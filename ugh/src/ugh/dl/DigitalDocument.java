@@ -842,13 +842,13 @@ public class DigitalDocument implements Serializable {
 
 		// Delete the existing fileset before adding the files, and save the
 		// virtualFileGroups!
-//		if (this.getFileSet() != null
-//				&& this.getFileSet().getVirtualFileGroups() != null) {
-//			List<VirtualFileGroup> vfgList = this.getFileSet()
-//					.getVirtualFileGroups();
-//			this.setFileSet(new FileSet());
-//			this.getFileSet().setVirtualFileGroups(vfgList);
-//		}
+		if (this.getFileSet() != null
+				&& this.getFileSet().getVirtualFileGroups() != null) {
+			List<VirtualFileGroup> vfgList = this.getFileSet()
+					.getVirtualFileGroups();
+			this.setFileSet(new FileSet());
+			this.getFileSet().setVirtualFileGroups(vfgList);
+		}
 
 		// Iterate throught all the physical docstruct's metadata.
 		if (tp != null && tp.getAllMetadata() != null) {

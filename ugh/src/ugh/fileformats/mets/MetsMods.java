@@ -533,6 +533,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 	protected static final String				METS_FROM_STRING							= "from";
 	protected static final String				METS_XMLNS_STRING							= "xmlns";
 	protected static final String				METS_SCHEMALOCATION_STRING					= "schemaLocation";
+	protected static final String 				METS_URN_NAME								= "_urn";
 
 	// Type names for preferences parsing.
 	protected static final String				PREFS_METADATA_STRING						= "Metadata";
@@ -1584,7 +1585,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 				+ "[@anchorId='true'][@name='"
 				+ this.anchorIdentifierMetadataType + "']";
 
-		LOGGER.trace("XQuery path for anchor ID: " + this.xPathAnchorReference);
+		LOGGER.debug("XQuery path for anchor ID: " + this.xPathAnchorReference);
 
 		XmlOptions xo = new XmlOptions();
 		xo.setUseDefaultNamespace();
@@ -4664,6 +4665,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 						divElement
 								.setAttribute(METS_ORDER_STRING, m.getValue());
 					}
+
 					// Write logical page number into div.
 					else if (m.getType().getName().equals(
 							METADATA_LOGICAL_PAGE_NUMBER)) {
