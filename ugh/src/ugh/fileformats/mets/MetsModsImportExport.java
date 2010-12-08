@@ -271,7 +271,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 		// configured by the METS section in the prefs.
 
 		// TODO After testing, call super class and set return value to TRUE!
-		return false;
+		return super.read(filename);
 	}
 
 	/*
@@ -811,7 +811,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 							String message = "Person '" + mdt.getName() + "' (" + ps.getDisplayname() + ") is not allowed as a child for '"
 									+ inStruct.getType().getName() + "' during MODS import!";
 							LOGGER.error(message, e);
-							throw new ImportException(message, e);
+//							throw new ImportException(message, e);
 						}
 
 						// Get out of for loop; we don't need to iterate over
@@ -1704,6 +1704,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 				}
 
 				// Get MODS XPATH settings.
+				// TODO added temporary || currentNode.getNodeName().equalsIgnoreCase(METS_PREFS_WRITEXPATH_STRING)
 				if (currentNode.getNodeName().equalsIgnoreCase(METS_PREFS_XPATH_STRING)) {
 					String xpathName = getTextNodeValue(currentNode);
 					if (xpathName == null) {

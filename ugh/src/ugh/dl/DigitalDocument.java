@@ -975,7 +975,7 @@ public class DigitalDocument implements Serializable {
 	 * @author Robert Sehr
 	 * @deprecated
 	 **************************************************************************/
-	@Deprecated
+	
 	public void overrideContentFiles(List<String> images) {
 
 		// Get the physical DocStruct.

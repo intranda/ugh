@@ -949,6 +949,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
 						String oldContent = content;
 						// TODO Check what happens to "\"s in the String from
 						// the Prefs' XML value.
+						// TODO
 						content = new String(perlUtil.substitute(mmo
 								.getValueRegExp(), content));
 						LOGGER.info("Regular expression '"
