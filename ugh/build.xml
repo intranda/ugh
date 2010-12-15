@@ -79,20 +79,9 @@
 
 	<!-- Build of war file. -->
 	<target name="jar" depends="compile" description="Build of war file.">
-		<jar destfile="${dir.build}/ugh.jar" basedir="${dir.build.classes}">
+		<jar destfile="ugh.jar" basedir="${dir.build.classes}">
 		</jar>
-		<delete dir="${dir.build}/src" />
-		<delete dir="${dir.build}/classes" />
-		<!--
-		<delete>
-			<fileset dir="${dir.build}">
-				<exclude name="ugh.jar" />
-				<patternset>
-					<include name="**/*.*" />
-				</patternset>
-			</fileset>
-		</delete>
-		-->
+		<delete dir="${dir.build}" />
 	</target>
 
 
