@@ -51,11 +51,14 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
@@ -76,7 +79,6 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptionCharEscapeMap;
 import org.apache.xmlbeans.XmlOptions;
 import org.w3c.dom.Attr;
-import org.w3c.dom.Comment;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -2774,6 +2776,10 @@ public class MetsMods implements ugh.dl.Fileformat {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document domDoc = builder.newDocument();
 
+			
+			
+			
+			
 			// Create the document, set METS and xlink namespaces.
 			this.metsNode = createDomElementNS(domDoc,
 					this.metsNamespacePrefix, METS_METS_STRING);
@@ -2798,6 +2804,22 @@ public class MetsMods implements ugh.dl.Fileformat {
 			// Append the METS node.
 			domDoc.appendChild(this.metsNode);
 
+			Element metsHdr = createDomElementNS(domDoc,this.metsNamespacePrefix, "metsHdr");
+			createDomAttributeNS(metsHdr,this.metsNamespacePrefix, "CREATEDATE", generateDate());
+			Element agent = createDomElementNS(domDoc, this.metsNamespacePrefix, "agent");
+			createDomAttributeNS(agent,this.metsNamespacePrefix, "ROLE", "CREATOR");
+			createDomAttributeNS(agent,this.metsNamespacePrefix, "TYPE", "OTHER");
+			createDomAttributeNS(agent,this.metsNamespacePrefix, "OTHERTYPE", "SOFTWARE");
+			Element name = createDomElementNS(domDoc,this.metsNamespacePrefix, "name");
+			name.setTextContent("Goobi - " + ugh.Version.BUILDVERSION + " - " + ugh.Version.BUILDDATE);
+			agent.appendChild(name);
+			Element note = createDomElementNS(domDoc,this.metsNamespacePrefix, "note");
+			note.setTextContent("Goobi - intranda version");
+			agent.appendChild(note);
+			metsHdr.appendChild(agent);
+			
+			this.metsNode.appendChild(metsHdr);
+			
 			// Get topmost divs.
 			DocStruct toplogdiv = this.digdoc.getLogicalDocStruct();
 			if (toplogdiv == null && validate) {
@@ -2931,6 +2953,18 @@ public class MetsMods implements ugh.dl.Fileformat {
 		}
 
 		return true;
+	}
+
+	private String generateDate() {
+		Date d = new Date();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");//;YYYY-MM-DDThh:mm:ssZ
+		SimpleDateFormat hours = new SimpleDateFormat("HH:mm:ss");
+		format.setTimeZone(TimeZone.getTimeZone("GMT"));
+		hours.setTimeZone(TimeZone.getTimeZone("GMT"));
+        String yearMonthDay = format.format(d);
+        String hourMinuteSecond = hours.format(d);
+
+		return yearMonthDay + "T" + hourMinuteSecond; 
 	}
 
 	/***************************************************************************
@@ -4799,13 +4833,13 @@ public class MetsMods implements ugh.dl.Fileformat {
 		// opts.setUseDefaultNamespace();
 
 		// Add version string to METS xml file.
-		Comment versionComment = domDoc
-				.createComment(" This METS file was created on "
-						+ new java.util.Date()
-						+ " using the UGH Metadata Library: "
-						+ this.getClass().getCanonicalName() + " (version "
-						+ VERSION + ") ");
-		domDoc.insertBefore(versionComment, domDoc.getDocumentElement());
+//		Comment versionComment = domDoc
+//				.createComment(" This METS file was created on "
+//						+ new java.util.Date()
+//						+ " using the UGH Metadata Library: "
+//						+ this.getClass().getCanonicalName() + " (version "
+//						+ VERSION + ") ");
+//		domDoc.insertBefore(versionComment, domDoc.getDocumentElement());
 
 		try {
 			metsBean = MetsDocument.Factory.parse(domDoc, opts);
