@@ -1227,6 +1227,25 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 		Element amdSec = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_AMDSEC_STRING);
 		amdSec.setAttribute(METS_ID_STRING, AMD_PREFIX);
 
+		// create techMD
+		List<Node> techMdList = digdoc.getTechMd();
+		if (techMdList != null && techMdList.size() > 0) {
+			for (Node node : techMdList) {
+				this.techidMax++;
+				Node theNode = domDoc.importNode(node, true);
+				Node child = theNode.getFirstChild();
+				Element techMd = createDomElementNS(domDoc, this.metsNamespacePrefix, TECHMD_PREFIX);
+				techMd.setAttribute(METS_ID_STRING, "techMD");
+				Element techNode = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_MDWRAP_STRING);
+				techNode.setAttribute(METS_MDTYPE_STRING, "PREMIS:OBJECT");
+				String idlog = TECHMD_PREFIX + "_" + new DecimalFormat(DECIMAL_FORMAT).format(this.techidMax);
+				techMd.setAttribute(METS_ID_STRING, idlog);
+				techNode.appendChild(child);
+				techMd.appendChild(techNode);
+				amdSec.appendChild(techMd);
+			}
+		}
+		
 		// Create rightsMD.
 		//
 		Element rightsMd = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_RIGHTSMD_STRING);

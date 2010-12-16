@@ -33,11 +33,13 @@ import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.Node;
 
 import ugh.exceptions.ContentFileNotLinkedException;
 import ugh.exceptions.PreferencesException;
@@ -202,6 +204,8 @@ public class DigitalDocument implements Serializable {
 	// This is the unique identifier for the whole document; usually Metadata
 	// object from the logical DocStruct.
 	private Metadata			uniqueIdentifer;
+	
+	private List<Node> techMd = new ArrayList<Node>();
 
 	/***************************************************************************
 	 * <p>
@@ -1185,6 +1189,20 @@ public class DigitalDocument implements Serializable {
 		}
 
 		return ListPairCheck.needsFurtherChecking;
+	}
+
+	/**
+	 * @param techMd the techMd to set
+	 */
+	public void addTechMd(Node techMd) {
+		this.techMd.add(techMd);
+	}
+
+	/**
+	 * @return the techMd
+	 */
+	public List< Node> getTechMd() {
+		return techMd;
 	}
 
 	/***************************************************************************
