@@ -63,6 +63,7 @@ import ugh.dl.DocStruct;
 import ugh.dl.DocStructType;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataType;
+import ugh.dl.NormMetadata;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
 import ugh.exceptions.DocStructHasNoTypeException;
@@ -79,13 +80,9 @@ import ugh.exceptions.WriteException;
  * 
  *        TODOLOG
  * 
- *        TODO Check, if we need to separate the anchor values for reading and storing: e.g. if we want to read an anchor METS file out of two files,
- *        and write a single METS file containing the anchor and the rest.
  * 
  *        TODO Check if there is a metadata with type="identifier" existing in those DocStructs with anchor="true"!
  * 
- *        TODO Check if there are NOT 1:1 mappings existing in the MODS mapping in the prefs, WARN or ERROR! For now only NOT MAPPED metadata is
- *        reported.
  * 
  *        CHANGELOG
  * 
@@ -199,7 +196,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 	protected static final String METS_PREFS_MODSXMLLANG_STRING = "MODSXMLLang";
 	protected static final String METS_PREFS_VALUECONDITION_STRING = "ValueCondition";
 	protected static final String METS_PREFS_VALUEREGEXP_STRING = "ValueRegExp";
-
+	protected static final String METS_PREFS_DATABASE_SOURCE = "DatabaseXpath";
+	protected static final String METS_PREFS_DATABASE_IDENTIFIER = "IdentifierXpath";
+	
 	protected static final String METS_RIGHTS_OWNER_STRING = "rightsOwner";
 	protected static final String METS_RIGHTS_OWNER_LOGO_STRING = "rightsOwnerLogo";
 	protected static final String METS_RIGHTS_OWNER_SITE_STRING = "rightsOwnerSiteUrl";
@@ -270,7 +269,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 		// parseMODSForLogicalDOM for import of external METS/MODS files
 		// configured by the METS section in the prefs.
 
-		// TODO After testing, call super class and set return value to TRUE!
 		return super.read(filename);
 	}
 
@@ -819,6 +817,42 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 						break;
 					}
 
+					if (mdt.getIsNormdata()) {
+						NormMetadata norm = null;
+						try {
+							norm = new NormMetadata(mdt);
+						} catch (MetadataTypeNotAllowedException e) {
+							// mdt is NOT null, we ensure this above!
+							e.printStackTrace();
+						}
+						String[] database = null;
+						String[] identifier = null;
+
+
+						if (mmo.getDatabaseXQuery() != null) {
+							database = getValueForUnambigiousXQuery(node, mmo.getDatabaseXQuery());
+						}
+						if (mmo.getIdentifierXQuery() != null) {
+							identifier = getValueForUnambigiousXQuery(node, mmo.getIdentifierXQuery());
+						}
+						if (database != null) {
+							norm.setDataBase(database[0]);
+						}
+						if (identifier != null) {
+							norm.setIdentifier(identifier[0]);
+						}
+						
+						try {
+							inStruct.addNormMetadata(norm);
+						} catch (MetadataTypeNotAllowedException e) {
+							String message = "DocumentStructure for which metadata should be added has no type!";
+							LOGGER.error(message, e);
+							throw new ImportException(message, e);
+						}
+						break;
+					}
+					
+					
 					if (value == null) {
 						// Value not found, as the subnode is not a TEXT node
 						// continue iterating over subnodes.
@@ -1389,8 +1423,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 
 		// Check conditions from the prefs. If they exist and do NOT
 		// match, continue with the next mmo.
-		// TODO Generalise this in a general util class? I just copied this from
-		// PicaPlus.java.
 		Perl5Util perlUtil = new Perl5Util();
 
 		try {
@@ -1410,8 +1442,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 		}
 
 		// Check and process regular expression from the prefs.
-		// TODO Generalise this in a general util class? I just copied this from
-		// PicaPlus.java.
+
 		try {
 			if (theMMO != null && theMMO.getValueRegExp() != null && !theMMO.getValueRegExp().equals("")) {
 				// TODO Check what happens to "\"s in the String from
@@ -1441,19 +1472,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 			// Add value to node.
 			Node valueNode = theDocument.createTextNode(newMetadataValue);
 
-			// TODO DPD-407
-			// System.out.println("!!!!STARTINGNODE NSURI: "
-			// + theStartingNode.getNamespaceURI());
-			// System.out
-			// .println("!!!!CREATEDNODE NS: " + createdNode.getPrefix());
-			// System.out.println("!!!!XQUERY: " + theXQuery);
-			// System.out.println("!!!!VALUE NODE: " + valueNode.getNodeName());
-			// System.out.println("!!!!VALUE NODE: " +
-			// valueNode.getNodeValue());
-			//
-			// if (valueNode.getNodeValue().contains("Dresden>")) {
-			// System.out.println("!!!!!");
-			// }
+			
 
 			createdNode.appendChild(valueNode);
 			LOGGER.trace("Value '" + newMetadataValue + "' (" + theMetadata.getType().getName() + ") added to node >>" + createdNode.getNodeName()
@@ -1586,27 +1605,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 		}
 	}
 
-	// /***************************************************************************
-	// * <p>
-	// * Finds the DocStructType element for a given METS type; iterates over the
-	// * modsNamesDS list.
-	// * </p>
-	// *
-	// * TODO This will be needed for external METS/MODS reading!
-	// *
-	// * @param metstype
-	// * @return DocStructType element for the given internal METS type
-	// **************************************************************************/
-	// private DocStructType getInternalDocStructType(String metstype) {
-	//
-	// for (MatchingDocStructObject mds : this.modsNamesDS) {
-	// if (mds.getMetstype() != null && mds.getMetstype().equals(metstype)) {
-	// return mds.getInternaltype();
-	// }
-	// }
-	//
-	// return null;
-	// }
+	
 
 	/***************************************************************************
 	 * <p>
@@ -1917,9 +1916,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 	 * TODO This is a really dirty hack, I will fix it tomorrow! (hihi)
 	 * 
 	 * @param theModsNode
-	 * @deprecated
+	 *
 	 **************************************************************************/
-	@Deprecated
+	
 	private void dirtyReplaceGroupingTagNameHack(Node theNode) {
 
 		// Replace things.

@@ -76,6 +76,8 @@ import ugh.exceptions.WriteException;
  * 
  *          TODOLOG
  * 
+ * 			 TODO add NormMetadata
+ * 
  *          CHANGELOG
  * 
  *          15.02.2010 --- Funk --- Logging version information now.
@@ -1061,7 +1063,9 @@ public class PicaPlus implements ugh.dl.Fileformat {
 							}
 						}
 					}
-				} else if (mmo != null && mmo.getType().equals("Person")) {
+				}
+				// TODO add NormMetadata
+				else if (mmo != null && mmo.getType().equals("Person")) {
 					// It's a person; we can get to this point several times, as
 					// person's metadata information is split over several
 					// subfields.

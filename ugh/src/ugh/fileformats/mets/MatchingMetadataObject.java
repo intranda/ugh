@@ -78,6 +78,9 @@ public class MatchingMetadataObject {
 
 	// Used for grouping of MODS subtags.
 	private String	modsGrouping			= null;
+	
+	private String database = null;
+	private String identifier = null;
 
 	/***************************************************************************
 	 * @return
@@ -408,6 +411,15 @@ public class MatchingMetadataObject {
 	protected String getIdentifierXQuery() {
 		return this.identifierXQuery;
 	}
+	
+	protected void setDatabaseXQuery(String databaseXQuery) {
+		this.database = databaseXQuery;
+	}
+	
+	protected String getDatabaseXQuery() {
+		return database;
+	}
+	
 
 	/***************************************************************************
 	 * @param identifierXQuery
@@ -460,6 +472,9 @@ public class MatchingMetadataObject {
 	protected void setModsGrouping(String modsGrouping) {
 		this.modsGrouping = modsGrouping;
 	}
+	
+
+	
 
 	/***************************************************************************
 	 * @param checkObject
