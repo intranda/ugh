@@ -278,6 +278,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 	 * @see ugh.fileformats.mets.MetsMods#WriteMODS(ugh.dl.DocStruct, org.w3c.dom.Node, org.w3c.dom.Document)
 	 */
 	@Override
+	// TODO add Normdata
 	protected void writeLogModsSection(DocStruct inStruct, Node dommodsnode, Document domDoc) throws PreferencesException, DOMException,
 			WriteException {
 
