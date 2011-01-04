@@ -2574,16 +2574,20 @@ public class MetsMods implements ugh.dl.Fileformat {
 			domDoc.appendChild(this.metsNode);
 
 			Element metsHdr = createDomElementNS(domDoc, this.metsNamespacePrefix, "metsHdr");
-			createDomAttributeNS(metsHdr, this.metsNamespacePrefix, "CREATEDATE", generateDate());
+//			createDomAttributeNS(metsHdr, this.metsNamespacePrefix, "CREATEDATE", generateDate());
+			metsHdr.setAttribute("CREATEDATE", generateDate());
 			Element agent = createDomElementNS(domDoc, this.metsNamespacePrefix, "agent");
-			createDomAttributeNS(agent, this.metsNamespacePrefix, "ROLE", "CREATOR");
-			createDomAttributeNS(agent, this.metsNamespacePrefix, "TYPE", "OTHER");
-			createDomAttributeNS(agent, this.metsNamespacePrefix, "OTHERTYPE", "SOFTWARE");
+			agent.setAttribute("ROLE", "CREATOR");
+//			createDomAttributeNS(agent, this.metsNamespacePrefix, "ROLE", "CREATOR");
+			agent.setAttribute("TYPE", "OTHER");
+//			createDomAttributeNS(agent, this.metsNamespacePrefix, "TYPE", "OTHER");
+			agent.setAttribute("OTHERTYPE", "SOFTWARE");
+//			createDomAttributeNS(agent, this.metsNamespacePrefix, "OTHERTYPE", "SOFTWARE");
 			Element name = createDomElementNS(domDoc, this.metsNamespacePrefix, "name");
 			name.setTextContent("Goobi - " + ugh.Version.BUILDVERSION + " - " + ugh.Version.BUILDDATE);
 			agent.appendChild(name);
 			Element note = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
-			note.setTextContent("Goobi - intranda version");
+			note.setTextContent("Goobi");
 			agent.appendChild(note);
 			metsHdr.appendChild(agent);
 
