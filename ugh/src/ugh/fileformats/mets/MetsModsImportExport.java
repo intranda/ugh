@@ -348,6 +348,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 								}
 								// Node was created successfully, now add
 								// value to it.
+//								metadataValue = metadataValue.replace("< ", "&lt; ").replace("> ", "&gt; ").replace("\"", "&quot;");
 								Node valueNode = domDoc.createTextNode(metadataValue);
 								createdNode.appendChild(valueNode);
 
@@ -1422,6 +1423,8 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 		// Get metadata to set.
 		String newMetadataValue = theMetadata.getValue();
 
+//		newMetadataValue = newMetadataValue.replace("< ", "&lt; ").replace("> ", "&gt; ").replace("\"", "&quot;");
+
 		// Check conditions from the prefs. If they exist and do NOT
 		// match, continue with the next mmo.
 		Perl5Util perlUtil = new Perl5Util();
@@ -1504,11 +1507,23 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 			throw new PreferencesException(message);
 		}
 
+//		if (thePerson.getLastname() != null) {
+//			thePerson.setLastname(thePerson.getLastname().replace("< ", "&lt; ").replace("> ", "&gt; ").replace("\"", "&quot;"));
+//		}
+//		if (thePerson.getFirstname() != null) {
+//			thePerson.setFirstname(thePerson.getFirstname().replace("< ", "&lt; ").replace("> ", "&gt; ").replace("\"", "&quot;"));
+//		}
+		
 		// Set the displayname of the current person, if NOT already set! Use
 		// "lastname, name" as we were told in the MODS profile.
-		if ((thePerson.getDisplayname() == null || thePerson.getDisplayname().equals("")) && thePerson.getLastname() != null
-				&& !thePerson.getLastname().equals("") && thePerson.getFirstname() != null && !thePerson.getFirstname().equals("")) {
-			thePerson.setDisplayname(thePerson.getLastname() + ", " + thePerson.getFirstname());
+		if ((thePerson.getLastname() != null	&& !thePerson.getLastname().equals("")) || (thePerson.getFirstname() != null && !thePerson.getFirstname().equals(""))) {
+			if (thePerson.getLastname() != null	&& !thePerson.getLastname().equals("") && thePerson.getFirstname() != null && !thePerson.getFirstname().equals("")) { 
+				thePerson.setDisplayname(thePerson.getLastname() + ", " + thePerson.getFirstname());
+			} else if (thePerson.getFirstname() == null || thePerson.getFirstname().equals("")) {
+				thePerson.setDisplayname(thePerson.getLastname());
+			} else {
+				thePerson.setDisplayname(thePerson.getFirstname());
+			}
 		}
 
 		// Create the subnodes.

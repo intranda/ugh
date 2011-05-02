@@ -24,20 +24,20 @@ package ugh.fileformats.mets;
 
 import gov.loc.mets.AmdSecType;
 import gov.loc.mets.DivType;
-import gov.loc.mets.DivType.Fptr;
 import gov.loc.mets.FileType;
-import gov.loc.mets.FileType.FLocat;
 import gov.loc.mets.Helper;
 import gov.loc.mets.MdSecType;
+import gov.loc.mets.MetsDocument;
+import gov.loc.mets.StructMapType;
+import gov.loc.mets.DivType.Fptr;
+import gov.loc.mets.FileType.FLocat;
 import gov.loc.mets.MdSecType.MdWrap;
 import gov.loc.mets.MdSecType.MdWrap.XmlData;
-import gov.loc.mets.MetsDocument;
 import gov.loc.mets.MetsDocument.Mets;
 import gov.loc.mets.MetsType.FileSec;
-import gov.loc.mets.MetsType.FileSec.FileGrp;
 import gov.loc.mets.MetsType.StructLink;
+import gov.loc.mets.MetsType.FileSec.FileGrp;
 import gov.loc.mets.StructLinkType.SmLink;
-import gov.loc.mets.StructMapType;
 import gov.loc.mods.v3.ModsDocument;
 
 import java.io.ByteArrayInputStream;
@@ -58,10 +58,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -3996,9 +3996,14 @@ public class MetsMods implements ugh.dl.Fileformat {
 		// Set the displayname of the current person, use
 		// "lastname, name" as we were told in the MODS
 		// profile, only if the displayName is not yet set.
-		if ((thePerson.getDisplayname() == null || thePerson.getDisplayname().equals("")) && thePerson.getLastname() != null
-				&& !thePerson.getLastname().equals("") && thePerson.getFirstname() != null && !thePerson.getFirstname().equals("")) {
-			thePerson.setDisplayname(thePerson.getLastname() + ", " + thePerson.getFirstname());
+		if ((thePerson.getLastname() != null	&& !thePerson.getLastname().equals("")) || (thePerson.getFirstname() != null && !thePerson.getFirstname().equals(""))) {
+			if (thePerson.getLastname() != null	&& !thePerson.getLastname().equals("") && thePerson.getFirstname() != null && !thePerson.getFirstname().equals("")) { 
+				thePerson.setDisplayname(thePerson.getLastname() + ", " + thePerson.getFirstname());
+			} else if (thePerson.getFirstname() == null || thePerson.getFirstname().equals("")) {
+				thePerson.setDisplayname(thePerson.getLastname());
+			} else {
+				thePerson.setDisplayname(thePerson.getFirstname());
+			}
 		}
 
 		// Create the subnodes.
@@ -4375,6 +4380,8 @@ public class MetsMods implements ugh.dl.Fileformat {
 		XmlOptionCharEscapeMap charEsc = new XmlOptionCharEscapeMap();
 		try {
 			charEsc.addMapping('>', XmlOptionCharEscapeMap.PREDEF_ENTITY);
+//			charEsc.addMapping('<', XmlOptionCharEscapeMap.PREDEF_ENTITY);
+			charEsc.addMapping('"', XmlOptionCharEscapeMap.PREDEF_ENTITY);
 		} catch (XmlException e) {
 			// No error should occur, unless the above code is correct!
 			e.printStackTrace();
