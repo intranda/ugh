@@ -53,6 +53,7 @@ import java.io.StringReader;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -2480,6 +2481,11 @@ public class MetsMods implements ugh.dl.Fileformat {
 		DigitalDocument newDigDoc = null;
 
 		try {
+			
+			//remove techMd list for serialization
+			ArrayList<Node> tempList = new ArrayList<Node>(this.digdoc.getTechMd());
+			this.digdoc.getTechMd().clear();
+			
 			// Write the object out to a byte array.
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ObjectOutputStream out = new ObjectOutputStream(bos);
@@ -2491,8 +2497,14 @@ public class MetsMods implements ugh.dl.Fileformat {
 			// a copy of the object back in.
 			ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
 			newDigDoc = (DigitalDocument) in.readObject();
+			
+			//reattach techMd list
+			for (Node node : tempList) {
+				newDigDoc.addTechMd(node);
+			}
+			
 		} catch (IOException e) {
-			String message = "Could not obtain OutputStream!";
+			String message = "Couldn't obtain OutputStream!";
 			LOGGER.error(message, e);
 			throw new WriteException(message, e);
 		} catch (ClassNotFoundException e) {
