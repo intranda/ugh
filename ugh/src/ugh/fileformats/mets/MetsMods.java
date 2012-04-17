@@ -24,20 +24,20 @@ package ugh.fileformats.mets;
 
 import gov.loc.mets.AmdSecType;
 import gov.loc.mets.DivType;
+import gov.loc.mets.DivType.Fptr;
 import gov.loc.mets.FileType;
+import gov.loc.mets.FileType.FLocat;
 import gov.loc.mets.Helper;
 import gov.loc.mets.MdSecType;
-import gov.loc.mets.MetsDocument;
-import gov.loc.mets.StructMapType;
-import gov.loc.mets.DivType.Fptr;
-import gov.loc.mets.FileType.FLocat;
 import gov.loc.mets.MdSecType.MdWrap;
 import gov.loc.mets.MdSecType.MdWrap.XmlData;
+import gov.loc.mets.MetsDocument;
 import gov.loc.mets.MetsDocument.Mets;
 import gov.loc.mets.MetsType.FileSec;
-import gov.loc.mets.MetsType.StructLink;
 import gov.loc.mets.MetsType.FileSec.FileGrp;
+import gov.loc.mets.MetsType.StructLink;
 import gov.loc.mets.StructLinkType.SmLink;
+import gov.loc.mets.StructMapType;
 import gov.loc.mods.v3.ModsDocument;
 
 import java.io.ByteArrayInputStream;
@@ -59,10 +59,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -505,6 +505,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 	protected static final String PHYS_PREFIX = "PHYS_";
 	protected static final String DMDPHYS_PREFIX = "DMDPHYS_";
 	protected static final String ANCHOR_XML_FILE_SUFFIX_STRING = "_anchor";
+	private boolean writeLocalFilegroup = true;
 
 	/***************************************************************************
 	 * FINALS
@@ -620,6 +621,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 	 * 
 	 * @see ugh.dl.Fileformat#GetDigitalDocument()
 	 */
+	@Override
 	public DigitalDocument getDigitalDocument() {
 		return this.digdoc;
 	}
@@ -629,6 +631,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 	 * 
 	 * @see ugh.dl.Fileformat#Update(java.lang.String)
 	 */
+	@Override
 	public boolean update(String filename) {
 		return false;
 	}
@@ -638,6 +641,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 	 * 
 	 * @see ugh.dl.Fileformat#SetDigitalDocument(ugh.dl.DigitalDocument)
 	 */
+	@Override
 	public boolean setDigitalDocument(DigitalDocument inDoc) {
 		this.digdoc = inDoc;
 		return true;
@@ -648,6 +652,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 	 * 
 	 * @see ugh.dl.Fileformat#read(java.lang.String)
 	 */
+	@Override
 	public boolean read(String theFilename) throws ReadException {
 
 		LOGGER.info("Reading METS file...");
@@ -743,6 +748,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 	 * 
 	 * @see ugh.fileformats.mets.MetsModsGdz#write(java.lang.String)
 	 */
+	@Override
 	public boolean write(String filename) throws WriteException, PreferencesException {
 
 		LOGGER.info("Writing METS ....");
@@ -2481,11 +2487,11 @@ public class MetsMods implements ugh.dl.Fileformat {
 		DigitalDocument newDigDoc = null;
 
 		try {
-			
-			//remove techMd list for serialization
+
+			// remove techMd list for serialization
 			ArrayList<Node> tempList = new ArrayList<Node>(this.digdoc.getTechMd());
 			this.digdoc.getTechMd().clear();
-			
+
 			// Write the object out to a byte array.
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ObjectOutputStream out = new ObjectOutputStream(bos);
@@ -2497,12 +2503,12 @@ public class MetsMods implements ugh.dl.Fileformat {
 			// a copy of the object back in.
 			ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
 			newDigDoc = (DigitalDocument) in.readObject();
-			
-			//reattach techMd list
+
+			// reattach techMd list
 			for (Node node : tempList) {
 				newDigDoc.addTechMd(node);
 			}
-			
+
 		} catch (IOException e) {
 			String message = "Couldn't obtain OutputStream!";
 			LOGGER.error(message, e);
@@ -2529,7 +2535,8 @@ public class MetsMods implements ugh.dl.Fileformat {
 	 * @throws PreferencesException
 	 * @throws MissingModsMappingException
 	 **************************************************************************/
-	private boolean writeMetsMods(String filename, boolean validate, boolean isAnchorFile) throws WriteException, PreferencesException {
+	private boolean writeMetsMods(String filename, boolean validate, boolean isAnchorFile) throws WriteException,
+			PreferencesException {
 
 		// Check if all necesarry things are set from outside.
 		// TODO Only is needed from MetsModsInternalExternal()!
@@ -2586,15 +2593,15 @@ public class MetsMods implements ugh.dl.Fileformat {
 			domDoc.appendChild(this.metsNode);
 
 			Element metsHdr = createDomElementNS(domDoc, this.metsNamespacePrefix, "metsHdr");
-//			createDomAttributeNS(metsHdr, this.metsNamespacePrefix, "CREATEDATE", generateDate());
+			// createDomAttributeNS(metsHdr, this.metsNamespacePrefix, "CREATEDATE", generateDate());
 			metsHdr.setAttribute("CREATEDATE", generateDate());
 			Element agent = createDomElementNS(domDoc, this.metsNamespacePrefix, "agent");
 			agent.setAttribute("ROLE", "CREATOR");
-//			createDomAttributeNS(agent, this.metsNamespacePrefix, "ROLE", "CREATOR");
+			// createDomAttributeNS(agent, this.metsNamespacePrefix, "ROLE", "CREATOR");
 			agent.setAttribute("TYPE", "OTHER");
-//			createDomAttributeNS(agent, this.metsNamespacePrefix, "TYPE", "OTHER");
+			// createDomAttributeNS(agent, this.metsNamespacePrefix, "TYPE", "OTHER");
 			agent.setAttribute("OTHERTYPE", "SOFTWARE");
-//			createDomAttributeNS(agent, this.metsNamespacePrefix, "OTHERTYPE", "SOFTWARE");
+			// createDomAttributeNS(agent, this.metsNamespacePrefix, "OTHERTYPE", "SOFTWARE");
 			Element name = createDomElementNS(domDoc, this.metsNamespacePrefix, "name");
 			name.setTextContent("Goobi - " + ugh.Version.BUILDVERSION + " - " + ugh.Version.BUILDDATE);
 			agent.appendChild(name);
@@ -2643,14 +2650,19 @@ public class MetsMods implements ugh.dl.Fileformat {
 					for (VirtualFileGroup vFileGroup : this.digdoc.getFileSet().getVirtualFileGroups()) {
 						if (vFileGroup.getName().equals(METS_FILEGROUP_LOCAL_STRING)) {
 							localFilegroupInGoobi = true;
+							if (this.writeLocalFilegroup) {
+								fileSecElement.appendChild(createFileGroup(domDoc, vFileGroup));
+							}
 						}
-						fileSecElement.appendChild(createFileGroup(domDoc, vFileGroup));
+						else {
+							fileSecElement.appendChild(createFileGroup(domDoc, vFileGroup));
+						}
 					}
 				}
 
 				// Only write local file group, if no file group "LOCAL" is
 				// defined.
-				if (!localFilegroupInGoobi) {
+				if (!localFilegroupInGoobi && this.writeLocalFilegroup) {
 					VirtualFileGroup vFileGroup = new VirtualFileGroup();
 					vFileGroup.setName(METS_FILEGROUP_LOCAL_STRING);
 					this.digdoc.getFileSet().addVirtualFileGroup(vFileGroup);
@@ -4008,8 +4020,10 @@ public class MetsMods implements ugh.dl.Fileformat {
 		// Set the displayname of the current person, use
 		// "lastname, name" as we were told in the MODS
 		// profile, only if the displayName is not yet set.
-		if ((thePerson.getLastname() != null	&& !thePerson.getLastname().equals("")) || (thePerson.getFirstname() != null && !thePerson.getFirstname().equals(""))) {
-			if (thePerson.getLastname() != null	&& !thePerson.getLastname().equals("") && thePerson.getFirstname() != null && !thePerson.getFirstname().equals("")) { 
+		if ((thePerson.getLastname() != null && !thePerson.getLastname().equals(""))
+				|| (thePerson.getFirstname() != null && !thePerson.getFirstname().equals(""))) {
+			if (thePerson.getLastname() != null && !thePerson.getLastname().equals("") && thePerson.getFirstname() != null
+					&& !thePerson.getFirstname().equals("")) {
 				thePerson.setDisplayname(thePerson.getLastname() + ", " + thePerson.getFirstname());
 			} else if (thePerson.getFirstname() == null || thePerson.getFirstname().equals("")) {
 				thePerson.setDisplayname(thePerson.getLastname());
@@ -4316,7 +4330,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 	 * @param isAnchorFile
 	 **************************************************************************/
 	protected void writeAmdSec(Document theDomDoc, boolean isAnchorFile) {
-		List<Node> techMdList = digdoc.getTechMd();
+		List<Node> techMdList = this.digdoc.getTechMd();
 		Element amdSec = createDomElementNS(theDomDoc, this.metsNamespacePrefix, METS_AMDSEC_STRING);
 		amdSec.setAttribute(METS_ID_STRING, AMD_PREFIX);
 		if (techMdList != null && techMdList.size() > 0) {
@@ -4392,7 +4406,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 		XmlOptionCharEscapeMap charEsc = new XmlOptionCharEscapeMap();
 		try {
 			charEsc.addMapping('>', XmlOptionCharEscapeMap.PREDEF_ENTITY);
-//			charEsc.addMapping('<', XmlOptionCharEscapeMap.PREDEF_ENTITY);
+			// charEsc.addMapping('<', XmlOptionCharEscapeMap.PREDEF_ENTITY);
 			charEsc.addMapping('"', XmlOptionCharEscapeMap.PREDEF_ENTITY);
 		} catch (XmlException e) {
 			// No error should occur, unless the above code is correct!
@@ -4600,5 +4614,8 @@ public class MetsMods implements ugh.dl.Fileformat {
 	public static String getVersion() {
 		return VERSION;
 	}
-
+	
+	public void setWriteLocal(boolean writeLocal) {
+		this.writeLocalFilegroup = writeLocal;
+	}
 }
