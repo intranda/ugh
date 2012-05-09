@@ -2535,8 +2535,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 	 * @throws PreferencesException
 	 * @throws MissingModsMappingException
 	 **************************************************************************/
-	private boolean writeMetsMods(String filename, boolean validate, boolean isAnchorFile) throws WriteException,
-			PreferencesException {
+	private boolean writeMetsMods(String filename, boolean validate, boolean isAnchorFile) throws WriteException, PreferencesException {
 
 		// Check if all necesarry things are set from outside.
 		// TODO Only is needed from MetsModsInternalExternal()!
@@ -2653,8 +2652,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 							if (this.writeLocalFilegroup) {
 								fileSecElement.appendChild(createFileGroup(domDoc, vFileGroup));
 							}
-						}
-						else {
+						} else {
 							fileSecElement.appendChild(createFileGroup(domDoc, vFileGroup));
 						}
 					}
@@ -2701,11 +2699,14 @@ public class MetsMods implements ugh.dl.Fileformat {
 				} else {
 					LOGGER.debug("No FileSec or StructMap LOGICAL existing yet");
 				}
-				{
+				if (structMapPhys != null) {
 					this.metsNode.appendChild(structMapPhys);
+				} else {
+					LOGGER.warn("Please create a structMap physical first (pagination)");
 				}
 				this.metsNode.appendChild(structLinkElement);
 			}
+
 			// Write amdSec, if needed.
 			LOGGER.info("Writing amdSec");
 			writeAmdSec(domDoc, isAnchorFile);
@@ -4275,7 +4276,6 @@ public class MetsMods implements ugh.dl.Fileformat {
 					if (m.getType().getName().equals(METADATA_PHYSICAL_PAGE_NUMBER)) {
 						divElement.setAttribute(METS_ORDER_STRING, m.getValue());
 					}
-
 					// Write logical page number into div.
 					else if (m.getType().getName().equals(METADATA_LOGICAL_PAGE_NUMBER)) {
 						divElement.setAttribute(METS_ORDERLABEL_STRING, m.getValue());
@@ -4614,7 +4614,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 	public static String getVersion() {
 		return VERSION;
 	}
-	
+
 	public void setWriteLocal(boolean writeLocal) {
 		this.writeLocalFilegroup = writeLocal;
 	}

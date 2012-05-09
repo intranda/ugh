@@ -198,7 +198,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 	protected static final String METS_PREFS_VALUEREGEXP_STRING = "ValueRegExp";
 	protected static final String METS_PREFS_DATABASE_SOURCE = "DatabaseXpath";
 	protected static final String METS_PREFS_DATABASE_IDENTIFIER = "IdentifierXpath";
-	
+
 	protected static final String METS_RIGHTS_OWNER_STRING = "rightsOwner";
 	protected static final String METS_RIGHTS_OWNER_LOGO_STRING = "rightsOwnerLogo";
 	protected static final String METS_RIGHTS_OWNER_SITE_STRING = "rightsOwnerSiteUrl";
@@ -245,6 +245,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 	 * 
 	 * @see ugh.dl.Fileformat#Update(java.lang.String)
 	 */
+	@Override
 	public boolean update(String filename) {
 		return false;
 	}
@@ -254,6 +255,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 	 * 
 	 * @see ugh.dl.Fileformat#SetDigitalDocument(ugh.dl.DigitalDocument)
 	 */
+	@Override
 	public boolean setDigitalDocument(DigitalDocument inDoc) {
 		this.digdoc = inDoc;
 		return true;
@@ -264,6 +266,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 	 * 
 	 * @see ugh.dl.Fileformat#read(java.lang.String)
 	 */
+	@Override
 	public boolean read(String filename) throws ReadException {
 		// The reading of the METS is already existing in the method
 		// parseMODSForLogicalDOM for import of external METS/MODS files
@@ -348,7 +351,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 								}
 								// Node was created successfully, now add
 								// value to it.
-//								metadataValue = metadataValue.replace("< ", "&lt; ").replace("> ", "&gt; ").replace("\"", "&quot;");
+								// metadataValue = metadataValue.replace("< ", "&lt; ").replace("> ", "&gt; ").replace("\"", "&quot;");
 								Node valueNode = domDoc.createTextNode(metadataValue);
 								createdNode.appendChild(valueNode);
 
@@ -434,8 +437,8 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 
 			// At last replace all the grouping things.
 			// TODO This MUST be replaced with MUCH NICER code!!!!!!!!!
-			dirtyReplaceGroupingTagNameHack(dommodsnode);
 		}
+		dirtyReplaceGroupingTagNameHack(dommodsnode);
 	}
 
 	/*
@@ -811,7 +814,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 							String message = "Person '" + mdt.getName() + "' (" + ps.getDisplayname() + ") is not allowed as a child for '"
 									+ inStruct.getType().getName() + "' during MODS import!";
 							LOGGER.error(message, e);
-//							throw new ImportException(message, e);
+							// throw new ImportException(message, e);
 						}
 
 						// Get out of for loop; we don't need to iterate over
@@ -830,7 +833,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 						String[] database = null;
 						String[] identifier = null;
 
-
 						if (mmo.getDatabaseXQuery() != null) {
 							database = getValueForUnambigiousXQuery(node, mmo.getDatabaseXQuery());
 						}
@@ -843,7 +845,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 						if (identifier != null) {
 							norm.setIdentifier(identifier[0]);
 						}
-						
+
 						try {
 							inStruct.addNormMetadata(norm);
 						} catch (MetadataTypeNotAllowedException e) {
@@ -853,8 +855,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 						}
 						break;
 					}
-					
-					
+
 					if (value == null) {
 						// Value not found, as the subnode is not a TEXT node
 						// continue iterating over subnodes.
@@ -1264,7 +1265,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 		amdSec.setAttribute(METS_ID_STRING, AMD_PREFIX);
 
 		// create techMD
-		List<Node> techMdList = digdoc.getTechMd();
+		List<Node> techMdList = this.digdoc.getTechMd();
 		if (techMdList != null && techMdList.size() > 0) {
 			for (Node node : techMdList) {
 				this.techidMax++;
@@ -1281,7 +1282,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 				amdSec.appendChild(techMd);
 			}
 		}
-		
+
 		// Create rightsMD.
 		//
 		Element rightsMd = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_RIGHTSMD_STRING);
@@ -1423,7 +1424,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 		// Get metadata to set.
 		String newMetadataValue = theMetadata.getValue();
 
-//		newMetadataValue = newMetadataValue.replace("< ", "&lt; ").replace("> ", "&gt; ").replace("\"", "&quot;");
+		// newMetadataValue = newMetadataValue.replace("< ", "&lt; ").replace("> ", "&gt; ").replace("\"", "&quot;");
 
 		// Check conditions from the prefs. If they exist and do NOT
 		// match, continue with the next mmo.
@@ -1476,8 +1477,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 			// Add value to node.
 			Node valueNode = theDocument.createTextNode(newMetadataValue);
 
-			
-
 			createdNode.appendChild(valueNode);
 			LOGGER.trace("Value '" + newMetadataValue + "' (" + theMetadata.getType().getName() + ") added to node >>" + createdNode.getNodeName()
 					+ "<<");
@@ -1507,17 +1506,19 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 			throw new PreferencesException(message);
 		}
 
-//		if (thePerson.getLastname() != null) {
-//			thePerson.setLastname(thePerson.getLastname().replace("< ", "&lt; ").replace("> ", "&gt; ").replace("\"", "&quot;"));
-//		}
-//		if (thePerson.getFirstname() != null) {
-//			thePerson.setFirstname(thePerson.getFirstname().replace("< ", "&lt; ").replace("> ", "&gt; ").replace("\"", "&quot;"));
-//		}
-		
+		// if (thePerson.getLastname() != null) {
+		// thePerson.setLastname(thePerson.getLastname().replace("< ", "&lt; ").replace("> ", "&gt; ").replace("\"", "&quot;"));
+		// }
+		// if (thePerson.getFirstname() != null) {
+		// thePerson.setFirstname(thePerson.getFirstname().replace("< ", "&lt; ").replace("> ", "&gt; ").replace("\"", "&quot;"));
+		// }
+
 		// Set the displayname of the current person, if NOT already set! Use
 		// "lastname, name" as we were told in the MODS profile.
-		if ((thePerson.getLastname() != null	&& !thePerson.getLastname().equals("")) || (thePerson.getFirstname() != null && !thePerson.getFirstname().equals(""))) {
-			if (thePerson.getLastname() != null	&& !thePerson.getLastname().equals("") && thePerson.getFirstname() != null && !thePerson.getFirstname().equals("")) { 
+		if ((thePerson.getLastname() != null && !thePerson.getLastname().equals(""))
+				|| (thePerson.getFirstname() != null && !thePerson.getFirstname().equals(""))) {
+			if (thePerson.getLastname() != null && !thePerson.getLastname().equals("") && thePerson.getFirstname() != null
+					&& !thePerson.getFirstname().equals("")) {
 				thePerson.setDisplayname(thePerson.getLastname() + ", " + thePerson.getFirstname());
 			} else if (thePerson.getFirstname() == null || thePerson.getFirstname().equals("")) {
 				thePerson.setDisplayname(thePerson.getLastname());
@@ -1620,8 +1621,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 			}
 		}
 	}
-
-	
 
 	/***************************************************************************
 	 * <p>
@@ -1932,9 +1931,10 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 	 * TODO This is a really dirty hack, I will fix it tomorrow! (hihi)
 	 * 
 	 * @param theModsNode
-	 *
+	 * 
 	 **************************************************************************/
-	
+
+	@Deprecated
 	private void dirtyReplaceGroupingTagNameHack(Node theNode) {
 
 		// Replace things.
