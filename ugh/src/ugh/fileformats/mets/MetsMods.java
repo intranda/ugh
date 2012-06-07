@@ -3037,9 +3037,11 @@ public class MetsMods implements ugh.dl.Fileformat {
 			div.setAttribute(METS_DMDID_STRING, dmdidString);
 		}
 
+		// TODO add techMD ID here
+		
 		// Write links to ContentFiles (FPTRs).
 		writeFptrs(inStruct, domDoc, div);
-
+		// TODO remove recursion
 		// Get all children and write their divs recursive.
 		List<DocStruct> allChildren = inStruct.getAllChildren();
 		if (allChildren != null) {
