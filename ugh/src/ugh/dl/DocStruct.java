@@ -1624,6 +1624,76 @@ public class DocStruct implements Serializable {
 		return addableMetadata;
 	}
 
+	public List<MetadataType> getPossibleMetadataTypes() {
+		// If e.g. the topstruct has no Metadata, or something...
+		if (this.type == null) {
+			return null;
+		}
+
+		// Get all Metadatatypes for my DocStructType.
+		List<MetadataType> addableMetadata = new LinkedList<MetadataType>();
+		List<MetadataType> allTypes = this.type.getAllMetadataTypes();
+
+		// Get all metadata types which are known, iterate over them and check,
+		// if they are still addable.
+		for (MetadataType mdt : allTypes) {
+
+			// Metadata beginning with the HIDDEN_METADATA_CHAR are internal
+			// metadata are not user addable.
+			// if (!mdt.getName().startsWith(HIDDEN_METADATA_CHAR)) {
+			String maxnumber = this.type.getNumberOfMetadataType(mdt);
+
+			// Metadata can only be available once; so we have to check if
+			// it is already available.
+			if (maxnumber.equals("1m") || maxnumber.equals("1o")) {
+				// Check metadata here only.
+				List<? extends Metadata> availableMD = this.getAllMetadataByType(mdt);
+
+				if (!mdt.isNormdata && !mdt.isPerson && (availableMD.size() < 1)) {
+					// Metadata is NOT available; we are allowed to add it.
+					addableMetadata.add(mdt);
+				}
+
+				// Then check persons here.
+				boolean used = false;
+				if (mdt.getIsPerson() && this.getAllPersons() != null) {
+					for (Person per : this.getAllPersons()) {
+						// If the person of the current metadata type is
+						// already used, set the flag.
+						if (per.getRole().equals(mdt.getName())) {
+							used = true;
+						}
+					}
+
+					// Only add the metadata type, if the person was not
+					// already used.
+					if (!used) {
+						addableMetadata.add(mdt);
+					}
+				} else if (mdt.getIsNormdata() && this.getAllNormMetadata() != null) {
+					for (NormMetadata nmd : this.getAllNormMetadata()) {
+						if (nmd.getType().equals(mdt)) {
+							used = true;
+						}
+					}
+					if (!used) {
+						addableMetadata.add(mdt);
+					}
+				}
+			} else {
+				// We can add as many metadata as we want (+ or *).
+				addableMetadata.add(mdt);
+			}
+
+		}
+
+		if (addableMetadata == null || addableMetadata.isEmpty()) {
+			return null;
+		}
+
+		return addableMetadata;
+	}
+
 	//
 	// Handle children.
 	//
