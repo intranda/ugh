@@ -814,10 +814,26 @@ public class MetsMods implements ugh.dl.Fileformat {
 			// There is a child, so delete only the anchor's metadata from
 			// the Digital Document.
 			if (children != null) {
-				topDocument = copyDigitalDocument();
-				for (Metadata m : this.digdoc.getLogicalDocStruct().getAllMetadata()) {
-					topDocument.getLogicalDocStruct().removeMetadata(m);
-				}
+
+				topDocument = this.digdoc;
+				// ArrayList<Metadata> anchorMdList = new ArrayList<Metadata>();
+				// for (Metadata m : this.digdoc.getLogicalDocStruct().getAllMetadata()) {
+				// anchorMdList.add(m);
+				// }
+				// for (Metadata metadata : anchorMdList) {
+				// topDocument.getLogicalDocStruct().removeMetadata(metadata);
+				// }
+
+				// topDocument = copyDigitalDocument();
+				// for (Metadata m : this.digdoc.getLogicalDocStruct().getAllMetadata()) {
+				// topDocument.getLogicalDocStruct().removeMetadata(m);
+				// }
+
+				// for (Metadata md : topDocument.getLogicalDocStruct().getAllMetadata()) {
+				// if (md.getType().getName().contentEquals("CatalogIDDigital")) {
+				// System.out.println("DigitalIDDigital of anchor after split = " + md.getValue());
+				// }
+				// }
 			}
 		} else {
 			// Simply write the normal DigitalDocument.
