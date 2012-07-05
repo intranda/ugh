@@ -2070,7 +2070,7 @@ public class DocStruct implements Serializable {
 		MetadataType mdtype = this.type.getMetadataTypeByType(in.getType());
 		if (mdtype == null) {
 			MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException();
-			LOGGER.error("MetadataType not available for DocStruct '" + this.getType().getName() + "'");
+			LOGGER.error("MetadataType " + in.getType().getName() + " not available for DocStruct '" + this.getType().getName() + "'");
 			throw mtnae;
 		}
 
@@ -2206,7 +2206,7 @@ public class DocStruct implements Serializable {
 		MetadataType mdtype = this.type.getMetadataTypeByType(in.getType());
 		if (mdtype == null) {
 			MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException();
-			LOGGER.error("MetadataType not available for DocStruct '" + this.getType().getName() + "'");
+			LOGGER.error("MetadataType " + in.getType().getName() + " is not available for DocStruct '" + this.getType().getName() + "'");
 			throw mtnae;
 		}
 
