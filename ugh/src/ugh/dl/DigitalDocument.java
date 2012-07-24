@@ -205,7 +205,9 @@ public class DigitalDocument implements Serializable {
 	// object from the logical DocStruct.
 	private Metadata			uniqueIdentifer;
 	
-	private List<Node> techMd = new ArrayList<Node>();
+	//This contains the list of techMds. Currently only one amdSec is allowed, to comply with DFG-Viewer
+	private AmdSec 				amdSec;
+//	private List<Node> techMd = new ArrayList<Node>();
 
 	/***************************************************************************
 	 * <p>
@@ -1194,15 +1196,71 @@ public class DigitalDocument implements Serializable {
 	/**
 	 * @param techMd the techMd to set
 	 */
-	public void addTechMd(Node techMd) {
-		this.techMd.add(techMd);
+	public void addTechMd(Node techMdNode) {
+		if(this.amdSec == null) {
+			amdSec = new AmdSec(new ArrayList<Md>());
+		}
+		Md techMd = new Md(techMdNode);
+		this.amdSec.addTechMd(techMd);
+	}
+	
+	/**
+	 * @param techMd the techMd to set
+	 */
+	public void addTechMd(Md techMd) {
+		if(this.amdSec == null) {
+			amdSec = new AmdSec(new ArrayList<Md>());
+		}
+		this.amdSec.addTechMd(techMd);
 	}
 
 	/**
 	 * @return the techMd
 	 */
-	public List< Node> getTechMd() {
-		return techMd;
+	public List<Node> getTechMdsAsNodes() {
+		return amdSec.getTechMdsAsNodes();
+	}
+	
+	/**
+	 * @return the techMd
+	 */
+	public List<Md> getTechMds() {
+		if(amdSec == null) {
+			return new ArrayList<Md>();
+		}
+		return amdSec.getTechMdList();
+	}
+	
+	
+	public Md getTechMd(String id) {
+		if(amdSec == null || amdSec.getTechMdList() == null) {
+			return null;
+		}
+		
+		for (Md techMd : this.amdSec.getTechMdList()) {
+			if(techMd.getId() != null && techMd.getId().trim().contentEquals(id.trim())) {
+				return techMd;
+			}
+		}
+		return null;
+	}
+	
+	public void setAmdSec(String id) {
+		this.amdSec = new AmdSec(new ArrayList<Md>());
+		this.amdSec.setId(id);
+	}
+	
+	public AmdSec getAmdSec(String id) {
+		if(amdSec == null) {
+			return null;
+		} else if(amdSec.getId().trim().contentEquals(id.trim())) {
+			return amdSec;
+		}
+		return null;
+	}
+	
+	public AmdSec getAmdSec() {
+		return amdSec;
 	}
 
 	/***************************************************************************

@@ -93,6 +93,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import ugh.dl.AmdSec;
 import ugh.dl.ContentFile;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
@@ -104,6 +105,7 @@ import ugh.dl.NormMetadata;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
 import ugh.dl.Reference;
+import ugh.dl.Md;
 import ugh.dl.VirtualFileGroup;
 import ugh.exceptions.DocStructHasNoTypeException;
 import ugh.exceptions.ImportException;
@@ -686,6 +688,9 @@ public class MetsMods implements ugh.dl.Fileformat {
 			this.setDigitalDocument(new DigitalDocument());
 		}
 
+		// readAmdSec now to provide references for fileSec and LogDocStruct
+		readAmdSec(metsElement);
+
 		// Get FileSec to read all files.
 		readFileSec(metsElement);
 
@@ -723,7 +728,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 		// || this.digdoc.getFileSet().getAllFiles().isEmpty()) {
 		// this.digdoc.addAllContentFiles();
 		// }
-		readAmdSec(metsElement);
+		// readAmdSec(metsElement);
 		// Sort metadata in all DocStructs according to the prefs.
 		this.digdoc.sortMetadataRecursively(this.myPreferences);
 
@@ -732,14 +737,55 @@ public class MetsMods implements ugh.dl.Fileformat {
 
 	private void readAmdSec(Mets metsElement) {
 		List<AmdSecType> list = metsElement.getAmdSecList();
-		for (AmdSecType ast : list) {
+		// for (AmdSecType ast : list) {
+		if (list != null && !list.isEmpty()) {
+			AmdSecType ast = list.get(0); // allow only one amdSec
+			this.digdoc.setAmdSec(ast.getID());
 
 			List<MdSecType> mst = ast.getTechMDList();
 			for (MdSecType tech : mst) {
 				MdWrap wrap = tech.getMdWrap();
 				Node premis = wrap.getDomNode();
-				this.digdoc.addTechMd(premis);
+				Md techMd = new Md(premis);
+				techMd.setId(tech.getID());
+				techMd.setType("techMD");
+				// System.out.println("Reading techMd " + tech.getID());
+				this.digdoc.addTechMd(techMd);
 			}
+
+			mst = ast.getRightsMDList();
+			for (MdSecType tech : mst) {
+				MdWrap wrap = tech.getMdWrap();
+				Node premis = wrap.getDomNode();
+				Md techMd = new Md(premis);
+				techMd.setId(tech.getID());
+				techMd.setType("rightsMD");
+				// System.out.println("Reading techMd " + tech.getID());
+				this.digdoc.addTechMd(techMd);
+			}
+
+			mst = ast.getDigiprovMDList();
+			for (MdSecType tech : mst) {
+				MdWrap wrap = tech.getMdWrap();
+				Node premis = wrap.getDomNode();
+				Md techMd = new Md(premis);
+				techMd.setId(tech.getID());
+				techMd.setType("digiprovMD");
+				// System.out.println("Reading techMd " + tech.getID());
+				this.digdoc.addTechMd(techMd);
+			}
+
+			mst = ast.getSourceMDList();
+			for (MdSecType tech : mst) {
+				MdWrap wrap = tech.getMdWrap();
+				Node premis = wrap.getDomNode();
+				Md techMd = new Md(premis);
+				techMd.setId(tech.getID());
+				techMd.setType("sourceMD");
+				// System.out.println("Reading techMd " + tech.getID());
+				this.digdoc.addTechMd(techMd);
+			}
+
 		}
 	}
 
@@ -1177,6 +1223,18 @@ public class MetsMods implements ugh.dl.Fileformat {
 				throw new ReadException(message, e);
 			}
 
+			// get the corresponding amdSec
+			List admList = dt.getADMID();
+			if (admList != null) {
+				for (Object object : admList) {
+					String admid = (String) object;
+					AmdSec amdSec = digdoc.getAmdSec(admid);
+					if (amdSec != null) {
+						newDocStruct.setAmdSec(amdSec);
+					}
+				}
+			}
+
 			// If order and orderlabel are stored here; than we should create
 			// the appropriate metadata.
 			try {
@@ -1294,6 +1352,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 			// (A) Create the DocStructType.
 			String type = topmostdiv.getTYPE();
 			String id = topmostdiv.getID();
+
 			if (type == null) {
 				String message = "No type attribute set for topmost <div> in physical structMap";
 				LOGGER.error(message);
@@ -1315,6 +1374,19 @@ public class MetsMods implements ugh.dl.Fileformat {
 				newDocStruct = this.getDigitalDocument().createDocStruct(myType);
 				newDocStruct.setIdentifier(id);
 				newDocStruct.setOrigObject(topmostdiv);
+
+				// get the corresponding amdSec
+				List admList = topmostdiv.getADMID();
+				if (admList != null) {
+					for (Object object : admList) {
+						String admid = (String) object;
+						AmdSec amdSec = digdoc.getAmdSec(admid);
+						if (amdSec != null) {
+							newDocStruct.setAmdSec(amdSec);
+						}
+					}
+				}
+
 			} catch (TypeNotAllowedForParentException e) {
 				String message = "Can't create this DocStruct of type '" + type + "' at the current position in tree (logical tree)";
 				LOGGER.error(message, e);
@@ -2232,6 +2304,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
 									if (cf != null) {
 										child.addContentFile(cf);
+										child.setTechMds(cf.getTechMds());
 
 										LOGGER.trace("Added content file with ID '" + cf.getIdentifier() + "' to DocStruct '"
 												+ child.getType().getName() + "'");
@@ -2505,8 +2578,8 @@ public class MetsMods implements ugh.dl.Fileformat {
 		try {
 
 			// remove techMd list for serialization
-			ArrayList<Node> tempList = new ArrayList<Node>(this.digdoc.getTechMd());
-			this.digdoc.getTechMd().clear();
+			ArrayList<Md> tempList = new ArrayList<Md>(this.digdoc.getTechMds());
+			this.digdoc.getTechMds().clear();
 
 			// Write the object out to a byte array.
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -2521,8 +2594,8 @@ public class MetsMods implements ugh.dl.Fileformat {
 			newDigDoc = (DigitalDocument) in.readObject();
 
 			// reattach techMd list
-			for (Node node : tempList) {
-				newDigDoc.addTechMd(node);
+			for (Md md : tempList) {
+				newDigDoc.addTechMd(md);
 			}
 
 		} catch (IOException e) {
@@ -2723,9 +2796,10 @@ public class MetsMods implements ugh.dl.Fileformat {
 				this.metsNode.appendChild(structLinkElement);
 			}
 
-			// Write amdSec, if needed.
-			LOGGER.info("Writing amdSec");
-			writeAmdSec(domDoc, isAnchorFile);
+			
+			 // Write amdSec, if needed.
+			 LOGGER.info("Writing amdSec");
+			 writeAmdSec(domDoc, isAnchorFile);
 
 			// Serialize the document.
 			LOGGER.info("Serializing METS document to file");
@@ -2852,6 +2926,19 @@ public class MetsMods implements ugh.dl.Fileformat {
 			LOGGER.warn("No fileset available... unable to create FileGroups!");
 			return result;
 		}
+		
+		if(fs.getAllFiles() != null) {
+		for (ContentFile file : fs.getAllFiles()) {
+			if(file.getReferencedDocStructs() != null) {
+				for (DocStruct ds : file.getReferencedDocStructs()) {
+					if(ds.getTechMds() != null) {
+//					System.out.println("Setting " + ds.getTechMds().size() + " techMds for file " + file.getIdentifier());
+					file.setTechMds(ds.getTechMds());
+					}
+				}
+			}
+		}
+		}
 
 		// Check file group pathes, suffixes, and mimetypes, except for
 		// filegroup LOCAL.
@@ -2906,6 +2993,19 @@ public class MetsMods implements ugh.dl.Fileformat {
 				id += "_" + theFilegroup.getName();
 			}
 			file.setAttribute(METS_ID_STRING, id);
+
+			// write admid attribute is necessary
+			List<Md> mdList = cf.getTechMds();
+			if (mdList != null) {
+				String admid = "";
+				for (Md md : mdList) {
+					admid += md.getId();
+					admid += " ";
+				}
+				if (!admid.isEmpty()) {
+					file.setAttribute(METS_ADMID_STRING, admid.trim());
+				}
+			}
 
 			// Write location (as URL).
 			Element flocat = createDomElementNS(domDoc, this.metsNamespacePrefix, "FLocat");
@@ -2997,6 +3097,18 @@ public class MetsMods implements ugh.dl.Fileformat {
 						cf.setMimetype(file.getMIMETYPE());
 					}
 
+					// set the admIDs
+					List<?> admIds = file.getADMID();
+					// System.out.println("Reading admIds");
+					if(admIds != null) {
+					for (Object object : admIds) {
+						if (object instanceof String) {
+							String id = (String) object;
+							cf.addTechMd(this.digdoc.getTechMd(id));
+						}
+					}
+					}
+
 					// Add the file to the fileset.
 					fileset.addFile(cf);
 
@@ -3054,7 +3166,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 		}
 
 		// TODO add techMD ID here
-		
+
 		// Write links to ContentFiles (FPTRs).
 		writeFptrs(inStruct, domDoc, div);
 		// TODO remove recursion
@@ -3102,6 +3214,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 				if (!vFileGroup.getName().equals(METS_FILEGROUP_LOCAL_STRING)) {
 					id += "_" + vFileGroup.getName();
 				}
+				
 				fptr.setAttribute(METS_FILEID_STRING, id);
 				theDiv.appendChild(fptr);
 
@@ -3160,6 +3273,14 @@ public class MetsMods implements ugh.dl.Fileformat {
 			// Just set DMDID attribute, if there is a metadata set.
 			String dmdidString = DMDLOG_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(dmdid);
 			div.setAttribute(METS_DMDID_STRING, dmdidString);
+		}
+
+		// Set the AMDIDs if necessary
+		if (inStruct != null && inStruct.getAmdSec() != null) {
+			String amdid = inStruct.getAmdSec().getId();
+			if (amdid != null && !amdid.isEmpty()) {
+				div.setAttribute(METS_ADMID_STRING, amdid);
+			}
 		}
 
 		// Create mptr element.
@@ -4348,20 +4469,30 @@ public class MetsMods implements ugh.dl.Fileformat {
 	 * @param isAnchorFile
 	 **************************************************************************/
 	protected void writeAmdSec(Document theDomDoc, boolean isAnchorFile) {
-		List<Node> techMdList = this.digdoc.getTechMd();
+		List<Md> techMdList = this.digdoc.getTechMds();
 		Element amdSec = createDomElementNS(theDomDoc, this.metsNamespacePrefix, METS_AMDSEC_STRING);
-		amdSec.setAttribute(METS_ID_STRING, AMD_PREFIX);
+		AmdSec amd = this.digdoc.getAmdSec();
+		if(amd != null) {
+			amdSec.setAttribute(METS_ID_STRING, amd.getId());
+		} else {
+			amdSec.setAttribute(METS_ID_STRING, AMD_PREFIX);
+		}
 		if (techMdList != null && techMdList.size() > 0) {
-			for (Node node : techMdList) {
+			for (Md md : techMdList) {
 				this.techidMax++;
-				Node theNode = theDomDoc.importNode(node, true);
+				Node theNode = theDomDoc.importNode(md.getContent(), true);
 				Node child = theNode.getFirstChild();
-				Element techMd = createDomElementNS(theDomDoc, this.metsNamespacePrefix, TECHMD_PREFIX);
-				techMd.setAttribute(METS_ID_STRING, "techMD");
+				Element techMd = createDomElementNS(theDomDoc, this.metsNamespacePrefix, md.getType());
+				techMd.setAttribute(METS_ID_STRING, md.getId());
 				Element techNode = createDomElementNS(theDomDoc, this.metsNamespacePrefix, METS_MDWRAP_STRING);
-				techNode.setAttribute(METS_MDTYPE_STRING, "PREMIS:OBJECT");
-				String idlog = TECHMD_PREFIX + "_" + new DecimalFormat(DECIMAL_FORMAT).format(this.techidMax);
-				techMd.setAttribute(METS_ID_STRING, idlog);
+				for (int i = 0; i < theNode.getAttributes().getLength(); i++) {
+					Node attribute = theNode.getAttributes().item(i);
+					techNode.setAttribute(attribute.getNodeName(), attribute.getNodeValue());
+					// System.out.println("mdWrap attribute " + attribute.getNodeName() + ": " + attribute.getNodeValue());
+				}
+				// techNode.setAttribute(METS_MDTYPE_STRING, "PREMIS:OBJECT");
+				// String idlog = TECHMD_PREFIX + "_" + new DecimalFormat(DECIMAL_FORMAT).format(this.techidMax);
+				// techMd.setAttribute(METS_ID_STRING, idlog);
 				techNode.appendChild(child);
 				techMd.appendChild(techNode);
 				amdSec.appendChild(techMd);

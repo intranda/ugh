@@ -23,6 +23,7 @@ package ugh.dl;
  ******************************************************************************/
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -182,6 +183,10 @@ public class DocStruct implements Serializable {
 	private boolean physical = false;
 	// String containing an identifier or a URL to the anchor.
 	private String referenceToAnchor;
+	//the amdSec referenced by this docStruct, if any
+	private AmdSec amdSec;
+	//the list of techMd sections referenced by this docStruct, if any
+	private List<Md> techMdList;
 
 	/***************************************************************************
 	 * <p>
@@ -3059,6 +3064,33 @@ public class DocStruct implements Serializable {
 			return m1.getType().getName().compareTo(m2.getType().getName());
 		}
 
+	}
+	
+	public AmdSec getAmdSec() {
+		return amdSec;
+	}
+
+	public void setAmdSec(AmdSec amdSec) {
+		this.amdSec = amdSec;
+	}
+	
+	public List<Md> getTechMds() {
+		return techMdList;
+	}
+	
+	public void addTechMd(Md techMd) {
+		if(techMdList == null) {
+			techMdList = new ArrayList<Md>();
+		}
+		if(techMd != null) {
+			techMdList.add(techMd);
+		}
+	}
+	
+	public void setTechMds(List<Md> mds) {
+		if(mds != null) {			
+			this.techMdList = mds;
+		}
 	}
 
 }
