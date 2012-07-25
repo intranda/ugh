@@ -1173,6 +1173,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 		// replacement! Configure languages, too, if no title is omitted. Or
 		// configure in the prefs and make METS multi-languaged via XML:Lang.
 		String label = "";
+
 		if (inStruct.getAllMetadata() != null) {
 			for (Metadata md : inStruct.getAllMetadata()) {
 				if (md.getType().getName().equals(METS_PREFS_LABEL_METADATA_STRING)) {
@@ -1182,7 +1183,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 				}
 			}
 		}
-
 		if (label != null && !label.equals("")) {
 			div.setAttribute(METS_LABEL_STRING, label);
 		}
@@ -1215,6 +1215,37 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 		Element mptr = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_MPTR_STRING);
 		mptr.setAttribute(METS_LOCTYPE_STRING, "URL");
 
+		String ordernumber = "";
+		// current element is anchor file
+		if (inStruct.getType().isAnchor()) {
+			if (inStruct.getAllChildren() != null && inStruct.getAllChildren().size() > 0) {
+				DocStruct child = inStruct.getAllChildren().get(0);
+				if (child.getAllMetadata() != null) {
+					for (Metadata md : child.getAllMetadata()) {
+						if (md.getType().getName().equals(RULESET_ORDER_NAME)) {
+							ordernumber = md.getValue();
+						}
+					}
+				}
+			}
+		}
+		// current element is first child of an anchor file
+		else if (!inStruct.getType().isAnchor() && inStruct.getParent() != null && inStruct.getParent().getType().isAnchor()) {
+			if (inStruct.getAllMetadata() != null) {
+				for (Metadata md : inStruct.getAllMetadata()) {
+					if (md.getType().getName().equals(RULESET_ORDER_NAME)) {
+						ordernumber = md.getValue();
+					}
+				}
+			}
+		}
+		
+		if (!isAnchorFile && !inStruct.getType().isAnchor() && inStruct.getParent() != null && inStruct.getParent().getType().isAnchor()) {
+			if (ordernumber != null && ordernumber.length() > 0) {
+				div.setAttribute(METS_ORDER_STRING, ordernumber);
+			}			
+		}
+
 		// Write the MPTR element if a non-anchor file is written AND element is
 		// defined as an anchor in the prefs --> METS pointer in e.g.
 		// "periodical volume".
@@ -1234,6 +1265,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 				LOGGER.warn("No METS pointer URL (mptr) to the child DocStructs is defined! Referencing will NOT work!");
 			}
 			createDomAttributeNS(mptr, this.xlinkNamespacePrefix, METS_HREF_STRING, this.mptrUrlAnchor);
+			if (ordernumber != null && ordernumber.length() > 0) {
+				div.setAttribute(METS_ORDER_STRING, ordernumber);
+			}
 			// Write mptr element.
 			div.appendChild(mptr);
 		}

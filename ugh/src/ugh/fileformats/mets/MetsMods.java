@@ -468,6 +468,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 	protected static final String METS_XMLNS_STRING = "xmlns";
 	protected static final String METS_SCHEMALOCATION_STRING = "schemaLocation";
 	protected static final String METS_URN_NAME = "_urn";
+	protected static final String RULESET_ORDER_NAME = "CurrentNoSorting";
 
 	// Type names for preferences parsing.
 	protected static final String PREFS_METADATA_STRING = "Metadata";
