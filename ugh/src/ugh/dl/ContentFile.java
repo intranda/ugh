@@ -23,6 +23,7 @@ package ugh.dl;
  ******************************************************************************/
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -80,6 +81,8 @@ public class ContentFile implements Serializable {
 	// Type of offset (if it's byte offset, time code, etc.
 	private String				offsetType;
 	private String				identifier;
+	//the list of techMd sections referenced by this File
+	private List<Md> techMdList;
 
 	/***************************************************************************
 	 * <p>
@@ -312,6 +315,25 @@ public class ContentFile implements Serializable {
 		}
 
 		return true;
+	}
+	
+	public List<Md> getTechMds() {
+		return techMdList;
+	}
+	
+	public void addTechMd(Md techMd) {
+		if(techMdList == null) {
+			techMdList = new ArrayList<Md>();
+		}
+		if(techMd != null) {
+			techMdList.add(techMd);
+		}
+	}
+	
+	public void setTechMds(List<Md> mds) {
+		if(mds != null) {			
+			this.techMdList = mds;
+		}
 	}
 
 }

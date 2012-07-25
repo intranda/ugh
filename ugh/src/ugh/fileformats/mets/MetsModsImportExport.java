@@ -58,9 +58,11 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import ugh.dl.AmdSec;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
 import ugh.dl.DocStructType;
+import ugh.dl.Md;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataType;
 import ugh.dl.NormMetadata;
@@ -1203,12 +1205,20 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 			String dmdidString = DMDLOG_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(dmdid);
 			div.setAttribute(METS_DMDID_STRING, dmdidString);
 		}
-
-		// Set the ADMID, depends if the current element is an anchor or not.
-		if ((isAnchorFile && inStruct.getType().isAnchor())
-				|| (!isAnchorFile && inStruct.getParent() != null && inStruct.getParent().getType().isAnchor())
-				|| (!isAnchorFile && !inStruct.getType().isAnchor() && inStruct.getParent() == null)) {
-			div.setAttribute(METS_ADMID_STRING, AMD_PREFIX);
+		
+		//Set the AMDIDs if necessary
+		if (inStruct != null && inStruct.getAmdSec() != null) {
+			String amdid = inStruct.getAmdSec().getId();
+			if (amdid != null && !amdid.isEmpty()) {
+				div.setAttribute(METS_ADMID_STRING, amdid);
+			}
+		} else {
+			// Set the ADMID, depends if the current element is an anchor or not.
+			if ((isAnchorFile && inStruct.getType().isAnchor())
+					|| (!isAnchorFile && inStruct.getParent() != null && inStruct.getParent().getType().isAnchor())
+					|| (!isAnchorFile && !inStruct.getType().isAnchor() && inStruct.getParent() == null)) {
+				div.setAttribute(METS_ADMID_STRING, AMD_PREFIX);
+			}
 		}
 
 		// Create MPTR element.
@@ -1294,29 +1304,48 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 	@Override
 	protected void writeAmdSec(Document domDoc, boolean isAnchorFile) {
 
+		boolean rightsMDExists = false;
+		boolean digiprovMDExists = false;
+		
 		// Creates the METS' AMDSEC, uses only *ONE* AMDID for ZVDD/DFG-Viewer.
 		Element amdSec = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_AMDSEC_STRING);
-		amdSec.setAttribute(METS_ID_STRING, AMD_PREFIX);
+		AmdSec amd = this.digdoc.getAmdSec();
+		if(amd != null) {
+			amdSec.setAttribute(METS_ID_STRING, amd.getId());
+		} else {
+			amdSec.setAttribute(METS_ID_STRING, AMD_PREFIX);
+		}
 
 		// create techMD
-		List<Node> techMdList = this.digdoc.getTechMd();
+		List<Md> techMdList = this.digdoc.getTechMds();
 		if (techMdList != null && techMdList.size() > 0) {
-			for (Node node : techMdList) {
+			for (Md md : techMdList) {
 				this.techidMax++;
-				Node theNode = domDoc.importNode(node, true);
+				Node theNode = domDoc.importNode(md.getContent(), true);
 				Node child = theNode.getFirstChild();
-				Element techMd = createDomElementNS(domDoc, this.metsNamespacePrefix, TECHMD_PREFIX);
-				techMd.setAttribute(METS_ID_STRING, "techMD");
+				Element techMd = createDomElementNS(domDoc, this.metsNamespacePrefix, md.getType());
+				if(md.getType().contentEquals(METS_RIGHTSMD_STRING)) {
+					rightsMDExists = true;
+				} else if(md.getType().contentEquals("digiprovMD")) {
+					digiprovMDExists = true;
+				}
+				techMd.setAttribute(METS_ID_STRING, md.getId());
 				Element techNode = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_MDWRAP_STRING);
-				techNode.setAttribute(METS_MDTYPE_STRING, "PREMIS:OBJECT");
-				String idlog = TECHMD_PREFIX + "_" + new DecimalFormat(DECIMAL_FORMAT).format(this.techidMax);
-				techMd.setAttribute(METS_ID_STRING, idlog);
+				for (int i = 0; i < theNode.getAttributes().getLength(); i++) {
+					Node attribute = theNode.getAttributes().item(i);
+					techNode.setAttribute(attribute.getNodeName(), attribute.getNodeValue());
+//					System.out.println("mdWrap attribute " + attribute.getNodeName() + ": " + attribute.getNodeValue());
+				}
+//				techNode.setAttribute(METS_MDTYPE_STRING, "PREMIS:OBJECT");
+//				String idlog = TECHMD_PREFIX + "_" + new DecimalFormat(DECIMAL_FORMAT).format(this.techidMax);
+//				techMd.setAttribute(METS_ID_STRING, idlog);
 				techNode.appendChild(child);
 				techMd.appendChild(techNode);
 				amdSec.appendChild(techMd);
 			}
 		}
 
+		if(!rightsMDExists) {
 		// Create rightsMD.
 		//
 		Element rightsMd = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_RIGHTSMD_STRING);
@@ -1349,7 +1378,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 		dv.appendChild(dvOwnerLogo);
 		dv.appendChild(dvOwnerSiteURL);
 		dv.appendChild(dvOwnerContact);
+		}
 
+		if(!digiprovMDExists) {
 		// Create digiprovMD.
 		//
 		Element digiprovMd = createDomElementNS(domDoc, this.metsNamespacePrefix, "digiprovMD");
@@ -1383,6 +1414,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 
 		dvDigiprov.appendChild(dvReference);
 		dvDigiprov.appendChild(dvPresentation);
+		}
 
 		// Append to our metsNode, before the fileSec (or before the structMap
 		// if anchor file).
