@@ -1,6 +1,6 @@
 package ugh.dl;
 /*******************************************************************************
- * ugh.dl / MD.java
+ * ugh.dl / AmdSec.java
  * 
  * Copyright 2012 intranda GmbH, Göttingen
  * 
