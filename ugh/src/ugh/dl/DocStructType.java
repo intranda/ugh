@@ -783,36 +783,38 @@ public class DocStructType implements Serializable {
 	 */
 	public String toString() {
 
-		String result = LINE + "\nDocStructType " + this.getName() + "\n"
-				+ LINE + "\n";
-
-		// All languages.
-		result += "\tLANGUAGES\n";
-
-		StringBuffer resultBuffer = new StringBuffer();
-		for (String lan : this.allLanguages.values()) {
-			resultBuffer.append("\t\t" + lan + "\n");
-		}
-		result += resultBuffer;
-
-		// All children types.
-		result += "\tALLOWED CHILD TYPES\n";
-
-		for (String child : this.allChildrenTypes) {
-			result += "\t\t" + child + "\n";
-		}
-
-		// All metadata.
-		result += "\tMETADATA\n";
-
-		for (Object ob : this.allMetadataTypes) {
-			DocStructType.MetadataTypeForDocStructType meta = (DocStructType.MetadataTypeForDocStructType) ob;
-			System.out.println("\t\t" + meta.getMetadataType().getName()
-					+ "/de:" + meta.getMetadataType().getLanguage("de") + "("
-					+ meta.getNumber() + ")");
-		}
-
-		return result;
+		return getName();
+		
+//		String result = LINE + "\nDocStructType " + this.getName() + "\n"
+//				+ LINE + "\n";
+//
+//		// All languages.
+//		result += "\tLANGUAGES\n";
+//
+//		StringBuffer resultBuffer = new StringBuffer();
+//		for (String lan : this.allLanguages.values()) {
+//			resultBuffer.append("\t\t" + lan + "\n");
+//		}
+//		result += resultBuffer;
+//
+//		// All children types.
+//		result += "\tALLOWED CHILD TYPES\n";
+//
+//		for (String child : this.allChildrenTypes) {
+//			result += "\t\t" + child + "\n";
+//		}
+//
+//		// All metadata.
+//		result += "\tMETADATA\n";
+//
+//		for (Object ob : this.allMetadataTypes) {
+//			DocStructType.MetadataTypeForDocStructType meta = (DocStructType.MetadataTypeForDocStructType) ob;
+//			System.out.println("\t\t" + meta.getMetadataType().getName()
+//					+ "/de:" + meta.getMetadataType().getLanguage("de") + "("
+//					+ meta.getNumber() + ")");
+//		}
+//
+//		return result;
 	}
 
 	/***************************************************************************
