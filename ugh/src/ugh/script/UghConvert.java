@@ -22,15 +22,8 @@ package ugh.script;
  * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  ******************************************************************************/
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -46,6 +39,7 @@ import ugh.dl.DocStruct;
 import ugh.dl.Fileformat;
 import ugh.dl.Metadata;
 import ugh.dl.Prefs;
+import ugh.dl.VirtualFileGroup;
 import ugh.exceptions.PreferencesException;
 import ugh.exceptions.ReadException;
 import ugh.exceptions.WriteException;
@@ -146,10 +140,8 @@ public class UghConvert {
 	 * 
 	 * @param args
 	 **************************************************************************/
-	@SuppressWarnings("deprecation")
 	public static int testmain(String args[]) {
 
-		@SuppressWarnings("unused")
 		boolean verbose = false;
 
 		//
@@ -165,6 +157,7 @@ public class UghConvert {
 			// Not thrown never.
 			System.out.println("?ARGS MISSING  ERROR\nREADY.");
 			System.out.println("This error should never have happened!");
+
 			return 1;
 		}
 
@@ -185,13 +178,12 @@ public class UghConvert {
 			System.out.println("\t" + MetsModsImportExport.class.getSimpleName() + " (dvmets): " + MetsModsImportExport.getVersion());
 			System.out.println("\t" + PicaPlus.class.getSimpleName() + " (picaplus): " + PicaPlus.getVersion());
 			System.out.println("\t" + RDFFile.class.getSimpleName() + " (rdf): " + RDFFile.getVersion());
-
 			System.out.println("\t" + XStream.class.getSimpleName() + " (xstream): " + XStream.getVersion());
 			return 0;
 		}
 
 		// Check for config file, input file and input format.
-		if (!commandLine.hasOption('c') || !commandLine.hasOption('i')) {
+		if (!commandLine.hasOption('c') || !commandLine.hasOption('i') || !commandLine.hasOption('r')) {
 			System.out.println("?ARGS MISSING  ERROR\nREADY.");
 			System.out.println("Please provide at least config filename, input filename and input format (-c -i -r)");
 			HelpFormatter hf = new HelpFormatter();
@@ -203,6 +195,34 @@ public class UghConvert {
 		// Verbose.
 		if (commandLine.hasOption('v')) {
 			verbose = true;
+		}
+
+		// Set format to read from.
+		String convertFrom = commandLine.getOptionValue('r');
+		if (convertFrom == null) {
+			System.out.println("?FORMAT MISSING  ERROR\nREADY.");
+			System.out.println("Please provide an input format string");
+			return 3;
+		}
+		// Formats: "mets", "rdf", "xstream", "picaplus".
+		if (!(convertFrom.equals(METS_CLASSIFIER) || convertFrom.equals(RDF_CLASSIFIER) || convertFrom.equals(XSTREAM_CLASSIFIER) || convertFrom
+				.equals(PICAPLUS_CLASSIFIER))) {
+			System.out.println("?FORMAT NOT READABLE  ERROR\nREADY.");
+			System.out.println("Input format '" + convertFrom + "' can not be read using the ugh metadata subsystem");
+			return 4;
+		}
+
+		// Set format to write to.
+		String convertTo = commandLine.getOptionValue('w');
+		// Formats: "mets", "dvmets", "rdf", "xstream".
+		if (convertTo != null) {
+			if (!(convertTo.equals(METS_CLASSIFIER) || convertTo.equals(DVMETS_CLASSIFIER) || convertTo.equals(RDF_CLASSIFIER) || convertTo
+					.equals(XSTREAM_CLASSIFIER))) {
+				System.out.println("?FORMAT NOT WRITABLE  ERROR\nREADY.");
+				System.out.println("Input format '" + convertTo
+						+ "' can not be written using the ugh metadata subsystem. Please use one of mets, dvmets, rdf, or xstream");
+				return 5;
+			}
 		}
 
 		// Set input file.
@@ -231,61 +251,55 @@ public class UghConvert {
 		}
 
 		//
+		// Now check which format to read.
+		//
+		Fileformat fileFrom = null;
+		String inputVersion = "";
+		try {
+			if (convertFrom.equals(DVMETS_CLASSIFIER)) {
+				fileFrom = new MetsModsImportExport(preferences);
+				inputVersion = MetsModsImportExport.class.getName() + " " + MetsModsImportExport.getVersion();
+			} else if (convertFrom.equals(METS_CLASSIFIER)) {
+				fileFrom = new MetsMods(preferences);
+				inputVersion = MetsMods.class.getName() + " " + MetsMods.getVersion();
+			} else if (convertFrom.equals(RDF_CLASSIFIER)) {
+				fileFrom = new RDFFile(preferences);
+				inputVersion = RDFFile.class.getName() + " " + RDFFile.getVersion();
+			} else if (convertFrom.equals(XSTREAM_CLASSIFIER)) {
+				fileFrom = new XStream(preferences);
+				inputVersion = XStream.class.getName() + " " + XStream.getVersion();
+			} else if (convertFrom.equals(PICAPLUS_CLASSIFIER)) {
+				fileFrom = new PicaPlus(preferences);
+				inputVersion = PicaPlus.getVersion();
+			}
+		} catch (PreferencesException e) {
+			System.out.println("?READ  ERROR\nREADY.");
+			System.out.println("Unable to parse config file");
+			return 9;
+		}
+
+		//
 		// Change value of metadata.
 		//
 		if (commandLine.hasOption('m')) {
 			// Missing parameter.
-			if (commandLine.getOptionValue("m") == null || commandLine.getOptionValue("v") == null) {
+			if (commandLine.getOptionValue("m") == null || commandLine.getOptionValue("nmv") == null) {
 				System.out.println("Missing required input.");
-				System.out.println("m - internal metadata name or v - new value is null");
+				System.out.println("m - internal metadata name or nmv - new value is null");
 				return 20;
 			} else {
 				// Internal metadata name.
 				String metadataName = commandLine.getOptionValue("m");
 				// New value.
-				String newValue = commandLine.getOptionValue("v");
+				String newValue = commandLine.getOptionValue("nmv");
 				System.out.println("change value for metadata " + metadataName + " to " + newValue);
 				try {
-					String metaType = "";
-					HashMap<String, String> types = new HashMap<String, String>();
-					types.put("mets", "www.loc.gov/METS/".toLowerCase());
-					types.put("rdf", "<RDF:RDF ".toLowerCase());
-					types.put("xstream", "<ugh.dl.DigitalDocument>".toLowerCase());
-
-					FileReader input = new FileReader(commandLine.getOptionValue('i'));
-					BufferedReader bufRead = new BufferedReader(input);
-					char[] buffer = new char[200];
-					while ((bufRead.read(buffer)) >= 0) {
-
-						String temp = new String(buffer).toLowerCase();
-						// System.out.print(temp);
-						Iterator<Entry<String, String>> i = types.entrySet().iterator();
-						while (i.hasNext()) {
-							Entry<String, String> entry = (Entry<String, String>) i.next();
-							if (temp.contains(entry.getValue())) {
-								bufRead.close();
-								input.close();
-								metaType = entry.getKey();
-							}
-						}
-					}
-					bufRead.close();
-
-					Fileformat ff = null;
-					if (metaType.equals("mets")) {
-						ff = new MetsMods(preferences);
-					} else if (metaType.equals("xstream")) {
-						ff = new XStream(preferences);
-					} else {
-						ff = new RDFFile(preferences);
-					}
-
-					ff.read(commandLine.getOptionValue('i'));
-					DigitalDocument myDocument = ff.getDigitalDocument();
+					fileFrom.read(commandLine.getOptionValue('i'));
+					DigitalDocument myDocument = fileFrom.getDigitalDocument();
 					DocStruct log = myDocument.getLogicalDocStruct();
 					// Search for metadata.
 					changeMetadataValue(log, metadataName, newValue);
-					ff.write(commandLine.getOptionValue('i'));
+					fileFrom.write(commandLine.getOptionValue('i'));
 					return 0;
 				} catch (WriteException e) {
 					System.out.println("error while saving new file");
@@ -293,88 +307,202 @@ public class UghConvert {
 					System.out.println("error while saving new file");
 				} catch (ReadException e) {
 					System.out.println("error on reading file");
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-
-			// 
-			// update value of metadatatype
-			//
-			if (commandLine.hasOption('u')) {
-				// Missing parameter.
-				if (commandLine.getOptionValue("u") == null || commandLine.getOptionValue("v") == null) {
-					System.out.println("Missing required input.");
-					System.out.println("u - internal metadata name or v - new value is null");
-					return 20;
-				} else {
-					// Internal metadata name.
-					String metadataName = commandLine.getOptionValue("u");
-					// New value.
-					String newValue = commandLine.getOptionValue("v");
-					System.out.println("change value for metadata " + metadataName + " to " + newValue);
-					try {
-						String metaType = "";
-						HashMap<String, String> types = new HashMap<String, String>();
-						types.put("mets", "www.loc.gov/METS/".toLowerCase());
-						types.put("rdf", "<RDF:RDF ".toLowerCase());
-						types.put("xstream", "<ugh.dl.DigitalDocument>".toLowerCase());
-
-						FileReader input = new FileReader(commandLine.getOptionValue('i'));
-						BufferedReader bufRead = new BufferedReader(input);
-						char[] buffer = new char[200];
-						while ((bufRead.read(buffer)) >= 0) {
-
-							String temp = new String(buffer).toLowerCase();
-							// System.out.print(temp);
-							Iterator<Entry<String, String>> i = types.entrySet().iterator();
-							while (i.hasNext()) {
-								Entry<String, String> entry = (Entry<String, String>) i.next();
-								if (temp.contains(entry.getValue())) {
-									bufRead.close();
-									input.close();
-									metaType = entry.getKey();
-								}
-							}
-						}
-						bufRead.close();
-
-						Fileformat ff = null;
-						if (metaType.equals("mets")) {
-							ff = new MetsMods(preferences);
-						} else if (metaType.equals("xstream")) {
-							ff = new XStream(preferences);
-						} else {
-							ff = new RDFFile(preferences);
-						}
-
-						ff.read(commandLine.getOptionValue('i'));
-						DigitalDocument myDocument = ff.getDigitalDocument();
-						DocStruct log = myDocument.getLogicalDocStruct();
-						// Search for metadata.
-						updateMetadataValue(log, metadataName, newValue);
-						ff.write(commandLine.getOptionValue('i'));
-						return 0;
-					} catch (WriteException e) {
-						System.out.println("error while saving new file");
-					} catch (PreferencesException e) {
-						System.out.println("error while saving new file");
-					} catch (ReadException e) {
-						System.out.println("error on reading file");
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
 				}
 			}
 		}
+		//
+		// Print version and class name.
+		//
+		if (!commandLine.hasOption('q')) {
+			System.out.println("Input class name and version is '" + inputVersion + "'");
+		}
+
+		//
+		// Read the file and get the DigitalDocument.
+		//
+		boolean readOutcome = false;
+		try {
+			if (!commandLine.hasOption('q')) {
+				System.out.println("Reading source file '" + inputFile.getAbsolutePath() + "'");
+			}
+			readOutcome = fileFrom.read(inputFile.getAbsolutePath());
+			document = fileFrom.getDigitalDocument();
+		} catch (ReadException e) {
+			System.out.println("?READ  ERROR\nREADY.");
+			System.out.println("Unable to parse input file '" + inputFile.getAbsolutePath() + "'");
+			return 10;
+		} catch (PreferencesException e) {
+			System.out.println("?READ  ERROR\nREADY.");
+			System.out.println("Unable to parse config file");
+			return 11;
+		}
+
+		if (readOutcome) {
+			if (!commandLine.hasOption('q')) {
+				System.out.println(convertFrom + " file '" + inputFile.getAbsolutePath() + "' read");
+			}
+		} else {
+			System.out.println("?READ  ERROR\nREADY.");
+			System.out.println(convertFrom + " file '" + inputFile.getAbsolutePath() + "' could not be read");
+			return 12;
+		}
+
+		// Give some verbose output.
+		if (verbose) {
+			System.out.println(document);
+		}
+
+		// TODO REMOVE DEBUG OUTPUT
+		//
+		// if (document.getLogicalDocStruct() != null) {
+		// ugh.dl.DocStruct e = document.getLogicalDocStruct();
+		//
+		// for (DocStruct ds : e.getAllChildren()) {
+		// for (DocStruct d : ds.getAllChildren()) {
+		// if (d.getType().getName().equals("PeriodicalIssue")) {
+		// System.out
+		// .println("############################################################");
+		// System.out.println("##  AddableMetadataTypes for "
+		// + d.getType().getName());
+		// System.out
+		// .println("############################################################");
+		// if (d.getAddableMetadataTypes() != null) {
+		// for (ugh.dl.MetadataType m : d
+		// .getAddableMetadataTypes()) {
+		// System.out.println(m.getName());
+		// }
+		// }
+		// System.out
+		// .println("############################################################");
+		// System.out
+		// .println("##  DefaultDisplayMetadataTypes for "
+		// + d.getType().getName());
+		// System.out
+		// .println("############################################################");
+		// if (d.getDefaultDisplayMetadataTypes() != null) {
+		// for (ugh.dl.MetadataType m : d
+		// .getDefaultDisplayMetadataTypes()) {
+		// System.out.println(m.getName());
+		// }
+		// }
+		// System.out
+		// .println("############################################################");
+		// System.out.println("##  AllMetadata for "
+		// + d.getType().getName());
+		// System.out
+		// .println("############################################################");
+		// if (d.getAllMetadata() != null) {
+		// for (ugh.dl.Metadata m : d.getAllMetadata()) {
+		// System.out.println(m.getType().getName());
+		// }
+		// }
+		// System.out
+		// .println("############################################################");
+		// System.out.println("##  AllVisibleMetadata for "
+		// + d.getType().getName());
+		// System.out
+		// .println("############################################################");
+		// if (d.getAllVisibleMetadata() != null) {
+		// for (ugh.dl.Metadata m : d.getAllVisibleMetadata()) {
+		// System.out.println(m.getType().getName());
+		// }
+		// }
+		// }
+		// }
+		// }
+		// }
+		//
+		// TODO REMOVE DEBUG OUTPUT
+
+		// Return if no output file specified.
+		if (convertTo == null) {
+			return 0;
+		}
+
+		// Check for output file and output format.
+		if (!commandLine.hasOption('o') || !commandLine.hasOption('w')) {
+			System.out.println("?ARGS MISSING  ERROR\nREADY.");
+			System.out.println("Please provide output filename and output format (-o -w)");
+			HelpFormatter hf = new HelpFormatter();
+			hf.defaultWidth = 79;
+			hf.printHelp("java -jar ughCLI.jar [options]", cliOptions);
+			return 17;
+		}
+
+		// Set output file.
+		File outputFile = new File(commandLine.getOptionValue('o'));
+
+		//
+		// Check which format to write.
+		//
+		Fileformat fileTo = null;
+		String outputVersion = "";
+		try {
+			if (convertTo.equals(DVMETS_CLASSIFIER)) {
+				fileTo = new MetsModsImportExport(preferences);
+				setMetsSpecificContent((MetsModsImportExport) fileTo);
+				outputVersion = MetsModsImportExport.class.getName() + " " + MetsModsImportExport.getVersion();
+			} else if (convertTo.equals(METS_CLASSIFIER)) {
+				fileTo = new MetsMods(preferences);
+				outputVersion = MetsMods.class.getName() + " " + MetsMods.getVersion();
+			} else if (convertTo.equals(RDF_CLASSIFIER)) {
+				fileTo = new RDFFile(preferences);
+				outputVersion = RDFFile.class.getName() + " " + RDFFile.getVersion();
+			} else if (convertTo.equals(XSTREAM_CLASSIFIER)) {
+				fileTo = new XStream(preferences);
+				outputVersion = XStream.class.getName() + " " + XStream.getVersion();
+			}
+		} catch (PreferencesException e) {
+			e.printStackTrace();
+			System.out.println("?WRITE  ERROR\nREADY.");
+			System.out.println("Unable to parse config file");
+			return 13;
+		}
+
+		//
+		// Write the output version.
+		//
+		if (!commandLine.hasOption('q')) {
+			System.out.println("Output class name and version is '" + outputVersion + "'");
+		}
+
+		//
+		// Set the DigitalDocument and write the file.
+		//
+		boolean writeOutcome = false;
+		try {
+			// Set the digital document.
+			fileTo.setDigitalDocument(document);
+
+			if (verbose && document.getFileSet() != null) {
+				for (VirtualFileGroup v : document.getFileSet().getVirtualFileGroups()) {
+					System.out.println("Creating filegroup '" + v.getName() + "'");
+				}
+			}
+
+			writeOutcome = fileTo.write(outputFile.getAbsolutePath());
+		} catch (PreferencesException e) {
+			e.printStackTrace();
+			System.out.println("?READ  ERROR\nREADY.");
+			System.out.println("Unable to parse config file");
+			return 14;
+		} catch (WriteException e) {
+			e.printStackTrace();
+			System.out.println("?WRITE  ERROR\nREADY.");
+			System.out.println("Unable to write " + convertTo + " file");
+			return 15;
+		}
+
+		if (writeOutcome) {
+			if (!commandLine.hasOption('q')) {
+				System.out.println(convertTo + " file '" + outputFile.getAbsolutePath() + "' written");
+			}
+		} else {
+			System.out.println("?WRITE  ERROR\nREADY.");
+			System.out.println(convertTo + " file '" + outputFile.getAbsolutePath() + "' could not be written");
+			return 16;
+		}
+
 		return 0;
 	}
 
@@ -405,28 +533,6 @@ public class UghConvert {
 				}
 			}
 		}
-
-		return foundMetadata;
-	}
-
-	private static boolean updateMetadataValue(DocStruct theDocstruct, String theMetadataName, String theValue) {
-
-		List<Metadata> mdlist = theDocstruct.getAllMetadata();
-		for (Metadata md : mdlist) {
-			if (md.getType().getName().equals(theMetadataName)) {
-				md.setValue(theValue + md.getValue());
-				foundMetadata = true;
-				break;
-			}
-		}
-		// if (!foundMetadata) {
-		List<DocStruct> children = theDocstruct.getAllChildren();
-		if (children != null && children.size() != 0) {
-			for (DocStruct ds : children) {
-				foundMetadata = updateMetadataValue(ds, theMetadataName, theValue);
-			}
-		}
-		// }
 
 		return foundMetadata;
 	}
@@ -675,126 +781,117 @@ public class UghConvert {
 
 		// Change value of metadata.
 		Option metadata = new Option("m", "metadatatypename", true, "Name of metadata type to change (experimental)");
-		metadata.setArgs(1);
-		metadata.setArgName("metadata");
+		inputFile.setArgs(1);
+		inputFile.setArgName("metadata");
 		cliOptions.addOption(metadata);
 
-		Option value = new Option("v", "newmetadatavalue", true, "New value for metadata type (experimental)");
-		value.setArgs(1);
-		value.setArgName("value");
+		Option value = new Option("nmv", "newmetadatavalue", true, "New value for metadata type (experimental)");
+		inputFile.setArgs(1);
+		inputFile.setArgName("value");
 		cliOptions.addOption(value);
 
-		Option update = new Option("u", "updatemetadatatypename", true, "Name of metadata type to update (experimental)");
-		update.setArgs(1);
-		update.setArgName("updatemetadataname");
-		cliOptions.addOption(update);
-		
 		return cliOptions;
 	}
 
-	// /***************************************************************************
-	// * @param theMets
-	// * @return
-	// **************************************************************************/
-	// private static MetsMods setMetsSpecificContent(MetsMods theMets) {
-	//
-	// MetsMods result = theMets;
-	//
-	// // Handle all the filegroups.
-	// setVirtualFilegroup("DEFAULT", "pdef", "mdef", "fdef", "sdef");
-	// setVirtualFilegroup("MIN", "pmin", "mmin", "fmin", "smin");
-	// setVirtualFilegroup("MAX", "pmax", "mmax", "fmax", "smax");
-	// setVirtualFilegroup("THUMBS", "pthb", "mthb", "fthb", "sthb");
-	// setVirtualFilegroup("DOWNLOAD", "pdwl", "mdwl", "fdwl", "sdwl");
-	// setVirtualFilegroup("PRESENTATION", "ppre", "mpre", "fpre", "spre");
-	// setVirtualFilegroup("LOCAL", "ploc", "mloc", "floc", "sloc");
-	//
-	// // Handle the mets rights and digiprov things.
-	// if (theMets instanceof MetsModsImportExport) {
-	// MetsModsImportExport newMets = (MetsModsImportExport) theMets;
-	// setMetsRights(newMets);
-	// setMetsDigiprov(newMets);
-	// theMets = newMets;
-	// }
-	//
-	// return result;
-	// }
+	/***************************************************************************
+	 * @param theMets
+	 * @return
+	 **************************************************************************/
+	private static MetsMods setMetsSpecificContent(MetsMods theMets) {
 
-	// /***************************************************************************
-	// * @param theName
-	// * @param thePath
-	// * @param theMimetype
-	// * @param theFileSuffix
-	// * @param theIdSuffix
-	// **************************************************************************/
-	// private static void setVirtualFilegroup(String theName, String thePath,
-	// String theMimetype, String theFileSuffix, String theIdSuffix) {
-	//
-	// String path = commandLine.getOptionValue(thePath);
-	// String mimetype = commandLine.getOptionValue(theMimetype);
-	// String fileSuffix = commandLine.getOptionValue(theFileSuffix);
-	// String idSuffix = commandLine.getOptionValue(theIdSuffix);
-	//
-	// VirtualFileGroup v = new VirtualFileGroup();
-	// v.setName(theName);
-	//
-	// if (path != null) {
-	// v.setPathToFiles(path);
-	// }
-	// if (mimetype != null) {
-	// v.setMimetype(mimetype);
-	// }
-	// if (fileSuffix != null) {
-	// v.setFileSuffix(fileSuffix);
-	// }
-	// if (idSuffix != null) {
-	// v.setIdSuffix(idSuffix);
-	// }
-	//
-	// if (path != null || mimetype != null || fileSuffix != null
-	// || idSuffix != null) {
-	// document.getFileSet().addVirtualFileGroup(v);
-	// }
-	// }
+		MetsMods result = theMets;
 
-	// /***************************************************************************
-	// * @param theMets
-	// **************************************************************************/
-	// private static void setMetsRights(MetsModsImportExport theMets) {
-	//
-	// if (commandLine.getOptionValue("mro") != null) {
-	// theMets.setRightsOwner(commandLine.getOptionValue("mro"));
-	// }
-	// if (commandLine.getOptionValue("mrc") != null) {
-	// theMets.setRightsOwnerContact(commandLine.getOptionValue("mrc"));
-	// }
-	// if (commandLine.getOptionValue("mrl") != null) {
-	// theMets.setRightsOwnerLogo(commandLine.getOptionValue("mrl"));
-	// }
-	// if (commandLine.getOptionValue("mru") != null) {
-	// theMets.setRightsOwnerSiteURL(commandLine.getOptionValue("mru"));
-	// }
-	// }
-	//
-	// /***************************************************************************
-	// * @param theMets
-	// **************************************************************************/
-	// private static void setMetsDigiprov(MetsModsImportExport theMets) {
-	//
-	// if (commandLine.getOptionValue("mdr") != null) {
-	// theMets.setDigiprovReference(commandLine.getOptionValue("mdr"));
-	// }
-	// if (commandLine.getOptionValue("mdp") != null) {
-	// theMets.setDigiprovPresentation(commandLine.getOptionValue("mdp"));
-	// }
-	// if (commandLine.getOptionValue("mdra") != null) {
-	// theMets.setDigiprovReferenceAnchor(commandLine
-	// .getOptionValue("mdra"));
-	// }
-	// if (commandLine.getOptionValue("mdpa") != null) {
-	// theMets.setDigiprovPresentationAnchor(commandLine
-	// .getOptionValue("mdpa"));
-	// }
-	// }
+		// Handle all the filegroups.
+		setVirtualFilegroup("DEFAULT", "pdef", "mdef", "fdef", "sdef");
+		setVirtualFilegroup("MIN", "pmin", "mmin", "fmin", "smin");
+		setVirtualFilegroup("MAX", "pmax", "mmax", "fmax", "smax");
+		setVirtualFilegroup("THUMBS", "pthb", "mthb", "fthb", "sthb");
+		setVirtualFilegroup("DOWNLOAD", "pdwl", "mdwl", "fdwl", "sdwl");
+		setVirtualFilegroup("PRESENTATION", "ppre", "mpre", "fpre", "spre");
+		setVirtualFilegroup("LOCAL", "ploc", "mloc", "floc", "sloc");
+
+		// Handle the mets rights and digiprov things.
+		if (theMets instanceof MetsModsImportExport) {
+			MetsModsImportExport newMets = (MetsModsImportExport) theMets;
+			setMetsRights(newMets);
+			setMetsDigiprov(newMets);
+			theMets = newMets;
+		}
+
+		return result;
+	}
+
+	/***************************************************************************
+	 * @param theName
+	 * @param thePath
+	 * @param theMimetype
+	 * @param theFileSuffix
+	 * @param theIdSuffix
+	 **************************************************************************/
+	private static void setVirtualFilegroup(String theName, String thePath, String theMimetype, String theFileSuffix, String theIdSuffix) {
+
+		String path = commandLine.getOptionValue(thePath);
+		String mimetype = commandLine.getOptionValue(theMimetype);
+		String fileSuffix = commandLine.getOptionValue(theFileSuffix);
+		String idSuffix = commandLine.getOptionValue(theIdSuffix);
+
+		VirtualFileGroup v = new VirtualFileGroup();
+		v.setName(theName);
+
+		if (path != null) {
+			v.setPathToFiles(path);
+		}
+		if (mimetype != null) {
+			v.setMimetype(mimetype);
+		}
+		if (fileSuffix != null) {
+			v.setFileSuffix(fileSuffix);
+		}
+		if (idSuffix != null) {
+			v.setIdSuffix(idSuffix);
+		}
+
+		if (path != null || mimetype != null || fileSuffix != null || idSuffix != null) {
+			document.getFileSet().addVirtualFileGroup(v);
+		}
+	}
+
+	/***************************************************************************
+	 * @param theMets
+	 **************************************************************************/
+	private static void setMetsRights(MetsModsImportExport theMets) {
+
+		if (commandLine.getOptionValue("mro") != null) {
+			theMets.setRightsOwner(commandLine.getOptionValue("mro"));
+		}
+		if (commandLine.getOptionValue("mrc") != null) {
+			theMets.setRightsOwnerContact(commandLine.getOptionValue("mrc"));
+		}
+		if (commandLine.getOptionValue("mrl") != null) {
+			theMets.setRightsOwnerLogo(commandLine.getOptionValue("mrl"));
+		}
+		if (commandLine.getOptionValue("mru") != null) {
+			theMets.setRightsOwnerSiteURL(commandLine.getOptionValue("mru"));
+		}
+	}
+
+	/***************************************************************************
+	 * @param theMets
+	 **************************************************************************/
+	private static void setMetsDigiprov(MetsModsImportExport theMets) {
+
+		if (commandLine.getOptionValue("mdr") != null) {
+			theMets.setDigiprovReference(commandLine.getOptionValue("mdr"));
+		}
+		if (commandLine.getOptionValue("mdp") != null) {
+			theMets.setDigiprovPresentation(commandLine.getOptionValue("mdp"));
+		}
+		if (commandLine.getOptionValue("mdra") != null) {
+			theMets.setDigiprovReferenceAnchor(commandLine.getOptionValue("mdra"));
+		}
+		if (commandLine.getOptionValue("mdpa") != null) {
+			theMets.setDigiprovPresentationAnchor(commandLine.getOptionValue("mdpa"));
+		}
+	}
 
 }
