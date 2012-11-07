@@ -1325,9 +1325,21 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 				Node child = theNode.getFirstChild();
 				Element techMd = createDomElementNS(domDoc, this.metsNamespacePrefix, md.getType());
 				if(md.getType().contentEquals(METS_RIGHTSMD_STRING)) {
-					rightsMDExists = true;
+					Node mdWrap = md.getContent();
+					if(mdWrap != null) {
+						Node mdType = mdWrap.getAttributes().getNamedItem("OTHERMDTYPE");
+						if(mdType != null && mdType.getNodeValue().contentEquals("DVRIGHTS")) {							
+							rightsMDExists = true;
+						}
+					}
 				} else if(md.getType().contentEquals("digiprovMD")) {
-					digiprovMDExists = true;
+					Node mdWrap = md.getContent();
+					if(mdWrap != null) {
+						Node mdType = mdWrap.getAttributes().getNamedItem("OTHERMDTYPE");
+						if(mdType != null && mdType.getNodeValue().contentEquals("DVLINKS")) {							
+							digiprovMDExists = true;
+						}
+					}
 				}
 				techMd.setAttribute(METS_ID_STRING, md.getId());
 				Element techNode = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_MDWRAP_STRING);

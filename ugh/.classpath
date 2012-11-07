@@ -29,8 +29,5 @@
 	<classpathentry kind="lib" path="lib/commons-lang-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/jdom.jar"/>
-	<classpathentry kind="lib" path="lib/saxon9-dom.jar"/>
-	<classpathentry kind="lib" path="lib/saxon9.jar"/>
-	<classpathentry kind="lib" path="lib/xbean_xpath-2.4.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
