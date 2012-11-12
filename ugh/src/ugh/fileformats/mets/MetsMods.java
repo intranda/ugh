@@ -63,6 +63,8 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -84,6 +86,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
@@ -3519,8 +3522,8 @@ public class MetsMods implements ugh.dl.Fileformat {
 					// Add the mods namespace.
 					currentPath += "/" + this.modsNamespacePrefix + element;
 				}
-				currentPathNS += "/" + element;
 			}
+			currentPathNS += "/" + element;
 
 			// Check, if currentPath is already available.
 			XPathFactory factory = XPathFactory.newInstance();
@@ -3583,9 +3586,39 @@ public class MetsMods implements ugh.dl.Fileformat {
 						// anything else, the attribute cannot have any
 						// children.
 						availablePath = availablePath + "/" + element;
-					}
+						
+						//get the existing Node with the right attributes
+						String elementName = getSubPathElementName(availablePath);
+						HashMap<String, String> attributeMap = getAttributesFromNode(element); 
+						XPathExpression expr2 = xpath.compile(elementName);
+						result = expr2.evaluate(startingNode.getParentNode(), XPathConstants.NODESET);
+						if(result != null) {
+							NodeList nodes = (NodeList) result;
+							if (nodes.getLength() > 0) {
+								for (int i=0; i < nodes.getLength(); i++) {
+									Node node = nodes.item(i);
+									NamedNodeMap attributes = node.getAttributes();
+									int matchingattributes = 0;
+									if(attributes != null && attributes.getLength() > 0) {
+										for (int j = 0; j < attributes.getLength(); j++) {
+											Node attribute = attributes.item(j);
+											String testValue = attributeMap.get(attribute.getNodeName());
+											if(testValue != null && testValue.contentEquals(attribute.getNodeValue())) {
+												matchingattributes++;
+											}
+										}
+									}
+									if(matchingattributes > 0 && matchingattributes == attributeMap.size()) {
+										latestNode = node;
+										break;
+									}
+								}
+							}
+						}
+					} else {
 					// Attribute is not available, so we need to add it.
 					break;
+					}
 				}
 			} catch (XPathExpressionException e) {
 				String message = "Error due to querying XPath expression '" + query + "'!";
@@ -4724,6 +4757,34 @@ public class MetsMods implements ugh.dl.Fileformat {
 		}
 		this.namespaces.put(xsi.getPrefix(), xsi);
 		this.xsiNamespacePrefix = xsi.getPrefix();
+	}
+	
+	/**
+	 * Gets a map of all attributes of this node, with their respective values.
+	 * attributes are expected to follow the pattern [@attribute='value']
+	 * 
+	 * @param nodeName
+	 * @return
+	 */
+	HashMap<String, String> getAttributesFromNode(String nodeName) {
+	
+		HashMap<String, String> attributes = new HashMap<String, String>();
+		
+		Pattern p = Pattern.compile("\\[[^\\]]+\\]");
+		Matcher m = p.matcher(nodeName);
+		while(m.find()) {
+			String group = m.group();
+			int indexAt = group.indexOf("@");
+			int indexEq = group.indexOf("=");
+			if(indexAt==-1 || indexEq==-1 || indexAt > indexEq) {
+				//pattern does not match an attribute pattern
+				continue;
+			}
+			String atrName = group.substring(indexAt+1, indexEq);
+			String atrValue = group.substring(indexEq+1, group.length()-1).replaceAll("'", "");
+			attributes.put(atrName, atrValue);
+		}
+		return attributes;
 	}
 
 	/***************************************************************************

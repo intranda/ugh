@@ -566,6 +566,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 		if (!notMappedMetadataAndPersons.isEmpty()) {
 			LOGGER.warn(getMappingWarning(inStruct.getType(), notMappedMetadataAndPersons));
 		}
+		dirtyReplaceGroupingTagNameHack(dommodsnode);
 	}
 
 	/*
