@@ -202,10 +202,8 @@ public class DigitalDocument implements Serializable {
 	 * Create a DocStruct instance for the Digital Document.
 	 * </p>
 	 * 
-	 * @param dsType
-	 *            Is a DocStructType object.
-	 * @throws TypeNotAllowedForParentException
-	 *             Is thrown, if this docstruct is not allowed for a parent.
+	 * @param dsType Is a DocStructType object.
+	 * @throws TypeNotAllowedForParentException Is thrown, if this docstruct is not allowed for a parent.
 	 **************************************************************************/
 	public DocStruct createDocStruct(DocStructType dsType) throws TypeNotAllowedForParentException {
 
@@ -918,8 +916,7 @@ public class DigitalDocument implements Serializable {
 	 * Overrides ContentFiles of DigitalDocument with new names for images. Code mostly taken from old addAllContentFiles method.
 	 * </p>
 	 * 
-	 * @param a
-	 *            List of sorted image names
+	 * @param a List of sorted image names
 	 * 
 	 * @author Robert Sehr
 	 * @deprecated
@@ -995,13 +992,14 @@ public class DigitalDocument implements Serializable {
 	private String getPathToImages() {
 
 		String pathToImageFiles = "";
-
-		for (Metadata md : this.getPhysicalDocStruct().getAllMetadata()) {
-			if (md.getType().getName().equals("pathimagefiles")) {
-				pathToImageFiles = md.getValue();
+		if (this.getPhysicalDocStruct() != null && this.getPhysicalDocStruct().getAllMetadata() != null) {
+			for (Metadata md : this.getPhysicalDocStruct().getAllMetadata()) {
+				if (md.getType().getName().equals("pathimagefiles")) {
+					pathToImageFiles = md.getValue();
+					break;
+				}
 			}
 		}
-
 		return pathToImageFiles;
 	}
 
@@ -1119,8 +1117,7 @@ public class DigitalDocument implements Serializable {
 	}
 
 	/**
-	 * @param techMd
-	 *            the techMd to set
+	 * @param techMd the techMd to set
 	 */
 	public void addTechMd(Node techMdNode) {
 		if (this.amdSec == null) {
@@ -1131,8 +1128,7 @@ public class DigitalDocument implements Serializable {
 	}
 
 	/**
-	 * @param techMd
-	 *            the techMd to set
+	 * @param techMd the techMd to set
 	 */
 	public void addTechMd(Md techMd) {
 		if (this.amdSec == null) {
