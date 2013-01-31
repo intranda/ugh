@@ -788,9 +788,9 @@ public class DigitalDocument implements Serializable {
 	 * Add all content files to the digital document according to the pathimagefiles metadata. The pages in the physical DocStruct must already exist!
 	 * </p>
 	 * 
-	 * @deprecated
+	 * 
 	 **************************************************************************/
-	@Deprecated
+	
 	public void addAllContentFiles() {
 
 		// Get the physical DocStruct.
@@ -851,66 +851,7 @@ public class DigitalDocument implements Serializable {
 		}
 	}
 
-	// public void addAllContentFiles() {
-	// // Get the physical DocStruct.
-	// DocStruct tp = this.getPhysicalDocStruct();
-	//
-	// // Delete the existing fileset bevore adding the files.
-	// this.setFileSet(new FileSet());
-	//
-	// // Iterate throught all the physical docstruct's metadata.
-	// if (tp != null && tp.getAllMetadata() != null) {
-	//
-	// // Set the path to the images.
-	// String pif = "";
-	// for (Metadata md : tp.getAllMetadata()) {
-	// if (md.getType().getName().equals("pathimagefiles")) {
-	// pif = md.getValue();
-	// }
-	// }
-	//
-	// // Iterate over all pages and add all the content files.
-	// if (tp.getAllChildren() != null) {
-	// for (DocStruct ds : tp.getAllChildren()) {
-	// ContentFile cf = new ContentFile();
-	//
-	// if (ds.getType().getName().equals("page")) {
-	// // Iterate over all metadata.
-	// for (Metadata md : ds.getAllMetadata()) {
-	// if (md.getType().getName().equals("physPageNumber")) {
-	// cf.setLocation(pif
-	// + "/"
-	// + new DecimalFormat("00000000")
-	// .format(Integer.parseInt(md
-	// .getValue())) + ".tif");
-	// cf.setMimetype("image/tiff");
-	// // Remove all content files from the page, if
-	// // existing.
-	// if (ds.getAllContentFiles() != null) {
-	// for (ContentFile oldCf : ds
-	// .getAllContentFiles()) {
-	// try {
-	// ds.removeContentFile(oldCf);
-	// } catch (ContentFileNotLinkedException e) {
-	// // Do nothing, because we want to
-	// // remove them anyway. If they do
-	// // not exist, we have no problem.
-	// }
-	// }
-	// }
-	// // Add the current content file to page.
-	// ds.addContentFile(cf);
-	//
-	// LOGGER.trace("Added file '" + cf.getLocation()
-	// + "' to DocStruct '"
-	// + ds.getType().getName() + "'");
-	// }
-	// }
-	// }
-	// }
-	// }
-	// }
-	// }
+	
 	/***************************************************************************
 	 * <p>
 	 * Overrides ContentFiles of DigitalDocument with new names for images. Code mostly taken from old addAllContentFiles method.
@@ -919,7 +860,7 @@ public class DigitalDocument implements Serializable {
 	 * @param a List of sorted image names
 	 * 
 	 * @author Robert Sehr
-	 * @deprecated
+	 * 
 	 **************************************************************************/
 
 	public void overrideContentFiles(List<String> images) {
