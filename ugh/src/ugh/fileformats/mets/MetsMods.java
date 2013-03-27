@@ -2695,10 +2695,10 @@ public class MetsMods implements ugh.dl.Fileformat {
 			agent.setAttribute("OTHERTYPE", "SOFTWARE");
 			// createDomAttributeNS(agent, this.metsNamespacePrefix, "OTHERTYPE", "SOFTWARE");
 			Element name = createDomElementNS(domDoc, this.metsNamespacePrefix, "name");
-			name.setTextContent(ugh.Version.PROGRAMNAME + "  - " + ugh.Version.BUILDVERSION + " - " + ugh.Version.BUILDDATE);
+			name.setTextContent(ugh.Version.PROGRAMNAME + " - " + ugh.Version.BUILDVERSION + " - " + ugh.Version.BUILDDATE);
 			agent.appendChild(name);
 			Element note = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
-			note.setTextContent("Goobi");
+			note.setTextContent(ugh.Version.PROGRAMNAME);
 			agent.appendChild(note);
 			metsHdr.appendChild(agent);
 
