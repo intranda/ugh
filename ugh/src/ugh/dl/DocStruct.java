@@ -1721,6 +1721,11 @@ public class DocStruct implements Serializable {
 	 **************************************************************************/
 	public boolean addChild(DocStruct inchild) throws TypeNotAllowedAsChildException {
 
+	    if (inchild == null || inchild.getType() == null) {
+	        LOGGER.warn("DocStruct or DocStructType is null");
+	        return false;
+	    }
+	    
 		DocStructType childtype;
 		boolean allowed = false;
 
