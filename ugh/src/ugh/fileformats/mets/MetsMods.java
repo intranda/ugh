@@ -2998,6 +2998,11 @@ public class MetsMods implements ugh.dl.Fileformat {
 			}
 			file.setAttribute(METS_ID_STRING, id);
 
+			
+			if (cf.isRepresentative()) {
+			    file.setAttribute("USE", "banner");
+			}
+			
 			// write admid attribute is necessary
 			List<Md> mdList = cf.getTechMds();
 			if (mdList != null) {

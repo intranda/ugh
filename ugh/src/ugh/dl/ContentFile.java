@@ -83,6 +83,8 @@ public class ContentFile implements Serializable {
 	private String				identifier;
 	//the list of techMd sections referenced by this File
 	private List<Md> techMdList;
+	
+    private boolean isRepresentative = false;
 
 	/***************************************************************************
 	 * <p>
@@ -335,5 +337,13 @@ public class ContentFile implements Serializable {
 			this.techMdList = mds;
 		}
 	}
+
+    public boolean isRepresentative() {
+        return isRepresentative;
+    }
+
+    public void setRepresentative(boolean isRepresentative) {
+        this.isRepresentative = isRepresentative;
+    }
 
 }
