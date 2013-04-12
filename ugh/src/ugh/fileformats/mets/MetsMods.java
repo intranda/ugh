@@ -2438,7 +2438,9 @@ public class MetsMods implements ugh.dl.Fileformat {
 				//
 				// Logical page number.
 				String logpageString = pagediv.getORDERLABEL();
-
+				if (logpageString == null) {
+				    logpageString = METADATA_PAGE_UNCOUNTED_VALUE;
+				}
 				if (logpageString.equals("uncounted")) {
 					logpageString = METADATA_PAGE_UNCOUNTED_VALUE;
 				}
