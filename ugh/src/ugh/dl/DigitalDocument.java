@@ -839,6 +839,7 @@ public class DigitalDocument implements Serializable {
                                     for (ContentFile oldCf : ds.getAllContentFiles()) {
                                         try {
                                             ds.removeContentFile(oldCf);
+                                            cf.setLocation(oldCf.getLocation());
                                         } catch (ContentFileNotLinkedException e) {
                                             // Do nothing, because we want to
                                             // remove them anyway. If they do
@@ -914,6 +915,7 @@ public class DigitalDocument implements Serializable {
                                 if (ds.getAllContentFiles() != null) {
                                     for (ContentFile oldCf : ds.getAllContentFiles()) {
                                         cf.setMimetype(oldCf.getMimetype());
+                                        cf.setLocation(oldCf.getLocation());
                                         try {
                                             ds.removeContentFile(oldCf);
                                         } catch (ContentFileNotLinkedException e) {
