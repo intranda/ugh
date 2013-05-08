@@ -484,17 +484,20 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
     @Override
     protected void writePhysModsSection(DocStruct inStruct, Node dommodsnode, Document domDoc, Element divElement) throws PreferencesException {
 
-        // TODO write groups
-
         // Prepare lists of all metadata and all persons, that will monitor if
         // some metadata are NOT mapped to MODS.
-        List<Metadata> notMappedMetadataAndPersons = inStruct.getAllMetadata();
+        List notMappedMetadataAndPersons = inStruct.getAllMetadata();
         if (notMappedMetadataAndPersons == null) {
-            notMappedMetadataAndPersons = new LinkedList<Metadata>();
+            notMappedMetadataAndPersons = new LinkedList();
         }
         // Add persons to list.
         if (inStruct.getAllPersons() != null) {
             notMappedMetadataAndPersons.addAll(inStruct.getAllPersons());
+        }
+        
+        // Add groups to list
+        if (inStruct.getAllMetadataGroups() != null) {
+            notMappedMetadataAndPersons.addAll(inStruct.getAllMetadataGroups());
         }
 
         // Iterate over all metadata, ordered by the appearance of the
@@ -561,7 +564,37 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
                     }
                 }
             }
+            // handle groups
 
+            if (inStruct.getAllMetadataGroups() != null) {
+                // Only if the metadata type does exist in the current DocStruct...
+                MetadataGroupType mdt = this.myPreferences.getMetadataGroupByName(mmo.getInternalName());
+
+                // ... go throught all the available metadata of that type.
+
+                if (inStruct.hasMetadataGroupType(mdt)) {
+                    for (MetadataGroup group : inStruct.getAllMetadataGroupsByType(mdt)) {
+                        boolean isEmpty = true;
+                        for (Metadata md : group.getMetadataList()) {
+                            if (md.getValue() != null && md.getValue().length() > 0) {
+                                isEmpty = false;
+                                break;
+                            }
+                        }
+                        // only write groups with values
+
+                        if (!isEmpty) {
+                            writeSingleModsGroup(mmo, group, dommodsnode, domDoc);
+
+                            // The node was sucessfully written! Remove the
+                            // metadata object from the checklist.
+                            notMappedMetadataAndPersons.remove(group);
+
+                        }
+
+                    }
+                }
+            }
             // Get the current person object list.
             List<Person> currentPerList = new LinkedList<Person>();
             if (inStruct.getAllPersons() != null) {
