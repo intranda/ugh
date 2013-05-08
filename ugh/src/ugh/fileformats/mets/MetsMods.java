@@ -126,7 +126,7 @@ import ugh.exceptions.WriteException;
 /*******************************************************************************
  * @author Stefan Funk
  * @author Robert Sehr
- * @version 2010-05-05
+ * @version 2013-05-08
  * @since 2008-05-09
  * 
  *        TODOLOG
@@ -480,6 +480,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
     // Type names for preferences parsing.
     protected static final String PREFS_METADATA_STRING = "Metadata";
+    protected static final String PREFS_GROUP_STRING = "Group";
     protected static final String PREFS_DOCSTRUCT_STRING = "DocStruct";
     protected static final String PREFS_NAMESPACEDEFINITION_STRING = "NamespaceDefinition";
     protected static final String PREFS_XPATHANCHORQUERY_STRING = "XPathAnchorQuery";
@@ -909,6 +910,8 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         return true;
     }
+    
+  
 
     /***************************************************************************
      * <p>
@@ -941,6 +944,17 @@ public class MetsMods implements ugh.dl.Fileformat {
                             throw pe;
                         }
                     }
+                 // Read Group prefs from deferred method.
+                    if (childnode.getNodeName().equalsIgnoreCase(PREFS_GROUP_STRING)) {
+                        try {
+                            readMetadataGroupPrefs(childnode);
+                        } catch (PreferencesException pe) {
+                            String message = "Could not parse the prefs' metadata section!";
+                            LOGGER.error(message, pe);
+                            throw pe;
+                        }
+                    }
+                    
                     // Read DocStruct prefs from deferred method.
                     if (childnode.getNodeName().equalsIgnoreCase(PREFS_DOCSTRUCT_STRING)) {
                         try {
@@ -4206,7 +4220,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                 if (!isEmpty) {
                     String xquery =
                             "./" + this.modsNamespacePrefix + ":mods/" + this.modsNamespacePrefix + ":extension/" + this.goobiNamespacePrefix
-                                    + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@type='group'][@name='" + m.getType().getName() + "']";
+                                    + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@type='group'][@name='" + m.getMetadataGroupType().getName() + "']";
                     writeSingleModsGroup(xquery, m, dommodsnode, domDoc);
                 }
 
@@ -4343,7 +4357,7 @@ public class MetsMods implements ugh.dl.Fileformat {
         Node createdNode = createNode(theXQuery, theStartingNode, theDocument);
 
         for (Metadata md : theGroup.getMetadataList()) {
-            String xquery = "./" + this.goobiNamespacePrefix + ":metadata[@name='" + md.getType().getName() + "']";
+            String xquery = "./#" + this.goobiNamespacePrefix + ":metadata[@name='" + md.getType().getName() + "']";
             writeSingleModsMetadata(xquery, md, createdNode, theDocument);
         }
 
@@ -4560,7 +4574,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                 if (!isEmpty) {
                     String xquery =
                             "./" + this.modsNamespacePrefix + ":mods/" + this.modsNamespacePrefix + ":extension/" + this.goobiNamespacePrefix
-                                    + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@type='group'][@name='" + m.getType().getName() + "']";
+                                    + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@type='group'][@name='" + m.getMetadataGroupType().getName() + "']";
                     writeSingleModsGroup(xquery, m, dommodsnode, domDoc);
                 }
 
@@ -4661,6 +4675,10 @@ public class MetsMods implements ugh.dl.Fileformat {
      **************************************************************************/
     protected void readMetadataPrefs(Node childnode) throws PreferencesException {
         // No metadataPrefs to read here in the internal METS file.
+    }
+    
+  protected void readMetadataGroupPrefs(Node inNode) throws PreferencesException {
+      // No metadataPrefs to read here in the internal METS file.
     }
 
     /***************************************************************************

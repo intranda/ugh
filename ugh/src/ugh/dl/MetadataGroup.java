@@ -73,7 +73,7 @@ public class MetadataGroup implements Serializable {
 	public MetadataGroup(MetadataGroupType theType)
 			throws MetadataTypeNotAllowedException {
 
-		super();
+		
 
 		// Check for NULL MetadataTypes.
 		if (theType == null) {
@@ -124,7 +124,7 @@ public class MetadataGroup implements Serializable {
 	 * 
 	 * @return MetadataGroupType instance
 	 **************************************************************************/
-	public MetadataGroupType getType() {
+	public MetadataGroupType getMetadataGroupType() {
 		return this.MDType;
 	}
 
@@ -138,7 +138,7 @@ public class MetadataGroup implements Serializable {
 	 * @param inType
 	 * @return
 	 **************************************************************************/
-	public boolean setType(MetadataGroupType inType) {
+	public boolean setMetadataGroupType(MetadataGroupType inType) {
 		this.MDType = inType;
 		return true;
 	}
