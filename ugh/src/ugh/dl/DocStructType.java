@@ -38,7 +38,8 @@ import java.util.Map;
  * 
  * @author Markus Enders
  * @author Stefan E. Funk
- * @version 2010-02-13
+ * @author Robert Sehr
+ * @version 2013-05-08
  * @see DocStruct#setType
  * 
  *      CHANGELOG
@@ -772,9 +773,9 @@ public class DocStructType implements Serializable {
      * @param in
      * @return
      **************************************************************************/
-    public boolean setAllMetadataGroups(List<MetadataGroup> in) {
+    public boolean setAllMetadataGroups(List<MetadataGroupType> in) {
 
-        for (MetadataGroup mdt : in) {
+        for (MetadataGroupType mdt : in) {
             MetadataGroupForDocStructType mdtfdst = new MetadataGroupForDocStructType(mdt);
             this.allMetadataGroups.add(mdtfdst);
         }
@@ -789,9 +790,9 @@ public class DocStructType implements Serializable {
      * 
      * @return List containing MetadataGroup objects; These MetadataGroup-objects are just local objects
      **************************************************************************/
-    public List<MetadataGroup> getAllMetadataGroups() {
+    public List<MetadataGroupType> getAllMetadataGroupTypes() {
 
-        List<MetadataGroup> out = new LinkedList<MetadataGroup>();
+        List<MetadataGroupType> out = new LinkedList<MetadataGroupType>();
 
         Iterator<MetadataGroupForDocStructType> it = this.allMetadataGroups.iterator();
         while (it.hasNext()) {
@@ -810,9 +811,9 @@ public class DocStructType implements Serializable {
      * 
      * @return List containing MetadataGroup objects; These MetadataGroup objects are just local objects.
      **************************************************************************/
-    public List<MetadataGroup> getAllDefaultDisplayMetadataGroups() {
+    public List<MetadataGroupType> getAllDefaultDisplayMetadataGroups() {
 
-        List<MetadataGroup> out = new LinkedList<MetadataGroup>();
+        List<MetadataGroupType> out = new LinkedList<MetadataGroupType>();
 
         Iterator<MetadataGroupForDocStructType> it = this.allMetadataGroups.iterator();
         while (it.hasNext()) {
@@ -847,7 +848,7 @@ public class DocStructType implements Serializable {
      * @param inType MetadataGroup - can be a global type
      * @return String containing the number (number can be: "1o", "1m", "*", "+")
      **************************************************************************/
-    public String getNumberOfMetadataGroups(MetadataGroup inType) {
+    public String getNumberOfMetadataGroups(MetadataGroupType inType) {
 
         Iterator<MetadataGroupForDocStructType> it = this.allMetadataGroups.iterator();
         while (it.hasNext()) {
@@ -868,11 +869,11 @@ public class DocStructType implements Serializable {
      * @param inMDType MetadataType - can be a global type (with same internal name)
      * @return true, if it is allowed; otherwise false
      **************************************************************************/
-    public boolean isMDTGroupAllowed(MetadataGroup inMDType) {
+    public boolean isMDTGroupAllowed(MetadataGroupType inMDType) {
 
-        Iterator<MetadataGroup> it = this.allMetadataGroups.iterator();
+        Iterator<MetadataGroupType> it = this.allMetadataGroups.iterator();
         while (it.hasNext()) {
-            MetadataGroup mdt = it.next();
+            MetadataGroupType mdt = it.next();
             if (mdt.getName().equals(inMDType.getName())) {
                 return true; // it is already available
             }
@@ -889,7 +890,7 @@ public class DocStructType implements Serializable {
      * @param type MetadataGroup
      * @return true if successful, otherwise false
      **************************************************************************/
-    public boolean removeMetadataGroup(MetadataGroup type) {
+    public boolean removeMetadataGroup(MetadataGroupType type) {
 
         List<MetadataGroupForDocStructType> ll = new LinkedList(this.allMetadataGroups);
 
@@ -916,13 +917,13 @@ public class DocStructType implements Serializable {
      * @param inMDType global MetadataGroup object (from Preferences)
      * @return MetadataGroup or null, if not available for this DocStructType
      **************************************************************************/
-    public MetadataGroup getMetadataGroupByGroup(MetadataGroup inMDType) {
+    public MetadataGroupType getMetadataGroupByGroup(MetadataGroupType inMDType) {
 
         // Check, if MetadataType is already available.
         Iterator<MetadataGroupForDocStructType> it = this.allMetadataGroups.iterator();
         while (it.hasNext()) {
             MetadataGroupForDocStructType mdtfdst = it.next();
-            MetadataGroup mdt = mdtfdst.getMetadataGroup();
+            MetadataGroupType mdt = mdtfdst.getMetadataGroup();
 
             if (mdt.getName().equals(inMDType.getName())) {
                 return mdt;
@@ -944,10 +945,10 @@ public class DocStructType implements Serializable {
      * @param inNumber number, how often Metadata of type can be added to a DocStruct object of this kind
      * @return newly created copy of the MetadataGroup object; if not successful null is returned
      **************************************************************************/
-    public MetadataGroup addMetadataGroup(MetadataGroup type, String inNumber) {
+    public MetadataGroupType addMetadataGroup(MetadataGroupType type, String inNumber) {
 
         // New MetadataType obejct which is added to this DocStructType.
-        MetadataGroup myType;
+        MetadataGroupType myType;
 
         // Metadata is already available.
         if (isMetadataGroupAlreadyAvailable(type)) {
@@ -977,10 +978,10 @@ public class DocStructType implements Serializable {
      * @param isDefault if set to true, this metadatatype will be displayed (even if it's empty)
      * @return newly created copy of the MetadataType object; if not successful null is returned
      **************************************************************************/
-    public MetadataGroup addMetadataGroup(MetadataGroup type, String inNumber, boolean isDefault, boolean isInvisible) {
+    public MetadataGroupType addMetadataGroup(MetadataGroupType type, String inNumber, boolean isDefault, boolean isInvisible) {
 
         // New MetadataType obejct which is added to this DocStructType.
-        MetadataGroup myType;
+        MetadataGroupType myType;
 
         // Metadata is already available.
         if (isMetadataGroupAlreadyAvailable(type)) {
@@ -1008,7 +1009,7 @@ public class DocStructType implements Serializable {
      * @param type
      * @return true, if is is already available
      **************************************************************************/
-    private boolean isMetadataGroupAlreadyAvailable(MetadataGroup type) {
+    private boolean isMetadataGroupAlreadyAvailable(MetadataGroupType type) {
 
         MetadataGroupForDocStructType test;
         String testname;
@@ -1018,7 +1019,7 @@ public class DocStructType implements Serializable {
         Iterator<MetadataGroupForDocStructType> it = this.allMetadataGroups.iterator();
         while (it.hasNext()) {
             test = it.next();
-            MetadataGroup mdt = test.getMetadataGroup();
+            MetadataGroupType mdt = test.getMetadataGroup();
             testname = mdt.getName();
             typename = type.getName();
 
@@ -1115,7 +1116,7 @@ public class DocStructType implements Serializable {
 
         private static final long serialVersionUID = -4571877810721395422L;
 
-        private MetadataGroup mdg = null;
+        private MetadataGroupType mdg = null;
         // Number of metadatatypes for this docStruct.
         private String num = null;
         // Just a filter to display only default metadata types.
@@ -1126,7 +1127,7 @@ public class DocStructType implements Serializable {
         /***********************************************************************
          * @param inType
          **********************************************************************/
-        public MetadataGroupForDocStructType(MetadataGroup group) {
+        public MetadataGroupForDocStructType(MetadataGroupType group) {
             this.mdg = group;
         }
 
@@ -1147,7 +1148,7 @@ public class DocStructType implements Serializable {
         /***********************************************************************
          * @return
          **********************************************************************/
-        public MetadataGroup getMetadataGroup() {
+        public MetadataGroupType getMetadataGroup() {
             return this.mdg;
         }
 

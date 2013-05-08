@@ -54,7 +54,8 @@ import ugh.exceptions.PreferencesException;
  * 
  * @author Markus Enders
  * @author Stefan E. Funk
- * @version 2010-02-13
+ * @author Robert Sehr
+ * @version 2013-05-08
  * @since 2004-05-21
  * 
  *        TODOLOG
@@ -89,7 +90,7 @@ public class Prefs implements Serializable {
 
     private List<DocStructType> allDocStrctTypes;
     private List<MetadataType> allMetadataTypes;
-    private List<MetadataGroup> allMetadataGroups;
+    private List<MetadataGroupType> allMetadataGroups;
     private Hashtable<String, Node> allFormats;
 
     public static final short ELEMENT_NODE = 1;
@@ -139,7 +140,7 @@ public class Prefs implements Serializable {
         DocStructType parsedDocStrctType;
         MetadataType parsedMetadataType;
 
-        MetadataGroup parsedMetadataGroup;
+        MetadataGroupType parsedMetadataGroup;
 
         // Read file and parse it.
         try {
@@ -489,7 +490,7 @@ public class Prefs implements Serializable {
                     }
                     // MetadataType newMDType=new MetadataType();
                     // newMDType.setName(mdtype_name);
-                    MetadataGroup newMdGroup = getMetadataGroupByName(mdtypeName);
+                    MetadataGroupType newMdGroup = getMetadataGroupByName(mdtypeName);
                     if (newMdGroup == null) {
                         LOGGER.error("Error reading config for DocStrctType '" + currentDocStrctType.getName() + "'! MetadataType '" + mdtypeName
                                 + "' is unknown");
@@ -497,7 +498,7 @@ public class Prefs implements Serializable {
                     }
                     // Set max. number.
                     newMdGroup.setNum(mdtypeNum);
-                    MetadataGroup result = null;
+                    MetadataGroupType result = null;
 
                     // Handle Invisible attribute.
                     boolean invisible = false;
@@ -663,7 +664,7 @@ public class Prefs implements Serializable {
      * @param theMetadataTypeNode
      * @return
      **************************************************************************/
-    public MetadataGroup parseMetadataGroup(Node theMetadataGroupNode) {
+    public MetadataGroupType parseMetadataGroup(Node theMetadataGroupNode) {
 
         NodeList allchildren;
         // NamedNodeMap containing all attributes.
@@ -677,7 +678,7 @@ public class Prefs implements Serializable {
         String languageValue;
         HashMap<String, String> allLanguages = new HashMap<String, String>();
 
-        MetadataGroup currenGroup = new MetadataGroup();
+        MetadataGroupType currenGroup = new MetadataGroupType();
 
         String mdtypeName;
         allchildren = theMetadataGroupNode.getChildNodes(); // get allchildren
@@ -1047,13 +1048,13 @@ public class Prefs implements Serializable {
      * @param name
      * @return
      **************************************************************************/
-    public MetadataGroup getMetadataGroupByName(String name) {
+    public MetadataGroupType getMetadataGroupByName(String name) {
 
-        MetadataGroup currentMdGroup;
+        MetadataGroupType currentMdGroup;
         String checkname;
 
         // Get dstype first.
-        Iterator<MetadataGroup> it = this.allMetadataGroups.iterator();
+        Iterator<MetadataGroupType> it = this.allMetadataGroups.iterator();
         while (it.hasNext()) {
             currentMdGroup = it.next();
             checkname = currentMdGroup.getName();
@@ -1119,9 +1120,9 @@ public class Prefs implements Serializable {
      * @param inType
      * @return
      **************************************************************************/
-    public boolean addMetadataGroup(MetadataGroup inGroup) {
+    public boolean addMetadataGroup(MetadataGroupType inGroup) {
 
-        MetadataGroup tempType;
+        MetadataGroupType tempType;
 
         if (inGroup == null) {
             return false;
