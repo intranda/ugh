@@ -23,6 +23,7 @@ package ugh.dl;
  ******************************************************************************/
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -81,6 +82,13 @@ public class MetadataGroup implements Serializable {
 		}
 
 		this.MDType = theType;
+		
+		metadataList = new LinkedList<Metadata>();
+		for (MetadataType mdt : MDType.getMetadataTypeList()) {
+		    Metadata md = new Metadata(mdt);
+		    metadataList.add(md);
+		}
+		
 	}
 
 	/***************************************************************************

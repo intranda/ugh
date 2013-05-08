@@ -2867,6 +2867,12 @@ public class MetsMods implements ugh.dl.Fileformat {
             String message = "Exception building DOM tree!";
             LOGGER.error(message, e);
             throw new WriteException(message, e);
+        } finally {
+            try {
+                xmlFile.close();
+            } catch (IOException e) {
+                LOGGER.error(e);
+            }
         }
 
         return true;
@@ -4115,9 +4121,6 @@ public class MetsMods implements ugh.dl.Fileformat {
         // Go through all the current metadata and write them to
         // <mods:extension><goobi:goobi><goobi:metadata>.
 
-        // TODO write groups
-        
-        
         if (inStruct.getAllMetadata() != null) {
             for (Metadata m : inStruct.getAllMetadata()) {
 
@@ -4188,6 +4191,29 @@ public class MetsMods implements ugh.dl.Fileformat {
             }
         }
 
+        if (inStruct.getAllMetadataGroups() != null) {
+            for (MetadataGroup m : inStruct.getAllMetadataGroups()) {
+                // check if group has values
+                boolean isEmpty = true;
+                for (Metadata md : m.getMetadataList()) {
+                    if (md.getValue() != null && md.getValue().length() > 0) {
+                        isEmpty = false;
+                        break;
+                    }
+                }
+                // only write groups with values
+
+                if (!isEmpty) {
+                    String xquery =
+                            "./" + this.modsNamespacePrefix + ":mods/" + this.modsNamespacePrefix + ":extension/" + this.goobiNamespacePrefix
+                                    + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@type='group'][@name='" + m.getType().getName() + "']";
+                    writeSingleModsGroup(xquery, m, dommodsnode, domDoc);
+                }
+
+            }
+
+        }
+        
         // Write all persons.
         writeDmdPersons(inStruct, dommodsnode, domDoc);
     }
@@ -4309,6 +4335,18 @@ public class MetsMods implements ugh.dl.Fileformat {
             persontypeNode.appendChild(persontypevalueNode);
             createdNode.appendChild(persontypeNode);
         }
+    }
+
+    protected void writeSingleModsGroup(String theXQuery, MetadataGroup theGroup, Node theStartingNode, Document theDocument)
+            throws PreferencesException {
+
+        Node createdNode = createNode(theXQuery, theStartingNode, theDocument);
+
+        for (Metadata md : theGroup.getMetadataList()) {
+            String xquery = "./" + this.goobiNamespacePrefix + ":metadata[@name='" + md.getType().getName() + "']";
+            writeSingleModsMetadata(xquery, md, createdNode, theDocument);
+        }
+
     }
 
     /***************************************************************************
@@ -4506,8 +4544,29 @@ public class MetsMods implements ugh.dl.Fileformat {
                 }
             }
         }
-        // TODO write groups
 
+        if (inStruct.getAllMetadataGroups() != null) {
+            for (MetadataGroup m : inStruct.getAllMetadataGroups()) {
+                // check if group has values
+                boolean isEmpty = true;
+                for (Metadata md : m.getMetadataList()) {
+                    if (md.getValue() != null && md.getValue().length() > 0) {
+                        isEmpty = false;
+                        break;
+                    }
+                }
+                // only write groups with values
+
+                if (!isEmpty) {
+                    String xquery =
+                            "./" + this.modsNamespacePrefix + ":mods/" + this.modsNamespacePrefix + ":extension/" + this.goobiNamespacePrefix
+                                    + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@type='group'][@name='" + m.getType().getName() + "']";
+                    writeSingleModsGroup(xquery, m, dommodsnode, domDoc);
+                }
+
+            }
+
+        }
         // Write all persons.
         writeDmdPersons(inStruct, dommodsnode, domDoc);
     }

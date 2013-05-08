@@ -103,6 +103,7 @@ public class Prefs implements Serializable {
     public Prefs() {
         this.allDocStrctTypes = new LinkedList<DocStructType>();
         this.allMetadataTypes = new LinkedList<MetadataType>();
+        this.allMetadataGroups = new LinkedList<MetadataGroupType>();
         this.allFormats = new Hashtable<String, Node>();
     }
 
@@ -222,7 +223,6 @@ public class Prefs implements Serializable {
                 }
 
                 if (currentNode.getNodeName().equals("Group")) {
-                    // TODO
                     parsedMetadataGroup = parseMetadataGroup(currentNode);
                     if (parsedMetadataGroup != null) {
                         this.allMetadataGroups.add(parsedMetadataGroup);
@@ -443,8 +443,6 @@ public class Prefs implements Serializable {
                         return null;
                     }
                 }
-
-                // TODO read metadataGroups
                 
                 if (currentNode.getNodeName().equals("group")) {
                     attributeNodelist = currentNode.getAttributes();

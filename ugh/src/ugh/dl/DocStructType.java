@@ -898,7 +898,7 @@ public class DocStructType implements Serializable {
         while (it.hasNext()) {
             MetadataGroupForDocStructType mdtfdst = it.next();
             if (mdtfdst.getMetadataGroup().equals(type)) {
-                this.allMetadataTypes.remove(mdtfdst);
+                this.allMetadataGroups.remove(mdtfdst);
                 return true;
             }
         }
@@ -961,7 +961,7 @@ public class DocStructType implements Serializable {
 
         MetadataGroupForDocStructType mdtfdst = new MetadataGroupForDocStructType(myType);
         mdtfdst.setNumber(inNumber);
-        this.allMetadataTypes.add(mdtfdst);
+        this.allMetadataGroups.add(mdtfdst);
 
         return myType;
     }
@@ -996,7 +996,7 @@ public class DocStructType implements Serializable {
         mdtfdst.setNumber(inNumber);
         mdtfdst.setDefaultdisplay(isDefault);
         mdtfdst.setInvisible(isInvisible);
-        this.allMetadataTypes.add(mdtfdst);
+        this.allMetadataGroups.add(mdtfdst);
 
         return myType;
     }
