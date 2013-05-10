@@ -4220,7 +4220,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                 if (!isEmpty) {
                     String xquery =
                             "./" + this.modsNamespacePrefix + ":mods/" + this.modsNamespacePrefix + ":extension/" + this.goobiNamespacePrefix
-                                    + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@type='group'][@name='" + m.getMetadataGroupType().getName() + "']";
+                                    + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@type='group'][@name='" + m.getType().getName() + "']";
                     writeSingleModsGroup(xquery, m, dommodsnode, domDoc);
                 }
 
@@ -4574,7 +4574,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                 if (!isEmpty) {
                     String xquery =
                             "./" + this.modsNamespacePrefix + ":mods/" + this.modsNamespacePrefix + ":extension/" + this.goobiNamespacePrefix
-                                    + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@type='group'][@name='" + m.getMetadataGroupType().getName() + "']";
+                                    + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@type='group'][@name='" + m.getType().getName() + "']";
                     writeSingleModsGroup(xquery, m, dommodsnode, domDoc);
                 }
 

@@ -1,12 +1,14 @@
 package ugh.dl;
 
-/*******************************************************************************
- * ugh.dl / Metadata.java
- * 
- * Copyright 2010 Center for Retrospective Digitization, Göttingen (GDZ)
- * 
- * http://gdz.sub.uni-goettingen.de
- * 
+/***************************************************************
+ * Copyright notice
+ *
+ * ugh.dl / MetadataGroup.java
+ *
+ * (c) 2013 Robert Sehr <robert.sehr@intranda.com>
+ *
+ * All rights reserved
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or (at your
@@ -20,7 +22,7 @@ package ugh.dl;
  * You should have received a copy of the GNU Lesser General Public License
  * along with this library; if not, write to the Free Software Foundation,
  * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
- ******************************************************************************/
+ ***************************************************************/ 
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -124,7 +126,7 @@ public class MetadataGroup implements Serializable {
 	 * 
 	 * @return MetadataGroupType instance
 	 **************************************************************************/
-	public MetadataGroupType getMetadataGroupType() {
+	public MetadataGroupType getType() {
 		return this.MDType;
 	}
 
@@ -138,7 +140,7 @@ public class MetadataGroup implements Serializable {
 	 * @param inType
 	 * @return
 	 **************************************************************************/
-	public boolean setMetadataGroupType(MetadataGroupType inType) {
+	public boolean setType(MetadataGroupType inType) {
 		this.MDType = inType;
 		return true;
 	}

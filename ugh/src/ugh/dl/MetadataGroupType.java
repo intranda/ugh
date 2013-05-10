@@ -1,10 +1,35 @@
 package ugh.dl;
 
+/***************************************************************
+ * Copyright notice
+ *
+ * ugh.dl / MetadataGroupType.java
+ *
+ * (c) 2013 Robert Sehr <robert.sehr@intranda.com>
+ *
+ * All rights reserved
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or (at your
+ * option) any later version.
+ * 
+ * This Library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+ ***************************************************************/ 
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MetadataGroupType implements Serializable {
 
@@ -76,6 +101,16 @@ public class MetadataGroupType implements Serializable {
         this.max_number = in;
 
         return true;
+    }
+    
+    public String getLanguage(String theLanguage) {
+        for (Map.Entry<String, String> lang : getAllLanguages().entrySet()) {
+            if (lang.getKey().equals(theLanguage)) {
+                return lang.getValue();
+            }
+        }
+
+        return null;
     }
 
     /***************************************************************************

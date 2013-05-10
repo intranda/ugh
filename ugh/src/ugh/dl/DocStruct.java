@@ -525,7 +525,7 @@ public class DocStruct implements Serializable {
             if (this.getAllMetadataGroups() != null) {
                 for (MetadataGroup md : this.getAllMetadataGroups()) {
                     try {
-                        MetadataGroup mdnew = new MetadataGroup(md.getMetadataGroupType());
+                        MetadataGroup mdnew = new MetadataGroup(md.getType());
                         mdnew.setDocStruct(newStruct);
                         List<Metadata> newmdlist = new LinkedList<Metadata>();
                         for (Metadata meta : md.getMetadataList()) {
@@ -849,7 +849,7 @@ public class DocStruct implements Serializable {
         List<MetadataGroup> allMDs = this.getAllMetadataGroups();
         if (allMDs != null) {
             for (MetadataGroup md : allMDs) {
-                MetadataGroupType mdt = md.getMetadataGroupType();
+                MetadataGroupType mdt = md.getType();
                 if (inMDT != null && inMDT.getName().equals(mdt.getName())) {
                     return true;
                 }
@@ -1170,7 +1170,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public boolean addMetadataGroup(MetadataGroup theMetadataGroup) throws MetadataTypeNotAllowedException, DocStructHasNoTypeException {
 
-        MetadataGroupType inMdType = theMetadataGroup.getMetadataGroupType();
+        MetadataGroupType inMdType = theMetadataGroup.getType();
         String inMdName = inMdType.getName();
         // Integer, number of metadata allowed for this metadatatype.
         String maxnumberallowed;
@@ -1235,7 +1235,7 @@ public class DocStruct implements Serializable {
         // Add metadata.
         if (insert) {
             // Set type to MetadataType of the DocStructType.
-            theMetadataGroup.setMetadataGroupType(prefsMdType);
+            theMetadataGroup.setType(prefsMdType);
             // Set this document structure as myDocStruct.
             theMetadataGroup.setDocStruct(this);
             if (this.allMetadataGroups == null) {
@@ -1275,7 +1275,7 @@ public class DocStruct implements Serializable {
         int typesavailable;
 
         // Get Type of inMD.
-        inMdType = theMd.getMetadataGroupType();
+        inMdType = theMd.getType();
 
         // How many metadata of this type do we have already.
         typesavailable = countMDofthisType(inMdType.getName());
@@ -1347,8 +1347,8 @@ public class DocStruct implements Serializable {
         int counter = 0;
 
         // Get MetadataTypes.
-        oldMdt = theOldMd.getMetadataGroupType();
-        newMdt = theNewMd.getMetadataGroupType();
+        oldMdt = theOldMd.getType();
+        newMdt = theNewMd.getType();
 
         // Get names.
         oldName = oldMdt.getName();
@@ -1371,8 +1371,8 @@ public class DocStruct implements Serializable {
 
         // Ask DocStructType instance to get a new MetadataType object of the
         // same kind.
-        MetadataGroupType mdType = this.type.getMetadataGroupByGroup(theOldMd.getMetadataGroupType());
-        theNewMd.setMetadataGroupType(mdType);
+        MetadataGroupType mdType = this.type.getMetadataGroupByGroup(theOldMd.getType());
+        theNewMd.setType(mdType);
 
         this.allMetadataGroups.remove(theOldMd);
         this.allMetadataGroups.add(counter, theNewMd);
@@ -1398,7 +1398,7 @@ public class DocStruct implements Serializable {
         // Check all metadata.
         if (inType != null && this.allMetadataGroups != null) {
             for (MetadataGroup md : this.allMetadataGroups) {
-                if (md.getMetadataGroupType() != null && md.getMetadataGroupType().getName().equals(inType.getName())) {
+                if (md.getType() != null && md.getType().getName().equals(inType.getName())) {
                     resultList.add(md);
                 }
             }
@@ -1803,7 +1803,7 @@ public class DocStruct implements Serializable {
 
         if (this.allMetadataGroups != null) {
             for (MetadataGroup md : this.allMetadataGroups) {
-                MetadataGroupType mdt = md.getMetadataGroupType();
+                MetadataGroupType mdt = md.getType();
                 if (mdt == null) {
                     continue;
                 }
@@ -1935,7 +1935,7 @@ public class DocStruct implements Serializable {
 
         if (allMetadataGroups != null) {
             for (MetadataGroup mdg : allMetadataGroups) {
-                MetadataGroupType mgt = mdg.getMetadataGroupType();
+                MetadataGroupType mgt = mdg.getType();
                 if (mgt != null && mgt.getName().equals(inTypeName)) {
                     // Another one is available.
                     counter++;
@@ -3476,12 +3476,12 @@ public class DocStruct implements Serializable {
 
                 for (MetadataGroup md2 : docStruct.getAllMetadataGroups()) {
                     if (md1.equals(md2)) {
-                        LOGGER.debug("equals=true: MD1=" + md1.getMetadataGroupType().getName() + ";MD2=" + md2.getMetadataGroupType().getName());
+                        LOGGER.debug("equals=true: MD1=" + md1.getType().getName() + ";MD2=" + md2.getType().getName());
                         flagFound = true;
                         break;
                     }
 
-                    LOGGER.debug("equals=false: MD1=" + md1.getMetadataGroupType().getName() + ", MD2=" + md2.getMetadataGroupType().getName());
+                    LOGGER.debug("equals=false: MD1=" + md1.getType().getName() + ", MD2=" + md2.getType().getName());
                 }
 
                 // If equal Metadata couldn't be found this DocStruct cannot be
@@ -3646,7 +3646,7 @@ public class DocStruct implements Serializable {
             MetadataGroup m1 = (MetadataGroup) o1;
             MetadataGroup m2 = (MetadataGroup) o2;
 
-            return m1.getMetadataGroupType().getName().compareTo(m2.getMetadataGroupType().getName());
+            return m1.getType().getName().compareTo(m2.getType().getName());
         }
 
     }
