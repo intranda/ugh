@@ -2099,7 +2099,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                         && metabagu.getAttributes().getNamedItem("type").getTextContent().equals("group")) {
                     String groupName = metabagu.getAttributes().item(0).getTextContent();
                     // Check if group exists in prefs.
-                    MetadataGroupType mgt = this.myPreferences.getMetadataGroupByName(groupName);
+                    MetadataGroupType mgt = this.myPreferences.getMetadataGroupTypeByName(groupName);
 
                     if (mgt == null) {
                         // No valid metadata type found.

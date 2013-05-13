@@ -406,7 +406,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 
                 if (inStruct.getAllMetadataGroups() != null) {
                     // Only if the metadata type does exist in the current DocStruct...
-                    MetadataGroupType mdt = this.myPreferences.getMetadataGroupByName(mmo.getInternalName());
+                    MetadataGroupType mdt = this.myPreferences.getMetadataGroupTypeByName(mmo.getInternalName());
 
                     // ... go throught all the available metadata of that type.
 
@@ -568,7 +568,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 
             if (inStruct.getAllMetadataGroups() != null) {
                 // Only if the metadata type does exist in the current DocStruct...
-                MetadataGroupType mdt = this.myPreferences.getMetadataGroupByName(mmo.getInternalName());
+                MetadataGroupType mdt = this.myPreferences.getMetadataGroupTypeByName(mmo.getInternalName());
 
                 // ... go throught all the available metadata of that type.
 

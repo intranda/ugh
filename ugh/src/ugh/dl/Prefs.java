@@ -90,7 +90,7 @@ public class Prefs implements Serializable {
 
     private List<DocStructType> allDocStrctTypes;
     private List<MetadataType> allMetadataTypes;
-    private List<MetadataGroupType> allMetadataGroups;
+    private List<MetadataGroupType> allMetadataGroupTypes;
     private Hashtable<String, Node> allFormats;
 
     public static final short ELEMENT_NODE = 1;
@@ -103,7 +103,7 @@ public class Prefs implements Serializable {
     public Prefs() {
         this.allDocStrctTypes = new LinkedList<DocStructType>();
         this.allMetadataTypes = new LinkedList<MetadataType>();
-        this.allMetadataGroups = new LinkedList<MetadataGroupType>();
+        this.allMetadataGroupTypes = new LinkedList<MetadataGroupType>();
         this.allFormats = new Hashtable<String, Node>();
     }
 
@@ -225,7 +225,7 @@ public class Prefs implements Serializable {
                 if (currentNode.getNodeName().equals("Group")) {
                     parsedMetadataGroup = parseMetadataGroup(currentNode);
                     if (parsedMetadataGroup != null) {
-                        this.allMetadataGroups.add(parsedMetadataGroup);
+                        this.allMetadataGroupTypes.add(parsedMetadataGroup);
                     }
                 }
 
@@ -488,7 +488,7 @@ public class Prefs implements Serializable {
                     }
                     // MetadataType newMDType=new MetadataType();
                     // newMDType.setName(mdtype_name);
-                    MetadataGroupType newMdGroup = getMetadataGroupByName(mdtypeName);
+                    MetadataGroupType newMdGroup = getMetadataGroupTypeByName(mdtypeName);
                     if (newMdGroup == null) {
                         LOGGER.error("Error reading config for DocStrctType '" + currentDocStrctType.getName() + "'! MetadataType '" + mdtypeName
                                 + "' is unknown");
@@ -1046,13 +1046,13 @@ public class Prefs implements Serializable {
      * @param name
      * @return
      **************************************************************************/
-    public MetadataGroupType getMetadataGroupByName(String name) {
+    public MetadataGroupType getMetadataGroupTypeByName(String name) {
 
         MetadataGroupType currentMdGroup;
         String checkname;
 
         // Get dstype first.
-        Iterator<MetadataGroupType> it = this.allMetadataGroups.iterator();
+        Iterator<MetadataGroupType> it = this.allMetadataGroupTypes.iterator();
         while (it.hasNext()) {
             currentMdGroup = it.next();
             checkname = currentMdGroup.getName();
@@ -1125,17 +1125,17 @@ public class Prefs implements Serializable {
         if (inGroup == null) {
             return false;
         }
-        if (getMetadataGroupByName(inGroup.getName()) == null) {
+        if (getMetadataGroupTypeByName(inGroup.getName()) == null) {
             // still not available, so add ist
-            this.allMetadataGroups.add(inGroup);
+            this.allMetadataGroupTypes.add(inGroup);
             return true;
         }
 
-        tempType = getMetadataGroupByName(inGroup.getName());
+        tempType = getMetadataGroupTypeByName(inGroup.getName());
         // Remove old.
-        this.allMetadataGroups.remove(tempType);
+        this.allMetadataGroupTypes.remove(tempType);
         // Add new.
-        this.allMetadataGroups.add(inGroup);
+        this.allMetadataGroupTypes.add(inGroup);
 
         return true;
     }

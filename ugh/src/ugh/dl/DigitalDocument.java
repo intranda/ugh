@@ -24,11 +24,16 @@ package ugh.dl;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -44,6 +49,7 @@ import org.w3c.dom.Node;
 import ugh.exceptions.ContentFileNotLinkedException;
 import ugh.exceptions.PreferencesException;
 import ugh.exceptions.TypeNotAllowedForParentException;
+import ugh.exceptions.WriteException;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -1152,4 +1158,52 @@ public class DigitalDocument implements Serializable {
         isEqual, isNotEqual, needsFurtherChecking
     }
 
+    
+    /***************************************************************************
+     * <p>
+     * Creates a deep copy of the DigitalDocument.
+     * </p>
+     * 
+     * @return the new DigitalDocument instance
+     **************************************************************************/
+    
+    public DigitalDocument copyDigitalDocument() throws WriteException {
+
+        DigitalDocument newDigDoc = null;
+
+        try {
+
+            // remove techMd list for serialization
+            ArrayList<Md> tempList = new ArrayList<Md>(getTechMds());
+            getTechMds().clear();
+
+            // Write the object out to a byte array.
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(bos);
+            out.writeObject(this);
+            out.flush();
+            out.close();
+
+            // Make an input stream from the byte array and read
+            // a copy of the object back in.
+            ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
+            newDigDoc = (DigitalDocument) in.readObject();
+
+            // reattach techMd list
+            for (Md md : tempList) {
+                newDigDoc.addTechMd(md);
+            }
+
+        } catch (IOException e) {
+            String message = "Couldn't obtain OutputStream!";
+            LOGGER.error(message, e);
+            throw new WriteException(message, e);
+        } catch (ClassNotFoundException e) {
+            String message = "Could not find some class!";
+            LOGGER.error(message, e);
+            throw new WriteException(message, e);
+        }
+
+        return newDigDoc;
+    }
 }
