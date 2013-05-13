@@ -85,6 +85,7 @@ public class MetadataGroup implements Serializable {
         for (MetadataType mdt : MDType.getMetadataTypeList()) {
             if (mdt.getIsPerson()) {
                 Person p = new Person(mdt);
+                p.setRole(mdt.getName());
                 personList.add(p);
             } else {
                 Metadata md = new Metadata(mdt);
