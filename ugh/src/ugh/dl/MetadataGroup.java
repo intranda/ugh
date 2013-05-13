@@ -22,9 +22,10 @@ package ugh.dl;
  * You should have received a copy of the GNU Lesser General Public License
  * along with this library; if not, write to the Free Software Foundation,
  * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
- ***************************************************************/ 
+ ***************************************************************/
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,9 +35,8 @@ import ugh.exceptions.MetadataTypeNotAllowedException;
 
 /*******************************************************************************
  * <p>
- * A MetadataGroup object represents a single MetadataGroup element. Each MetadataGroup element
- * has at least a metadata element. The type of a MetadataGroup element is stored as
- * a {@link MetadataGroupType} object.
+ * A MetadataGroup object represents a single MetadataGroup element. Each MetadataGroup element has at least a metadata element. The type of a
+ * MetadataGroup element is stored as a {@link MetadataGroupType} object.
  * </p>
  * 
  * <p>
@@ -54,96 +54,87 @@ public class MetadataGroup implements Serializable {
 
     private static final long serialVersionUID = -6283388063178498292L;
 
-    private static final Logger	LOGGER				= Logger
-															.getLogger(ugh.dl.DigitalDocument.class);
+    private static final Logger LOGGER = Logger.getLogger(ugh.dl.DigitalDocument.class);
 
-	protected MetadataGroupType		MDType;
-	// Document structure to which this metadata type belongs to.
-	protected DocStruct			myDocStruct;
+    protected MetadataGroupType MDType;
+    // Document structure to which this metadata type belongs to.
+    protected DocStruct myDocStruct;
 
-	private List<Metadata> metadataList;
+    private List<Metadata> metadataList;
 
+    /***************************************************************************
+     * <p>
+     * Constructor.
+     * </p>
+     * 
+     * @throws MetadataTypeNotAllowedException
+     **************************************************************************/
+    public MetadataGroup(MetadataGroupType theType) throws MetadataTypeNotAllowedException {
 
+        // Check for NULL MetadataTypes.
+        if (theType == null) {
+            String message = "MetadataType must not be null at Metadata creation!";
+            throw new MetadataTypeNotAllowedException(message);
+        }
 
-	/***************************************************************************
-	 * <p>
-	 * Constructor.
-	 * </p>
-	 * 
-	 * @throws MetadataTypeNotAllowedException
-	 **************************************************************************/
-	public MetadataGroup(MetadataGroupType theType)
-			throws MetadataTypeNotAllowedException {
+        this.MDType = theType;
 
-		
+        metadataList = new LinkedList<Metadata>();
+        for (MetadataType mdt : MDType.getMetadataTypeList()) {
+            Metadata md = new Metadata(mdt);
+            metadataList.add(md);
+        }
 
-		// Check for NULL MetadataTypes.
-		if (theType == null) {
-			String message = "MetadataType must not be null at Metadata creation!";
-			throw new MetadataTypeNotAllowedException(message);
-		}
+    }
 
-		this.MDType = theType;
-		
-		metadataList = new LinkedList<Metadata>();
-		for (MetadataType mdt : MDType.getMetadataTypeList()) {
-		    Metadata md = new Metadata(mdt);
-		    metadataList.add(md);
-		}
-		
-	}
+    /***************************************************************************
+     * <p>
+     * Sets the Document structure entity to which this object belongs to.
+     * </p>
+     * 
+     * @param inDoc
+     **************************************************************************/
+    public void setDocStruct(DocStruct inDoc) {
+        this.myDocStruct = inDoc;
+    }
 
-	/***************************************************************************
-	 * <p>
-	 * Sets the Document structure entity to which this object belongs to.
-	 * </p>
-	 * 
-	 * @param inDoc
-	 **************************************************************************/
-	public void setDocStruct(DocStruct inDoc) {
-		this.myDocStruct = inDoc;
-	}
+    /***************************************************************************
+     * <p>
+     * Returns the DocStruct instance, to which this metadataGroup object belongs. This is extremly helpful, if only the metadata instance is stored
+     * in a list; the reference to the associated DocStrct instance is always kept.
+     * </p>
+     * 
+     * @return DocStruct instance.
+     **************************************************************************/
+    public DocStruct getDocStruct() {
+        return this.myDocStruct;
+    }
 
-	/***************************************************************************
-	 * <p>
-	 * Returns the DocStruct instance, to which this metadataGroup object belongs.
-	 * This is extremly helpful, if only the metadata instance is stored in a
-	 * list; the reference to the associated DocStrct instance is always kept.
-	 * </p>
-	 * 
-	 * @return DocStruct instance.
-	 **************************************************************************/
-	public DocStruct getDocStruct() {
-		return this.myDocStruct;
-	}
+    /***************************************************************************
+     * <p>
+     * Returns the type of the metadataGroup instance; The MetadataGroupType object which is returned, may have the same name, but be a different
+     * object than the MetadataGroupType object from another MetadataGroupType.
+     * </p>
+     * 
+     * @return MetadataGroupType instance
+     **************************************************************************/
+    public MetadataGroupType getType() {
+        return this.MDType;
+    }
 
-	/***************************************************************************
-	 *<p>
-	 * Returns the type of the metadataGroup instance; The MetadataGroupType object which
-	 * is returned, may have the same name, but be a different object than the
-	 * MetadataGroupType object from another MetadataGroupType.
-	 * </p>
-	 * 
-	 * @return MetadataGroupType instance
-	 **************************************************************************/
-	public MetadataGroupType getType() {
-		return this.MDType;
-	}
-
-	/***************************************************************************
-	 * <p>
-	 * Sets the MetadataGroupType for this instance; only a MetadataGroupType instance is
-	 * used as the only parameter. The method returns true if MDType was set;
-	 * false if not.
-	 * </p>
-	 * 
-	 * @param inType
-	 * @return
-	 **************************************************************************/
-	public boolean setType(MetadataGroupType inType) {
-		this.MDType = inType;
-		return true;
-	}
+    /***************************************************************************
+     * <p>
+     * Sets the MetadataGroupType for this instance; only a MetadataGroupType instance is used as the only parameter. The method returns true if
+     * MDType was set; false if not.
+     * </p>
+     * 
+     * @param inType
+     * @return
+     **************************************************************************/
+    public boolean setType(MetadataGroupType inType) {
+        this.MDType = inType;
+        return true;
+    }
 
     public List<Metadata> getMetadataList() {
         return metadataList;
@@ -152,7 +143,7 @@ public class MetadataGroup implements Serializable {
     public void setMetadataList(List<Metadata> metadataList) {
         this.metadataList = metadataList;
     }
-    
+
     public void addMetadata(Metadata metadata) {
         this.metadataList.add(metadata);
     }
@@ -160,6 +151,16 @@ public class MetadataGroup implements Serializable {
     @Override
     public String toString() {
         return "MetadataGroup [MDType=" + MDType + ", myDocStruct=" + myDocStruct + ", metadataList=" + metadataList + "]";
+    }
+
+    public List<Metadata> getMetadataByType(String theType) {
+        List<Metadata> returnList = new ArrayList<Metadata>();
+        for (Metadata md : metadataList) {
+            if (md.getType().getName().equals(theType)) {
+                returnList.add(md);
+            }
+        }
+        return returnList;
     }
 
     @Override
@@ -198,6 +199,5 @@ public class MetadataGroup implements Serializable {
             return false;
         return true;
     }
-
 
 }
