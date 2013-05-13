@@ -61,6 +61,7 @@ public class MetadataGroup implements Serializable {
     protected DocStruct myDocStruct;
 
     private List<Metadata> metadataList;
+    private List<Person> personList;
 
     /***************************************************************************
      * <p>
@@ -80,9 +81,15 @@ public class MetadataGroup implements Serializable {
         this.MDType = theType;
 
         metadataList = new LinkedList<Metadata>();
+        personList = new LinkedList<Person>();
         for (MetadataType mdt : MDType.getMetadataTypeList()) {
-            Metadata md = new Metadata(mdt);
-            metadataList.add(md);
+            if (mdt.getIsPerson()) {
+                Person p = new Person(mdt);
+                personList.add(p);
+            } else {
+                Metadata md = new Metadata(mdt);
+                metadataList.add(md);
+            }
         }
 
     }
@@ -148,14 +155,35 @@ public class MetadataGroup implements Serializable {
         this.metadataList.add(metadata);
     }
 
+    public List<Person> getPersonList() {
+        return personList;
+    }
+
+    public void setPersonList(List<Person> personList) {
+        this.personList = personList;
+    }
+
+    public void addPerson(Person person) {
+        this.personList.add(person);
+    }
     @Override
     public String toString() {
-        return "MetadataGroup [MDType=" + MDType + ", myDocStruct=" + myDocStruct + ", metadataList=" + metadataList + "]";
+        return "MetadataGroup [MDType=" + MDType + ", myDocStruct=" + myDocStruct + ", metadataList=" + metadataList + ", personList=" + personList + "]";
     }
 
     public List<Metadata> getMetadataByType(String theType) {
         List<Metadata> returnList = new ArrayList<Metadata>();
         for (Metadata md : metadataList) {
+            if (md.getType().getName().equals(theType)) {
+                returnList.add(md);
+            }
+        }
+        return returnList;
+    }
+    
+    public List<Person> getPersonByType(String theType) {
+        List<Person> returnList = new ArrayList<Person>();
+        for (Person md : personList) {
             if (md.getType().getName().equals(theType)) {
                 returnList.add(md);
             }
@@ -169,6 +197,7 @@ public class MetadataGroup implements Serializable {
         int result = 1;
         result = prime * result + ((MDType == null) ? 0 : MDType.hashCode());
         result = prime * result + ((metadataList == null) ? 0 : metadataList.hashCode());
+        result = prime * result + ((personList == null) ? 0 : personList.hashCode());
         result = prime * result + ((myDocStruct == null) ? 0 : myDocStruct.hashCode());
         return result;
     }
@@ -191,6 +220,11 @@ public class MetadataGroup implements Serializable {
             if (other.metadataList != null)
                 return false;
         } else if (!metadataList.equals(other.metadataList))
+            return false;
+        if (personList == null) {
+            if (other.personList != null)
+                return false;
+        } else if (!personList.equals(other.personList))
             return false;
         if (myDocStruct == null) {
             if (other.myDocStruct != null)

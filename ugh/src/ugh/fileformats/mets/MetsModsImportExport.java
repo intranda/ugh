@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -494,7 +496,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
         if (inStruct.getAllPersons() != null) {
             notMappedMetadataAndPersons.addAll(inStruct.getAllPersons());
         }
-        
+
         // Add groups to list
         if (inStruct.getAllMetadataGroups() != null) {
             notMappedMetadataAndPersons.addAll(inStruct.getAllMetadataGroups());
@@ -1630,16 +1632,134 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
             throws PreferencesException {
 
         Node createdNode = createNode(mmo.getWriteXPath(), theStartingNode, theDocument);
-        Map<String, String> xpathMap = mmo.getMetadataGroupXQueries();
+        Map<String, Map<String, String>> xpathMap = mmo.getMetadataGroupXQueries();
 
         for (String metadataName : xpathMap.keySet()) {
             for (Metadata md : theGroup.getMetadataList()) {
                 if (md.getType().getName().equals(metadataName)) {
-                    String xquery = xpathMap.get(metadataName);
+                    Map<String, String> xqueryMap = xpathMap.get(metadataName);
+                    String xquery = xqueryMap.get(metadataName);
                     writeSingleModsMetadata(xquery, md, createdNode, theDocument);
+                    break;
+                }
+            }
+            for (Person p : theGroup.getPersonList()) {
+                if (p.getType().getName().equals(metadataName)) {
+                    Map<String, String> xqueryMap = xpathMap.get(metadataName);
+                    writeSingleGroupPerson(p, xqueryMap, createdNode, theDocument);
+                    break;
                 }
             }
         }
+    }
+
+    private void writeSingleGroupPerson(Person thePerson, Map<String, String> xpathMap, Node theDomModsNode, Document theDomDoc)
+            throws PreferencesException {
+
+        if ((thePerson.getLastname() != null && !thePerson.getLastname().equals(""))
+                || (thePerson.getFirstname() != null && !thePerson.getFirstname().equals(""))) {
+            if (thePerson.getLastname() != null && !thePerson.getLastname().equals("") && thePerson.getFirstname() != null
+                    && !thePerson.getFirstname().equals("")) {
+                thePerson.setDisplayname(thePerson.getLastname() + ", " + thePerson.getFirstname());
+            } else if (thePerson.getFirstname() == null || thePerson.getFirstname().equals("")) {
+                thePerson.setDisplayname(thePerson.getLastname());
+            } else {
+                thePerson.setDisplayname(thePerson.getFirstname());
+            }
+        }
+
+        String xquery = xpathMap.get(METS_PREFS_WRITEXPATH_STRING);
+        Node createdNode = createNode(xquery, theDomModsNode, theDomDoc);
+
+        for (String key : xpathMap.keySet()) {
+            xquery = xpathMap.get(key);
+            
+
+            if (key.equalsIgnoreCase(METS_PREFS_FIRSTNAMEXPATH_STRING) && thePerson.getFirstname() != null) {
+                if (xquery == null) {
+                    LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s firstname '" + thePerson.getFirstname() + "'");
+                } else {
+                    Node firstnameNode = createNode(xquery, createdNode, theDomDoc);
+                    Node firstnamevalueNode = theDomDoc.createTextNode(thePerson.getFirstname());
+                    firstnameNode.appendChild(firstnamevalueNode);
+                    createdNode.appendChild(firstnameNode);
+                }
+
+            } else if (key.equalsIgnoreCase(METS_PREFS_LASTNAMEXPATH_STRING) && thePerson.getLastname() != null) {
+                if (xquery == null) {
+                    LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s lastname '" + thePerson.getLastname() + "'");
+                } else {
+                    Node lastnameNode = createNode(xquery, createdNode, theDomDoc);
+                    Node lastnamevalueNode = theDomDoc.createTextNode(thePerson.getLastname());
+                    lastnameNode.appendChild(lastnamevalueNode);
+                    createdNode.appendChild(lastnameNode);
+                }
+            } else if (key.equalsIgnoreCase(METS_PREFS_AFFILIATIONXPATH_STRING) && thePerson.getAffiliation() != null) {
+                if (xquery == null) {
+                    LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s affiliation '" + thePerson.getAffiliation() + "'");
+                } else {
+                    Node affiliationNode = createNode(xquery, createdNode, theDomDoc);
+                    Node affiliationvalueNode = theDomDoc.createTextNode(thePerson.getAffiliation());
+                    affiliationNode.appendChild(affiliationvalueNode);
+                    createdNode.appendChild(affiliationNode);
+                }
+
+            } else if (key.equalsIgnoreCase(METS_PREFS_DISPLAYNAMEXPATH_STRING) && thePerson.getDisplayname() != null) {
+                if (xquery == null) {
+                    LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s displayName '" + thePerson.getDisplayname() + "'");
+                } else {
+                    Node displaynameNode = createNode(xquery, createdNode, theDomDoc);
+                    Node displaynamevalueNode = theDomDoc.createTextNode(thePerson.getDisplayname());
+                    displaynameNode.appendChild(displaynamevalueNode);
+                    createdNode.appendChild(displaynameNode);
+                }
+
+            } else if (key.equalsIgnoreCase(METS_PREFS_PERSONTYPEXPATH_STRING) && thePerson.getPersontype() != null) {
+                if (xquery == null) {
+                    LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s personType '" + thePerson.getPersontype() + "'");
+                } else {
+                    Node persontypeNode = createNode(xquery, createdNode, theDomDoc);
+                    Node persontypevalueNode = theDomDoc.createTextNode(thePerson.getPersontype());
+                    persontypeNode.appendChild(persontypevalueNode);
+                    createdNode.appendChild(persontypeNode);
+                }
+
+            } else if (key.equalsIgnoreCase(METS_PREFS_AUTHORITYFILEIDXPATH_STRING) && thePerson.getAuthorityFileID() != null) {
+
+                if (xquery == null) {
+                    LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s authorityFileID '" + thePerson.getAuthorityFileID()
+                            + "'");
+                } else {
+                    Node authorityfileidNode = createNode(xquery, createdNode, theDomDoc);
+                    Node authorityfileidvalueNode = theDomDoc.createTextNode(thePerson.getAuthorityFileID());
+                    authorityfileidNode.appendChild(authorityfileidvalueNode);
+                    createdNode.appendChild(authorityfileidNode);
+                }
+
+            } else if (key.equalsIgnoreCase(METS_PREFS_IDENTIFIERXPATH_STRING) && thePerson.getIdentifier() != null) {
+                if (xquery == null) {
+                    LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s identifier '" + thePerson.getIdentifier() + "'");
+                } else {
+
+                    if (xquery.equals("../mods:name[@authority='gbv'][@ID='']")) {
+                        ((Element) createdNode).setAttribute(METS_ID_STRING, "pnd" + thePerson.getIdentifier());
+                        ((Element) createdNode).setAttribute("authority", "gbv");
+                    }
+
+                }
+            } else if (key.equalsIgnoreCase(METS_PREFS_IDENTIFIERTYPEXPATH_STRING) && thePerson.getIdentifierType() != null) {
+
+                if (xquery == null) {
+                    LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s identifierType '" + thePerson.getIdentifierType() + "'");
+                } else {
+                    Node identifierTypeNode = createNode(xquery, createdNode, theDomDoc);
+                    Node identifierTypevalueNode = theDomDoc.createTextNode(thePerson.getIdentifierType());
+                    identifierTypeNode.appendChild(identifierTypevalueNode);
+                    createdNode.appendChild(identifierTypeNode);
+                }
+            }
+        }
+
     }
 
     /***************************************************************************
@@ -2095,8 +2215,139 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 
                     }
                     if (!elementName.isEmpty() && !xpath.isEmpty()) {
-                        mmo.addToMap(elementName, xpath);
+                        Map<String, String> map = new LinkedHashMap<String, String>();
+                        map.put(elementName, xpath);
+                        mmo.addToMap(elementName, map);
                     }
+                } else if (currentNode.getNodeName().equalsIgnoreCase("Person")) {
+
+                    NodeList metadataChildlist = currentNode.getChildNodes();
+
+                    String elementName = "";
+                    Map<String, String> map = new HashMap<String, String>();
+                    for (int k = 0; k < metadataChildlist.getLength(); k++) {
+                        // Get single node.
+
+                        Node metadataSubElement = metadataChildlist.item(k);
+                        if (metadataSubElement.getNodeType() == ELEMENT_NODE) {
+                            // Get internal name.
+                            if (metadataSubElement.getNodeName().equals(METS_PREFS_INTERNALNAME_STRING)) {
+                                elementName = getTextNodeValue(metadataSubElement);
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_WRITEXPATH_STRING)) {
+                                String value = getTextNodeValue(metadataSubElement);
+                                if (value != null) {
+                                    map.put(METS_PREFS_WRITEXPATH_STRING, value.trim());
+                                }
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_FIRSTNAMEXPATH_STRING)) {
+                                String value = getTextNodeValue(metadataSubElement);
+                                if (value != null) {
+                                    map.put(METS_PREFS_FIRSTNAMEXPATH_STRING, value.trim());
+                                }
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_LASTNAMEXPATH_STRING)) {
+                                String value = getTextNodeValue(metadataSubElement);
+                                if (value != null) {
+                                    map.put(METS_PREFS_LASTNAMEXPATH_STRING, value.trim());
+                                }
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_AFFILIATIONXPATH_STRING)) {
+                                String value = getTextNodeValue(metadataSubElement);
+                                if (value != null) {
+                                    map.put(METS_PREFS_AFFILIATIONXPATH_STRING, value.trim());
+                                }
+
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_DISPLAYNAMEXPATH_STRING)) {
+                                String value = getTextNodeValue(metadataSubElement);
+                                if (value != null) {
+                                    map.put(METS_PREFS_DISPLAYNAMEXPATH_STRING, value.trim());
+                                }
+
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_PERSONTYPEXPATH_STRING)) {
+                                String value = getTextNodeValue(metadataSubElement);
+                                if (value != null) {
+                                    map.put(METS_PREFS_PERSONTYPEXPATH_STRING, value.trim());
+                                }
+
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_AUTHORITYFILEIDXPATH_STRING)) {
+                                String value = getTextNodeValue(metadataSubElement);
+                                if (value != null) {
+                                    map.put(METS_PREFS_AUTHORITYFILEIDXPATH_STRING, value.trim());
+                                }
+
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_IDENTIFIERXPATH_STRING)) {
+                                String value = getTextNodeValue(metadataSubElement);
+                                if (value != null) {
+                                    map.put(METS_PREFS_IDENTIFIERXPATH_STRING, value.trim());
+                                }
+
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_IDENTIFIERTYPEXPATH_STRING)) {
+                                String value = getTextNodeValue(metadataSubElement);
+                                if (value != null) {
+                                    map.put(METS_PREFS_IDENTIFIERTYPEXPATH_STRING, value.trim());
+                                }
+
+                                // Get other MODS settings (used for reading only?).
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_READMODSNAME_STRING)) {
+                                //                                modsName = getTextNodeValue(metadataSubElement);
+                                //                                if (modsName != null) {
+                                //                                    mmo.setReadModsName(modsName.trim());
+                                //                                }
+
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_WRITEMODSNAME_STRING)) {
+                                //                                modsName = getTextNodeValue(metadataSubElement);
+                                //                                if (modsName != null) {
+                                //                                    mmo.setReadModsName(modsName.trim());
+                                //                                }
+
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_MODSTYPE_STRING)) {
+                                //                                modsName = getTextNodeValue(metadataSubElement);
+                                //                                if (modsName != null) {
+                                //                                    mmo.setMODSType(modsName.trim());
+                                //                                }
+
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_MODSENCODING_STRING)) {
+                                //                                modsName = getTextNodeValue(metadataSubElement);
+                                //                                if (modsName != null) {
+                                //                                    mmo.setMODSEncoding(modsName.trim());
+                                //                                }
+
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_MODSAUTHORITY_STRING)) {
+                                //                                modsName = getTextNodeValue(metadataSubElement);
+                                //                                if (modsName != null) {
+                                //                                    mmo.setMODSAuthority(modsName.trim());
+                                //                                }
+
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_MODSLANG_STRING)) {
+                                //                                modsName = getTextNodeValue(metadataSubElement);
+                                //                                if (modsName != null) {
+                                //                                    mmo.setMODSLang(modsName.trim());
+                                //                                }
+
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_MODSXMLLANG_STRING)) {
+                                //                                modsName = getTextNodeValue(metadataSubElement);
+                                //                                if (modsName != null) {
+                                //                                    mmo.setMODSXMLLang(modsName.trim());
+                                //                                }
+
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_MODSID_STRING)) {
+                                //                                modsName = getTextNodeValue(metadataSubElement);
+                                //                                if (modsName != null) {
+                                //                                    mmo.setMODSID(modsName.trim());
+                                //                                }
+
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_MODSSCRIPT_STRING)) {
+                                //                                modsName = getTextNodeValue(metadataSubElement);
+                                //                                if (modsName != null) {
+                                //                                    mmo.setMODSScript(modsName.trim());
+                                //                                }
+
+                            } else if (metadataSubElement.getNodeName().equalsIgnoreCase(METS_PREFS_MODSTRANSLITERATION_STRING)) {
+                                //                                modsName = getTextNodeValue(metadataSubElement);
+                                //                                if (modsName != null) {
+                                //                                    mmo.setMODSTransliteration(modsName.trim());
+                                //                                }
+                            }
+                        }
+                    }
+                    mmo.addToMap(elementName, map);
                 }
             }
         }

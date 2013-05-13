@@ -910,8 +910,6 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         return true;
     }
-    
-  
 
     /***************************************************************************
      * <p>
@@ -944,7 +942,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                             throw pe;
                         }
                     }
-                 // Read Group prefs from deferred method.
+                    // Read Group prefs from deferred method.
                     if (childnode.getNodeName().equalsIgnoreCase(PREFS_GROUP_STRING)) {
                         try {
                             readMetadataGroupPrefs(childnode);
@@ -954,7 +952,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                             throw pe;
                         }
                     }
-                    
+
                     // Read DocStruct prefs from deferred method.
                     if (childnode.getNodeName().equalsIgnoreCase(PREFS_DOCSTRUCT_STRING)) {
                         try {
@@ -2117,16 +2115,95 @@ public class MetsMods implements ugh.dl.Fileformat {
 
                         NodeList metadataNodelist = metabagu.getChildNodes();
                         for (int j = 0; j < metadataNodelist.getLength(); j++) {
-
                             Node metadata = metadataNodelist.item(j);
 
-                            String metadataName = metadata.getAttributes().item(0).getTextContent();
-                            String value = metadata.getTextContent();
+                            // metadata
+                            if (metadata.getNodeType() == ELEMENT_NODE && metadata.getAttributes().getNamedItem("type") == null) {
 
-                            for (Metadata meta : metadataGroup.getMetadataList()) {
-                                if (meta.getType().getName().equals(metadataName)) {
-                                    meta.setValue(value);
-                                    break;
+                                String metadataName = metadata.getAttributes().item(0).getTextContent();
+                                String value = metadata.getTextContent();
+
+                                for (Metadata meta : metadataGroup.getMetadataList()) {
+                                    if (meta.getType().getName().equals(metadataName)) {
+                                        if (meta.getValue() == null || meta.getValue().isEmpty()) {
+                                            meta.setValue(value);
+                                            break;
+                                        } else {
+                                            Metadata mdnew = new Metadata(meta.getType());
+                                            meta.setValue(value);
+                                            metadataGroup.addMetadata(mdnew);
+                                        }
+                                    }
+                                }
+                            }
+
+                            // person
+                            else if (metadata.getNodeType() == ELEMENT_NODE && metadata.getAttributes().getNamedItem("type") != null
+                                    && metadata.getAttributes().getNamedItem("type").getTextContent().equals("person")) {
+
+                                String role = metadata.getAttributes().item(0).getTextContent();
+                                MetadataType mdt = this.myPreferences.getMetadataTypeByName(role);
+                                if (mdt == null) {
+                                    // No valid metadata type found.
+                                    String message = "Can't find person with name '" + role + "' in prefs";
+                                    LOGGER.error(message);
+                                    throw new ImportException(message);
+                                }
+
+                                // Create and add person.
+                                if (mdt.getIsPerson()) {
+                                    for (Person ps : metadataGroup.getPersonList()) {
+
+                                        if (ps.getType().getName().equals(mdt.getName())) {
+                                            if ((ps.getLastname() == null || ps.getLastname().isEmpty())
+                                                    && (ps.getFirstname() == null || ps.getFirstname().isEmpty())) {
+
+                                                ps.setRole(mdt.getName());
+
+                                            } else {
+                                                ps = new Person(mdt);
+                                                ps.setRole(mdt.getName());
+                                                metadataGroup.addPerson(ps);
+                                            }
+                                            // Iterate over every person's data.
+                                            NodeList personNodelist = metadata.getChildNodes();
+                                            for (int k = 0; k < personNodelist.getLength(); k++) {
+
+                                                Node personbagu = personNodelist.item(k);
+                                                if (personbagu.getNodeType() == ELEMENT_NODE) {
+                                                    String name = personbagu.getLocalName();
+                                                    String value = personbagu.getTextContent();
+
+                                                    // Get and set values.
+                                                    if (name.equals(GOOBI_PERSON_FIRSTNAME_STRING)) {
+                                                        ps.setFirstname(value);
+                                                    }
+                                                    if (name.equals(GOOBI_PERSON_LASTNAME_STRING)) {
+                                                        ps.setLastname(value);
+                                                    }
+                                                    if (name.equals(GOOBI_PERSON_AFFILIATION_STRING)) {
+                                                        ps.setAffiliation(value);
+                                                    }
+                                                    if (name.equals(GOOBI_PERSON_AUTHORITYFILEID_STRING)) {
+                                                        ps.setAutorityFileID(value);
+                                                    }
+                                                    if (name.equals(GOOBI_PERSON_IDENTIFIER_STRING)) {
+                                                        ps.setIdentifier(value);
+                                                    }
+                                                    if (name.equals(GOOBI_PERSON_IDENTIFIERTYPE_STRING)) {
+                                                        ps.setIdentifierType(value);
+                                                    }
+                                                    if (name.equals(GOOBI_PERSON_PERSONTYPE_STRING)) {
+                                                        ps.setPersontype(value);
+                                                    }
+                                                    if (name.equals(GOOBI_PERSON_DISPLAYNAME_STRING)) {
+                                                        ps.setDisplayname(value);
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
@@ -4227,7 +4304,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             }
 
         }
-        
+
         // Write all persons.
         writeDmdPersons(inStruct, dommodsnode, domDoc);
     }
@@ -4357,10 +4434,19 @@ public class MetsMods implements ugh.dl.Fileformat {
         Node createdNode = createNode(theXQuery, theStartingNode, theDocument);
 
         for (Metadata md : theGroup.getMetadataList()) {
-            String xquery = "./#" + this.goobiNamespacePrefix + ":metadata[@name='" + md.getType().getName() + "']";
-            writeSingleModsMetadata(xquery, md, createdNode, theDocument);
-        }
+            if (!md.getType().getIsPerson()) {
+                String xquery = "./#" + this.goobiNamespacePrefix + ":metadata[@name='" + md.getType().getName() + "']";
+                writeSingleModsMetadata(xquery, md, createdNode, theDocument);
 
+            }
+        }
+        for (Person p : theGroup.getPersonList()) {
+            if (p != null && p.getRole() != null && !p.getRole().equals("")
+                    && (p.getFirstname() != null || p.getLastname() != null || p.getDisplayname() != null)) {
+                String xquery = "./#" + this.goobiNamespacePrefix + ":metadata[@type='person'][@name='" + p.getRole() + "']";
+                writeSingleModsPerson(xquery, p, createdNode, theDocument);
+            }
+        }
     }
 
     /***************************************************************************
@@ -4676,9 +4762,9 @@ public class MetsMods implements ugh.dl.Fileformat {
     protected void readMetadataPrefs(Node childnode) throws PreferencesException {
         // No metadataPrefs to read here in the internal METS file.
     }
-    
-  protected void readMetadataGroupPrefs(Node inNode) throws PreferencesException {
-      // No metadataPrefs to read here in the internal METS file.
+
+    protected void readMetadataGroupPrefs(Node inNode) throws PreferencesException {
+        // No metadataPrefs to read here in the internal METS file.
     }
 
     /***************************************************************************

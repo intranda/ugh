@@ -528,6 +528,7 @@ public class DocStruct implements Serializable {
                         MetadataGroup mdnew = new MetadataGroup(md.getType());
                         mdnew.setDocStruct(newStruct);
                         List<Metadata> newmdlist = new LinkedList<Metadata>();
+                        List<Person> newPersonList = new LinkedList<Person>();
                         for (Metadata meta : md.getMetadataList()) {
                             Metadata newMeta = new Metadata(meta.getType());
                             newMeta.setValue(meta.getValue());
@@ -537,9 +538,37 @@ public class DocStruct implements Serializable {
                             if (meta.getAuthorityFileID() != null) {
                                 newMeta.setAutorityFileID(meta.getAuthorityFileID());
                             }
-                            newStruct.addMetadataGroup(mdnew);
                             newmdlist.add(newMeta);
                         }
+
+                        for (Person ps : md.getPersonList()) {
+                            Person newps = new Person(ps.getType());
+                            if (ps.getLastname() != null) {
+                                newps.setLastname(ps.getLastname());
+                            }
+                            if (ps.getFirstname() != null) {
+                                newps.setFirstname(ps.getFirstname());
+                            }
+                            if (ps.getIdentifier() != null) {
+                                newps.setIdentifier(ps.getIdentifier());
+                            }
+                            if (ps.getIdentifierType() != null) {
+                                newps.setIdentifierType(ps.getIdentifierType());
+                            }
+                            if (ps.getInstitution() != null) {
+                                newps.setInstitution(ps.getInstitution());
+                            }
+                            if (ps.getAffiliation() != null) {
+                                newps.setAffiliation(ps.getAffiliation());
+                            }
+                            if (ps.getRole() != null) {
+                                newps.setRole(ps.getRole());
+                            }
+                            newPersonList.add(newps);
+                        }
+                        mdnew.setMetadataList(newmdlist);
+                        mdnew.setPersonList(newPersonList);
+                        newStruct.addMetadataGroup(mdnew);
 
                         mdnew.setMetadataList(newmdlist);
                         newStruct.addMetadataGroup(mdnew);
