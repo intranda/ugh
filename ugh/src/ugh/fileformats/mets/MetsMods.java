@@ -2122,8 +2122,8 @@ public class MetsMods implements ugh.dl.Fileformat {
 
                                 String metadataName = metadata.getAttributes().item(0).getTextContent();
                                 String value = metadata.getTextContent();
-
-                                for (Metadata meta : metadataGroup.getMetadataList()) {
+                                   List<Metadata> metadataList = new ArrayList<Metadata>(metadataGroup.getMetadataList());
+                                for (Metadata meta : metadataList) {
                                     if (meta.getType().getName().equals(metadataName)) {
                                         if (meta.getValue() == null || meta.getValue().isEmpty()) {
                                             meta.setValue(value);
@@ -2152,7 +2152,8 @@ public class MetsMods implements ugh.dl.Fileformat {
 
                                 // Create and add person.
                                 if (mdt.getIsPerson()) {
-                                    for (Person ps : metadataGroup.getPersonList()) {
+                                    List<Person> metadataList = new ArrayList<Person>(metadataGroup.getPersonList());
+                                    for (Person ps : metadataList) {
 
                                         if (ps.getType().getName().equals(mdt.getName())) {
                                             if ((ps.getLastname() == null || ps.getLastname().isEmpty())
