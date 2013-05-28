@@ -64,7 +64,9 @@ public class MatchingMetadataObject {
 	private String	affiliationXQuery		= null;
 	private String	identifierXQuery		= null;
 	private String	identifierTypeXQuery	= null;
-	private String	authorityFileIDXquery	= null;
+	private String	authorityIDXquery   	= null;
+	private String  authorityURIXquery       = null;
+	private String  authorityValueXquery    = null;
 	private String	displayNameXQuery		= null;
 	private String	persontypeXQuery		= null;
 
@@ -368,18 +370,34 @@ public class MatchingMetadataObject {
 	/***************************************************************************
 	 * @return the authorityFileIDXquery
 	 **************************************************************************/
-	protected String getAuthorityFileIDXquery() {
-		return this.authorityFileIDXquery;
+	protected String getAuthorityIDXquery() {
+		return this.authorityIDXquery;
 	}
 
 	/***************************************************************************
 	 * @param authorityFileIDXquery
 	 *            the authorityFileIDXquery to set
 	 **************************************************************************/
-	protected void setAuthorityFileIDXquery(String authorityFileIDXquery) {
-		this.authorityFileIDXquery = authorityFileIDXquery;
+	protected void setAuthorityIDXquery(String authorityIDXquery) {
+		this.authorityIDXquery = authorityIDXquery;
 	}
-
+	
+	protected String getAuthorityURIXquery() {
+        return this.authorityURIXquery;
+    }
+    
+    protected void setAuthorityURIXquery(String authorityURIXquery) {
+        this.authorityURIXquery = authorityURIXquery;
+    }
+	
+	protected String getAuthorityValueXquery() {
+        return this.authorityValueXquery;
+    }
+	
+	protected void setAuthorityValueXquery(String authorityValueXquery) {
+        this.authorityValueXquery = authorityValueXquery;
+    }
+	
 	/***************************************************************************
 	 * @return the displayNameXQuery
 	 **************************************************************************/

@@ -591,9 +591,6 @@ public class Prefs implements Serializable {
             if (nodevalue != null && nodevalue.equals("identifier")) {
                 currenMdType.setIdentifier(true);
             }
-            if (nodevalue != null && nodevalue.equals("normdata")) {
-                currenMdType.setNormdata(true);
-            }
         }
 
         allchildren = theMetadataTypeNode.getChildNodes(); // get allchildren
@@ -991,22 +988,6 @@ public class Prefs implements Serializable {
         }
 
         return allPersons;
-    }
-
-    public List<MetadataType> getAllNormMetadataTypes() {
-
-        MetadataType currentMdType;
-        List<MetadataType> allNorm = new LinkedList<MetadataType>();
-
-        Iterator<MetadataType> it = this.allMetadataTypes.iterator();
-        while (it.hasNext()) {
-            currentMdType = it.next();
-            if (currentMdType.getIsNormdata()) {
-                allNorm.add(currentMdType);
-            }
-        }
-
-        return allNorm;
     }
 
     /***************************************************************************

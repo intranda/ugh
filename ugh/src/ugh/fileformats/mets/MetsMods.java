@@ -106,7 +106,6 @@ import ugh.dl.MetadataGroup;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataGroupType;
 import ugh.dl.MetadataType;
-import ugh.dl.NormMetadata;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
 import ugh.dl.Reference;
@@ -421,7 +420,9 @@ public class MetsMods implements ugh.dl.Fileformat {
     protected static final String GOOBI_PERSON_IDENTIFIER_STRING = "identifier";
     protected static final String GOOBI_PERSON_IDENTIFIERTYPE_STRING = "identifierType";
     protected static final String GOOBI_PERSON_AFFILIATION_STRING = "affiliation";
-    protected static final String GOOBI_PERSON_AUTHORITYFILEID_STRING = "authorityFileID";
+    protected static final String GOOBI_PERSON_AUTHORITYID_STRING = "authorityID";
+    protected static final String GOOBI_PERSON_AUTHORITYURI_STRING = "authorityURI";
+    protected static final String GOOBI_PERSON_AUTHORITYVALUE_STRING = "authorityValue";
     protected static final String GOOBI_PERSON_DISPLAYNAME_STRING = "displayName";
     protected static final String GOOBI_PERSON_PERSONTYPE_STRING = "personType";
 
@@ -2057,7 +2058,8 @@ public class MetsMods implements ugh.dl.Fileformat {
                         && metabagu.getAttributes().getNamedItem("type") == null) {
                     String name = metabagu.getAttributes().getNamedItem("name").getNodeValue();
                     String value = metabagu.getTextContent();
-
+                    // TODO check for authorityFileID, authortityValue
+                    
                     LOGGER.debug("Metadata '" + name + "' with value '" + value + "' found in Goobi's MODS extension");
 
                     // Check if metadata exists in prefs.
@@ -2124,6 +2126,8 @@ public class MetsMods implements ugh.dl.Fileformat {
                                 String value = metadata.getTextContent();
                                    List<Metadata> metadataList = new ArrayList<Metadata>(metadataGroup.getMetadataList());
                                 for (Metadata meta : metadataList) {
+                                    // TODO check for authorityFileID, authortityValue
+                                 
                                     if (meta.getType().getName().equals(metadataName)) {
                                         if (meta.getValue() == null || meta.getValue().isEmpty()) {
                                             meta.setValue(value);
@@ -2168,6 +2172,9 @@ public class MetsMods implements ugh.dl.Fileformat {
                                             }
                                             // Iterate over every person's data.
                                             NodeList personNodelist = metadata.getChildNodes();
+                                            String authorityID = null;
+                                            String authorityURI = null;
+                                            String authortityValue = null;
                                             for (int k = 0; k < personNodelist.getLength(); k++) {
 
                                                 Node personbagu = personNodelist.item(k);
@@ -2175,6 +2182,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                                                     String name = personbagu.getLocalName();
                                                     String value = personbagu.getTextContent();
 
+                                                    
                                                     // Get and set values.
                                                     if (name.equals(GOOBI_PERSON_FIRSTNAME_STRING)) {
                                                         ps.setFirstname(value);
@@ -2185,10 +2193,16 @@ public class MetsMods implements ugh.dl.Fileformat {
                                                     if (name.equals(GOOBI_PERSON_AFFILIATION_STRING)) {
                                                         ps.setAffiliation(value);
                                                     }
-                                                    if (name.equals(GOOBI_PERSON_AUTHORITYFILEID_STRING)) {
-                                                        ps.setAutorityFileID(value);
+                                                    if (name.equals(GOOBI_PERSON_AUTHORITYID_STRING)) {
+                                                        authorityID =value;
                                                     }
-                                                    if (name.equals(GOOBI_PERSON_IDENTIFIER_STRING)) {
+                                                    if (name.equals(GOOBI_PERSON_AUTHORITYURI_STRING)) {
+                                                        authorityURI =value;
+                                                    }
+                                                    if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
+                                                        authortityValue =value;
+                                                    }
+                                                     if (name.equals(GOOBI_PERSON_IDENTIFIER_STRING)) {
                                                         ps.setIdentifier(value);
                                                     }
                                                     if (name.equals(GOOBI_PERSON_IDENTIFIERTYPE_STRING)) {
@@ -2202,6 +2216,9 @@ public class MetsMods implements ugh.dl.Fileformat {
                                                     }
                                                 }
 
+                                            }
+                                            if (authorityID != null && authorityURI != null && authortityValue != null) {
+                                                ps.setAutorityFile(authorityID, authorityURI, authortityValue);
                                             }
                                         }
                                     }
@@ -2257,6 +2274,9 @@ public class MetsMods implements ugh.dl.Fileformat {
 
                         // Iterate over every person's data.
                         NodeList personNodelist = metabagu.getChildNodes();
+                        String authorityFileID= null;
+                        String authorityURI = null;
+                        String authortityValue= null;
                         for (int j = 0; j < personNodelist.getLength(); j++) {
 
                             Node personbagu = personNodelist.item(j);
@@ -2274,9 +2294,15 @@ public class MetsMods implements ugh.dl.Fileformat {
                                 if (name.equals(GOOBI_PERSON_AFFILIATION_STRING)) {
                                     ps.setAffiliation(value);
                                 }
-                                if (name.equals(GOOBI_PERSON_AUTHORITYFILEID_STRING)) {
-                                    ps.setAutorityFileID(value);
+                                if (name.equals(GOOBI_PERSON_AUTHORITYID_STRING)) {
+                                    authorityFileID =value;
                                 }
+                                if (name.equals(GOOBI_PERSON_AUTHORITYURI_STRING)) {
+                                    authorityURI =value;
+                                }
+                                if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
+                                    authortityValue =value;
+                                }                               
                                 if (name.equals(GOOBI_PERSON_IDENTIFIER_STRING)) {
                                     ps.setIdentifier(value);
                                 }
@@ -2290,6 +2316,9 @@ public class MetsMods implements ugh.dl.Fileformat {
                                     ps.setDisplayname(value);
                                 }
                             }
+                        }
+                        if (authorityFileID != null && authorityURI != null && authortityValue != null) {
+                            ps.setAutorityFile(authorityFileID, authorityURI, authortityValue);
                         }
                         try {
                             inStruct.addPerson(ps);
@@ -2306,46 +2335,6 @@ public class MetsMods implements ugh.dl.Fileformat {
                             LOGGER.error(message, e);
                             throw new ImportException(message);
                         }
-                    }
-                    if (mdt.getIsNormdata()) {
-                        NormMetadata nmd;
-                        try {
-                            nmd = new NormMetadata(mdt);
-                        } catch (MetadataTypeNotAllowedException e) {
-                            String message = "Can't add normmetadata! MetadataType must not be null!";
-                            LOGGER.error(message, e);
-                            throw new ReadException(message, e);
-                        }
-
-                        NodeList normNodelist = metabagu.getChildNodes();
-                        for (int j = 0; j < normNodelist.getLength(); j++) {
-
-                            Node normbagu = normNodelist.item(j);
-                            if (normbagu.getNodeType() == ELEMENT_NODE) {
-                                String name = normbagu.getLocalName();
-                                String value = normbagu.getTextContent();
-
-                                // Get and set values.
-                                if (name.equals(GOOBI_NORMDATA_IDENTIFIER)) {
-                                    nmd.setIdentifier(value);
-                                }
-                                if (name.equals(GOOBI_NORMDATA_SOURCE)) {
-                                    nmd.setDataBase(value);
-                                }
-                            }
-                        }
-                        try {
-                            inStruct.addNormMetadata(nmd);
-                        } catch (MetadataTypeNotAllowedException e) {
-                            String message = "DocumentStructure for which metadata should be added has no type!";
-                            LOGGER.error(message, e);
-                            throw new ImportException(message, e);
-                        } catch (IncompletePersonObjectException e) {
-                            String message = "DocumentStructure for which metadata should be added has no type!";
-                            LOGGER.error(message, e);
-                            throw new ImportException(message, e);
-                        }
-
                     }
                 }
             }
@@ -4406,13 +4395,29 @@ public class MetsMods implements ugh.dl.Fileformat {
             identifierTypeNode.appendChild(identifierTypevalueNode);
             createdNode.appendChild(identifierTypeNode);
         }
-        if (thePerson.getAuthorityFileID() != null && !thePerson.getAuthorityFileID().equals("")) {
-            theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYFILEID_STRING;
+        if (thePerson.getAuthorityID() != null && !thePerson.getAuthorityID().equals("")) {
+            theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYID_STRING;
             Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument);
-            Node authorityfileidvalueNode = theDocument.createTextNode(thePerson.getAuthorityFileID());
+            Node authorityfileidvalueNode = theDocument.createTextNode(thePerson.getAuthorityID());
             authorityfileidNode.appendChild(authorityfileidvalueNode);
             createdNode.appendChild(authorityfileidNode);
         }
+        if (thePerson.getAuthoritURI() != null && !thePerson.getAuthoritURI().equals("")) {
+            theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYURI_STRING;
+            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument);
+            Node authorityfileidvalueNode = theDocument.createTextNode(thePerson.getAuthoritURI());
+            authorityfileidNode.appendChild(authorityfileidvalueNode);
+            createdNode.appendChild(authorityfileidNode);
+        }
+        if (thePerson.getAuthoritValue() != null && !thePerson.getAuthoritValue().equals("")) {
+            theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYVALUE_STRING;
+            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument);
+            Node authorityfileidvalueNode = theDocument.createTextNode(thePerson.getAuthoritValue());
+            authorityfileidNode.appendChild(authorityfileidvalueNode);
+            createdNode.appendChild(authorityfileidNode);
+        }
+        
+        
         if (thePerson.getDisplayname() != null && !thePerson.getDisplayname().equals("")) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_DISPLAYNAME_STRING;
             Node displaynameNode = createNode(theXQuery, createdNode, theDocument);

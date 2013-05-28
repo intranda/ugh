@@ -108,8 +108,6 @@ public class MetadataType implements Serializable {
 	// that a metadata with the same value cannot be available twice.
 	protected boolean				isIdentifier		= false;
 	
-	protected boolean 				isNormdata			= false;
-
 	/***************************************************************************
 	 * Constructor.
 	 **************************************************************************/
@@ -166,7 +164,6 @@ public class MetadataType implements Serializable {
 		}
 		newMDType.setIdentifier(this.isIdentifier());
 		newMDType.setIsPerson(this.isPerson);
-		newMDType.setNormdata(this.isNormdata);
 		return newMDType;
 	}
 
@@ -367,24 +364,12 @@ public class MetadataType implements Serializable {
 		}
 
 		if (this.isIdentifier == metadataType.isIdentifier
-				&& metadataType.isPerson == this.isPerson && metadataType.isNormdata == this.isNormdata) {
+				&& metadataType.isPerson == this.isPerson) {
 			return true;
 		}
 
 		return false;
 	}
 
-	/**
-	 * @param isNormdata the isNormdata to set
-	 */
-	public void setNormdata(boolean isNormdata) {
-		this.isNormdata = isNormdata;
-	}
 
-	/**
-	 * @return the isNormdata
-	 */
-	public boolean getIsNormdata() {
-		return isNormdata;
-	}
 }

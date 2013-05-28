@@ -168,7 +168,6 @@ public class DocStruct implements Serializable {
     // List of all persons; list containing all Person objects.
     private List<Person> persons;
 
-    private List<NormMetadata> normmetadata;
     private DocStruct parent;
     // All references to other DocStrct instances (containing References
     // objects).
@@ -228,7 +227,7 @@ public class DocStruct implements Serializable {
 
         // We have to check, if this type is allowed here, this depends on the
         // parent DocStruct.
-        boolean result = setType(inType);
+       setType(inType);
 
         //        // This conditional can never be reached, because the result ALWAYS
         //        // is true! See setType()! Check again and take it out!
@@ -504,8 +503,8 @@ public class DocStruct implements Serializable {
                         if (md.getValueQualifier() != null && md.getValueQualifierType() != null) {
                             mdnew.setValueQualifier(md.getValueQualifier(), md.getValueQualifierType());
                         }
-                        if (md.getAuthorityFileID() != null) {
-                            mdnew.setAutorityFileID(md.getAuthorityFileID());
+                        if (md.getAuthorityID() != null && md.getAuthoritValue() != null && md.getAuthoritURI() != null) {
+                            mdnew.setAutorityFile(md.getAuthorityID(), md.getAuthoritURI(), md.getAuthoritValue());
                         }
                         newStruct.addMetadata(mdnew);
                     } catch (DocStructHasNoTypeException e) {
@@ -535,8 +534,8 @@ public class DocStruct implements Serializable {
                             if (meta.getValueQualifier() != null && meta.getValueQualifierType() != null) {
                                 newMeta.setValueQualifier(meta.getValueQualifier(), meta.getValueQualifierType());
                             }
-                            if (meta.getAuthorityFileID() != null) {
-                                newMeta.setAutorityFileID(meta.getAuthorityFileID());
+                            if (meta.getAuthorityID() != null && meta.getAuthoritValue() != null && meta.getAuthoritURI() != null) {
+                                newMeta.setAutorityFile(meta.getAuthorityID(), meta.getAuthoritURI(), meta.getAuthoritValue());
                             }
                             newmdlist.add(newMeta);
                         }
@@ -2119,7 +2118,7 @@ public class DocStruct implements Serializable {
                     // Check metadata here only.
                     List<? extends Metadata> availableMD = this.getAllMetadataByType(mdt);
 
-                    if (!mdt.isNormdata && !mdt.isPerson && (availableMD.size() < 1)) {
+                    if (!mdt.isPerson && (availableMD.size() < 1)) {
                         // Metadata is NOT available; we are allowed to add it.
                         addableMetadata.add(mdt);
                     }
@@ -2137,15 +2136,6 @@ public class DocStruct implements Serializable {
 
                         // Only add the metadata type, if the person was not
                         // already used.
-                        if (!used) {
-                            addableMetadata.add(mdt);
-                        }
-                    } else if (mdt.getIsNormdata() && this.getAllNormMetadata() != null) {
-                        for (NormMetadata nmd : this.getAllNormMetadata()) {
-                            if (nmd.getType().equals(mdt)) {
-                                used = true;
-                            }
-                        }
                         if (!used) {
                             addableMetadata.add(mdt);
                         }
@@ -2189,7 +2179,7 @@ public class DocStruct implements Serializable {
                 // Check metadata here only.
                 List<? extends Metadata> availableMD = this.getAllMetadataByType(mdt);
 
-                if (!mdt.isNormdata && !mdt.isPerson && (availableMD.size() < 1)) {
+                if (!mdt.isPerson && (availableMD.size() < 1)) {
                     // Metadata is NOT available; we are allowed to add it.
                     addableMetadata.add(mdt);
                 }
@@ -2207,15 +2197,6 @@ public class DocStruct implements Serializable {
 
                     // Only add the metadata type, if the person was not
                     // already used.
-                    if (!used) {
-                        addableMetadata.add(mdt);
-                    }
-                } else if (mdt.getIsNormdata() && this.getAllNormMetadata() != null) {
-                    for (NormMetadata nmd : this.getAllNormMetadata()) {
-                        if (nmd.getType().equals(mdt)) {
-                            used = true;
-                        }
-                    }
                     if (!used) {
                         addableMetadata.add(mdt);
                     }
@@ -2598,152 +2579,6 @@ public class DocStruct implements Serializable {
         return true;
     }
 
-    /***************************************************************************
-     * <p>
-     * Adds a person to this DocStruct instance. Information from configuration is used to check, wether this person can be added to this document.
-     * </p>
-     * 
-     * @param in Person object
-     * @return true if successful
-     * @throws MetadataTypeNotAllowedException if metadata could not be added, because the DocStructType configuration of this DocStruct instance does
-     *             not allow metadata of this type or this DocStruct instance has already the maximum number of metadata of this type. Information
-     *             about possible maximum numbers of metadata can be found in the <code>
-     * DocStructType</code> class.
-     * @throws IncompletePersonObjectException if a person, which is added is not complete; e.g. the MetadataType is not set.
-     **************************************************************************/
-    public boolean addNormMetadata(NormMetadata in) throws MetadataTypeNotAllowedException {
-
-        // Max number of persons (from configuration).
-        String maxnumberallowed = null;
-        // Number of persons currently available.
-        int number = 0;
-        // Store, wether we can or cannot add information.
-        boolean insert = false;
-
-        // Check, if person is complete.
-        if (in.getType() == null) {
-            IncompletePersonObjectException ipoe = new IncompletePersonObjectException();
-            LOGGER.error("Incomplete data for person metadata");
-            throw ipoe;
-        }
-
-        // Get MetadataType of this person get MetadataType from docstructType
-        // object with the same name.
-        MetadataType mdtype = this.type.getMetadataTypeByType(in.getType());
-        if (mdtype == null) {
-            MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException();
-            LOGGER.error("MetadataType " + in.getType().getName() + " not available for DocStruct '" + this.getType().getName() + "'");
-            throw mtnae;
-        }
-
-        // Check, if docstruct may have this person ??? depends on the role
-        // value of person.
-        maxnumberallowed = this.type.getNumberOfMetadataType(mdtype);
-
-        // Check, if another Person of this type is allowed. How many persons
-        // are already available.
-        number = countMDofthisType(mdtype.getName());
-
-        // As many as we want (zero or more).
-        if (maxnumberallowed.equals("*")) {
-            insert = true;
-        }
-        // One or more.
-        if (maxnumberallowed.equals("+") || maxnumberallowed.equals("+")) {
-            insert = true;
-        }
-        // Only one, if we have already one, we cannot add it.
-        if (maxnumberallowed.equals("1m") || maxnumberallowed.equals("1o")) {
-            if (number < 1) {
-                insert = true;
-            } else {
-                insert = false;
-            }
-        }
-
-        // We can add this person.
-        if (insert) {
-            if (this.normmetadata == null) {
-                this.normmetadata = new LinkedList<NormMetadata>();
-            }
-            this.normmetadata.add(in);
-
-            return true;
-        }
-
-        MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException();
-        LOGGER.error("Person MetadataType '" + in.getType().getName() + "' not allowed for DocStruct '" + this.getType().getName() + "'");
-        throw mtnae;
-    }
-
-    /***************************************************************************
-     * <p>
-     * Removes a Person object.
-     * </p>
-     * 
-     * @param in Person object to be removed
-     * @param force if set to true, person is removed, even if invalid document is the result
-     * @return true, if removed; otherwise false
-     * @throws IncompletePersonObjectException if the first parameter is not a complete person object
-     **************************************************************************/
-    public boolean removeNormMetadata(NormMetadata in, boolean force) throws IncompletePersonObjectException {
-
-        if (this.normmetadata == null) {
-            return false;
-        }
-
-        MetadataType inMDType = in.getType();
-        // Incomplete person.
-        if (inMDType == null) {
-            IncompletePersonObjectException ipoe = new IncompletePersonObjectException();
-            LOGGER.error("Incomplete data for person metadata '" + in.getType().getName() + "'");
-            throw ipoe;
-        }
-
-        // How many metadata of this type do we have already.
-        int typesavailable = countMDofthisType(inMDType.getName());
-        // How many types must be at least available.
-        String maxnumbersallowed = this.type.getNumberOfMetadataType(inMDType);
-
-        if (force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
-            // There must be at least one.
-            return false;
-        }
-        if (force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
-            // There must be at least one.
-            return false;
-        }
-
-        this.normmetadata.remove(in);
-
-        return true;
-    }
-
-    /***************************************************************************
-     * @param in
-     * @return true, if removed; otherwise false
-     * @throws IncompletePersonObjectException
-     **************************************************************************/
-    public boolean removeNormMetadata(NormMetadata in) throws IncompletePersonObjectException {
-        return removeNormMetadata(in, false);
-    }
-
-    /***************************************************************************
-     * <p>
-     * Get a list of all Person objects.
-     * </p>
-     * 
-     * @return List containing Person objects; if no such objects are available null is returned.
-     **************************************************************************/
-    public List<NormMetadata> getAllNormMetadata() {
-
-        if (this.normmetadata == null || this.normmetadata.isEmpty()) {
-            return null;
-        }
-
-        return this.normmetadata;
-    }
-
     public boolean addPerson(Person in) throws MetadataTypeNotAllowedException, IncompletePersonObjectException {
 
         // Max number of persons (from configuration).
@@ -3014,9 +2849,6 @@ public class DocStruct implements Serializable {
                     } catch (MetadataTypeNotAllowedException e) {
                         continue;
                     }
-                } else if (mdt.isNormdata) {
-                    NormMetadata nmd = new NormMetadata(mdt);
-                    this.addNormMetadata(nmd);
                 } else {
                     // It's metadata, so create a new Metadata element.
                     Metadata metaFoo = new Metadata(mdt);

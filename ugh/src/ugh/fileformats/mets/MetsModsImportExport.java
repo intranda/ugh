@@ -71,7 +71,6 @@ import ugh.dl.Metadata;
 import ugh.dl.MetadataGroup;
 import ugh.dl.MetadataGroupType;
 import ugh.dl.MetadataType;
-import ugh.dl.NormMetadata;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
 import ugh.exceptions.DocStructHasNoTypeException;
@@ -824,6 +823,8 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
                         String[] lastnamevalue = null;
                         String[] affiliationvalue = null;
                         String[] authorityfileidvalue = null;
+                        String[] authorityuri = null;
+                        String[] authorityvalue = null;
                         String[] identifiervalue = null;
                         String[] identifiertypevalue = null;
                         String[] displaynamevalue = null;
@@ -838,8 +839,14 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
                         if (mmo.getAffiliationXQuery() != null) {
                             affiliationvalue = getValueForUnambigiousXQuery(node, mmo.getAffiliationXQuery());
                         }
-                        if (mmo.getAuthorityFileIDXquery() != null) {
-                            authorityfileidvalue = getValueForUnambigiousXQuery(node, mmo.getAuthorityFileIDXquery());
+                        if (mmo.getAuthorityIDXquery() != null) {
+                            authorityfileidvalue = getValueForUnambigiousXQuery(node, mmo.getAuthorityIDXquery());
+                        }
+                        if (mmo.getAuthorityURIXquery() != null) {
+                            authorityuri = getValueForUnambigiousXQuery(node, mmo.getAuthorityURIXquery());
+                        }
+                        if (mmo.getAuthorityValueXquery() != null) {
+                            authorityvalue = getValueForUnambigiousXQuery(node, mmo.getAuthorityValueXquery());
                         }
                         if (mmo.getIdentifierXQuery() != null) {
                             identifiervalue = getValueForUnambigiousXQuery(node, mmo.getIdentifierXQuery());
@@ -853,6 +860,8 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
                         if (mmo.getPersontypeXQuery() != null) {
                             persontypevalue = getValueForUnambigiousXQuery(node, mmo.getDisplayNameXQuery());
                         }
+               
+                        
 
                         if (lastnamevalue != null) {
                             ps.setLastname(lastnamevalue[0]);
@@ -863,8 +872,8 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
                         if (affiliationvalue != null) {
                             ps.setAffiliation(affiliationvalue[0]);
                         }
-                        if (authorityfileidvalue != null) {
-                            ps.setAutorityFileID(authorityfileidvalue[0]);
+                        if (authorityfileidvalue != null && authorityuri != null && authorityvalue != null) {
+                            ps.setAutorityFile(authorityfileidvalue[0], authorityuri[0], authorityvalue[0]);
                         }
                         if (identifiervalue != null) {
                             ps.setIdentifier(identifiervalue[0]);
@@ -898,40 +907,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
                         break;
                     }
 
-                    if (mdt.getIsNormdata()) {
-                        NormMetadata norm = null;
-                        try {
-                            norm = new NormMetadata(mdt);
-                        } catch (MetadataTypeNotAllowedException e) {
-                            // mdt is NOT null, we ensure this above!
-                            e.printStackTrace();
-                        }
-                        String[] database = null;
-                        String[] identifier = null;
-
-                        if (mmo.getDatabaseXQuery() != null) {
-                            database = getValueForUnambigiousXQuery(node, mmo.getDatabaseXQuery());
-                        }
-                        if (mmo.getIdentifierXQuery() != null) {
-                            identifier = getValueForUnambigiousXQuery(node, mmo.getIdentifierXQuery());
-                        }
-                        if (database != null) {
-                            norm.setDataBase(database[0]);
-                        }
-                        if (identifier != null) {
-                            norm.setIdentifier(identifier[0]);
-                        }
-
-                        try {
-                            inStruct.addNormMetadata(norm);
-                        } catch (MetadataTypeNotAllowedException e) {
-                            String message = "DocumentStructure for which metadata should be added has no type!";
-                            LOGGER.error(message, e);
-                            throw new ImportException(message, e);
-                        }
-                        break;
-                    }
-
                     if (value == null) {
                         // Value not found, as the subnode is not a TEXT node
                         // continue iterating over subnodes.
@@ -946,7 +921,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
                         // mdt is NOT null, we ensure this above!
                         e.printStackTrace();
                     }
-
+                    // TODO check for authorityID and value
                     md.setValue(value);
 
                     // TODO read groups
@@ -1724,14 +1699,14 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
                     createdNode.appendChild(persontypeNode);
                 }
 
-            } else if (key.equalsIgnoreCase(METS_PREFS_AUTHORITYFILEIDXPATH_STRING) && thePerson.getAuthorityFileID() != null) {
+            } else if (key.equalsIgnoreCase(METS_PREFS_AUTHORITYFILEIDXPATH_STRING) && thePerson.getAuthorityID() != null) {
 
                 if (xquery == null) {
-                    LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s authorityFileID '" + thePerson.getAuthorityFileID()
+                    LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s authorityFileID '" + thePerson.getAuthorityID()
                             + "'");
                 } else {
                     Node authorityfileidNode = createNode(xquery, createdNode, theDomDoc);
-                    Node authorityfileidvalueNode = theDomDoc.createTextNode(thePerson.getAuthorityFileID());
+                    Node authorityfileidvalueNode = theDomDoc.createTextNode(thePerson.getAuthorityID());
                     authorityfileidNode.appendChild(authorityfileidvalueNode);
                     createdNode.appendChild(authorityfileidNode);
                 }
@@ -1864,13 +1839,13 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
                 createdNode.appendChild(identifierTypeNode);
             }
         }
-        if (thePerson.getAuthorityFileID() != null) {
-            xquery = theMMO.getAuthorityFileIDXquery();
+        if (thePerson.getAuthorityID() != null) {
+            xquery = theMMO.getAuthorityIDXquery();
             if (xquery == null) {
-                LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s authorityFileID '" + thePerson.getAuthorityFileID() + "'");
+                LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s authorityFileID '" + thePerson.getAuthorityID() + "'");
             } else {
                 Node authorityfileidNode = createNode(xquery, createdNode, theDomDoc);
-                Node authorityfileidvalueNode = theDomDoc.createTextNode(thePerson.getAuthorityFileID());
+                Node authorityfileidvalueNode = theDomDoc.createTextNode(thePerson.getAuthorityID());
                 authorityfileidNode.appendChild(authorityfileidvalueNode);
                 createdNode.appendChild(authorityfileidNode);
             }
@@ -2067,7 +2042,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
                 if (currentNode.getNodeName().equalsIgnoreCase(METS_PREFS_AUTHORITYFILEIDXPATH_STRING)) {
                     personName = getTextNodeValue(currentNode);
                     if (personName != null) {
-                        mmo.setAuthorityFileIDXquery(personName.trim());
+                        mmo.setAuthorityIDXquery(personName.trim());
                     }
                 }
                 if (currentNode.getNodeName().equalsIgnoreCase(METS_PREFS_IDENTIFIERXPATH_STRING)) {
