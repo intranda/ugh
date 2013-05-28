@@ -922,7 +922,12 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
                         // mdt is NOT null, we ensure this above!
                         e.printStackTrace();
                     }
-                    // TODO check for authorityID and value
+                    if (node.getAttributes().getNamedItem("authority") != null && node.getAttributes().getNamedItem("authorityURI") != null && node.getAttributes().getNamedItem("valueURI") != null) {
+                        String authority =  node.getAttributes().getNamedItem("authority").getNodeValue();
+                        String authorityURI = node.getAttributes().getNamedItem("authorityURI").getNodeValue();
+                        String valueURI = node.getAttributes().getNamedItem("valueURI").getNodeValue();
+                        md.setAutorityFile(authority, authorityURI, valueURI);
+                     }
                     md.setValue(value);
 
                     // TODO read groups
@@ -1598,6 +1603,13 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
             // Add value to node.
             Node valueNode = theDocument.createTextNode(newMetadataValue);
 
+            
+            if (theMetadata.getAuthorityID() != null && theMetadata.getAuthorityURI() != null && theMetadata.getAuthorityValue() != null) {
+                ((Element) createdNode).setAttribute("authority", theMetadata.getAuthorityID());
+                ((Element) createdNode).setAttribute("authorityURI", theMetadata.getAuthorityURI());
+                ((Element) createdNode).setAttribute("valueURI", theMetadata.getAuthorityValue());
+            }
+            
             createdNode.appendChild(valueNode);
             LOGGER.trace("Value '" + newMetadataValue + "' (" + theMetadata.getType().getName() + ") added to node >>" + createdNode.getNodeName()
                     + "<<");
@@ -1841,17 +1853,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
             }
         }
         if (thePerson.getAuthorityID() != null && thePerson.getAuthorityURI() != null && thePerson.getAuthorityValue() != null) {
-            Attr authority = theDomDoc.createAttribute("authority");
-            authority.setNodeValue(thePerson.getAuthorityID());
-            createdNode.appendChild(authority);
-            
-            Attr authorityURI = theDomDoc.createAttribute("authorityURI");
-            authorityURI.setNodeValue(thePerson.getAuthorityURI());
-            createdNode.appendChild(authorityURI);
-            
-            Attr authorityvalue = theDomDoc.createAttribute("valueURI");
-            authorityvalue.setNodeValue(thePerson.getAuthorityValue());
-            createdNode.appendChild(authorityvalue);
+            ((Element) createdNode).setAttribute("authority", thePerson.getAuthorityID());
+            ((Element) createdNode).setAttribute("authorityURI", thePerson.getAuthorityURI());
+            ((Element) createdNode).setAttribute("valueURI", thePerson.getAuthorityValue());
             
 //            xquery = theMMO.getAuthorityIDXquery();
 //            if (xquery == null) {

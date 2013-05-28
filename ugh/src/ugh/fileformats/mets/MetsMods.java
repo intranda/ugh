@@ -113,7 +113,6 @@ import ugh.dl.Md;
 import ugh.dl.VirtualFileGroup;
 import ugh.exceptions.DocStructHasNoTypeException;
 import ugh.exceptions.ImportException;
-import ugh.exceptions.IncompletePersonObjectException;
 import ugh.exceptions.MetadataTypeNotAllowedException;
 import ugh.exceptions.MissingModsMappingException;
 import ugh.exceptions.PreferencesException;
@@ -133,22 +132,11 @@ import ugh.exceptions.WriteException;
  *        TODO REFACTOR ALL THE XPATH PARSING STUFF!!
  * 
  *        TODO Separate the VirtualFileGroup usage, put it into MetsModsImportExport!
- * 
- *        TODO (GENERAL UGH ISSUE) Throw exceptions, if a method is not implementet yet! do not return boolean values!
- * 
- *        TODO (GENERAL UGH ISSUE) Change null return values of list return types to empty lists EVERYWHERE in ugh!
- * 
- *        TODO Fix the PreferencesxException for Volumes (DPD-372)!
- * 
+ *
  *        TODO Get the anchor files from the METS' mptrs, and not via filename! Don't we do that already?
  * 
- *        TODO Have a look at DPD-352 again, and check IF and WHEN MetsMods writes smLinks for logical DocStructs from the anchor DocStruct into the
- *        subordinated DocStruct!
- * 
  *        TODO Check if there is a metadata with type="identifier" is existing in those DocStructs with anchor="true"! Already checked?
- * 
- *        TODO Generalize the internal metadata storing, e.g. persons should be stored in BoundBook too, if they are existing!
- * 
+ *
  *        TODO Maybe read the content files while reading the DocStructs and then use the MetsHelper to retrieve things!
  * 
  *        CHANGELOG
@@ -425,10 +413,6 @@ public class MetsMods implements ugh.dl.Fileformat {
     protected static final String GOOBI_PERSON_AUTHORITYVALUE_STRING = "authorityValue";
     protected static final String GOOBI_PERSON_DISPLAYNAME_STRING = "displayName";
     protected static final String GOOBI_PERSON_PERSONTYPE_STRING = "personType";
-
-    // Store normdata in mods:extension
-    protected static final String GOOBI_NORMDATA_IDENTIFIER = "identifier";
-    protected static final String GOOBI_NORMDATA_SOURCE = "source";
 
     // The Goobi internal metadata XPath.
     protected static final String GOOBI_INTERNAL_METADATA_XPATH = "/mods:mods/mods:extension/goobi:goobi/goobi:metadata";
@@ -2058,8 +2042,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                         && metabagu.getAttributes().getNamedItem("type") == null) {
                     String name = metabagu.getAttributes().getNamedItem("name").getNodeValue();
                     String value = metabagu.getTextContent();
-                    // TODO check for authorityFileID, authortityValue
-                    
+                   
                     LOGGER.debug("Metadata '" + name + "' with value '" + value + "' found in Goobi's MODS extension");
 
                     // Check if metadata exists in prefs.
@@ -2076,7 +2059,13 @@ public class MetsMods implements ugh.dl.Fileformat {
                     try {
                         Metadata md = new Metadata(mdt);
                         md.setValue(value);
-
+                        if (metabagu.getAttributes().getNamedItem("authority") != null && metabagu.getAttributes().getNamedItem("authorityURI") != null && metabagu.getAttributes().getNamedItem("valueURI") != null) {
+                            String authority =  metabagu.getAttributes().getNamedItem("authority").getNodeValue();
+                            String authorityURI = metabagu.getAttributes().getNamedItem("authorityURI").getNodeValue();
+                            String valueURI = metabagu.getAttributes().getNamedItem("valueURI").getNodeValue();
+                            md.setAutorityFile(authority, authorityURI, valueURI);
+                         }
+                         
                         inStruct.addMetadata(md);
 
                         LOGGER.debug("Added metadata '" + mdt.getName() + "' to DocStruct '" + inStruct.getType().getName() + "' with value '"
@@ -2124,17 +2113,30 @@ public class MetsMods implements ugh.dl.Fileformat {
 
                                 String metadataName = metadata.getAttributes().item(0).getTextContent();
                                 String value = metadata.getTextContent();
-                                   List<Metadata> metadataList = new ArrayList<Metadata>(metadataGroup.getMetadataList());
+                                String authority = null;
+                                String authorityURI = null;
+                                String valueURI = null;
+                                if (metadata.getAttributes().getNamedItem("authority") != null && metadata.getAttributes().getNamedItem("authorityURI") != null && metadata.getAttributes().getNamedItem("valueURI") != null) {
+                                    authority =  metadata.getAttributes().getNamedItem("authority").getNodeValue();
+                                    authorityURI = metadata.getAttributes().getNamedItem("authorityURI").getNodeValue();
+                                    valueURI = metadata.getAttributes().getNamedItem("valueURI").getNodeValue();
+                                }
+                                
+                                List<Metadata> metadataList = new ArrayList<Metadata>(metadataGroup.getMetadataList());
                                 for (Metadata meta : metadataList) {
-                                    // TODO check for authorityFileID, authortityValue
-                                 
                                     if (meta.getType().getName().equals(metadataName)) {
                                         if (meta.getValue() == null || meta.getValue().isEmpty()) {
                                             meta.setValue(value);
+                                            if (authority != null && authorityURI != null && valueURI != null) {
+                                                meta.setAutorityFile(authority, authorityURI, valueURI);
+                                            }
                                             break;
                                         } else {
                                             Metadata mdnew = new Metadata(meta.getType());
-                                            meta.setValue(value);
+                                            mdnew.setValue(value);
+                                            if (authority != null && authorityURI != null && valueURI != null) {
+                                                mdnew.setAutorityFile(authority, authorityURI, valueURI);
+                                            }
                                             metadataGroup.addMetadata(mdnew);
                                         }
                                     }
@@ -4324,6 +4326,12 @@ public class MetsMods implements ugh.dl.Fileformat {
         // Add value to node.
         Node valueNode = theDocument.createTextNode(theMetadata.getValue());
         createdNode.appendChild(valueNode);
+
+        if (theMetadata.getAuthorityID() != null && theMetadata.getAuthorityURI() != null && theMetadata.getAuthorityValue() != null) {
+            ((Element) createdNode).setAttribute("authority", theMetadata.getAuthorityID());
+            ((Element) createdNode).setAttribute("authorityURI", theMetadata.getAuthorityURI());
+            ((Element) createdNode).setAttribute("valueURI", theMetadata.getAuthorityValue());
+        }
 
         LOGGER.trace("Value '" + theMetadata.getValue() + "' (" + theMetadata.getType().getName() + ") added to node >>" + createdNode.getNodeName()
                 + "<<");

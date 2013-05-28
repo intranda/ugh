@@ -158,7 +158,7 @@ import ugh.exceptions.WriteException;
  * 
  ******************************************************************************/
 
-@SuppressWarnings("deprecation")
+@Deprecated
 public class RDFFile implements ugh.dl.Fileformat {
 
 	/***************************************************************************
