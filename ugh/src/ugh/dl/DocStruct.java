@@ -503,8 +503,8 @@ public class DocStruct implements Serializable {
                         if (md.getValueQualifier() != null && md.getValueQualifierType() != null) {
                             mdnew.setValueQualifier(md.getValueQualifier(), md.getValueQualifierType());
                         }
-                        if (md.getAuthorityID() != null && md.getAuthoritValue() != null && md.getAuthoritURI() != null) {
-                            mdnew.setAutorityFile(md.getAuthorityID(), md.getAuthoritURI(), md.getAuthoritValue());
+                        if (md.getAuthorityID() != null && md.getAuthorityValue() != null && md.getAuthorityURI() != null) {
+                            mdnew.setAutorityFile(md.getAuthorityID(), md.getAuthorityURI(), md.getAuthorityValue());
                         }
                         newStruct.addMetadata(mdnew);
                     } catch (DocStructHasNoTypeException e) {
@@ -534,8 +534,8 @@ public class DocStruct implements Serializable {
                             if (meta.getValueQualifier() != null && meta.getValueQualifierType() != null) {
                                 newMeta.setValueQualifier(meta.getValueQualifier(), meta.getValueQualifierType());
                             }
-                            if (meta.getAuthorityID() != null && meta.getAuthoritValue() != null && meta.getAuthoritURI() != null) {
-                                newMeta.setAutorityFile(meta.getAuthorityID(), meta.getAuthoritURI(), meta.getAuthoritValue());
+                            if (meta.getAuthorityID() != null && meta.getAuthorityValue() != null && meta.getAuthorityURI() != null) {
+                                newMeta.setAutorityFile(meta.getAuthorityID(), meta.getAuthorityURI(), meta.getAuthorityValue());
                             }
                             newmdlist.add(newMeta);
                         }

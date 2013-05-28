@@ -220,7 +220,7 @@ public class Metadata implements Serializable {
      * 
      * @return Identifier from value.
      **************************************************************************/
-    public String getAuthoritURI() {
+    public String getAuthorityURI() {
         return this.authorityURI;
     }
 
@@ -231,7 +231,7 @@ public class Metadata implements Serializable {
      * 
      * @return Identifier from value.
      **************************************************************************/
-    public String getAuthoritValue() {
+    public String getAuthorityValue() {
         return this.authorityValue;
     }
 

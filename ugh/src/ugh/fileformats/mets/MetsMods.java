@@ -4402,17 +4402,17 @@ public class MetsMods implements ugh.dl.Fileformat {
             authorityfileidNode.appendChild(authorityfileidvalueNode);
             createdNode.appendChild(authorityfileidNode);
         }
-        if (thePerson.getAuthoritURI() != null && !thePerson.getAuthoritURI().equals("")) {
+        if (thePerson.getAuthorityURI() != null && !thePerson.getAuthorityURI().equals("")) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYURI_STRING;
             Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument);
-            Node authorityfileidvalueNode = theDocument.createTextNode(thePerson.getAuthoritURI());
+            Node authorityfileidvalueNode = theDocument.createTextNode(thePerson.getAuthorityURI());
             authorityfileidNode.appendChild(authorityfileidvalueNode);
             createdNode.appendChild(authorityfileidNode);
         }
-        if (thePerson.getAuthoritValue() != null && !thePerson.getAuthoritValue().equals("")) {
+        if (thePerson.getAuthorityValue() != null && !thePerson.getAuthorityValue().equals("")) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYVALUE_STRING;
             Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument);
-            Node authorityfileidvalueNode = theDocument.createTextNode(thePerson.getAuthoritValue());
+            Node authorityfileidvalueNode = theDocument.createTextNode(thePerson.getAuthorityValue());
             authorityfileidNode.appendChild(authorityfileidvalueNode);
             createdNode.appendChild(authorityfileidNode);
         }

@@ -50,6 +50,7 @@ import org.apache.oro.text.perl.Perl5Util;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
+import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -1839,16 +1840,28 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
                 createdNode.appendChild(identifierTypeNode);
             }
         }
-        if (thePerson.getAuthorityID() != null) {
-            xquery = theMMO.getAuthorityIDXquery();
-            if (xquery == null) {
-                LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s authorityFileID '" + thePerson.getAuthorityID() + "'");
-            } else {
-                Node authorityfileidNode = createNode(xquery, createdNode, theDomDoc);
-                Node authorityfileidvalueNode = theDomDoc.createTextNode(thePerson.getAuthorityID());
-                authorityfileidNode.appendChild(authorityfileidvalueNode);
-                createdNode.appendChild(authorityfileidNode);
-            }
+        if (thePerson.getAuthorityID() != null && thePerson.getAuthorityURI() != null && thePerson.getAuthorityValue() != null) {
+            Attr authority = theDomDoc.createAttribute("authority");
+            authority.setNodeValue(thePerson.getAuthorityID());
+            createdNode.appendChild(authority);
+            
+            Attr authorityURI = theDomDoc.createAttribute("authorityURI");
+            authorityURI.setNodeValue(thePerson.getAuthorityURI());
+            createdNode.appendChild(authorityURI);
+            
+            Attr authorityvalue = theDomDoc.createAttribute("valueURI");
+            authorityvalue.setNodeValue(thePerson.getAuthorityValue());
+            createdNode.appendChild(authorityvalue);
+            
+//            xquery = theMMO.getAuthorityIDXquery();
+//            if (xquery == null) {
+//                LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s authorityFileID '" + thePerson.getAuthorityID() + "'");
+//            } else {
+//                Node authorityfileidNode = createNode(xquery, createdNode, theDomDoc);
+//                Node authorityfileidvalueNode = theDomDoc.createTextNode(thePerson.getAuthorityID());
+//                authorityfileidNode.appendChild(authorityfileidvalueNode);
+//                createdNode.appendChild(authorityfileidNode);
+//            }
         }
         if (thePerson.getDisplayname() != null) {
             xquery = theMMO.getDisplayNameXQuery();
