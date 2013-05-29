@@ -73,6 +73,7 @@ import java.util.Map;
  * 
  * @author Markus Enders
  * @author Stefan E. Funk
+ * @author Robert Sehr
  * @version 2010-02-13
  * @see Metadata#setType
  * @see DocStructType#getMetadataTypeByType

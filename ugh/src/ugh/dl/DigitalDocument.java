@@ -91,6 +91,7 @@ import com.thoughtworks.xstream.mapper.MapperWrapper;
  * 
  * @author Markus Enders
  * @author Stefan E. Funk
+ * @author Robert Sehr
  * @version 2010-02-23
  * @see DocStruct, Metadata, Prefs
  * 

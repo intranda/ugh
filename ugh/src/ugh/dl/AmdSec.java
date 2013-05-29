@@ -30,7 +30,7 @@ import org.w3c.dom.Node;
 public class AmdSec implements Serializable {
 
 	/**
-	 * 
+	 * @author Robert Sehr
 	 */
 	private static final long serialVersionUID = -2651069769792564435L;
 	private String id;

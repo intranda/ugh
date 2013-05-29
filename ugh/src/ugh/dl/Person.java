@@ -52,6 +52,7 @@ import ugh.exceptions.MetadataTypeNotAllowedException;
  * 
  * @author Markus Enders
  * @author Stefan E. Funk
+ * @author Robert Sehr
  * @version 2010-02-14
  * @see Metadata
  * 
@@ -83,8 +84,8 @@ public class Person extends Metadata {
 	private String				displayname			= null;
 	private String				affiliation			= null;
 	private String				institution			= null;
-	private String				identifier			= null;
-	private String				identifierType		= null;
+//	private String				identifier			= null;
+//	private String				identifierType		= null;
 	private String				role				= null;
 	private String				persontype			= null;
 	private boolean				isCorporation		= false;
@@ -194,37 +195,37 @@ public class Person extends Metadata {
 		return this.affiliation;
 	}
 
-	/***************************************************************************
-	 * @param in
-	 * @return
-	 **************************************************************************/
-	public boolean setIdentifier(String in) {
-		this.identifier = in;
-		return true;
-	}
-
-	/***************************************************************************
-	 * @return
-	 **************************************************************************/
-	public String getIdentifier() {
-		return this.identifier;
-	}
-
-	/***************************************************************************
-	 * @param in
-	 * @return
-	 **************************************************************************/
-	public boolean setIdentifierType(String in) {
-		this.identifierType = in;
-		return true;
-	}
-
-	/***************************************************************************
-	 * @return
-	 **************************************************************************/
-	public String getIdentifierType() {
-		return this.identifierType;
-	}
+//	/***************************************************************************
+//	 * @param in
+//	 * @return
+//	 **************************************************************************/
+//	public boolean setIdentifier(String in) {
+//		this.identifier = in;
+//		return true;
+//	}
+//
+//	/***************************************************************************
+//	 * @return
+//	 **************************************************************************/
+//	public String getIdentifier() {
+//		return this.identifier;
+//	}
+//
+//	/***************************************************************************
+//	 * @param in
+//	 * @return
+//	 **************************************************************************/
+//	public boolean setIdentifierType(String in) {
+//		this.identifierType = in;
+//		return true;
+//	}
+//
+//	/***************************************************************************
+//	 * @return
+//	 **************************************************************************/
+//	public String getIdentifierType() {
+//		return this.identifierType;
+//	}
 
 	/***************************************************************************
 	 * @param in
@@ -395,14 +396,20 @@ public class Person extends Metadata {
 				return false;
 			}
 
-			if (!((this.getIdentifier() == null && person.getIdentifier() == null) || this
-					.getIdentifier().equals(person.getIdentifier()))) {
+			if (!((this.getAuthorityValue() == null && person.getAuthorityValue() == null) || this
+					.getAuthorityValue().equals(person.getAuthorityValue()))) {
 				return false;
 			}
 
-			if (!((this.getIdentifierType() == null && person
-					.getIdentifierType() == null) || this.getIdentifierType()
-					.equals(person.getIdentifierType()))) {
+	         if (!((this.getAuthorityURI() == null && person.getAuthorityURI() == null) || this
+	                    .getAuthorityURI().equals(person.getAuthorityURI()))) {
+	                return false;
+	            }
+
+			
+			if (!((this.getAuthorityID() == null && person
+					.getAuthorityID() == null) || this.getAuthorityID()
+					.equals(person.getAuthorityID()))) {
 				return false;
 			}
 

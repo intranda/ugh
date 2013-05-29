@@ -88,10 +88,15 @@ import ugh.exceptions.WriteException;
  * </p>
  * 
  * @author Markus Enders
+ * @author Robert Sehr
  * @version 2010-05-05
  * @since 2004-05-21
  * 
  *        TODOLOG
+ * 
+ *        TODO read and write metadataGroups
+ *        
+ *        TODO read and write normdata
  * 
  *        TODO Use final strings for fixed XML strings and error messages!
  * 
@@ -1682,12 +1687,7 @@ public class RDFFile implements ugh.dl.Fileformat {
 
 				// Check, if metadata has external identifier; if so, write
 				// value in ID field.
-				if (ps.getIdentifier() != null) {
-					mdElement.setAttribute("id", ps.getIdentifier());
-				}
-				if (ps.getIdentifierType() != null) {
-					mdElement.setAttribute("idtype", ps.getIdentifierType());
-				}
+			
 
 				Element lastnameElement = domdoc
 						.createElement("AGORA:CreatorLastName");
@@ -2584,28 +2584,7 @@ public class RDFFile implements ugh.dl.Fileformat {
 										 * ).equals("Illustrator"))){
 										 **************************************/
 
-										// Get value of identifier, if there is
-										// any.
-										//
-										// Get all attributes.
-										NamedNodeMap nmm = currentNode3
-												.getAttributes();
-										Node idattr = nmm.getNamedItem("id");
-										// Get value only if there is an
-										// attribute.
-										if (idattr != null) {
-											String id = idattr.getNodeValue();
-											resultPerson.setIdentifier(id);
-										}
-										idattr = nmm.getNamedItem("idtype");
-										// Get value only if there is an
-										// attribute.
-										if (idattr != null) {
-											String idtype = idattr
-													.getNodeValue();
-											resultPerson
-													.setIdentifierType(idtype);
-										}
+										
 
 										// Get values of first- and lastname.
 										NodeList namenodes = currentNode3

@@ -40,6 +40,7 @@ import java.util.List;
  * 
  * @author Markus Enders
  * @author Stefan E. Funk
+ * @author Robert Sehr
  * @version 2010-02-14
  * @since 2009-09-23
  * @see FileSet#addFile

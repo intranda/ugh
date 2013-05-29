@@ -34,6 +34,7 @@ import ugh.exceptions.PreferencesException;
  * </p>
  * 
  * @author Stefan Funk
+ * @author Robert Sehr
  * @version 2009-11-20
  * @since 2009-05-09
  * 

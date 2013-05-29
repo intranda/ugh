@@ -869,6 +869,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             topDocument = this.digdoc;
         }
 
+        boolean success = true;
         if (anchorDocument != null) {
             // First write the anchor.
             this.digdoc = anchorDocument;
@@ -876,7 +877,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
             LOGGER.info("Writing anchor file '" + anchorfilename + "' from DocStruct '" + this.digdoc.getLogicalDocStruct().getType().getName() + "'");
 
-            writeMetsMods(anchorfilename, DO_NOT_VALIDATE, IS_ANCHOR);
+            success = writeMetsMods(anchorfilename, DO_NOT_VALIDATE, IS_ANCHOR);
 
             LOGGER.info("Anchor file written");
         }
@@ -886,14 +887,14 @@ public class MetsMods implements ugh.dl.Fileformat {
 
             LOGGER.info("Writing regular file '" + filename + "' from DocStruct '" + this.digdoc.getLogicalDocStruct().getType().getName() + "'");
 
-            writeMetsMods(filename, DO_NOT_VALIDATE, IS_NOT_ANCHOR);
+            success = writeMetsMods(filename, DO_NOT_VALIDATE, IS_NOT_ANCHOR);
         }
 
         this.digdoc = myDigDoc;
 
         LOGGER.info("Writing METS complete");
 
-        return true;
+        return success;
     }
 
     /***************************************************************************
@@ -2204,12 +2205,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                                                     if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
                                                         authortityValue =value;
                                                     }
-                                                     if (name.equals(GOOBI_PERSON_IDENTIFIER_STRING)) {
-                                                        ps.setIdentifier(value);
-                                                    }
-                                                    if (name.equals(GOOBI_PERSON_IDENTIFIERTYPE_STRING)) {
-                                                        ps.setIdentifierType(value);
-                                                    }
+                                                   
                                                     if (name.equals(GOOBI_PERSON_PERSONTYPE_STRING)) {
                                                         ps.setPersontype(value);
                                                     }
@@ -2305,12 +2301,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                                 if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
                                     authortityValue =value;
                                 }                               
-                                if (name.equals(GOOBI_PERSON_IDENTIFIER_STRING)) {
-                                    ps.setIdentifier(value);
-                                }
-                                if (name.equals(GOOBI_PERSON_IDENTIFIERTYPE_STRING)) {
-                                    ps.setIdentifierType(value);
-                                }
+                               
                                 if (name.equals(GOOBI_PERSON_PERSONTYPE_STRING)) {
                                     ps.setPersontype(value);
                                 }
@@ -4389,20 +4380,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             affiliationNode.appendChild(affiliationvalueNode);
             createdNode.appendChild(affiliationNode);
         }
-        if (thePerson.getIdentifier() != null && !thePerson.getIdentifier().equals("")) {
-            theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_IDENTIFIER_STRING;
-            Node identifierNode = createNode(theXQuery, createdNode, theDocument);
-            Node identifiervalueNode = theDocument.createTextNode(thePerson.getIdentifier());
-            identifierNode.appendChild(identifiervalueNode);
-            createdNode.appendChild(identifierNode);
-        }
-        if (thePerson.getIdentifierType() != null && !thePerson.getIdentifierType().equals("")) {
-            theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_IDENTIFIERTYPE_STRING;
-            Node identifierTypeNode = createNode(theXQuery, createdNode, theDocument);
-            Node identifierTypevalueNode = theDocument.createTextNode(thePerson.getIdentifierType());
-            identifierTypeNode.appendChild(identifierTypevalueNode);
-            createdNode.appendChild(identifierTypeNode);
-        }
+       
         if (thePerson.getAuthorityID() != null && !thePerson.getAuthorityID().equals("")) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYID_STRING;
             Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument);

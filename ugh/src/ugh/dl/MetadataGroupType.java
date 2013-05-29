@@ -22,7 +22,7 @@ package ugh.dl;
  * You should have received a copy of the GNU Lesser General Public License
  * along with this library; if not, write to the Free Software Foundation,
  * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
- ***************************************************************/ 
+ ***************************************************************/
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,6 +31,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Robert Sehr
+ */
 public class MetadataGroupType implements Serializable {
 
     private static final long serialVersionUID = -2935555025180170310L;
@@ -102,7 +105,7 @@ public class MetadataGroupType implements Serializable {
 
         return true;
     }
-    
+
     public String getLanguage(String theLanguage) {
         for (Map.Entry<String, String> lang : getAllLanguages().entrySet()) {
             if (lang.getKey().equals(theLanguage)) {

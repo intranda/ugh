@@ -72,6 +72,7 @@ import ugh.exceptions.WriteException;
  * 
  * @author Markus Enders
  * @author Stefan E. Funk
+ * @author Robert Sehr
  * @version 2010-02-15
  * 
  *          TODOLOG
@@ -361,10 +362,10 @@ public class PicaPlus implements ugh.dl.Fileformat {
 						.equalsIgnoreCase(PREFS_PERSONFIRSTNAME_STRING)) {
 					mmo.setFirstname(true);
 				}
-				if (attributeValue
-						.equalsIgnoreCase(PREFS_PERSONIDENTIFIER_STRING)) {
-					mmo.setPersonIdentifier(true);
-				}
+//				if (attributeValue
+//						.equalsIgnoreCase(PREFS_PERSONIDENTIFIER_STRING)) {
+//					mmo.setPersonIdentifier(true);
+//				}
 				if (attributeValue
 						.equalsIgnoreCase(PREFS_PERSONEXPANSION_STRING)) {
 					mmo.setExpansion(true);
@@ -1092,9 +1093,9 @@ public class PicaPlus implements ugh.dl.Fileformat {
 					if (mmo.isLastname()) {
 						per.setLastname(content);
 					}
-					if (mmo.isPersonIdentifier()) {
-						per.setIdentifier(content);
-					}
+//					if (mmo.isPersonIdentifier()) {
+//						per.setIdentifier(content);
+//					}
 
 					// Some OPAC (e.g. SWB) don't carry separate subfields for
 					// firstname and lastname. Therefore we try to extract the
@@ -1379,7 +1380,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
 		// These are only important, if MMO matches a person.
 		private boolean	isFirstname			= false;
 		private boolean	isLastname			= false;
-		private boolean	isPersonIdentifier	= false;
+//		private boolean	isPersonIdentifier	= false;
 		private boolean	isExpansion			= false;
 		// Role of other involved.
 		private boolean	isFunction			= false;
@@ -1507,20 +1508,20 @@ public class PicaPlus implements ugh.dl.Fileformat {
 			this.isLastname = isLastname;
 		}
 
-		/***********************************************************************
-		 * @return the isPersonIdentifier
-		 **********************************************************************/
-		public boolean isPersonIdentifier() {
-			return this.isPersonIdentifier;
-		}
-
-		/***********************************************************************
-		 * @param isPersonIdentifier
-		 *            the isPersonIdentifier to set
-		 **********************************************************************/
-		public void setPersonIdentifier(boolean isPersonIdentifier) {
-			this.isPersonIdentifier = isPersonIdentifier;
-		}
+//		/***********************************************************************
+//		 * @return the isPersonIdentifier
+//		 **********************************************************************/
+//		public boolean isPersonIdentifier() {
+//			return this.isPersonIdentifier;
+//		}
+//
+//		/***********************************************************************
+//		 * @param isPersonIdentifier
+//		 *            the isPersonIdentifier to set
+//		 **********************************************************************/
+//		public void setPersonIdentifier(boolean isPersonIdentifier) {
+//			this.isPersonIdentifier = isPersonIdentifier;
+//		}
 
 		/***********************************************************************
 		 * @return

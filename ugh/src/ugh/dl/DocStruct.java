@@ -548,11 +548,8 @@ public class DocStruct implements Serializable {
                             if (ps.getFirstname() != null) {
                                 newps.setFirstname(ps.getFirstname());
                             }
-                            if (ps.getIdentifier() != null) {
-                                newps.setIdentifier(ps.getIdentifier());
-                            }
-                            if (ps.getIdentifierType() != null) {
-                                newps.setIdentifierType(ps.getIdentifierType());
+                            if (ps.getAuthorityID() != null && ps.getAuthorityURI() != null && ps.getAuthorityValue() != null) {
+                                newps.setAutorityFile(ps.getAuthorityID(), ps.getAuthorityURI(), ps.getAuthorityValue());
                             }
                             if (ps.getInstitution() != null) {
                                 newps.setInstitution(ps.getInstitution());
@@ -597,12 +594,11 @@ public class DocStruct implements Serializable {
                         if (ps.getFirstname() != null) {
                             newps.setFirstname(ps.getFirstname());
                         }
-                        if (ps.getIdentifier() != null) {
-                            newps.setIdentifier(ps.getIdentifier());
+                
+                        if (ps.getAuthorityID() != null && ps.getAuthorityURI() != null && ps.getAuthorityValue() != null) {
+                            newps.setAutorityFile(ps.getAuthorityID(), ps.getAuthorityURI(), ps.getAuthorityValue());
                         }
-                        if (ps.getIdentifierType() != null) {
-                            newps.setIdentifierType(ps.getIdentifierType());
-                        }
+
                         if (ps.getInstitution() != null) {
                             newps.setInstitution(ps.getInstitution());
                         }
@@ -2944,7 +2940,7 @@ public class DocStruct implements Serializable {
             // from the persons list.
             List<Person> iteratorList = new LinkedList<Person>(personlist);
             for (Person per : iteratorList) {
-                if (per.getLastname() == null && per.getFirstname() == null && per.getIdentifier() == null && per.getInstitution() == null) {
+                if (per.getLastname() == null && per.getFirstname() == null && per.getInstitution() == null) {
                     // Delete this person from list of all Persons.
                     if (this.getAllPersons() != null) {
                         this.getAllPersons().remove(per);

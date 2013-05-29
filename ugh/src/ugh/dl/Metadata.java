@@ -41,6 +41,7 @@ import ugh.exceptions.MetadataTypeNotAllowedException;
  * 
  * @author Markus Enders
  * @author Stefan E. Funk
+ * @author Robert Sehr
  * @version 2010-02-14
  * @see MetadataType
  * 

@@ -27,6 +27,7 @@ import java.util.Map;
 
 /*******************************************************************************
  * @author Stefan Funk
+ * @author Robert Sehr
  * @version 2009-12-21
  * @since 2009-05-09
  * 

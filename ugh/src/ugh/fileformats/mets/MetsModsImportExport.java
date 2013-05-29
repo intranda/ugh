@@ -876,12 +876,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
                         if (authorityfileidvalue != null && authorityuri != null && authorityvalue != null) {
                             ps.setAutorityFile(authorityfileidvalue[0], authorityuri[0], authorityvalue[0]);
                         }
-                        if (identifiervalue != null) {
-                            ps.setIdentifier(identifiervalue[0]);
-                        }
-                        if (identifiertypevalue != null) {
-                            ps.setIdentifierType(identifiertypevalue[0]);
-                        }
                         if (displaynamevalue != null) {
                             ps.setDisplayname(displaynamevalue[0]);
                         }
@@ -1724,27 +1718,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
                     createdNode.appendChild(authorityfileidNode);
                 }
 
-            } else if (key.equalsIgnoreCase(METS_PREFS_IDENTIFIERXPATH_STRING) && thePerson.getIdentifier() != null) {
-                if (xquery == null) {
-                    LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s identifier '" + thePerson.getIdentifier() + "'");
-                } else {
-
-                    if (xquery.equals("../mods:name[@authority='gbv'][@ID='']")) {
-                        ((Element) createdNode).setAttribute(METS_ID_STRING, "pnd" + thePerson.getIdentifier());
-                        ((Element) createdNode).setAttribute("authority", "gbv");
-                    }
-
-                }
-            } else if (key.equalsIgnoreCase(METS_PREFS_IDENTIFIERTYPEXPATH_STRING) && thePerson.getIdentifierType() != null) {
-
-                if (xquery == null) {
-                    LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s identifierType '" + thePerson.getIdentifierType() + "'");
-                } else {
-                    Node identifierTypeNode = createNode(xquery, createdNode, theDomDoc);
-                    Node identifierTypevalueNode = theDomDoc.createTextNode(thePerson.getIdentifierType());
-                    identifierTypeNode.appendChild(identifierTypevalueNode);
-                    createdNode.appendChild(identifierTypeNode);
-                }
             }
         }
 
@@ -1828,30 +1801,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
                 createdNode.appendChild(affiliationNode);
             }
         }
-        if (thePerson.getIdentifier() != null) {
-            xquery = theMMO.getIdentifierXQuery();
-            if (xquery == null) {
-                LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s identifier '" + thePerson.getIdentifier() + "'");
-            } else {
-
-                if (xquery.equals("../mods:name[@authority='gbv'][@ID='']")) {
-                    ((Element) createdNode).setAttribute(METS_ID_STRING, "pnd" + thePerson.getIdentifier());
-                    ((Element) createdNode).setAttribute("authority", "gbv");
-                }
-
-            }
-        }
-        if (thePerson.getIdentifierType() != null) {
-            xquery = theMMO.getIdentifierTypeXQuery();
-            if (xquery == null) {
-                LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s identifierType '" + thePerson.getIdentifierType() + "'");
-            } else {
-                Node identifierTypeNode = createNode(xquery, createdNode, theDomDoc);
-                Node identifierTypevalueNode = theDomDoc.createTextNode(thePerson.getIdentifierType());
-                identifierTypeNode.appendChild(identifierTypevalueNode);
-                createdNode.appendChild(identifierTypeNode);
-            }
-        }
+        
         if (thePerson.getAuthorityID() != null && thePerson.getAuthorityURI() != null && thePerson.getAuthorityValue() != null) {
             ((Element) createdNode).setAttribute("authority", thePerson.getAuthorityID());
             ((Element) createdNode).setAttribute("authorityURI", thePerson.getAuthorityURI());
