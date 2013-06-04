@@ -3058,7 +3058,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                 if (file.getReferencedDocStructs() != null) {
                     for (DocStruct ds : file.getReferencedDocStructs()) {
                         if (ds.getTechMds() != null) {
-                            //					System.out.println("Setting " + ds.getTechMds().size() + " techMds for file " + file.getIdentifier());
+                            //                  System.out.println("Setting " + ds.getTechMds().size() + " techMds for file " + file.getIdentifier());
                             file.setTechMds(ds.getTechMds());
                         }
                     }
@@ -3108,9 +3108,20 @@ public class MetsMods implements ugh.dl.Fileformat {
             // Set content file's identifier (if not existing yet).
             String id = cf.getIdentifier();
             if (id == null || id.equals("")) {
-                id = FILE_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(this.fileidMax);
-                this.fileidMax++;
+                id = FILE_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(++fileidMax);
                 cf.setIdentifier(id);
+            } else {
+                if (id.contains(FILE_PREFIX)) {
+                    String numberPart = id.replace(FILE_PREFIX, "");
+                    try {
+                        int number = Integer.parseInt(numberPart);
+                        fileidMax = number;
+                    } catch (NumberFormatException e) {
+                        // do nothing
+                    }
+
+                }
+
             }
 
             // Use the content file's ID if local filegroup is written, append
@@ -3158,6 +3169,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         return result;
     }
+
 
     /***************************************************************************
      * <p>
@@ -3217,6 +3229,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                     // Create a new content file.
                     ContentFile cf = new ContentFile();
                     cf.setLocation(href);
+
 
                     // Set the content file's ID.
                     if (file.getID() != null) {
