@@ -240,6 +240,9 @@ public class Person extends Metadata {
 	 * @return
 	 **************************************************************************/
 	public String getRole() {
+	    if (role == null) {
+	        role = MDType.getName();
+	    }
 		return this.role;
 	}
 
