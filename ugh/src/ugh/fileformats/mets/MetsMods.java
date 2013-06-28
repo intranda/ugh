@@ -2112,7 +2112,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                             // metadata
                             if (metadata.getNodeType() == ELEMENT_NODE && metadata.getAttributes().getNamedItem("type") == null) {
 
-                                String metadataName = metadata.getAttributes().item(0).getTextContent();
+                                String metadataName = metadata.getAttributes().getNamedItem("name").getTextContent();
                                 String value = metadata.getTextContent();
                                 String authority = null;
                                 String authorityURI = null;
