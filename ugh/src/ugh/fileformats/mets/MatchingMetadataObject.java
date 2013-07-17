@@ -1,5 +1,8 @@
 package ugh.fileformats.mets;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /*******************************************************************************
  * ugh.fileformats.mets / MatchingMetadataObject.java
  * 
@@ -78,6 +81,8 @@ public class MatchingMetadataObject {
 
 	// Used for grouping of MODS subtags.
 	private String	modsGrouping			= null;
+	
+	private Map<String, Map<String, String>> metadataGroupXQueries = new LinkedHashMap<String, Map<String, String>>();
 	
 	private String database = null;
 	private String identifier = null;
@@ -476,7 +481,19 @@ public class MatchingMetadataObject {
 
 	
 
-	/***************************************************************************
+	public Map<String, Map<String, String>> getMetadataGroupXQueries() {
+        return metadataGroupXQueries;
+    }
+
+    public void setMetadataGroupXQueries(Map<String, Map<String, String>> metadataGroupXQueries) {
+        this.metadataGroupXQueries = metadataGroupXQueries;
+    }
+
+    public void addToMap(String key, Map<String, String> value) {
+        metadataGroupXQueries.put(key, value);
+    }
+    
+    /***************************************************************************
 	 * @param checkObject
 	 * @return
 	 **************************************************************************/

@@ -387,5 +387,4 @@ public class MetadataType implements Serializable {
 	public boolean getIsNormdata() {
 		return isNormdata;
 	}
-
 }
