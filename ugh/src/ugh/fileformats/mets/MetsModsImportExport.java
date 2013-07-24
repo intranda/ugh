@@ -1610,8 +1610,12 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
 
     protected void writeSingleModsGroup(MatchingMetadataObject mmo, MetadataGroup theGroup, Node theStartingNode, Document theDocument)
             throws PreferencesException {
-
-        Node createdNode = createNode(mmo.getWriteXPath(), theStartingNode, theDocument);
+        Node createdNode = null;
+        if (mmo.getWriteXPath().equals("./mods:mods")) {
+            createdNode = theStartingNode;
+        } else {
+            createdNode = createNode(mmo.getWriteXPath(), theStartingNode, theDocument);
+        }
         Map<String, Map<String, String>> xpathMap = mmo.getMetadataGroupXQueries();
 
         for (String metadataName : xpathMap.keySet()) {
