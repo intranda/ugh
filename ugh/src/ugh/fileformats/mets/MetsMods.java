@@ -4809,7 +4809,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             e.printStackTrace();
         }
         opts.setSaveSubstituteCharacters(charEsc);
-
+        opts.setSavePrettyPrint().setSavePrettyPrintIndent(3);
         try {
             metsBean = MetsDocument.Factory.parse(domDoc, opts);
         } catch (XmlException e) {
