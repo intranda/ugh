@@ -359,6 +359,15 @@ public class DigitalDocument implements Serializable {
             }
         }
 
+        
+        // Get and print Groups.
+        List<MetadataGroup> allGroups = inDocStruct.getAllMetadataGroups();
+        if (allGroups != null) {
+            for (MetadataGroup currentGroup : allGroups) {
+                result += hierarchyBuffer + currentGroup.toString();
+            }
+        }
+        
         // Get and print persons.
         List<Person> allPS = inDocStruct.getAllPersons();
         if (allPS != null) {
