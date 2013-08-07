@@ -132,11 +132,11 @@ import ugh.exceptions.WriteException;
  *        TODO REFACTOR ALL THE XPATH PARSING STUFF!!
  * 
  *        TODO Separate the VirtualFileGroup usage, put it into MetsModsImportExport!
- *
+ * 
  *        TODO Get the anchor files from the METS' mptrs, and not via filename! Don't we do that already?
  * 
  *        TODO Check if there is a metadata with type="identifier" is existing in those DocStructs with anchor="true"! Already checked?
- *
+ * 
  *        TODO Maybe read the content files while reading the DocStructs and then use the MetsHelper to retrieve things!
  * 
  *        CHANGELOG
@@ -2043,7 +2043,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                         && metabagu.getAttributes().getNamedItem("type") == null) {
                     String name = metabagu.getAttributes().getNamedItem("name").getNodeValue();
                     String value = metabagu.getTextContent();
-                   
+
                     LOGGER.debug("Metadata '" + name + "' with value '" + value + "' found in Goobi's MODS extension");
 
                     // Check if metadata exists in prefs.
@@ -2060,13 +2060,15 @@ public class MetsMods implements ugh.dl.Fileformat {
                     try {
                         Metadata md = new Metadata(mdt);
                         md.setValue(value);
-                        if (metabagu.getAttributes().getNamedItem("authority") != null && metabagu.getAttributes().getNamedItem("authorityURI") != null && metabagu.getAttributes().getNamedItem("valueURI") != null) {
-                            String authority =  metabagu.getAttributes().getNamedItem("authority").getNodeValue();
+                        if (metabagu.getAttributes().getNamedItem("authority") != null
+                                && metabagu.getAttributes().getNamedItem("authorityURI") != null
+                                && metabagu.getAttributes().getNamedItem("valueURI") != null) {
+                            String authority = metabagu.getAttributes().getNamedItem("authority").getNodeValue();
                             String authorityURI = metabagu.getAttributes().getNamedItem("authorityURI").getNodeValue();
                             String valueURI = metabagu.getAttributes().getNamedItem("valueURI").getNodeValue();
                             md.setAutorityFile(authority, authorityURI, valueURI);
-                         }
-                         
+                        }
+
                         inStruct.addMetadata(md);
 
                         LOGGER.debug("Added metadata '" + mdt.getName() + "' to DocStruct '" + inStruct.getType().getName() + "' with value '"
@@ -2117,12 +2119,14 @@ public class MetsMods implements ugh.dl.Fileformat {
                                 String authority = null;
                                 String authorityURI = null;
                                 String valueURI = null;
-                                if (metadata.getAttributes().getNamedItem("authority") != null && metadata.getAttributes().getNamedItem("authorityURI") != null && metadata.getAttributes().getNamedItem("valueURI") != null) {
-                                    authority =  metadata.getAttributes().getNamedItem("authority").getNodeValue();
+                                if (metadata.getAttributes().getNamedItem("authority") != null
+                                        && metadata.getAttributes().getNamedItem("authorityURI") != null
+                                        && metadata.getAttributes().getNamedItem("valueURI") != null) {
+                                    authority = metadata.getAttributes().getNamedItem("authority").getNodeValue();
                                     authorityURI = metadata.getAttributes().getNamedItem("authorityURI").getNodeValue();
                                     valueURI = metadata.getAttributes().getNamedItem("valueURI").getNodeValue();
                                 }
-                                
+
                                 List<Metadata> metadataList = new ArrayList<Metadata>(metadataGroup.getMetadataList());
                                 for (Metadata meta : metadataList) {
                                     if (meta.getType().getName().equals(metadataName)) {
@@ -2185,7 +2189,6 @@ public class MetsMods implements ugh.dl.Fileformat {
                                                     String name = personbagu.getLocalName();
                                                     String value = personbagu.getTextContent();
 
-                                                    
                                                     // Get and set values.
                                                     if (name.equals(GOOBI_PERSON_FIRSTNAME_STRING)) {
                                                         ps.setFirstname(value);
@@ -2197,15 +2200,15 @@ public class MetsMods implements ugh.dl.Fileformat {
                                                         ps.setAffiliation(value);
                                                     }
                                                     if (name.equals(GOOBI_PERSON_AUTHORITYID_STRING)) {
-                                                        authorityID =value;
+                                                        authorityID = value;
                                                     }
                                                     if (name.equals(GOOBI_PERSON_AUTHORITYURI_STRING)) {
-                                                        authorityURI =value;
+                                                        authorityURI = value;
                                                     }
                                                     if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
-                                                        authortityValue =value;
+                                                        authortityValue = value;
                                                     }
-                                                   
+
                                                     if (name.equals(GOOBI_PERSON_PERSONTYPE_STRING)) {
                                                         ps.setPersontype(value);
                                                     }
@@ -2272,9 +2275,9 @@ public class MetsMods implements ugh.dl.Fileformat {
 
                         // Iterate over every person's data.
                         NodeList personNodelist = metabagu.getChildNodes();
-                        String authorityFileID= null;
+                        String authorityFileID = null;
                         String authorityURI = null;
-                        String authortityValue= null;
+                        String authortityValue = null;
                         for (int j = 0; j < personNodelist.getLength(); j++) {
 
                             Node personbagu = personNodelist.item(j);
@@ -2293,15 +2296,15 @@ public class MetsMods implements ugh.dl.Fileformat {
                                     ps.setAffiliation(value);
                                 }
                                 if (name.equals(GOOBI_PERSON_AUTHORITYID_STRING)) {
-                                    authorityFileID =value;
+                                    authorityFileID = value;
                                 }
                                 if (name.equals(GOOBI_PERSON_AUTHORITYURI_STRING)) {
-                                    authorityURI =value;
+                                    authorityURI = value;
                                 }
                                 if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
-                                    authortityValue =value;
-                                }                               
-                               
+                                    authortityValue = value;
+                                }
+
                                 if (name.equals(GOOBI_PERSON_PERSONTYPE_STRING)) {
                                     ps.setPersontype(value);
                                 }
@@ -2897,24 +2900,26 @@ public class MetsMods implements ugh.dl.Fileformat {
                 Element physdiv = writePhysDivs(this.metsNode, topphysdiv);
                 structMapPhys.appendChild(physdiv);
 
-                // Write smLinks.
-                LOGGER.info("Creating structLink element");
-                Element structLinkElement = writeSMLinks(this.metsNode);
+                if (topphysdiv.getAllChildren() != null && !topphysdiv.getAllChildren().isEmpty()) {
+                    // Write smLinks.
+                    LOGGER.info("Creating structLink element");
+                    Element structLinkElement = writeSMLinks(this.metsNode);
 
-                // Order all XML-Elements according to METS schema.
-                LOGGER.info("Writing structMaps and structLink element");
-                // NOTE Changed the "&" into an "&&", most possibly a typo.
-                if (fileSecElement != null & structMapLog != null) {
-                    this.metsNode.insertBefore(fileSecElement, structMapLog);
-                } else {
-                    LOGGER.debug("No FileSec or StructMap LOGICAL existing yet");
+                    // Order all XML-Elements according to METS schema.
+                    LOGGER.info("Writing structMaps and structLink element");
+                    // NOTE Changed the "&" into an "&&", most possibly a typo.
+                    if (fileSecElement != null & structMapLog != null) {
+                        this.metsNode.insertBefore(fileSecElement, structMapLog);
+                    } else {
+                        LOGGER.debug("No FileSec or StructMap LOGICAL existing yet");
+                    }
+                    if (structMapPhys != null) {
+                        this.metsNode.appendChild(structMapPhys);
+                    } else {
+                        LOGGER.warn("Please create a structMap physical first (pagination)");
+                    }
+                    this.metsNode.appendChild(structLinkElement);
                 }
-                if (structMapPhys != null) {
-                    this.metsNode.appendChild(structMapPhys);
-                } else {
-                    LOGGER.warn("Please create a structMap physical first (pagination)");
-                }
-                this.metsNode.appendChild(structLinkElement);
             }
 
             // Write amdSec, if needed.
@@ -3170,7 +3175,6 @@ public class MetsMods implements ugh.dl.Fileformat {
         return result;
     }
 
-
     /***************************************************************************
      * <p>
      * Reads the METS FileSec.
@@ -3229,7 +3233,6 @@ public class MetsMods implements ugh.dl.Fileformat {
                     // Create a new content file.
                     ContentFile cf = new ContentFile();
                     cf.setLocation(href);
-
 
                     // Set the content file's ID.
                     if (file.getID() != null) {
@@ -4393,7 +4396,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             affiliationNode.appendChild(affiliationvalueNode);
             createdNode.appendChild(affiliationNode);
         }
-       
+
         if (thePerson.getAuthorityID() != null && !thePerson.getAuthorityID().equals("")) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYID_STRING;
             Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument);
@@ -4415,8 +4418,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             authorityfileidNode.appendChild(authorityfileidvalueNode);
             createdNode.appendChild(authorityfileidNode);
         }
-        
-        
+
         if (thePerson.getDisplayname() != null && !thePerson.getDisplayname().equals("")) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_DISPLAYNAME_STRING;
             Node displaynameNode = createNode(theXQuery, createdNode, theDocument);
