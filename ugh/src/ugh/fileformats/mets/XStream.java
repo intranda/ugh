@@ -73,6 +73,9 @@ public class XStream implements ugh.dl.Fileformat {
 	private DigitalDocument		digdoc	= null;
 	private Prefs				myPreferences;
 
+	public XStream() {
+	}
+	
 	/***************************************************************************
 	 * <p>
 	 * Default Constructor.
@@ -188,4 +191,23 @@ public class XStream implements ugh.dl.Fileformat {
 		return false;
 	}
 
+    @Override
+    public boolean isWritable() {
+        return true;
+    }
+
+    @Override
+    public boolean isExportable() {
+        return false;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "XStream";
+    }
+    
+    @Override
+    public void setPrefs(Prefs prefs) throws PreferencesException {
+        myPreferences = prefs;        
+    }
 }

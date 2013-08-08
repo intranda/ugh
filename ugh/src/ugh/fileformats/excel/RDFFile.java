@@ -58,6 +58,7 @@ import ugh.dl.FileSet;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataType;
 import ugh.dl.Person;
+import ugh.dl.Prefs;
 import ugh.dl.Reference;
 import ugh.dl.RomanNumeral;
 import ugh.exceptions.MetadataTypeNotAllowedException;
@@ -202,6 +203,9 @@ public class RDFFile implements ugh.dl.Fileformat {
 
 	private static final String							HIDDEN_METADATA_CHAR		= "_";
 
+	
+	public RDFFile() {}
+	
 	/***************************************************************************
 	 * CONSTRUCTORS
 	 **************************************************************************/
@@ -3233,4 +3237,23 @@ public class RDFFile implements ugh.dl.Fileformat {
 
 	}
 
+    @Override
+    public boolean isWritable() {
+        return true;
+    }
+
+    @Override
+    public boolean isExportable() {
+        return false;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Rdf";
+    }
+    
+    @Override
+    public void setPrefs(Prefs prefs) throws PreferencesException {
+        myPreferences = prefs;        
+    }
 }

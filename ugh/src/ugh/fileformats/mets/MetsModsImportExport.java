@@ -65,6 +65,7 @@ import ugh.dl.AmdSec;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
 import ugh.dl.DocStructType;
+import ugh.dl.ExportFileformat;
 import ugh.dl.Md;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataGroup;
@@ -164,7 +165,7 @@ import ugh.exceptions.WriteException;
  * 
  ******************************************************************************/
 
-public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
+public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implements ExportFileformat {
 
     /***************************************************************************
      * VERSION STRING
@@ -227,6 +228,8 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
     /***************************************************************************
      * CONSTRUCTORS
      **************************************************************************/
+    public MetsModsImportExport() {
+    }
 
     /***************************************************************************
      * @param inPrefs
@@ -2653,4 +2656,18 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods {
         return VERSION;
     }
 
+    @Override
+    public boolean isWritable() {
+        return false;
+    }
+    
+    @Override
+    public boolean isExportable() {
+        return true;
+    }
+    
+    @Override
+    public String getDisplayName() {
+        return "Mets";
+    }
 }

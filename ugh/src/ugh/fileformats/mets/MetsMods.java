@@ -582,6 +582,7 @@ public class MetsMods implements ugh.dl.Fileformat {
     /***************************************************************************
      * CONSTRUCTORS
      **************************************************************************/
+    public MetsMods() {}
 
     /***************************************************************************
      * @param inPrefs
@@ -5024,4 +5025,41 @@ public class MetsMods implements ugh.dl.Fileformat {
     public void setWriteLocal(boolean writeLocal) {
         this.writeLocalFilegroup = writeLocal;
     }
+
+    @Override
+    public boolean isWritable() {
+        return true;
+    }
+
+    @Override
+    public boolean isExportable() {
+        return false;
+    }
+    
+    @Override
+    public String getDisplayName() {
+        return "Mets";
+    }
+    
+    @Override
+    public void setPrefs(Prefs prefs) throws PreferencesException {
+        setNamespaces();
+        this.myPreferences = prefs;
+
+        LOGGER.info(this.getClass().getName() + " " + getVersion());
+
+        // Read preferences.
+        Node prefsMetsNode = prefs.getPreferenceNode(METS_PREFS_NODE_NAME_STRING);
+        if (prefsMetsNode == null) {
+            String message = "Can't read preferences for METS fileformat!";
+            PreferencesException pe = new PreferencesException("Node '" + METS_PREFS_NODE_NAME_STRING + "' in preferences file not found!");
+            LOGGER.error(message, pe);
+            throw pe;
+        }
+
+        readPrefs(prefsMetsNode);
+    }
+
+
 }
+

@@ -39,6 +39,7 @@ import ugh.dl.ContentFile;
 import ugh.dl.DocStruct;
 import ugh.dl.Metadata;
 import ugh.dl.Prefs;
+import ugh.exceptions.PreferencesException;
 
 import com.lowagie.text.BadElementException;
 import com.lowagie.text.DocumentException;
@@ -70,6 +71,9 @@ public class PortableDocumentFormat implements ugh.dl.Fileformat {
 	private ugh.dl.FileSet			myImageset;
 	private ugh.dl.Prefs			myPreferences;
 
+	public PortableDocumentFormat() {
+    }
+	
 	/***************************************************************************
 	 * @param inPrefs
 	 **************************************************************************/
@@ -345,4 +349,23 @@ public class PortableDocumentFormat implements ugh.dl.Fileformat {
 		return true;
 	}
 
+    @Override
+    public boolean isWritable() {
+        return false;
+    }
+
+    @Override
+    public boolean isExportable() {
+        return false;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "PDF";
+    }
+    
+    @Override
+    public void setPrefs(Prefs prefs) throws PreferencesException {
+        myPreferences = prefs;        
+    }
 }

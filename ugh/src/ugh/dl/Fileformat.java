@@ -135,5 +135,13 @@ public interface Fileformat {
 	 * @return true; only if a problem occured, false is returned.
 	 **************************************************************************/
 	public boolean setDigitalDocument(DigitalDocument inDoc);
+	
+	public boolean isWritable();
+	
+	public boolean isExportable();
+	
+	public String getDisplayName();
 
+	public void setPrefs(Prefs prefs) throws PreferencesException;
+	
 }

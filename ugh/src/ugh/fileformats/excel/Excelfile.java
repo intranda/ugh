@@ -39,6 +39,7 @@ import ugh.dl.DocStructType;
 import ugh.dl.FileSet;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataType;
+import ugh.dl.Prefs;
 import ugh.dl.Reference;
 import ugh.exceptions.MetadataTypeNotAllowedException;
 import ugh.exceptions.PreferencesException;
@@ -128,6 +129,9 @@ public class Excelfile implements ugh.dl.Fileformat {
 	 * @param inPrefs
 	 * @throws PreferencesException
 	 **************************************************************************/
+	
+	public Excelfile() {}
+	
 	public Excelfile(ugh.dl.Prefs inPrefs) throws PreferencesException {
 		Node excelNode = null;
 
@@ -2511,4 +2515,23 @@ public class Excelfile implements ugh.dl.Fileformat {
 		return inString;
 	}
 
+    @Override
+    public boolean isWritable() {
+        return false;
+    }
+
+    @Override
+    public boolean isExportable() {
+        return false;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Excel";
+    }
+    
+    @Override
+    public void setPrefs(Prefs prefs) throws PreferencesException {
+        myPreferences = prefs;        
+    }
 }
