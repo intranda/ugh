@@ -1469,7 +1469,7 @@ public class DocStruct implements Serializable {
         // First get MetadataType object for the DocStructType to which this
         // document structure belongs to get global MDType.
         if (this.type == null) {
-            String message = "Error occured while adding metadata of type '" + inMdName + "' to DocStruct '" + this.getType().getName() + "'";
+            String message = "Error occured while adding metadata of type '" + inMdName + "' to DocStruct";
             LOGGER.error(message);
             throw new DocStructHasNoTypeException(message);
         }
