@@ -136,12 +136,37 @@ public interface Fileformat {
 	 **************************************************************************/
 	public boolean setDigitalDocument(DigitalDocument inDoc);
 	
+	/***************************************************************************
+     * <p>
+     * Indicates whether the fileformat can be used to store metadata.
+     * </p>
+     * 
+     * @return true if the implementation can be used to store metadata.
+     **************************************************************************/
 	public boolean isWritable();
+	
+	 /***************************************************************************
+     * <p>
+     * Indicates whether the fileformat can be used to export metadata.
+     * </p>
+     * 
+     * @return true if the implementation can be used to export metadata.
+     **************************************************************************/
 	
 	public boolean isExportable();
 	
+	
+    /***************************************************************************
+     * <p>
+     * Returns a human readable name of the implementation. This name should be 
+     * unique as he can be used to identify the implementation.
+     * </p>
+     * 
+     * @returna human readable name of the fileformat.
+     **************************************************************************/	
 	public String getDisplayName();
 
+	
 	public void setPrefs(Prefs prefs) throws PreferencesException;
 	
 }
