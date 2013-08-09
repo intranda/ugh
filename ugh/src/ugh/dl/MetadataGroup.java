@@ -24,6 +24,8 @@ package ugh.dl;
  * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  ***************************************************************/
 
+import gov.loc.mets.MdSecType.MdRef.MDTYPE;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -167,9 +169,30 @@ public class MetadataGroup implements Serializable {
     public void addPerson(Person person) {
         this.personList.add(person);
     }
+
     @Override
     public String toString() {
-        return "MetadataGroup [MDType=" + MDType + ", myDocStruct=" + myDocStruct + ", metadataList=" + metadataList + ", personList=" + personList + "]";
+        StringBuffer sb = new StringBuffer();
+        sb.append("MetadataGroup [MDType:");
+        sb.append(MDType.getName());
+        sb.append(", myDocStruct:");
+        sb.append(myDocStruct.getType().getName());
+        if (metadataList != null && !metadataList.isEmpty()) {
+            sb.append(", metadataList:");
+            for (Metadata md : metadataList) {
+                sb.append(" ");
+                sb.append(md);
+            }
+        }
+        if (personList != null && !personList.isEmpty()) {
+            sb.append(", personList:");
+            for (Person p : personList) {
+                sb.append(" ");
+                sb.append(p);
+            }
+        }
+        sb.append("]");
+        return sb.toString();
     }
 
     public List<Metadata> getMetadataByType(String theType) {
@@ -181,7 +204,7 @@ public class MetadataGroup implements Serializable {
         }
         return returnList;
     }
-    
+
     public List<Person> getPersonByType(String theType) {
         List<Person> returnList = new ArrayList<Person>();
         for (Person md : personList) {
