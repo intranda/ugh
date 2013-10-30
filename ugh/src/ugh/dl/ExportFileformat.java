@@ -22,9 +22,6 @@ package ugh.dl;
  * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  ******************************************************************************/
 
-import ugh.exceptions.PreferencesException;
-import ugh.exceptions.ReadException;
-import ugh.exceptions.WriteException;
 
 /*******************************************************************************
  * <p>
@@ -80,6 +77,9 @@ public interface ExportFileformat extends Fileformat {
     public void setDigiprovPresentationAnchor(String digiprovPresentationAnchor);
     public void setDigiprovReferenceAnchor(String digiprovReferenceAnchor);
 
+    public void setMptrUrl(String pointer);
+    public void setMptrAnchorUrl(String pointer);
+    
     public void setPurlUrl(String purlUrl);
     public void setContentIDs(String contentIDs);
 	
