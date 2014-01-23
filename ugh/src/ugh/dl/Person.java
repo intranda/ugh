@@ -22,6 +22,9 @@ package ugh.dl;
  * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  ******************************************************************************/
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ugh.exceptions.MetadataTypeNotAllowedException;
 
 /*******************************************************************************
@@ -84,11 +87,11 @@ public class Person extends Metadata {
 	private String				displayname			= null;
 	private String				affiliation			= null;
 	private String				institution			= null;
-//	private String				identifier			= null;
-//	private String				identifierType		= null;
 	private String				role				= null;
 	private String				persontype			= null;
 	private boolean				isCorporation		= false;
+	
+	private List<NamePart>      additionalNameParts = null;
 
 	/***************************************************************************
 	 * <p>
@@ -433,4 +436,19 @@ public class Person extends Metadata {
 		return true;
 	}
 
+    public List<NamePart> getAdditionalNameParts() {
+        return additionalNameParts;
+    }
+
+    public void setAdditionalNameParts(List<NamePart> additionalNameParts) {
+        this.additionalNameParts = additionalNameParts;
+    }
+
+    public void addNamePart(NamePart part) {
+        if (additionalNameParts == null) {
+            additionalNameParts = new ArrayList<NamePart>();
+        }
+        additionalNameParts.add(part);
+    }
+    
 }

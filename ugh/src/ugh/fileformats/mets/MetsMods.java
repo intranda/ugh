@@ -106,6 +106,7 @@ import ugh.dl.MetadataGroup;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataGroupType;
 import ugh.dl.MetadataType;
+import ugh.dl.NamePart;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
 import ugh.dl.Reference;
@@ -414,6 +415,9 @@ public class MetsMods implements ugh.dl.Fileformat {
     protected static final String GOOBI_PERSON_DISPLAYNAME_STRING = "displayName";
     protected static final String GOOBI_PERSON_PERSONTYPE_STRING = "personType";
 
+    protected static final String GOOBI_PERSON_DATEVALUE_STRING = "date";
+    protected static final String GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING = "termsOfAddress";
+
     // The Goobi internal metadata XPath.
     protected static final String GOOBI_INTERNAL_METADATA_XPATH = "/mods:mods/mods:extension/goobi:goobi/goobi:metadata";
 
@@ -582,7 +586,8 @@ public class MetsMods implements ugh.dl.Fileformat {
     /***************************************************************************
      * CONSTRUCTORS
      **************************************************************************/
-    public MetsMods() {}
+    public MetsMods() {
+    }
 
     /***************************************************************************
      * @param inPrefs
@@ -2216,6 +2221,12 @@ public class MetsMods implements ugh.dl.Fileformat {
                                                     if (name.equals(GOOBI_PERSON_DISPLAYNAME_STRING)) {
                                                         ps.setDisplayname(value);
                                                     }
+                                                    if (name.equals(GOOBI_PERSON_DATEVALUE_STRING)) {
+                                                        ps.addNamePart(new NamePart(GOOBI_PERSON_DATEVALUE_STRING, value));
+                                                    }
+                                                    if (name.equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING)) {
+                                                        ps.addNamePart(new NamePart(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING, value));
+                                                    }
                                                 }
 
                                             }
@@ -2311,6 +2322,13 @@ public class MetsMods implements ugh.dl.Fileformat {
                                 }
                                 if (name.equals(GOOBI_PERSON_DISPLAYNAME_STRING)) {
                                     ps.setDisplayname(value);
+                                }
+
+                                if (name.equals(GOOBI_PERSON_DATEVALUE_STRING)) {
+                                    ps.addNamePart(new NamePart(GOOBI_PERSON_DATEVALUE_STRING, value));
+                                }
+                                if (name.equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING)) {
+                                    ps.addNamePart(new NamePart(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING, value));
                                 }
                             }
                         }
@@ -4434,6 +4452,25 @@ public class MetsMods implements ugh.dl.Fileformat {
             persontypeNode.appendChild(persontypevalueNode);
             createdNode.appendChild(persontypeNode);
         }
+
+        // TODO write additional nameParts
+        if (thePerson.getAdditionalNameParts() != null) {
+            for (NamePart part : thePerson.getAdditionalNameParts()) {
+                if (part.getType().equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING)) {
+                    theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING;
+                    Node persontypeNode = createNode(theXQuery, createdNode, theDocument);
+                    Node persontypevalueNode = theDocument.createTextNode(part.getValue());
+                    persontypeNode.appendChild(persontypevalueNode);
+                    createdNode.appendChild(persontypeNode);
+                } else if (part.getType().equals(GOOBI_PERSON_DATEVALUE_STRING)) {
+                    theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_DATEVALUE_STRING;
+                    Node persontypeNode = createNode(theXQuery, createdNode, theDocument);
+                    Node persontypevalueNode = theDocument.createTextNode(part.getValue());
+                    persontypeNode.appendChild(persontypevalueNode);
+                    createdNode.appendChild(persontypeNode);
+                }
+            }
+        }
     }
 
     protected void writeSingleModsGroup(String theXQuery, MetadataGroup theGroup, Node theStartingNode, Document theDocument)
@@ -5035,12 +5072,12 @@ public class MetsMods implements ugh.dl.Fileformat {
     public boolean isExportable() {
         return false;
     }
-    
+
     @Override
     public String getDisplayName() {
         return "Mets";
     }
-    
+
     @Override
     public void setPrefs(Prefs prefs) throws PreferencesException {
         setNamespaces();
@@ -5060,6 +5097,4 @@ public class MetsMods implements ugh.dl.Fileformat {
         readPrefs(prefsMetsNode);
     }
 
-
 }
-

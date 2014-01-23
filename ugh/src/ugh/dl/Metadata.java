@@ -201,6 +201,18 @@ public class Metadata implements Serializable {
         this.authorityValue = authorityValue;
         return true;
     }
+    
+    public void setAuthorityID(String authorityID) {
+        this.authorityID = authorityID;
+    }
+    
+    public void setAuthorityURI(String authorityURI) {
+        this.authorityURI = authorityURI;
+    }
+    
+    public void setAuthorityValue(String authorityValue) {
+        this.authorityValue = authorityValue;
+    }
 
     /***************************************************************************
      * <p>

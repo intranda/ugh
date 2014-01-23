@@ -1760,6 +1760,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
 
         // Set the displayname of the current person, if NOT already set! Use
         // "lastname, name" as we were told in the MODS profile.
+        
+        // TODO write other nameparts
+        
         if ((thePerson.getLastname() != null && !thePerson.getLastname().equals(""))
                 || (thePerson.getFirstname() != null && !thePerson.getFirstname().equals(""))) {
             if (thePerson.getLastname() != null && !thePerson.getLastname().equals("") && thePerson.getFirstname() != null
