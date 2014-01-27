@@ -155,6 +155,8 @@ public class MetadataType implements Serializable {
         }
         newMDType.setIdentifier(this.isIdentifier());
         newMDType.setIsPerson(this.isPerson);
+        newMDType.setAllowNameParts(this.allowNameParts);
+        newMDType.setAllowNormdata(this.allowNormdata);
         return newMDType;
     }
 
