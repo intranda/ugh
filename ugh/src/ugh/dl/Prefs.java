@@ -443,7 +443,7 @@ public class Prefs implements Serializable {
                         return null;
                     }
                 }
-                
+
                 if (currentNode.getNodeName().equals("group")) {
                     attributeNodelist = currentNode.getAttributes();
                     attribNode = attributeNodelist.getNamedItem("num");
@@ -588,11 +588,25 @@ public class Prefs implements Serializable {
             if (nodevalue != null && nodevalue.equals("person")) {
                 currenMdType.setIsPerson(true);
             }
-            if (nodevalue != null && nodevalue.equals("identifier")) {
-                currenMdType.setIdentifier(true);
+
+        }
+        
+        Node normdata = nnm.getNamedItem("normdata");
+        if (normdata != null) {
+            String nodevalue = normdata.getNodeValue();
+            if (nodevalue != null && nodevalue.equals("true")) {
+                currenMdType.setAllowNormdata(true);
             }
         }
 
+        Node additional = nnm.getNamedItem("namepart");
+        if (additional != null) {
+            String nodevalue = additional.getNodeValue();
+            if (nodevalue != null && nodevalue.equals("true")) {
+                currenMdType.setAllowNameParts(true);
+            }
+        }
+        
         allchildren = theMetadataTypeNode.getChildNodes(); // get allchildren
         for (int i = 0; i < allchildren.getLength(); i++) {
             currentNode = allchildren.item(i);
@@ -1017,8 +1031,7 @@ public class Prefs implements Serializable {
 
         return null;
     }
-    
-    
+
     /***************************************************************************
      * <p>
      * Needs string as parameter and returns MetadataGroup object with this name.

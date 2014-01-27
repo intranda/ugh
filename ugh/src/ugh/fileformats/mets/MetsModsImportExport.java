@@ -71,6 +71,7 @@ import ugh.dl.Metadata;
 import ugh.dl.MetadataGroup;
 import ugh.dl.MetadataGroupType;
 import ugh.dl.MetadataType;
+import ugh.dl.NamePart;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
 import ugh.exceptions.DocStructHasNoTypeException;
@@ -862,8 +863,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                         if (mmo.getPersontypeXQuery() != null) {
                             persontypevalue = getValueForUnambigiousXQuery(node, mmo.getDisplayNameXQuery());
                         }
-               
-                        
 
                         if (lastnamevalue != null) {
                             ps.setLastname(lastnamevalue[0]);
@@ -917,12 +916,13 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                         // mdt is NOT null, we ensure this above!
                         e.printStackTrace();
                     }
-                    if (node.getAttributes().getNamedItem("authority") != null && node.getAttributes().getNamedItem("authorityURI") != null && node.getAttributes().getNamedItem("valueURI") != null) {
-                        String authority =  node.getAttributes().getNamedItem("authority").getNodeValue();
+                    if (node.getAttributes().getNamedItem("authority") != null && node.getAttributes().getNamedItem("authorityURI") != null
+                            && node.getAttributes().getNamedItem("valueURI") != null) {
+                        String authority = node.getAttributes().getNamedItem("authority").getNodeValue();
                         String authorityURI = node.getAttributes().getNamedItem("authorityURI").getNodeValue();
                         String valueURI = node.getAttributes().getNamedItem("valueURI").getNodeValue();
                         md.setAutorityFile(authority, authorityURI, valueURI);
-                     }
+                    }
                     md.setValue(value);
 
                     // TODO read groups
@@ -1598,13 +1598,12 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             // Add value to node.
             Node valueNode = theDocument.createTextNode(newMetadataValue);
 
-            
             if (theMetadata.getAuthorityID() != null && theMetadata.getAuthorityURI() != null && theMetadata.getAuthorityValue() != null) {
                 ((Element) createdNode).setAttribute("authority", theMetadata.getAuthorityID());
                 ((Element) createdNode).setAttribute("authorityURI", theMetadata.getAuthorityURI());
                 ((Element) createdNode).setAttribute("valueURI", theMetadata.getAuthorityValue());
             }
-            
+
             createdNode.appendChild(valueNode);
             LOGGER.trace("Value '" + newMetadataValue + "' (" + theMetadata.getType().getName() + ") added to node >>" + createdNode.getNodeName()
                     + "<<");
@@ -1660,7 +1659,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
 
         for (String key : xpathMap.keySet()) {
             xquery = xpathMap.get(key);
-            
 
             if (key.equalsIgnoreCase(METS_PREFS_FIRSTNAMEXPATH_STRING) && thePerson.getFirstname() != null) {
                 if (xquery == null) {
@@ -1714,8 +1712,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             } else if (key.equalsIgnoreCase(METS_PREFS_AUTHORITYFILEIDXPATH_STRING) && thePerson.getAuthorityID() != null) {
 
                 if (xquery == null) {
-                    LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s authorityFileID '" + thePerson.getAuthorityID()
-                            + "'");
+                    LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s authorityFileID '" + thePerson.getAuthorityID() + "'");
                 } else {
                     Node authorityfileidNode = createNode(xquery, createdNode, theDomDoc);
                     Node authorityfileidvalueNode = theDomDoc.createTextNode(thePerson.getAuthorityID());
@@ -1725,7 +1722,25 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
 
             }
         }
-
+        if (thePerson.getAdditionalNameParts() != null && !thePerson.getAdditionalNameParts().isEmpty()) {
+            for (NamePart namePart : thePerson.getAdditionalNameParts()) {
+                if (namePart.getValue() != null && !namePart.getValue().isEmpty()) {
+                    if (namePart.getType().equals(GOOBI_PERSON_DATEVALUE_STRING)) {
+                        xquery = "./mods:namePart[@type='date']";
+                        Node displaynameNode = createNode(xquery, createdNode, theDomDoc);
+                        Node displaynamevalueNode = theDomDoc.createTextNode(namePart.getValue());
+                        displaynameNode.appendChild(displaynamevalueNode);
+                        createdNode.appendChild(displaynameNode);
+                    } else if (namePart.getType().equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING)) {
+                        xquery = "./mods:namePart[@type='termsOfAddress']";
+                        Node displaynameNode = createNode(xquery, createdNode, theDomDoc);
+                        Node displaynamevalueNode = theDomDoc.createTextNode(namePart.getValue());
+                        displaynameNode.appendChild(displaynamevalueNode);
+                        createdNode.appendChild(displaynameNode);
+                    }
+                }
+            }
+        }
     }
 
     /***************************************************************************
@@ -1760,9 +1775,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
 
         // Set the displayname of the current person, if NOT already set! Use
         // "lastname, name" as we were told in the MODS profile.
-        
-        // TODO write other nameparts
-        
+
         if ((thePerson.getLastname() != null && !thePerson.getLastname().equals(""))
                 || (thePerson.getFirstname() != null && !thePerson.getFirstname().equals(""))) {
             if (thePerson.getLastname() != null && !thePerson.getLastname().equals("") && thePerson.getFirstname() != null
@@ -1809,21 +1822,21 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 createdNode.appendChild(affiliationNode);
             }
         }
-        
+
         if (thePerson.getAuthorityID() != null && thePerson.getAuthorityURI() != null && thePerson.getAuthorityValue() != null) {
             ((Element) createdNode).setAttribute("authority", thePerson.getAuthorityID());
             ((Element) createdNode).setAttribute("authorityURI", thePerson.getAuthorityURI());
             ((Element) createdNode).setAttribute("valueURI", thePerson.getAuthorityValue());
-            
-//            xquery = theMMO.getAuthorityIDXquery();
-//            if (xquery == null) {
-//                LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s authorityFileID '" + thePerson.getAuthorityID() + "'");
-//            } else {
-//                Node authorityfileidNode = createNode(xquery, createdNode, theDomDoc);
-//                Node authorityfileidvalueNode = theDomDoc.createTextNode(thePerson.getAuthorityID());
-//                authorityfileidNode.appendChild(authorityfileidvalueNode);
-//                createdNode.appendChild(authorityfileidNode);
-//            }
+
+            //            xquery = theMMO.getAuthorityIDXquery();
+            //            if (xquery == null) {
+            //                LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s authorityFileID '" + thePerson.getAuthorityID() + "'");
+            //            } else {
+            //                Node authorityfileidNode = createNode(xquery, createdNode, theDomDoc);
+            //                Node authorityfileidvalueNode = theDomDoc.createTextNode(thePerson.getAuthorityID());
+            //                authorityfileidNode.appendChild(authorityfileidvalueNode);
+            //                createdNode.appendChild(authorityfileidNode);
+            //            }
         }
         if (thePerson.getDisplayname() != null) {
             xquery = theMMO.getDisplayNameXQuery();
@@ -1847,6 +1860,27 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 createdNode.appendChild(persontypeNode);
             }
         }
+
+        if (thePerson.getAdditionalNameParts() != null && !thePerson.getAdditionalNameParts().isEmpty()) {
+            for (NamePart namePart : thePerson.getAdditionalNameParts()) {
+                if (namePart.getValue() != null && !namePart.getValue().isEmpty()) {
+                    if (namePart.getType().equals(GOOBI_PERSON_DATEVALUE_STRING)) {
+                        xquery = "./mods:namePart[@type='date']";
+                        Node displaynameNode = createNode(xquery, createdNode, theDomDoc);
+                        Node displaynamevalueNode = theDomDoc.createTextNode(namePart.getValue());
+                        displaynameNode.appendChild(displaynamevalueNode);
+                        createdNode.appendChild(displaynameNode);
+                    } else if (namePart.getType().equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING)) {
+                        xquery = "./mods:namePart[@type='termsOfAddress']";
+                        Node displaynameNode = createNode(xquery, createdNode, theDomDoc);
+                        Node displaynamevalueNode = theDomDoc.createTextNode(namePart.getValue());
+                        displaynameNode.appendChild(displaynamevalueNode);
+                        createdNode.appendChild(displaynameNode);
+                    }
+                }
+            }
+        }
+
     }
 
     /***************************************************************************
@@ -2663,12 +2697,12 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
     public boolean isWritable() {
         return false;
     }
-    
+
     @Override
     public boolean isExportable() {
         return true;
     }
-    
+
     @Override
     public String getDisplayName() {
         return "Mets";
