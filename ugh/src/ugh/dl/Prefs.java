@@ -587,10 +587,12 @@ public class Prefs implements Serializable {
             String nodevalue = node.getNodeValue();
             if (nodevalue != null && nodevalue.equals("person")) {
                 currenMdType.setIsPerson(true);
+            } else if (nodevalue != null && nodevalue.equals("identifier")) {
+                currenMdType.setIdentifier(true);
             }
 
         }
-        
+               
         Node normdata = nnm.getNamedItem("normdata");
         if (normdata != null) {
             String nodevalue = normdata.getNodeValue();

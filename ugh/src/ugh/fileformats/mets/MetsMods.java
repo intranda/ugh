@@ -1560,6 +1560,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
             // Read anchor from separate file, if existing.
             anchorFilename = buildAnchorFilename(filename);
+            System.out.println(anchorFilename);
             if (!new File(anchorFilename).exists()) {
                 String message = "Anchor file '" + anchorFilename + "' expected due to existing anchor referenece, none found";
                 LOGGER.error(message);
