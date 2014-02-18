@@ -1598,7 +1598,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             // Add value to node.
             Node valueNode = theDocument.createTextNode(newMetadataValue);
 
-            if (theMetadata.getAuthorityID() != null && theMetadata.getAuthorityURI() != null && theMetadata.getAuthorityValue() != null) {
+            if (theMetadata.getAuthorityID() != null && theMetadata.getAuthorityURI() != null && theMetadata.getAuthorityValue() != null &&
+                    !theMetadata.getAuthorityID().equals("") && !theMetadata.getAuthorityURI().equals("") && !theMetadata.getAuthorityValue().equals("")
+                    ) {
                 ((Element) createdNode).setAttribute("authority", theMetadata.getAuthorityID());
                 ((Element) createdNode).setAttribute("authorityURI", theMetadata.getAuthorityURI());
                 ((Element) createdNode).setAttribute("valueURI", theMetadata.getAuthorityValue());
@@ -1823,7 +1825,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             }
         }
 
-        if (thePerson.getAuthorityID() != null && thePerson.getAuthorityURI() != null && thePerson.getAuthorityValue() != null) {
+        if (thePerson.getAuthorityID() != null && thePerson.getAuthorityURI() != null && thePerson.getAuthorityValue() != null &&
+                !thePerson.getAuthorityID().equals("") && !thePerson.getAuthorityURI().equals("") && !thePerson.getAuthorityValue().equals("")
+                ) {
             ((Element) createdNode).setAttribute("authority", thePerson.getAuthorityID());
             ((Element) createdNode).setAttribute("authorityURI", thePerson.getAuthorityURI());
             ((Element) createdNode).setAttribute("valueURI", thePerson.getAuthorityValue());
