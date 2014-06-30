@@ -2,9 +2,9 @@ package converter.ruleSetProcessing;
 
 import java.io.IOException;
 
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
 
 public class SlubReader extends RulesetReader {
 

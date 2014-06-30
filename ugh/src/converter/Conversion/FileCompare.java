@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.FileUtils;
-import org.jdom.JDOMException;
+import org.jdom2.JDOMException;
 
 public class FileCompare {
 

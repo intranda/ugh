@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.jdom.Attribute;
-import org.jdom.Comment;
-import org.jdom.Element;
+import org.jdom2.Attribute;
+import org.jdom2.Comment;
+import org.jdom2.Element;
 
 public class SlubElement
 {

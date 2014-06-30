@@ -1,6 +1,6 @@
 package converter.ruleSetProcessing;
 
-import org.jdom.Attribute;
+import org.jdom2.Attribute;
 
 public class SlubAttribute
 {

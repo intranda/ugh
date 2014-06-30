@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
-import org.jdom.Comment;
-import org.jdom.Content;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Parent;
-import org.jdom.input.SAXBuilder;
+import org.jdom2.Comment;
+import org.jdom2.Content;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.Parent;
+import org.jdom2.input.SAXBuilder;
 import org.xml.sax.InputSource;
 
 public class RulesetReader {
@@ -77,12 +77,11 @@ public class RulesetReader {
 		cleanOutTree(myDoc.getRootElement());
 	}
 
-	@SuppressWarnings("unchecked")
 	public Document getDoubleElements() {
 		ArrayList<Element> doubles = new ArrayList<Element>();
 		Element ele = null;
 
-		for (Iterator<Element> i = myDoc.getDescendants(); i.hasNext();) {
+		for (Iterator<Content> i = myDoc.getDescendants(); i.hasNext();) {
 			try {
 				ele = (Element) i.next();
 				ele = (Element) ele.clone();

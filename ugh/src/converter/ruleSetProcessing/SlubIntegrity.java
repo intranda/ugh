@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /* this class is in charge of checking if a certain element is already existing in the xml tree, 
  * which is checked against (here slub.xml). The general concept is that an element, which needs to
