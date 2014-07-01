@@ -72,13 +72,9 @@ import ugh.exceptions.WriteException;
  * @author Markus Enders
  * @author Stefan E. Funk
  * @author Robert Sehr
- * @version 2010-02-15
+ * @version 2014-07-01
  * 
- *          TODOLOG
- * 
- *          TODO add NormMetadata
- * 
- *          CHANGELOG
+ *          TODOLOG * CHANGELOG
  * 
  *          15.02.2010 --- Funk --- Logging version information now.
  * 
@@ -101,7 +97,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
      * VERSION STRING
      **************************************************************************/
 
-    private static final String VERSION = "1.3-20100215";
+    private static final String VERSION = "1.4-20140630";
 
     /***************************************************************************
      * STATIC FINALS
@@ -197,11 +193,13 @@ public class PicaPlus implements ugh.dl.Fileformat {
             // It's an element.
             if (n.getNodeType() == ELEMENT_NODE) {
                 // Check the name of the node.
-                MatchingMetadataObject mmo = null;
+
                 if (n.getNodeName().equalsIgnoreCase(PREFS_METADATA_STRING)) {
-                    mmo = readMetadata(n);
+                    Set<MatchingMetadataObject> list = readMetadata(n);
+                    this.mmoList.addAll(list);
                 } else if (n.getNodeName().equalsIgnoreCase(PREFS_DOCSTRUCT_STRING)) {
-                    mmo = readDocStruct(n);
+                    MatchingMetadataObject mmo = readDocStruct(n);
+                    mmoList.add(mmo);
                 } else if (n.getNodeName().equalsIgnoreCase(PREFS_PERSON_STRING)) {
                     Set<MatchingMetadataObject> hs = readPerson(n);
                     this.mmoList.addAll(hs);
@@ -209,11 +207,6 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     readPicaGroup(n);
                 }
 
-                if (mmo != null) {
-                    // Add the metadatamatchingobject to a string add it to list
-                    // of objects.
-                    this.mmoList.add(mmo);
-                }
             }
         }
 
@@ -252,7 +245,13 @@ public class PicaPlus implements ugh.dl.Fileformat {
      * @param inNode
      * @return
      **************************************************************************/
-    private MatchingMetadataObject readMetadata(Node inNode) {
+
+    private Set<MatchingMetadataObject> readMetadata(Node inNode) {
+
+        HashSet<MatchingMetadataObject> result = new HashSet<MatchingMetadataObject>();
+
+        String maintag = null;
+        String internal = null;
 
         MatchingMetadataObject mmo = new MatchingMetadataObject();
         mmo.setType("Metadata");
@@ -261,11 +260,58 @@ public class PicaPlus implements ugh.dl.Fileformat {
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
             if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_PICAMAINTAG_STRING)) {
-                mmo.setPicaplusField(readTextNode(n));
+                maintag = readTextNode(n);
+                mmo.setPicaplusField(maintag);
+
+                // Add it also to MMOs we already created.
+                for (MatchingMetadataObject mmo2 : result) {
+                    mmo2.setPicaplusField(maintag);
+                }
             }
             if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_PICASUBTAG_STRING)) {
-                mmo.setPicaplusSubfield(readTextNode(n));
+                String subtag = readTextNode(n);
+                mmo.setPicaplusSubfield(subtag);
+
+                NamedNodeMap nnm = n.getAttributes();
+                String attributeValue = null;
+                if (nnm != null && nnm.getLength() > 0) {
+                    Node tn = nnm.getNamedItem("type");
+                    attributeValue = tn.getNodeValue();
+                }
+
+                if (attributeValue == null) {
+                    mmo.setPicaplusSubfield(readTextNode(n));
+                }
+                if (attributeValue != null && attributeValue.equalsIgnoreCase(PREFS_PERSONIDENTIFIER_STRING)) {
+                    mmo.setIdentifier(true);
+                    mmo.setPicaplusSubfield(readTextNode(n));
+                }
+
+                // Create new MMO object, this is necessary, because in this
+                // case we have several subtags, each one will be a new MMO.
+                result.add(mmo);
+                mmo = new MatchingMetadataObject();
+                mmo.setType("Metadata");
+
+                if (maintag != null) {
+                    mmo.setPicaplusField(maintag);
+                }
+                if (internal != null) {
+                    mmo.setInternalName(internal);
+                }
             }
+            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_NAME_STRING)) {
+                internal = readTextNode(n);
+                mmo.setInternalName(internal);
+
+                // Add it also to MMOs with other subfields.
+                Iterator<MatchingMetadataObject> it = result.iterator();
+                while (it.hasNext()) {
+                    MatchingMetadataObject mmo2 = it.next();
+                    mmo2.setInternalName(internal);
+                }
+            }
+
             if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_PICAPLUSGROUP_STRING)) {
                 mmo.setPicaplusGroupname(readTextNode(n));
             }
@@ -281,14 +327,11 @@ public class PicaPlus implements ugh.dl.Fileformat {
         }
 
         // Check if all required data is set.
-        if (mmo.getPicaplusField() == null || mmo.getType() == null) {
-            return null;
-        }
-        if (mmo.getPicaplusField() == null && mmo.getPicaplusGroupname() == null) {
+        if (mmo.getInternalName() == null || mmo.getPicaplusField() == null || mmo.getType() == null) {
             return null;
         }
 
-        return mmo;
+        return result;
     }
 
     /***************************************************************************
@@ -333,7 +376,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     mmo.setFirstname(true);
                 }
                 if (attributeValue.equalsIgnoreCase(PREFS_PERSONIDENTIFIER_STRING)) {
-                    mmo.setPersonIdentifier(true);
+                    mmo.setIdentifier(true);
                 }
                 if (attributeValue.equalsIgnoreCase(PREFS_PERSONEXPANSION_STRING)) {
                     mmo.setExpansion(true);
@@ -952,20 +995,35 @@ public class PicaPlus implements ugh.dl.Fileformat {
                         } else {
                             // It has a subfield, so create a Metadata
                             // object, add content and return it.
-                            String internalname = mmo.getInternalName();
-                            MetadataType mdt = this.myPreferences.getMetadataTypeByName(internalname);
-                            if (mdt == null) {
-                                LOGGER.warn("Can't create unknown Metadata object '" + internalname + "'");
-                            } else {
-                                md = new Metadata(mdt);
-                                md.setValue(content);
-
-                                result.add(md);
+                            if (md == null) {
+                                String internalname = mmo.getInternalName();
+                                MetadataType mdt = this.myPreferences.getMetadataTypeByName(internalname);
+                                if (mdt == null) {
+                                    LOGGER.warn("Can't create unknown Metadata object '" + internalname + "'");
+                                } else {
+                                    md = new Metadata(mdt);
+                                }
                             }
+                            if (!mmo.isIdentifier()) {
+                                md.setValue(content);
+                            } else {
+                                if (content.contains("/")) {
+                                    String catalogue = content.substring(0, content.indexOf("/"));
+                                    String identifier = content.substring(content.indexOf("/") + 1);
+                                    if (catalogue.equals("gnd")) {
+                                        md.setAutorityFile(catalogue, "http://d-nb.info/gnd/", identifier);
+                                    }
+                                } else if (content.matches("gnd\\d+")) {
+                                    md.setAutorityFile("gnd", "http://d-nb.info/gnd/", content.replace("gnd", ""));
+                                } else {
+                                    md.setAutorityFile("gnd", "http://d-nb.info/gnd/", content);
+                                }
+                            }
+                            result.add(md);
                         }
                     }
                 }
-                // TODO add NormMetadata
+
                 else if (mmo != null && mmo.getType().equals("Person")) {
                     // It's a person; we can get to this point several times, as
                     // person's metadata information is split over several
@@ -990,7 +1048,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     if (mmo.isLastname()) {
                         per.setLastname(content);
                     }
-                    if (mmo.isPersonIdentifier()) {
+                    if (mmo.isIdentifier()) {
                         // gnd/123456 or gnd123456 or 123456 
                         // TODO import other catalogues
                         if (content.contains("/")) {
@@ -999,8 +1057,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                             if (catalogue.equals("gnd")) {
                                 per.setAutorityFile(catalogue, "http://d-nb.info/gnd/", identifier);
                             }
-                        }
-                        else if (content.matches("gnd\\d+")) {
+                        } else if (content.matches("gnd\\d+")) {
                             per.setAutorityFile("gnd", "http://d-nb.info/gnd/", content.replace("gnd", ""));
                         } else {
                             per.setAutorityFile("gnd", "http://d-nb.info/gnd/", content);
@@ -1274,7 +1331,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
         // These are only important, if MMO matches a person.
         private boolean isFirstname = false;
         private boolean isLastname = false;
-        private boolean isPersonIdentifier = false;
+        private boolean isIdentifier = false;
         private boolean isExpansion = false;
         // Role of other involved.
         private boolean isFunction = false;
@@ -1399,17 +1456,17 @@ public class PicaPlus implements ugh.dl.Fileformat {
         }
 
         /***********************************************************************
-         * @return the isPersonIdentifier
+         * @return the isIdentifier
          **********************************************************************/
-        public boolean isPersonIdentifier() {
-            return this.isPersonIdentifier;
+        public boolean isIdentifier() {
+            return this.isIdentifier;
         }
 
         /***********************************************************************
-         * @param isPersonIdentifier the isPersonIdentifier to set
+         * @param isIdentifier the isIdentifier to set
          **********************************************************************/
-        public void setPersonIdentifier(boolean isPersonIdentifier) {
-            this.isPersonIdentifier = isPersonIdentifier;
+        public void setIdentifier(boolean isIdentifier) {
+            this.isIdentifier = isIdentifier;
         }
 
         /***********************************************************************
