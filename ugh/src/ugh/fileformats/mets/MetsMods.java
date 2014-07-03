@@ -366,7 +366,7 @@ public class MetsMods implements ugh.dl.Fileformat {
     // Default namespace things.
     private static final String DEFAULT_METS_PREFIX = "mets";
     private static final String DEFAULT_METS_URI = "http://www.loc.gov/METS/";
-    private static final String DEFAULT_METS_SCHEMA_LOCATION = "http://www.loc.gov/standards/mets/version17/mets.v1-7.xsd";
+    private static final String DEFAULT_METS_SCHEMA_LOCATION = "http://www.loc.gov/standards/mets/mets.xsd";
     private static final String DEFAULT_MODS_PREFIX = "mods";
     private static final String DEFAULT_MODS_URI = "http://www.loc.gov/mods/v3";
     private static final String DEFAULT_SCHEMA_LOCATION = "http://www.loc.gov/standards/mods/v3/mods-3-5.xsd";
@@ -725,56 +725,61 @@ public class MetsMods implements ugh.dl.Fileformat {
     }
 
     private void readAmdSec(Mets metsElement) {
-        List<AmdSecType> list = metsElement.getAmdSecList();
+        AmdSecType[] list = metsElement.getAmdSecArray();
+        //        List<AmdSecType> list = metsElement.getAmdSecList();
         // for (AmdSecType ast : list) {
-        if (list != null && !list.isEmpty()) {
-            AmdSecType ast = list.get(0); // allow only one amdSec
+        if (list != null && list.length > 0) {
+            AmdSecType ast = list[0]; // allow only one amdSec
             this.digdoc.setAmdSec(ast.getID());
 
-            List<MdSecType> mst = ast.getTechMDList();
-            for (MdSecType tech : mst) {
-                MdWrap wrap = tech.getMdWrap();
-                Node premis = wrap.getDomNode();
-                Md techMd = new Md(premis);
-                techMd.setId(tech.getID());
-                techMd.setType("techMD");
-                // System.out.println("Reading techMd " + tech.getID());
-                this.digdoc.addTechMd(techMd);
+            MdSecType[] mst = ast.getTechMDArray();
+            if (mst != null) {
+                for (MdSecType tech : mst) {
+                    MdWrap wrap = tech.getMdWrap();
+                    Node premis = wrap.getDomNode();
+                    Md techMd = new Md(premis);
+                    techMd.setId(tech.getID());
+                    techMd.setType("techMD");
+                    // System.out.println("Reading techMd " + tech.getID());
+                    this.digdoc.addTechMd(techMd);
+                }
             }
-
-            mst = ast.getRightsMDList();
-            for (MdSecType tech : mst) {
-                MdWrap wrap = tech.getMdWrap();
-                Node premis = wrap.getDomNode();
-                Md techMd = new Md(premis);
-                techMd.setId(tech.getID());
-                techMd.setType("rightsMD");
-                // System.out.println("Reading techMd " + tech.getID());
-                this.digdoc.addTechMd(techMd);
+            mst = ast.getRightsMDArray();
+            if (mst != null) {
+                for (MdSecType tech : mst) {
+                    MdWrap wrap = tech.getMdWrap();
+                    Node premis = wrap.getDomNode();
+                    Md techMd = new Md(premis);
+                    techMd.setId(tech.getID());
+                    techMd.setType("rightsMD");
+                    // System.out.println("Reading techMd " + tech.getID());
+                    this.digdoc.addTechMd(techMd);
+                }
             }
-
-            mst = ast.getDigiprovMDList();
-            for (MdSecType tech : mst) {
-                MdWrap wrap = tech.getMdWrap();
-                Node premis = wrap.getDomNode();
-                Md techMd = new Md(premis);
-                techMd.setId(tech.getID());
-                techMd.setType("digiprovMD");
-                // System.out.println("Reading techMd " + tech.getID());
-                this.digdoc.addTechMd(techMd);
+            mst = ast.getDigiprovMDArray();
+            if (mst != null) {
+                for (MdSecType tech : mst) {
+                    MdWrap wrap = tech.getMdWrap();
+                    Node premis = wrap.getDomNode();
+                    Md techMd = new Md(premis);
+                    techMd.setId(tech.getID());
+                    techMd.setType("digiprovMD");
+                    // System.out.println("Reading techMd " + tech.getID());
+                    this.digdoc.addTechMd(techMd);
+                }
             }
-
-            mst = ast.getSourceMDList();
-            for (MdSecType tech : mst) {
-                MdWrap wrap = tech.getMdWrap();
-                Node premis = wrap.getDomNode();
-                Md techMd = new Md(premis);
-                techMd.setId(tech.getID());
-                techMd.setType("sourceMD");
-                // System.out.println("Reading techMd " + tech.getID());
-                this.digdoc.addTechMd(techMd);
+            mst = ast.getSourceMDArray();
+            if (mst != null) {
+                for (MdSecType tech : mst) {
+                    MdWrap wrap = tech.getMdWrap();
+                    Node premis = wrap.getDomNode();
+                    Md techMd = new Md(premis);
+                    techMd.setId(tech.getID());
+                    techMd.setType("sourceMD");
+                    // System.out.println("Reading techMd " + tech.getID());
+                    this.digdoc.addTechMd(techMd);
+                }
             }
-
         }
     }
 
@@ -1069,18 +1074,18 @@ public class MetsMods implements ugh.dl.Fileformat {
         // attribute are empty, just return (We do that at METS writing to
         // always get a valid METS file).
 
-        if (sl == null || sl.getSmLinkList().isEmpty()) {
+        if (sl == null || sl.getSmLinkArray() == null || sl.getSmLinkArray().length == 0) {
             return;
         }
-
-        boolean getFromNotExisting = sl.getSmLinkList().get(0).getFrom() == null || sl.getSmLinkList().get(0).getFrom().equals("");
-        boolean getToNotExisting = sl.getSmLinkList().get(0).getTo() == null || sl.getSmLinkList().get(0).getTo().equals("");
-        if (sl.getSmLinkList().size() == 1 && getFromNotExisting && getToNotExisting) {
+        SmLink link = sl.getSmLinkArray()[0];
+        boolean getFromNotExisting = link.getFrom() == null || link.getFrom().equals("");
+        boolean getToNotExisting = link.getTo() == null || link.getTo().equals("");
+        if (sl.getSmLinkArray().length == 1 && getFromNotExisting && getToNotExisting) {
             return;
         }
 
         // Iterate over all smLinks.
-        for (SmLink singleLink : sl.getSmLinkList()) {
+        for (SmLink singleLink : sl.getSmLinkArray()) {
             String linkFrom = singleLink.getFrom();
             String linkTo = singleLink.getTo();
 
@@ -1193,9 +1198,10 @@ public class MetsMods implements ugh.dl.Fileformat {
         LinkedList<DocStruct> result = new LinkedList<DocStruct>();
 
         // Get all sub <div> elements.
-        List<DivType> children = inDiv.getDivList();
+        DivType[] children = inDiv.getDivArray();
+        //        List<DivType> children = inDiv.getDivList();
 
-        if (children.isEmpty()) {
+        if (children == null | children.length == 0) {
             // No children available, so there is nothing to read.
             return null;
         }
@@ -2442,12 +2448,12 @@ public class MetsMods implements ugh.dl.Fileformat {
                 for (DocStruct child : toplist) {
                     try {
                         // Get the fileList from the DivType object.
-                        List<Fptr> fileList = ((DivType) child.getOrigObject()).getFptrList();
+                        Fptr[] fileList = ((DivType) child.getOrigObject()).getFptrArray();
 
                         // Get file pointer list from current div and add all
                         // content files to the current DocStruct, if any FPTRs
                         // are existing.
-                        if (fileList != null && !fileList.isEmpty()) {
+                        if (fileList != null && fileList.length > 0) {
                             for (Fptr fptr : fileList) {
                                 if (fptr != null) {
                                     ContentFile cf = this.sortedFileMap.get(fptr.getFILEID());
@@ -3226,64 +3232,69 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         // Iterate over local filegroup only (that's where the REAL files are
         // stored).
-        List<FileGrp> filegroups = fileSection.getFileGrpList();
-        for (FileGrp filegroup : filegroups) {
-            if (filegroup.getUSE().equals(METS_FILEGROUP_LOCAL_STRING)) {
+        FileGrp[] filegroups = fileSection.getFileGrpArray();
+        if (filegroups != null) {
+            for (FileGrp filegroup : filegroups) {
+                if (filegroup.getUSE().equals(METS_FILEGROUP_LOCAL_STRING)) {
 
-                // Read all files from the METS; we are not having subgroups
-                // here.
-                for (FileType file : filegroup.getFileList()) {
-                    // Get location array.
-                    List<FLocat> location = file.getFLocatList();
+                    // Read all files from the METS; we are not having subgroups
+                    // here.
+                    FileType[] fileTypeList = filegroup.getFileArray();
+                    if (fileTypeList != null) {
+                        for (FileType file : fileTypeList) {
+                            // Get location array.
+                            FLocat[] location = file.getFLocatArray();
 
-                    // We are just supporting a single location Element.
-                    if (location.size() != 1) {
-                        String message = "None or too many FLocat elements for <file> element!";
-                        LOGGER.error(message);
-                        throw new ReadException(message);
-                    }
-                    String href = location.get(0).getHref();
-                    if (href == null) {
-                        String message = "FLocat element for <file> element has no href attribute specifying the location of the file!";
-                        LOGGER.error(message);
-                        throw new ReadException(message);
-                    }
+                            // We are just supporting a single location Element.
+                            if (location.length != 1) {
+                                String message = "None or too many FLocat elements for <file> element!";
+                                LOGGER.error(message);
+                                throw new ReadException(message);
+                            }
+                            String href = location[0].getHref();
+                            if (href == null) {
+                                String message = "FLocat element for <file> element has no href attribute specifying the location of the file!";
+                                LOGGER.error(message);
+                                throw new ReadException(message);
+                            }
 
-                    // Create a new content file.
-                    ContentFile cf = new ContentFile();
-                    cf.setLocation(href);
+                            // Create a new content file.
+                            ContentFile cf = new ContentFile();
+                            cf.setLocation(href);
 
-                    // Set the content file's ID.
-                    if (file.getID() != null) {
-                        cf.setIdentifier(file.getID());
-                    }
-                    // Set the content file's mimetype.
-                    if (file.getMIMETYPE() != null) {
-                        cf.setMimetype(file.getMIMETYPE());
-                    }
+                            // Set the content file's ID.
+                            if (file.getID() != null) {
+                                cf.setIdentifier(file.getID());
+                            }
+                            // Set the content file's mimetype.
+                            if (file.getMIMETYPE() != null) {
+                                cf.setMimetype(file.getMIMETYPE());
+                            }
 
-                    // set the admIDs
-                    List<?> admIds = file.getADMID();
-                    // System.out.println("Reading admIds");
-                    if (admIds != null) {
-                        for (Object object : admIds) {
-                            if (object instanceof String) {
-                                String id = (String) object;
-                                cf.addTechMd(this.digdoc.getTechMd(id));
+                            // set the admIDs
+                            List<?> admIds = file.getADMID();
+                            // System.out.println("Reading admIds");
+                            if (admIds != null) {
+                                for (Object object : admIds) {
+                                    if (object instanceof String) {
+                                        String id = (String) object;
+                                        cf.addTechMd(this.digdoc.getTechMd(id));
+                                    }
+                                }
+                            }
+
+                            // Add the file to the fileset.
+                            fileset.addFile(cf);
+
+                            LOGGER.trace("Added file '" + cf.getLocation() + "' (" + cf.getIdentifier() + ") from FileGrp "
+                                    + METS_FILEGROUP_LOCAL_STRING + " to FileSet");
+
+                            // Add the file and the file ID to the content file hashmap
+                            // to retrieve the file by using the ID lateron.
+                            if (cf.getIdentifier() != null) {
+                                this.sortedFileMap.put(cf.getIdentifier(), cf);
                             }
                         }
-                    }
-
-                    // Add the file to the fileset.
-                    fileset.addFile(cf);
-
-                    LOGGER.trace("Added file '" + cf.getLocation() + "' (" + cf.getIdentifier() + ") from FileGrp " + METS_FILEGROUP_LOCAL_STRING
-                            + " to FileSet");
-
-                    // Add the file and the file ID to the content file hashmap
-                    // to retrieve the file by using the ID lateron.
-                    if (cf.getIdentifier() != null) {
-                        this.sortedFileMap.put(cf.getIdentifier(), cf);
                     }
                 }
             }
