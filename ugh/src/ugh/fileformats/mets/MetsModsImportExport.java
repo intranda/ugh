@@ -226,6 +226,11 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
     private String purlUrl = "";
     private String contentIDs = "";
 
+    private String metsRightsSponsor = "";
+    private String metsRightsSponsorLogo = "";
+    private String metsRightsSponsorSiteURL = "";
+    private String metsRightsLicense = "";
+
     /***************************************************************************
      * CONSTRUCTORS
      **************************************************************************/
@@ -1433,6 +1438,29 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             dv.appendChild(dvOwnerLogo);
             dv.appendChild(dvOwnerSiteURL);
             dv.appendChild(dvOwnerContact);
+
+            if (metsRightsSponsor != null && !metsRightsSponsor.isEmpty()) {
+                Element dvSponsor = createDomElementNS(domDoc, this.dvNamespacePrefix, "sponsor");
+                dvSponsor.setTextContent(metsRightsSponsor);
+                dv.appendChild(dvSponsor);
+            }
+
+            if (metsRightsSponsorLogo != null && !metsRightsSponsorLogo.isEmpty()) {
+                Element dvSponsor = createDomElementNS(domDoc, this.dvNamespacePrefix, "sponsorLogo");
+                dvSponsor.setTextContent(metsRightsSponsorLogo);
+                dv.appendChild(dvSponsor);
+            }
+
+            if (metsRightsSponsorSiteURL != null && !metsRightsSponsorSiteURL.isEmpty()) {
+                Element dvSponsor = createDomElementNS(domDoc, this.dvNamespacePrefix, "sponsorSiteURL");
+                dvSponsor.setTextContent(metsRightsSponsorSiteURL);
+                dv.appendChild(dvSponsor);
+            }
+            if (metsRightsLicense != null && !metsRightsLicense.isEmpty()) {
+                Element dvSponsor = createDomElementNS(domDoc, this.dvNamespacePrefix, "license");
+                dvSponsor.setTextContent(metsRightsLicense);
+                dv.appendChild(dvSponsor);
+            }
         }
 
         if (!digiprovMDExists) {
@@ -1598,9 +1626,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             // Add value to node.
             Node valueNode = theDocument.createTextNode(newMetadataValue);
 
-            if (theMetadata.getAuthorityID() != null && theMetadata.getAuthorityURI() != null && theMetadata.getAuthorityValue() != null &&
-                    !theMetadata.getAuthorityID().equals("") && !theMetadata.getAuthorityURI().equals("") && !theMetadata.getAuthorityValue().equals("")
-                    ) {
+            if (theMetadata.getAuthorityID() != null && theMetadata.getAuthorityURI() != null && theMetadata.getAuthorityValue() != null
+                    && !theMetadata.getAuthorityID().equals("") && !theMetadata.getAuthorityURI().equals("")
+                    && !theMetadata.getAuthorityValue().equals("")) {
                 ((Element) createdNode).setAttribute("authority", theMetadata.getAuthorityID());
                 ((Element) createdNode).setAttribute("authorityURI", theMetadata.getAuthorityURI());
                 ((Element) createdNode).setAttribute("valueURI", theMetadata.getAuthorityValue());
@@ -1825,9 +1853,8 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             }
         }
 
-        if (thePerson.getAuthorityID() != null && thePerson.getAuthorityURI() != null && thePerson.getAuthorityValue() != null &&
-                !thePerson.getAuthorityID().equals("") && !thePerson.getAuthorityURI().equals("") && !thePerson.getAuthorityValue().equals("")
-                ) {
+        if (thePerson.getAuthorityID() != null && thePerson.getAuthorityURI() != null && thePerson.getAuthorityValue() != null
+                && !thePerson.getAuthorityID().equals("") && !thePerson.getAuthorityURI().equals("") && !thePerson.getAuthorityValue().equals("")) {
             ((Element) createdNode).setAttribute("authority", thePerson.getAuthorityID());
             ((Element) createdNode).setAttribute("authorityURI", thePerson.getAuthorityURI());
             ((Element) createdNode).setAttribute("valueURI", thePerson.getAuthorityValue());
@@ -2688,6 +2715,27 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         } else {
             this.contentIDs = checkForRegExp(contentIDs);
         }
+    }
+
+    @Override
+    public void setMetsRightsLicense(String metsRightsLicense) {
+        this.metsRightsLicense = metsRightsLicense;
+
+    }
+
+    @Override
+    public void setMetsRightsSponsor(String metsRightsSponsor) {
+        this.metsRightsSponsor = metsRightsSponsor;
+    }
+
+    @Override
+    public void setMetsRightsSponsorLogo(String metsRightsSponsorLogo) {
+        this.metsRightsSponsorLogo = metsRightsSponsorLogo;
+    }
+
+    @Override
+    public void setMetsRightsSponsorSiteURL(String metsRightsSponsorSiteURL) {
+        this.metsRightsSponsorSiteURL = metsRightsSponsorSiteURL;
     }
 
     /***************************************************************************
