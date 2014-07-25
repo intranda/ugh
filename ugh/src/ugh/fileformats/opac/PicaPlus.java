@@ -995,35 +995,21 @@ public class PicaPlus implements ugh.dl.Fileformat {
                         } else {
                             // It has a subfield, so create a Metadata
                             // object, add content and return it.
-                            if (md == null) {
-                                String internalname = mmo.getInternalName();
-                                MetadataType mdt = this.myPreferences.getMetadataTypeByName(internalname);
-                                if (mdt == null) {
-                                    LOGGER.warn("Can't create unknown Metadata object '" + internalname + "'");
-                                } else {
-                                    md = new Metadata(mdt);
-                                }
-                            }
-                            if (!mmo.isIdentifier()) {
-                                md.setValue(content);
+                            String internalname = mmo.getInternalName();
+                            
+                            MetadataType mdt = this.myPreferences.getMetadataTypeByName(internalname);
+                            if (mdt == null) {
+                                LOGGER.warn("Can't create unknown Metadata object '" + internalname + "'");
                             } else {
-                                if (content.contains("/")) {
-                                    String catalogue = content.substring(0, content.indexOf("/"));
-                                    String identifier = content.substring(content.indexOf("/") + 1);
-                                    if (catalogue.equals("gnd")) {
-                                        md.setAutorityFile(catalogue, "http://d-nb.info/gnd/", identifier);
-                                    }
-                                } else if (content.matches("gnd\\d+")) {
-                                    md.setAutorityFile("gnd", "http://d-nb.info/gnd/", content.replace("gnd", ""));
-                                } else {
-                                    md.setAutorityFile("gnd", "http://d-nb.info/gnd/", content);
-                                }
-                            }
+                                md = new Metadata(mdt);
+                                md.setValue(content);
+                            
                             result.add(md);
                         }
                     }
                 }
-
+                }
+                // TODO add NormMetadata
                 else if (mmo != null && mmo.getType().equals("Person")) {
                     // It's a person; we can get to this point several times, as
                     // person's metadata information is split over several
@@ -1525,7 +1511,6 @@ public class PicaPlus implements ugh.dl.Fileformat {
         public void setValueRegExp(String valueRegExp) {
             this.valueRegExp = valueRegExp;
         }
-
     }
 
     @Override
