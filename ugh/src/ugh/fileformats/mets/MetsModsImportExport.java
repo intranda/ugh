@@ -1631,7 +1631,8 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                     && !theMetadata.getAuthorityValue().equals("")) {
                 ((Element) createdNode).setAttribute("authority", theMetadata.getAuthorityID());
                 ((Element) createdNode).setAttribute("authorityURI", theMetadata.getAuthorityURI());
-                ((Element) createdNode).setAttribute("valueURI", theMetadata.getAuthorityValue());
+                ((Element) createdNode).setAttribute("value", theMetadata.getAuthorityValue());
+                ((Element) createdNode).setAttribute("valueURI", theMetadata.getAuthorityURI() + theMetadata.getAuthorityValue());
             }
 
             createdNode.appendChild(valueNode);
@@ -1857,7 +1858,8 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 && !thePerson.getAuthorityID().equals("") && !thePerson.getAuthorityURI().equals("") && !thePerson.getAuthorityValue().equals("")) {
             ((Element) createdNode).setAttribute("authority", thePerson.getAuthorityID());
             ((Element) createdNode).setAttribute("authorityURI", thePerson.getAuthorityURI());
-            ((Element) createdNode).setAttribute("valueURI", thePerson.getAuthorityValue());
+            ((Element) createdNode).setAttribute("value", thePerson.getAuthorityValue());
+            ((Element) createdNode).setAttribute("valueURI", thePerson.getAuthorityURI() + thePerson.getAuthorityValue());
 
             //            xquery = theMMO.getAuthorityIDXquery();
             //            if (xquery == null) {
