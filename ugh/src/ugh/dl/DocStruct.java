@@ -566,8 +566,6 @@ public class DocStruct implements Serializable {
                         mdnew.setPersonList(newPersonList);
                         newStruct.addMetadataGroup(mdnew);
 
-                        mdnew.setMetadataList(newmdlist);
-                        newStruct.addMetadataGroup(mdnew);
                     } catch (DocStructHasNoTypeException e) {
                         // This should never happen, as we are adding the same
                         // MetadataType.
