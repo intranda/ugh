@@ -2139,24 +2139,19 @@ public class MetsMods implements ugh.dl.Fileformat {
                                     valueURI = metadata.getAttributes().getNamedItem("valueURI").getNodeValue();
                                 }
 
-                                List<Metadata> metadataList = new ArrayList<Metadata>(metadataGroup.getMetadataList());
-                                for (Metadata meta : metadataList) {
-                                    if (meta.getType().getName().equals(metadataName)) {
-                                        if (meta.getValue() == null || meta.getValue().isEmpty()) {
-                                            meta.setValue(value);
-                                            if (authority != null && authorityURI != null && valueURI != null) {
-                                                meta.setAutorityFile(authority, authorityURI, valueURI);
-                                            }
-                                            break;
-                                        } else {
-                                            Metadata mdnew = new Metadata(meta.getType());
-                                            mdnew.setValue(value);
-                                            if (authority != null && authorityURI != null && valueURI != null) {
-                                                mdnew.setAutorityFile(authority, authorityURI, valueURI);
-                                            }
-                                            metadataGroup.addMetadata(mdnew);
-                                        }
+                                List<Metadata> metadataList = metadataGroup.getMetadataByType(metadataName);
+                                boolean isMatched = false;
+                                for (Metadata currentMetadata : metadataList) {
+                                    if (currentMetadata.getValue() == null || currentMetadata.getValue().isEmpty()) {
+                                        currentMetadata.setValue(value);
+                                        isMatched = true;
+                                        break;
                                     }
+                                }
+                                if (!isMatched) {
+                                    Metadata md = new Metadata(myPreferences.getMetadataTypeByName(metadataName));
+                                    md.setValue(value);
+                                    metadataGroup.addMetadata(md);
                                 }
                             }
 
