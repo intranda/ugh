@@ -996,18 +996,18 @@ public class PicaPlus implements ugh.dl.Fileformat {
                             // It has a subfield, so create a Metadata
                             // object, add content and return it.
                             String internalname = mmo.getInternalName();
-                            
+
                             MetadataType mdt = this.myPreferences.getMetadataTypeByName(internalname);
                             if (mdt == null) {
                                 LOGGER.warn("Can't create unknown Metadata object '" + internalname + "'");
                             } else {
                                 md = new Metadata(mdt);
                                 md.setValue(content);
-                            
-                            result.add(md);
+
+                                result.add(md);
+                            }
                         }
                     }
-                }
                 }
                 // TODO add NormMetadata
                 else if (mmo != null && mmo.getType().equals("Person")) {
@@ -1035,16 +1035,17 @@ public class PicaPlus implements ugh.dl.Fileformat {
                         per.setLastname(content);
                     }
                     if (mmo.isIdentifier()) {
-                        // gnd/123456 or gnd123456 or 123456 
-                        // TODO import other catalogues
+                        // gnd/123456 or gnd123456 or 123456 or (DE-588)123456
                         if (content.contains("/")) {
                             String catalogue = content.substring(0, content.indexOf("/"));
                             String identifier = content.substring(content.indexOf("/") + 1);
                             if (catalogue.equals("gnd")) {
                                 per.setAutorityFile(catalogue, "http://d-nb.info/gnd/", identifier);
                             }
-                        } else if (content.matches("gnd\\d+")) {
+                        } else if (content.matches("gnd\\.+")) {
                             per.setAutorityFile("gnd", "http://d-nb.info/gnd/", content.replace("gnd", ""));
+                        } else if (content.matches("\\(.*\\).+")) {
+                            per.setAutorityFile("gnd", "http://d-nb.info/gnd/", content.replaceAll("\\(.*\\)", ""));
                         } else {
                             per.setAutorityFile("gnd", "http://d-nb.info/gnd/", content);
                         }
