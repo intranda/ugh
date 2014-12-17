@@ -1026,102 +1026,103 @@ public class PicaPlus implements ugh.dl.Fileformat {
                         per = new Person(mdt);
                         per.setRole(mdt.getName());
                     }
-
-                    // Check if mmo is lastname, firstname.
-                    if (mmo.isFirstname()) {
-                        per.setFirstname(content);
-                    }
-                    if (mmo.isLastname()) {
-                        per.setLastname(content);
-                    }
-                    if (mmo.isIdentifier()) {
-                        // gnd/123456 or gnd123456 or 123456 or (DE-588)123456
-                        if (content.contains("/")) {
-                            String catalogue = content.substring(0, content.indexOf("/"));
-                            String identifier = content.substring(content.indexOf("/") + 1);
-                            if (catalogue.equals("gnd")) {
-                                per.setAutorityFile(catalogue, "http://d-nb.info/gnd/", identifier);
-                            }
-                        } else if (content.matches("gnd\\.+")) {
-                            per.setAutorityFile("gnd", "http://d-nb.info/gnd/", content.replace("gnd", ""));
-                        } else if (content.matches("\\(.*\\).+")) {
-                            per.setAutorityFile("gnd", "http://d-nb.info/gnd/", content.replaceAll("\\(.*\\)", ""));
-                        } else {
-                            per.setAutorityFile("gnd", "http://d-nb.info/gnd/", content);
+                    if (mmo.getInternalName().equals(per.getRole())) {
+                        // Check if mmo is lastname, firstname.
+                        if (mmo.isFirstname()) {
+                            per.setFirstname(content);
                         }
-
-                    }
-
-                    // Some OPAC (e.g. SWB) don't carry separate subfields for
-                    // firstname and lastname. Therefore we try to extract the
-                    // name parts from the expansion subfield
-                    // ("Expansion der Ansetzungsform").
-                    //
-                    // <cite>Vorbehaltlich anderslautender Aussagen aus Konstanz
-                    // wäre das also unser Weg, an Personenansetzungen
-                    // herauzukommen: 028A $8 ..., Name 028A $8 , ... Vorname
-                    // 028A $8 , ... / von Vorname mit angehängtem Präfix (nur
-                    // "/" fällt weg bei Übernahme nach Goobi) 028A $8 ..., ...
-                    // *Jahr-Jahr* Lebensdaten (weglassen oder in eigenes
-                    // Metadatenfeld schieben, nicht immer vorhanden).
-                    //
-                    // 028A $8 @... <...> Name (@ kennzeichnet persönlichen
-                    // Namen, kein "," als Steuerzeichen vorhanden, vollständig
-                    // mit Sonderzeichen <> in Feld Name übernehmen)</cite>.
-                    if (mmo.isExpansion() && content != null) {
-                        // Ignore life dates.
-                        String heading = content.split("\\*")[0].trim();
-
-                        if (heading.length() > 0) {
-                            String lastname = null;
-                            String firstname = null;
-
-                            // Personal does not really start with '@', so check
-                            // for '<' (i.e. "&lt;") or missing comma.
-                            if (heading.contains("&lt;") || heading.contains("<") || !heading.contains(",")) {
-                                // Take personal name as lastname.
-                                heading = heading.replaceAll("&lt;", "<");
-                                heading = heading.replaceAll("&gt;", ">");
-                                lastname = heading.trim();
-                                firstname = "";
+                        if (mmo.isLastname()) {
+                            per.setLastname(content);
+                        }
+                        if (mmo.isIdentifier()) {
+                            // gnd/123456 or gnd123456 or 123456 or (DE-588)123456
+                            if (content.contains("/")) {
+                                String catalogue = content.substring(0, content.indexOf("/"));
+                                String identifier = content.substring(content.indexOf("/") + 1);
+                                if (catalogue.equals("gnd")) {
+                                    per.setAutorityFile(catalogue, "http://d-nb.info/gnd/", identifier);
+                                }
+                            } else if (content.matches("gnd\\.+")) {
+                                per.setAutorityFile("gnd", "http://d-nb.info/gnd/", content.replace("gnd", ""));
+                            } else if (content.matches("\\(.*\\).+")) {
+                                per.setAutorityFile("gnd", "http://d-nb.info/gnd/", content.replaceAll("\\(.*\\)", ""));
                             } else {
-                                // Take the comma as separator of lastname and
-                                // firstname.
-                                lastname = heading.split(",")[0].trim();
-                                firstname = heading.split(",")[1].trim();
-                                firstname = firstname.replace("/", "");
-                                firstname = firstname.replaceAll("\\s+", " ");
+                                per.setAutorityFile("gnd", "http://d-nb.info/gnd/", content);
                             }
-                            if (per.getLastname() == null) {
-                                per.setLastname(lastname);
-                            }
-                            if (per.getFirstname() == null) {
-                                per.setFirstname(firstname);
+
+                        }
+
+                        // Some OPAC (e.g. SWB) don't carry separate subfields for
+                        // firstname and lastname. Therefore we try to extract the
+                        // name parts from the expansion subfield
+                        // ("Expansion der Ansetzungsform").
+                        //
+                        // <cite>Vorbehaltlich anderslautender Aussagen aus Konstanz
+                        // wäre das also unser Weg, an Personenansetzungen
+                        // herauzukommen: 028A $8 ..., Name 028A $8 , ... Vorname
+                        // 028A $8 , ... / von Vorname mit angehängtem Präfix (nur
+                        // "/" fällt weg bei Übernahme nach Goobi) 028A $8 ..., ...
+                        // *Jahr-Jahr* Lebensdaten (weglassen oder in eigenes
+                        // Metadatenfeld schieben, nicht immer vorhanden).
+                        //
+                        // 028A $8 @... <...> Name (@ kennzeichnet persönlichen
+                        // Namen, kein "," als Steuerzeichen vorhanden, vollständig
+                        // mit Sonderzeichen <> in Feld Name übernehmen)</cite>.
+                        if (mmo.isExpansion() && content != null) {
+                            // Ignore life dates.
+                            String heading = content.split("\\*")[0].trim();
+
+                            if (heading.length() > 0) {
+                                String lastname = null;
+                                String firstname = null;
+
+                                // Personal does not really start with '@', so check
+                                // for '<' (i.e. "&lt;") or missing comma.
+                                if (heading.contains("&lt;") || heading.contains("<") || !heading.contains(",")) {
+                                    // Take personal name as lastname.
+                                    heading = heading.replaceAll("&lt;", "<");
+                                    heading = heading.replaceAll("&gt;", ">");
+                                    lastname = heading.trim();
+                                    firstname = "";
+                                } else {
+                                    // Take the comma as separator of lastname and
+                                    // firstname.
+                                    lastname = heading.split(",")[0].trim();
+                                    firstname = heading.split(",")[1].trim();
+                                    firstname = firstname.replace("/", "");
+                                    firstname = firstname.replaceAll("\\s+", " ");
+                                }
+                                if (per.getLastname() == null) {
+                                    per.setLastname(lastname);
+                                }
+                                if (per.getFirstname() == null) {
+                                    per.setFirstname(firstname);
+                                }
                             }
                         }
-                    }
 
-                    // Map the function of other involved persons to the
-                    // corresponding metadata type (i.e. person). This type is
-                    // found by PicaPlus_<field>_<function>, where <field> is
-                    // the picafield (e.g. 028C) and <function> is this content
-                    // without whitespaces and dots.
-                    if (mmo.isFunction() && content != null) {
-                        content = content.replaceAll("\\s+", "");
-                        content = content.replaceAll("\\.", "");
+                        // Map the function of other involved persons to the
+                        // corresponding metadata type (i.e. person). This type is
+                        // found by PicaPlus_<field>_<function>, where <field> is
+                        // the picafield (e.g. 028C) and <function> is this content
+                        // without whitespaces and dots.
+                        if (mmo.isFunction() && content != null) {
+                            content = content.replaceAll("\\s+", "");
+                            content = content.replaceAll("\\.", "");
 
-                        MetadataType mdt = null;
-                        if (content.length() > 0) {
-                            internalname = "PicaPlus_" + mmo.getPicaplusField() + "_" + content;
-                            mdt = this.myPreferences.getMetadataTypeByName(internalname);
-                            per.setType(mdt);
-                            per.setRole(internalname);
+                            MetadataType mdt = null;
+                            if (content.length() > 0) {
+                                internalname = "PicaPlus_" + mmo.getPicaplusField() + "_" + content;
+                                mdt = this.myPreferences.getMetadataTypeByName(internalname);
+                                per.setType(mdt);
+                                per.setRole(internalname);
+                            }
                         }
-                    }
 
-                    // Don't return anything; if it's a person we have to
-                    // get all subfields each subfield contains different
-                    // information: lastname, firstname etc.
+                        // Don't return anything; if it's a person we have to
+                        // get all subfields each subfield contains different
+                        // information: lastname, firstname etc.
+                    }
                 }
             }
         }
