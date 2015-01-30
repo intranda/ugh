@@ -76,6 +76,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.oro.text.perl.Perl5Util;
 import org.apache.xmlbeans.XmlException;
@@ -2222,10 +2223,10 @@ public class MetsMods implements ugh.dl.Fileformat {
                                                     if (name.equals(GOOBI_PERSON_DISPLAYNAME_STRING)) {
                                                         ps.setDisplayname(value);
                                                     }
-                                                    if (name.equals(GOOBI_PERSON_DATEVALUE_STRING)) {
+                                                    if (name.equals(GOOBI_PERSON_DATEVALUE_STRING) && StringUtils.isNotBlank(value)) {
                                                         ps.addNamePart(new NamePart(GOOBI_PERSON_DATEVALUE_STRING, value));
                                                     }
-                                                    if (name.equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING)) {
+                                                    if (name.equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING) && StringUtils.isNotBlank(value)) {
                                                         ps.addNamePart(new NamePart(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING, value));
                                                     }
                                                 }
@@ -4462,13 +4463,13 @@ public class MetsMods implements ugh.dl.Fileformat {
         // TODO write additional nameParts
         if (thePerson.getAdditionalNameParts() != null) {
             for (NamePart part : thePerson.getAdditionalNameParts()) {
-                if (part.getType().equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING)) {
+                if (part.getType().equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING) && StringUtils.isNotBlank(part.getValue())) {
                     theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING;
                     Node persontypeNode = createNode(theXQuery, createdNode, theDocument);
                     Node persontypevalueNode = theDocument.createTextNode(part.getValue());
                     persontypeNode.appendChild(persontypevalueNode);
                     createdNode.appendChild(persontypeNode);
-                } else if (part.getType().equals(GOOBI_PERSON_DATEVALUE_STRING)) {
+                } else if (part.getType().equals(GOOBI_PERSON_DATEVALUE_STRING) && StringUtils.isNotBlank(part.getValue())) {
                     theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_DATEVALUE_STRING;
                     Node persontypeNode = createNode(theXQuery, createdNode, theDocument);
                     Node persontypevalueNode = theDocument.createTextNode(part.getValue());
