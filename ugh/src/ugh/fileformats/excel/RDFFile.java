@@ -3254,6 +3254,23 @@ public class RDFFile implements ugh.dl.Fileformat {
     
     @Override
     public void setPrefs(Prefs prefs) throws PreferencesException {
-        myPreferences = prefs;        
+        myPreferences = prefs;   
+      
+        this.rdfNamesMD = new Hashtable<String, MatchingMetadataObject>();
+        this.rdfNamesDS = new Hashtable<String, MatchingMetadataObject>();
+
+        // Read preferences.
+        Node rdfNode = myPreferences.getPreferenceNode("RDF");
+        if (rdfNode == null) {
+            String message = "Can't read preferences for RDF fileformat! Node '"
+                    + RDF_PREFS_NODE_NAME_STRING
+                    + "' in preferences file not found!";
+            PreferencesException pe = new PreferencesException(message);
+            LOGGER.error(message, pe);
+            throw pe;
+        }
+
+        this.readPrefs(rdfNode);
+        
     }
 }
