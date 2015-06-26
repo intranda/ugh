@@ -18,16 +18,17 @@ package ugh.fileformats.opac;
  * for more details.
  * 
  * You should have received a copy of the GNU Lesser General Public License
- * along with this library; if not, write to the Free Software Foundation,
- * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+ * along with this library. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -48,6 +49,8 @@ import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
 import ugh.dl.DocStructType;
 import ugh.dl.Metadata;
+import ugh.dl.MetadataGroup;
+import ugh.dl.MetadataGroupType;
 import ugh.dl.MetadataType;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
@@ -72,9 +75,16 @@ import ugh.exceptions.WriteException;
  * @author Markus Enders
  * @author Stefan E. Funk
  * @author Robert Sehr
- * @version 2014-07-01
+ * @author Matthias Ronge &lt;matthias.ronge@zeutschel.de&gt;
+ * @version 2014-09-19
  * 
- *          TODOLOG * CHANGELOG
+ *          TODOLOG
+ * 
+ *          TODO add NormMetadata
+ * 
+ *          CHANGELOG
+ * 
+ *          19.09.2014 --- Ronge --- Add import into metadata groups
  * 
  *          15.02.2010 --- Funk --- Logging version information now.
  * 
@@ -97,7 +107,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
      * VERSION STRING
      **************************************************************************/
 
-    private static final String VERSION = "1.4-20140630";
+    private static final String VERSION = "1.3-20100215";
 
     /***************************************************************************
      * STATIC FINALS
@@ -113,6 +123,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
     private static final String PREFS_DOCSTRUCT_STRING = "DocStruct";
     private static final String PREFS_PERSON_STRING = "Person";
     private static final String PREFS_PICAPLUSGROUP_STRING = "PicaPlusGroup";
+    private static final String PREFS_METADATAGROUP_STRING = "MetadataGroup";
     private static final String PREFS_GROUPNAME_STRING = "Groupname";
     private static final String PREFS_DELIMETER_STRING = "Delimiter";
     private static final String PREFS_PICAMAINTAG_STRING = "PicaMainTag";
@@ -151,8 +162,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
     // Contains all rules for metadata matching.
     private Set<MatchingMetadataObject> mmoList = new HashSet<MatchingMetadataObject>();
 
-    public PicaPlus() {
-    }
+    private Map<String, String> metadataGroups = new HashMap<String, String>();
 
     /***************************************************************************
      * @param inPrefs
@@ -193,24 +203,58 @@ public class PicaPlus implements ugh.dl.Fileformat {
             // It's an element.
             if (n.getNodeType() == ELEMENT_NODE) {
                 // Check the name of the node.
-
+                MatchingMetadataObject mmo = null;
                 if (n.getNodeName().equalsIgnoreCase(PREFS_METADATA_STRING)) {
-                    Set<MatchingMetadataObject> list = readMetadata(n);
-                    this.mmoList.addAll(list);
+                    mmo = readMetadata(n);
                 } else if (n.getNodeName().equalsIgnoreCase(PREFS_DOCSTRUCT_STRING)) {
-                    MatchingMetadataObject mmo = readDocStruct(n);
-                    mmoList.add(mmo);
+                    mmo = readDocStruct(n);
                 } else if (n.getNodeName().equalsIgnoreCase(PREFS_PERSON_STRING)) {
                     Set<MatchingMetadataObject> hs = readPerson(n);
                     this.mmoList.addAll(hs);
                 } else if (n.getNodeName().equalsIgnoreCase(PREFS_PICAPLUSGROUP_STRING)) {
                     readPicaGroup(n);
+                } else if (n.getNodeName().equalsIgnoreCase(PREFS_METADATAGROUP_STRING)) {
+                    readMetadataGroup(n);
                 }
 
+                if (mmo != null) {
+                    // Add the metadatamatchingobject to a string add it to list
+                    // of objects.
+                    this.mmoList.add(mmo);
+                }
             }
         }
 
         LOGGER.info("Reading picaplus prefs complete");
+    }
+
+    /**
+     * Reads a MetadataGroup mapping and writes it in the global variable metadataGroups. A metadata group mapping is defined in a
+     * {@code <MetadataGroup>} tag which must contain the two tags {@code <Name>} and {@code <picaMainTag>}. In this case, all contents found in the
+     * given pica main tag will be grouped as a metadata group with the given name. The metadata and person elements that shall go into the group must
+     * independently have been defined.
+     * 
+     * @param node rule set node to parse
+     */
+    private void readMetadataGroup(Node node) {
+        String resultPicaMainTag = null;
+        String resultMetadataGroupType = null;
+
+        NodeList children = node.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            Node child = children.item(i);
+            if (child.getNodeType() == ELEMENT_NODE) {
+                if (child.getNodeName().equalsIgnoreCase(PREFS_NAME_STRING)) {
+                    resultMetadataGroupType = readTextNode(child);
+                } else if (child.getNodeName().equalsIgnoreCase(PREFS_PICAMAINTAG_STRING)) {
+                    resultPicaMainTag = readTextNode(child);
+                }
+            }
+        }
+
+        if (resultPicaMainTag != null && resultMetadataGroupType != null) {
+            metadataGroups.put(resultPicaMainTag, resultMetadataGroupType);
+        }
     }
 
     /***************************************************************************
@@ -245,13 +289,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
      * @param inNode
      * @return
      **************************************************************************/
-
-    private Set<MatchingMetadataObject> readMetadata(Node inNode) {
-
-        HashSet<MatchingMetadataObject> result = new HashSet<MatchingMetadataObject>();
-
-        String maintag = null;
-        String internal = null;
+    private MatchingMetadataObject readMetadata(Node inNode) {
 
         MatchingMetadataObject mmo = new MatchingMetadataObject();
         mmo.setType("Metadata");
@@ -260,58 +298,11 @@ public class PicaPlus implements ugh.dl.Fileformat {
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
             if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_PICAMAINTAG_STRING)) {
-                maintag = readTextNode(n);
-                mmo.setPicaplusField(maintag);
-
-                // Add it also to MMOs we already created.
-                for (MatchingMetadataObject mmo2 : result) {
-                    mmo2.setPicaplusField(maintag);
-                }
+                mmo.setPicaplusField(readTextNode(n));
             }
             if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_PICASUBTAG_STRING)) {
-                String subtag = readTextNode(n);
-                mmo.setPicaplusSubfield(subtag);
-
-                NamedNodeMap nnm = n.getAttributes();
-                String attributeValue = null;
-                if (nnm != null && nnm.getLength() > 0) {
-                    Node tn = nnm.getNamedItem("type");
-                    attributeValue = tn.getNodeValue();
-                }
-
-                if (attributeValue == null) {
-                    mmo.setPicaplusSubfield(readTextNode(n));
-                }
-                if (attributeValue != null && attributeValue.equalsIgnoreCase(PREFS_PERSONIDENTIFIER_STRING)) {
-                    mmo.setIdentifier(true);
-                    mmo.setPicaplusSubfield(readTextNode(n));
-                }
-
-                // Create new MMO object, this is necessary, because in this
-                // case we have several subtags, each one will be a new MMO.
-                result.add(mmo);
-                mmo = new MatchingMetadataObject();
-                mmo.setType("Metadata");
-
-                if (maintag != null) {
-                    mmo.setPicaplusField(maintag);
-                }
-                if (internal != null) {
-                    mmo.setInternalName(internal);
-                }
+                mmo.setPicaplusSubfield(readTextNode(n));
             }
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_NAME_STRING)) {
-                internal = readTextNode(n);
-                mmo.setInternalName(internal);
-
-                // Add it also to MMOs with other subfields.
-                Iterator<MatchingMetadataObject> it = result.iterator();
-                while (it.hasNext()) {
-                    MatchingMetadataObject mmo2 = it.next();
-                    mmo2.setInternalName(internal);
-                }
-            }
-
             if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_PICAPLUSGROUP_STRING)) {
                 mmo.setPicaplusGroupname(readTextNode(n));
             }
@@ -327,11 +318,14 @@ public class PicaPlus implements ugh.dl.Fileformat {
         }
 
         // Check if all required data is set.
-        if (mmo.getInternalName() == null || mmo.getPicaplusField() == null || mmo.getType() == null) {
+        if (mmo.getPicaplusField() == null || mmo.getType() == null) {
+            return null;
+        }
+        if (mmo.getPicaplusField() == null && mmo.getPicaplusGroupname() == null) {
             return null;
         }
 
-        return result;
+        return mmo;
     }
 
     /***************************************************************************
@@ -524,7 +518,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                                 // Parse a single picaplus record.
                                 ds = parsePicaPlusRecord(n);
                                 // It's the first one, so this becomes the
-                                // toplogical structual entity.
+                                // toplogical structural entity.
                                 if (dsOld == null) {
                                     this.mydoc.setLogicalDocStruct(ds);
                                     dsTop = ds;
@@ -618,7 +612,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                                     // Parse a single picaplus record.
                                     ds = parsePicaPlusRecord(n);
                                     // It's the first one, so this becomes the
-                                    // toplogical structual entity.
+                                    // toplogical structural entity.
                                     if (dsOld == null) {
                                         this.mydoc.setLogicalDocStruct(ds);
                                         dsTop = ds;
@@ -688,6 +682,8 @@ public class PicaPlus implements ugh.dl.Fileformat {
         LinkedList<Metadata> allMDs = new LinkedList<Metadata>();
         // Contains all persons.
         LinkedList<Person> allPer = new LinkedList<Person>();
+        // Contains all metadata groups.
+        LinkedList<MetadataGroup> allGroups = new LinkedList<MetadataGroup>();
 
         DocStruct ds = null;
         Metadata md = null;
@@ -718,6 +714,10 @@ public class PicaPlus implements ugh.dl.Fileformat {
                             per = (Person) pprObject;
                             allPer.add(per);
                             LOGGER.debug("Person '" + per.getType().getName() + "' found");
+                        } else if (pprObject != null && pprObject.getClass() == ugh.dl.MetadataGroup.class) {
+                            MetadataGroup group = (MetadataGroup) pprObject;
+                            allGroups.add(group);
+                            LOGGER.debug("MetadataGroup '" + group.getType().getName() + "' found");
                         }
                     }
                 }
@@ -796,6 +796,16 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     String message = "Ignoring IncompletePersonObjectException at OPAC import!";
                     LOGGER.warn(message, e);
                 }
+            }
+        }
+
+        // Add metadata groups to DocStruct.
+        for (MetadataGroup group : allGroups) {
+            try {
+                ds.addMetadataGroup(group);
+            } catch (MetadataTypeNotAllowedException e) {
+                String message = "Ignoring MetadataTypeNotAllowedException at OPAC import!";
+                LOGGER.warn(message, e);
             }
         }
 
@@ -996,7 +1006,6 @@ public class PicaPlus implements ugh.dl.Fileformat {
                             // It has a subfield, so create a Metadata
                             // object, add content and return it.
                             String internalname = mmo.getInternalName();
-
                             MetadataType mdt = this.myPreferences.getMetadataTypeByName(internalname);
                             if (mdt == null) {
                                 LOGGER.warn("Can't create unknown Metadata object '" + internalname + "'");
@@ -1135,11 +1144,27 @@ public class PicaPlus implements ugh.dl.Fileformat {
             result.add(md);
         }
 
-        // Return NULL is set is empty.
+        // Return NULL if set is empty.
         if (result.isEmpty()) {
             return null;
         }
 
+        // Combine result elements to a metadata group, if requested
+        if (metadataGroups.containsKey(fieldAttribute)) {
+            MetadataGroupType type = myPreferences.getMetadataGroupTypeByName(metadataGroups.get(fieldAttribute));
+            MetadataGroup createdGroup = new MetadataGroup(type);
+            for (Serializable content : result) {
+                if (content instanceof Person) {
+                    createdGroup.addPerson((Person) content);
+                } else if (content instanceof Metadata) {
+                    createdGroup.addMetadata((Metadata) content);
+                } else {
+                    LOGGER.warn("Can't add a " + content.getClass().getSimpleName() + " to a MetadataGroup.");
+                }
+            }
+            result = new HashSet<Serializable>();
+            result.add(createdGroup);
+        }
         return result;
     }
 
