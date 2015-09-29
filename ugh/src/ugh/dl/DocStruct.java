@@ -1969,7 +1969,7 @@ public class DocStruct implements Serializable {
         if (this.persons != null) {
             for (Person per : this.persons) {
                 testtype = per.getType();
-                if (testtype != null && testtype.equals(inTypeName)) {
+                if (testtype != null && testtype.getName().equals(inTypeName)) {
                     // Another one is available.
                     counter++;
                 }
