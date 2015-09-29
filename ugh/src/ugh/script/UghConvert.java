@@ -809,15 +809,7 @@ public class UghConvert {
 		setVirtualFilegroup("DOWNLOAD", "pdwl", "mdwl", "fdwl", "sdwl");
 		setVirtualFilegroup("PRESENTATION", "ppre", "mpre", "fpre", "spre");
 		setVirtualFilegroup("LOCAL", "ploc", "mloc", "floc", "sloc");
-
-		// Handle the mets rights and digiprov things.
-		if (theMets instanceof MetsModsImportExport) {
-			MetsModsImportExport newMets = (MetsModsImportExport) theMets;
-			setMetsRights(newMets);
-			setMetsDigiprov(newMets);
-			theMets = newMets;
-		}
-
+		
 		return result;
 	}
 
