@@ -565,7 +565,7 @@ public class Prefs implements Serializable {
      * @return
      **************************************************************************/
     public MetadataType parseMetadataType(Node theMetadataTypeNode) {
-
+// TODO
         NodeList allchildren;
         // NamedNodeMap containing all attributes.
         NamedNodeMap attributeNodelist;
@@ -576,6 +576,7 @@ public class Prefs implements Serializable {
 
         String languageName;
         String languageValue;
+        String validationExpression = "";
         HashMap<String, String> allLanguages = new HashMap<String, String>();
 
         MetadataType currenMdType = new MetadataType();
@@ -634,7 +635,7 @@ public class Prefs implements Serializable {
                         currenMdType.setName(textnode.getNodeValue());
                     }
                 }
-                if (currentNode.getNodeName().equals("language")) {
+                else if (currentNode.getNodeName().equals("language")) {
                     attributeNodelist = currentNode.getAttributes();
                     attributeNode = attributeNodelist.getNamedItem("name");
                     languageName = attributeNode.getNodeValue();
@@ -661,13 +662,19 @@ public class Prefs implements Serializable {
                         continue;
                     }
                     allLanguages.put(languageName, languageValue);
+                } else if (currentNode.getNodeName().equals("validationExpression")) {
+                    NodeList textnodes = currentNode.getChildNodes();
+                    if (textnodes != null) {
+                        Node textnode = textnodes.item(0);
+                        validationExpression = textnode.getNodeValue();
+                    }
                 }
             }
         }
 
         // Add allLanguages and all Metadata to DocStrctType.
         currenMdType.setAllLanguages(allLanguages);
-
+        currenMdType.setValidationExpression(validationExpression);
         return currenMdType;
     }
 
