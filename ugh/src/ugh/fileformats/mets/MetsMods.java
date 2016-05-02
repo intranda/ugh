@@ -506,7 +506,8 @@ public class MetsMods implements ugh.dl.Fileformat {
     protected static final String DMDPHYS_PREFIX = "DMDPHYS_";
     protected static final String ANCHOR_XML_FILE_SUFFIX_STRING = "_anchor";
     private boolean writeLocalFilegroup = true;
-
+    
+   
     /***************************************************************************
      * FINALS
      **************************************************************************/
@@ -532,7 +533,9 @@ public class MetsMods implements ugh.dl.Fileformat {
     // Set mptr things.
     protected String mptrUrl = "";
     protected String mptrUrlAnchor = "";
+    protected String goobiID = "";
 
+    
     //	protected FileSet myImageset;
 
     protected Prefs myPreferences;
@@ -2822,6 +2825,8 @@ public class MetsMods implements ugh.dl.Fileformat {
                 createDomAttributeNS(this.metsNode, this.xsiNamespacePrefix, METS_SCHEMALOCATION_STRING, schemaLocations.toString().trim());
             }
 
+            // TODO add OBJID
+            metsNode.setAttribute("OBJID", goobiID);
             // Append the METS node.
             domDoc.appendChild(this.metsNode);
 
@@ -5059,6 +5064,15 @@ public class MetsMods implements ugh.dl.Fileformat {
         this.mptrUrlAnchor = mptrAnchorUrl;
     }
 
+    
+    public String getGoobiID() {
+        return goobiID;
+    }
+    
+    public void setGoobiID(String goobiID) {
+        this.goobiID = goobiID;
+    }
+    
     /***************************************************************************
      * @return
      **************************************************************************/

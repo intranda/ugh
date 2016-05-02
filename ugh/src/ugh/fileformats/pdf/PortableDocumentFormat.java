@@ -368,4 +368,10 @@ public class PortableDocumentFormat implements ugh.dl.Fileformat {
     public void setPrefs(Prefs prefs) throws PreferencesException {
         myPreferences = prefs;        
     }
+
+    @Override
+    public void setGoobiID(String goobiId) {
+        // TODO Auto-generated method stub
+        
+    }
 }

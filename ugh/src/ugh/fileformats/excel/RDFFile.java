@@ -3273,4 +3273,10 @@ public class RDFFile implements ugh.dl.Fileformat {
         this.readPrefs(rdfNode);
         
     }
+
+    @Override
+    public void setGoobiID(String goobiId) {
+        // TODO Auto-generated method stub
+        
+    }
 }

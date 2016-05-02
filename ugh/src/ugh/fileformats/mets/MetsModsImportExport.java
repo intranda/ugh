@@ -230,6 +230,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
     private String metsRightsSponsorLogo = "";
     private String metsRightsSponsorSiteURL = "";
     private String metsRightsLicense = "";
+    
 
     /***************************************************************************
      * CONSTRUCTORS

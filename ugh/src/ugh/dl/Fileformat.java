@@ -169,4 +169,6 @@ public interface Fileformat {
 	
 	public void setPrefs(Prefs prefs) throws PreferencesException;
 	
+	public void setGoobiID(String goobiId);
+	
 }
