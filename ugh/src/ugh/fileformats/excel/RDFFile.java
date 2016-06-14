@@ -2212,9 +2212,8 @@ public class RDFFile implements ugh.dl.Fileformat {
 	 * 
 	 * @see ugh.dl.Fileformat#setDigitalDocument(ugh.dl.DigitalDocument)
 	 */
-	public boolean setDigitalDocument(DigitalDocument inDoc) {
+	public void setDigitalDocument(DigitalDocument inDoc) {
 		this.mydoc = inDoc;
-		return true;
 	}
 
 	/***************************************************************************

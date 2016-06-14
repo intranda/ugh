@@ -185,10 +185,8 @@ public class XStream implements ugh.dl.Fileformat {
 	 * 
 	 * @see ugh.dl.Fileformat#SetDigitalDocument(ugh.dl.DigitalDocument)
 	 */
-	public boolean setDigitalDocument(DigitalDocument inDoc) {
+	public void setDigitalDocument(DigitalDocument inDoc) {
 		this.digdoc = inDoc;
-
-		return false;
 	}
 
     @Override

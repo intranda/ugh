@@ -268,9 +268,8 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
      * @see ugh.dl.Fileformat#SetDigitalDocument(ugh.dl.DigitalDocument)
      */
     @Override
-    public boolean setDigitalDocument(DigitalDocument inDoc) {
+    public void setDigitalDocument(DigitalDocument inDoc) {
         this.digdoc = inDoc;
-        return true;
     }
 
     /*

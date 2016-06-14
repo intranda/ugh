@@ -134,7 +134,7 @@ public interface Fileformat {
 	 * @param inDoc
 	 * @return true; only if a problem occured, false is returned.
 	 **************************************************************************/
-	public boolean setDigitalDocument(DigitalDocument inDoc);
+	public void setDigitalDocument(DigitalDocument inDoc);
 	
 	/***************************************************************************
      * <p>

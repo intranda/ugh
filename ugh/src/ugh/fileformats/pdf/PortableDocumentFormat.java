@@ -95,9 +95,8 @@ public class PortableDocumentFormat implements ugh.dl.Fileformat {
 	 * 
 	 * @see ugh.dl.Fileformat#setDigitalDocument(ugh.dl.DigitalDocument)
 	 */
-	public boolean setDigitalDocument(ugh.dl.DigitalDocument inDoc) {
+	public void setDigitalDocument(ugh.dl.DigitalDocument inDoc) {
 		this.mydoc = inDoc;
-		return true;
 	}
 
 	/*

@@ -24,7 +24,6 @@ package ugh.dl;
  * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  ***************************************************************/
 
-import gov.loc.mets.MdSecType.MdRef.MDTYPE;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -141,9 +140,8 @@ public class MetadataGroup implements Serializable {
      * @param inType
      * @return
      **************************************************************************/
-    public boolean setType(MetadataGroupType inType) {
+    public void setType(MetadataGroupType inType) {
         this.MDType = inType;
-        return true;
     }
 
     public List<Metadata> getMetadataList() {

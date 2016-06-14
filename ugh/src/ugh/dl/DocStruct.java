@@ -184,7 +184,6 @@ public class DocStruct implements Serializable {
     private long databaseid = 0;
     private Object origObject = null;
     // Information, if database instance is the same than this one.
-    private boolean updated = false;
     private boolean logical = false;
     private boolean physical = false;
     // String containing an identifier or a URL to the anchor.
@@ -254,13 +253,11 @@ public class DocStruct implements Serializable {
      * @param inType DocStructType to be set
      * @return always true
      **************************************************************************/
-    public boolean setType(DocStructType inType) {
+    public void setType(DocStructType inType) {
 
         // Usually we had to check, if the new type is allowed. Search for
         // parent and see if the parent allows this type.
         this.type = inType;
-
-        return true;
     }
 
     /***************************************************************************
@@ -423,10 +420,8 @@ public class DocStruct implements Serializable {
      * @param in
      * @return always true
      **************************************************************************/
-    public boolean setIdentifier(String in) {
+    public void setIdentifier(String in) {
         this.identifier = in;
-
-        return true;
     }
 
     /***************************************************************************
@@ -746,7 +741,7 @@ public class DocStruct implements Serializable {
      * @param inParent
      * @return true, if parent was set successfully
      **************************************************************************/
-    public boolean setParent(DocStruct inParent) {
+    public void setParent(DocStruct inParent) {
 
         if (inParent != null) {
             // Remove this DocStruct instance fromt he child's list.
@@ -758,8 +753,6 @@ public class DocStruct implements Serializable {
 
         // Add child to this parent.
         this.parent = inParent;
-
-        return true;
     }
 
     /***************************************************************************
@@ -794,10 +787,8 @@ public class DocStruct implements Serializable {
      * @param inList List containing MetadataGroup objects.
      * @return always true
      **************************************************************************/
-    public boolean setAllMetadataGroups(List<MetadataGroup> inList) {
+    public void setAllMetadataGroups(List<MetadataGroup> inList) {
         this.allMetadataGroups = inList;
-
-        return true;
     }
 
     /***************************************************************************
@@ -825,10 +816,8 @@ public class DocStruct implements Serializable {
      * @param inList List containing Metadata objects.
      * @return always true
      **************************************************************************/
-    public boolean setAllMetadata(List<Metadata> inList) {
+    public void setAllMetadata(List<Metadata> inList) {
         this.allMetadata = inList;
-
-        return true;
     }
 
     /***************************************************************************
@@ -1074,8 +1063,6 @@ public class DocStruct implements Serializable {
         ref.setType(theType);
         this.docStructRefsTo.add(ref);
         inDocStruct.docStructRefsFrom.add(ref);
-        this.updated = true;
-
         return ref;
     }
 
@@ -1105,8 +1092,6 @@ public class DocStruct implements Serializable {
         ref.setType(theType);
         this.docStructRefsFrom.add(ref);
         inDocStruct.docStructRefsTo.add(ref);
-        this.updated = true;
-
         return ref;
     }
 
@@ -1119,7 +1104,7 @@ public class DocStruct implements Serializable {
      * @param inStruct target-DocStruct
      * @return true, if successful
      **************************************************************************/
-    public boolean removeReferenceTo(DocStruct inStruct) {
+    public void removeReferenceTo(DocStruct inStruct) {
 
         List<Reference> ll = new LinkedList<Reference>(this.docStructRefsTo);
 
@@ -1135,8 +1120,6 @@ public class DocStruct implements Serializable {
                 }
             }
         }
-
-        return (this.updated = true);
     }
 
     /**************************************************************************
@@ -1148,7 +1131,7 @@ public class DocStruct implements Serializable {
      * @param inStruct Source-DocStruct
      * @return true, if successful
      **************************************************************************/
-    public boolean removeReferenceFrom(DocStruct inStruct) {
+    public void removeReferenceFrom(DocStruct inStruct) {
 
         List<Reference> ll = new LinkedList<Reference>(this.docStructRefsFrom);
 
@@ -1164,8 +1147,6 @@ public class DocStruct implements Serializable {
                 }
             }
         }
-
-        return (this.updated = true);
     }
 
     /***************************************************************************
