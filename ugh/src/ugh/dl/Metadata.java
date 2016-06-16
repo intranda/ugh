@@ -151,9 +151,8 @@ public class Metadata implements Serializable {
      * @param inType
      * @return
      **************************************************************************/
-    public boolean setType(MetadataType inType) {
+    public void setType(MetadataType inType) {
         this.MDType = inType;
-        return true;
     }
 
     /***************************************************************************
@@ -177,10 +176,9 @@ public class Metadata implements Serializable {
      * 
      * @param inValue The value as String.
      **************************************************************************/
-    public boolean setValue(String inValue) {
+    public void setValue(String inValue) {
         this.metadataValue = inValue;
         this.updated = true;
-        return true;
     }
 
     /***************************************************************************
