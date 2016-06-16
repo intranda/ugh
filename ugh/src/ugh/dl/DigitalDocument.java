@@ -228,7 +228,7 @@ public class DigitalDocument implements Serializable {
      * @param inStruct
      * @return
      **************************************************************************/
-    public void setLogicalDocStruct(DocStruct inStruct) {
+    public boolean setLogicalDocStruct(DocStruct inStruct) {
 
         if (this.topLogicalStruct != null) {
             this.topLogicalStruct.setLogical(false);
@@ -238,6 +238,7 @@ public class DigitalDocument implements Serializable {
         // Set DocStruct and all children to logical.
         inStruct.setLogical(true);
 
+        return true;
     }
 
     /***************************************************************************
@@ -251,7 +252,7 @@ public class DigitalDocument implements Serializable {
      * @param inStruct
      * @return
      **************************************************************************/
-    public void setPhysicalDocStruct(DocStruct inStruct) {
+    public boolean setPhysicalDocStruct(DocStruct inStruct) {
 
         if (this.topPhysicalStruct != null) {
             this.topPhysicalStruct.setPhysical(false);
@@ -261,6 +262,7 @@ public class DigitalDocument implements Serializable {
         // Set DocStruct and all children to physical.
         inStruct.setPhysical(true);
 
+        return true;
     }
 
     /***************************************************************************
@@ -466,8 +468,9 @@ public class DigitalDocument implements Serializable {
      * @param inSet
      * @return
      **************************************************************************/
-    public void setFileSet(FileSet inSet) {
+    public boolean setFileSet(FileSet inSet) {
         this.allImages = inSet;
+        return true;
     }
 
     /***************************************************************************

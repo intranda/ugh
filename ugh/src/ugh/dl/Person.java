@@ -134,8 +134,9 @@ public class Person extends Metadata {
 	 * @param in
 	 * @return true is always returned
 	 **************************************************************************/
-	public void setFirstname(String in) {
+	public boolean setFirstname(String in) {
 		this.firstname = in;
+		return true;
 	}
 
 	/***************************************************************************
@@ -153,8 +154,9 @@ public class Person extends Metadata {
 	 * @param in
 	 * @return
 	 **************************************************************************/
-	public void setLastname(String in) {
+	public boolean setLastname(String in) {
 		this.lastname = in;
+		return true;
 	}
 
 	/***************************************************************************
@@ -168,8 +170,9 @@ public class Person extends Metadata {
 	 * @param in
 	 * @return
 	 **************************************************************************/
-	public void setInstitution(String in) {
+	public boolean setInstitution(String in) {
 		this.institution = in;
+		return true;
 	}
 
 	/***************************************************************************
@@ -183,8 +186,9 @@ public class Person extends Metadata {
 	 * @param in
 	 * @return
 	 **************************************************************************/
-	public void setAffiliation(String in) {
+	public boolean setAffiliation(String in) {
 		this.affiliation = in;
+		return true;
 	}
 
 	/***************************************************************************
@@ -198,7 +202,7 @@ public class Person extends Metadata {
 //	 * @param in
 //	 * @return
 //	 **************************************************************************/
-//	public void setIdentifier(String in) {
+//	public boolean setIdentifier(String in) {
 //		this.identifier = in;
 //		return true;
 //	}
@@ -214,7 +218,7 @@ public class Person extends Metadata {
 //	 * @param in
 //	 * @return
 //	 **************************************************************************/
-//	public void setIdentifierType(String in) {
+//	public boolean setIdentifierType(String in) {
 //		this.identifierType = in;
 //		return true;
 //	}
@@ -230,8 +234,9 @@ public class Person extends Metadata {
 	 * @param in
 	 * @return
 	 **************************************************************************/
-	public void setRole(String in) {
+	public boolean setRole(String in) {
 		this.role = in;
+		return true;
 	}
 
 	/***************************************************************************
@@ -254,8 +259,9 @@ public class Person extends Metadata {
 	 * @param in
 	 * @return always true;
 	 **************************************************************************/
-	public void setPersontype(String in) {
+	public boolean setPersontype(String in) {
 		this.persontype = in;
+		return true;
 	}
 
 	/***************************************************************************

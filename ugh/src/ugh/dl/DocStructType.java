@@ -104,8 +104,9 @@ public class DocStructType implements Serializable {
      * @param in
      * @return
      **************************************************************************/
-    public void setName(String in) {
+    public boolean setName(String in) {
         this.name = in;
+        return true;
     }
 
     /***************************************************************************
@@ -226,9 +227,11 @@ public class DocStructType implements Serializable {
      * @param in HashMap containing language code and value
      * @return always true
      **************************************************************************/
-    public void setAllLanguages(HashMap<String, String> in) {
+    public boolean setAllLanguages(HashMap<String, String> in) {
 
         this.allLanguages = in;
+
+        return true;
     }
 
     /***************************************************************************
@@ -340,12 +343,14 @@ public class DocStructType implements Serializable {
      * @param in
      * @return
      **************************************************************************/
-    public void setAllMetadataTypes(List<MetadataType> in) {
+    public boolean setAllMetadataTypes(List<MetadataType> in) {
 
         for (MetadataType mdt : in) {
             MetadataTypeForDocStructType mdtfdst = new MetadataTypeForDocStructType(mdt);
             this.allMetadataTypes.add(mdtfdst);
         }
+
+        return true;
     }
 
     /***************************************************************************
@@ -768,12 +773,14 @@ public class DocStructType implements Serializable {
      * @param in
      * @return
      **************************************************************************/
-    public void setAllMetadataGroups(List<MetadataGroupType> in) {
+    public boolean setAllMetadataGroups(List<MetadataGroupType> in) {
 
         for (MetadataGroupType mdt : in) {
             MetadataGroupForDocStructType mdtfdst = new MetadataGroupForDocStructType(mdt);
             this.allMetadataGroups.add(mdtfdst);
         }
+
+        return true;
     }
 
     /***************************************************************************

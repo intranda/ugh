@@ -915,21 +915,43 @@ public class Prefs implements Serializable {
     }
 
     /***************************************************************************
+     * @deprecated
      * @param inList
      * @return
      **************************************************************************/
-    public void setAllMetadataTypes(List<MetadataType> inList) {
-        this.allMetadataTypes = inList;
+    @Deprecated
+    public boolean SetAllMetadataTypes(List<MetadataType> inList) {
+        return setAllMetadataTypes(inList);
     }
-
-
 
     /***************************************************************************
      * @param inList
      * @return
      **************************************************************************/
-    public void setAllDocStructTypes(List<DocStructType> inList) {
+    public boolean setAllMetadataTypes(List<MetadataType> inList) {
+        this.allMetadataTypes = inList;
+
+        return true;
+    }
+
+    /***************************************************************************
+     * @deprecetad
+     * @param inList
+     * @return
+     **************************************************************************/
+    @Deprecated
+    public boolean SetAllDocStructTypes(List<DocStructType> inList) {
+        return setAllDocStructTypes(inList);
+    }
+
+    /***************************************************************************
+     * @param inList
+     * @return
+     **************************************************************************/
+    public boolean setAllDocStructTypes(List<DocStructType> inList) {
         this.allDocStrctTypes = inList;
+
+        return true;
     }
 
     /***************************************************************************

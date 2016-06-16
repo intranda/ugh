@@ -151,8 +151,9 @@ public class Metadata implements Serializable {
      * @param inType
      * @return
      **************************************************************************/
-    public void setType(MetadataType inType) {
+    public boolean setType(MetadataType inType) {
         this.MDType = inType;
+        return true;
     }
 
     /***************************************************************************
@@ -176,9 +177,10 @@ public class Metadata implements Serializable {
      * 
      * @param inValue The value as String.
      **************************************************************************/
-    public void setValue(String inValue) {
+    public boolean setValue(String inValue) {
         this.metadataValue = inValue;
         this.updated = true;
+        return true;
     }
 
     /***************************************************************************
@@ -193,10 +195,11 @@ public class Metadata implements Serializable {
      * @param value value of the record in the authority file
      * 
      **************************************************************************/
-    public void setAutorityFile(String authorityID, String authorityURI, String authorityValue) {
+    public boolean setAutorityFile(String authorityID, String authorityURI, String authorityValue) {
         this.authorityID = authorityID;
         this.authorityURI = authorityURI;
         this.authorityValue = authorityValue;
+        return true;
     }
     
     public void setAuthorityID(String authorityID) {
@@ -278,8 +281,8 @@ public class Metadata implements Serializable {
      * @return TRUE if successful, if ValueQualifier or type of ValueQualifier is not set, FALSE is returned.
      **************************************************************************/
     @Deprecated
-    public void setValueQualitifer(String inVQ, String inVQType) {
-         setValueQualifier(inVQ, inVQType);
+    public boolean setValueQualitifer(String inVQ, String inVQType) {
+        return setValueQualifier(inVQ, inVQType);
     }
 
     /***************************************************************************
@@ -294,14 +297,16 @@ public class Metadata implements Serializable {
      * @param inVQType Type of ValueQualifier as a string.
      * @return TRUE if successful, if ValueQualifier or type of ValueQualifier is not set, FALSE is returned.
      **************************************************************************/
-    public void setValueQualifier(String inVQ, String inVQType) {
+    public boolean setValueQualifier(String inVQ, String inVQType) {
 
         if (inVQ == null || inVQType == null) {
-            return;
+            return false;
         }
 
         this.MetadataVQ = inVQ;
         this.MetadataVQType = inVQType;
+
+        return true;
     }
 
     /***************************************************************************
@@ -335,8 +340,10 @@ public class Metadata implements Serializable {
      * @return always TRUE.
      **************************************************************************/
     @Deprecated
-    public void setNativeObject(Object inObj) {
+    public boolean setNativeObject(Object inObj) {
         this.nativeObject = inObj;
+
+        return true;
     }
 
     /***************************************************************************

@@ -95,14 +95,15 @@ public class MetadataGroupType implements Serializable {
      * @param in
      * @return
      **************************************************************************/
-    public void setNum(String in) {
+    public boolean setNum(String in) {
 
         if (!in.equals("1m") && !in.equals("1o") && !in.equals("+") && !in.equals("*")) {
             // Unknown syntax.
-            return ;
+            return false;
         }
         this.max_number = in;
 
+        return true;
     }
 
     public String getLanguage(String theLanguage) {

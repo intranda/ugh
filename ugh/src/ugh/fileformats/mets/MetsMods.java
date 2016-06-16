@@ -646,8 +646,9 @@ public class MetsMods implements ugh.dl.Fileformat {
      * @see ugh.dl.Fileformat#SetDigitalDocument(ugh.dl.DigitalDocument)
      */
     @Override
-    public void setDigitalDocument(DigitalDocument inDoc) {
+    public boolean setDigitalDocument(DigitalDocument inDoc) {
         this.digdoc = inDoc;
+        return true;
     }
 
     /*
