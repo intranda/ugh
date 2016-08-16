@@ -2147,7 +2147,10 @@ public class MetsMods implements ugh.dl.Fileformat {
                                 boolean isMatched = false;
                                 for (Metadata currentMetadata : metadataList) {
                                     if (currentMetadata.getValue() == null || currentMetadata.getValue().isEmpty()) {
-                                        currentMetadata.setValue(value);
+                                        currentMetadata.setValue(value);                                        
+                                        if (valueURI != null) {
+                                            currentMetadata.setAutorityFile(authority, authorityURI, valueURI);
+                                        }
                                         isMatched = true;
                                         break;
                                     }
@@ -2156,6 +2159,9 @@ public class MetsMods implements ugh.dl.Fileformat {
                                     Metadata md = new Metadata(myPreferences.getMetadataTypeByName(metadataName));
                                     md.setValue(value);
                                     metadataGroup.addMetadata(md);
+                                    if (valueURI != null) {
+                                        md.setAutorityFile(authority, authorityURI, valueURI);
+                                    }
                                 }
                             }
 
