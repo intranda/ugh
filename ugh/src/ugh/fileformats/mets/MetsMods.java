@@ -2998,7 +2998,7 @@ public class MetsMods implements ugh.dl.Fileformat {
         String yearMonthDay = format.format(d);
         String hourMinuteSecond = hours.format(d);
 
-        return yearMonthDay + "T" + hourMinuteSecond;
+        return yearMonthDay + "T" + hourMinuteSecond + "Z";
     }
 
     /***************************************************************************
