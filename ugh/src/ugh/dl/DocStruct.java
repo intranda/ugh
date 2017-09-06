@@ -32,6 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import ugh.dl.DigitalDocument.ListPairCheck;
@@ -227,7 +228,7 @@ public class DocStruct implements Serializable {
 
         // We have to check, if this type is allowed here, this depends on the
         // parent DocStruct.
-       setType(inType);
+        setType(inType);
 
         //        // This conditional can never be reached, because the result ALWAYS
         //        // is true! See setType()! Check again and take it out!
@@ -505,6 +506,8 @@ public class DocStruct implements Serializable {
                         }
                         if (md.getAuthorityID() != null && md.getAuthorityValue() != null && md.getAuthorityURI() != null) {
                             mdnew.setAutorityFile(md.getAuthorityID(), md.getAuthorityURI(), md.getAuthorityValue());
+                        } else if (StringUtils.isNotBlank(md.getAuthorityValue())) {
+                            mdnew.setAutorityFile("", "", md.getAuthorityValue());
                         }
                         newStruct.addMetadata(mdnew);
                     } catch (DocStructHasNoTypeException e) {
@@ -536,6 +539,8 @@ public class DocStruct implements Serializable {
                             }
                             if (meta.getAuthorityID() != null && meta.getAuthorityValue() != null && meta.getAuthorityURI() != null) {
                                 newMeta.setAutorityFile(meta.getAuthorityID(), meta.getAuthorityURI(), meta.getAuthorityValue());
+                            } else if (StringUtils.isNotBlank(meta.getAuthorityValue())) {
+                                newMeta.setAutorityFile("", "", meta.getAuthorityValue());
                             }
                             newmdlist.add(newMeta);
                         }
@@ -550,6 +555,8 @@ public class DocStruct implements Serializable {
                             }
                             if (ps.getAuthorityID() != null && ps.getAuthorityURI() != null && ps.getAuthorityValue() != null) {
                                 newps.setAutorityFile(ps.getAuthorityID(), ps.getAuthorityURI(), ps.getAuthorityValue());
+                            } else if (StringUtils.isNotBlank(ps.getAuthorityValue())) {
+                                newps.setAutorityFile("", "", ps.getAuthorityValue());
                             }
                             if (ps.getInstitution() != null) {
                                 newps.setInstitution(ps.getInstitution());
@@ -592,7 +599,7 @@ public class DocStruct implements Serializable {
                         if (ps.getFirstname() != null) {
                             newps.setFirstname(ps.getFirstname());
                         }
-                
+
                         if (ps.getAuthorityID() != null && ps.getAuthorityURI() != null && ps.getAuthorityValue() != null) {
                             newps.setAutorityFile(ps.getAuthorityID(), ps.getAuthorityURI(), ps.getAuthorityValue());
                         }
@@ -3186,8 +3193,8 @@ public class DocStruct implements Serializable {
             return false;
         }
 
-        if (!((this.getReferenceToAnchor() == null && docStruct.getReferenceToAnchor() == null) || this.getReferenceToAnchor().equals(
-                docStruct.getReferenceToAnchor()))) {
+        if (!((this.getReferenceToAnchor() == null && docStruct.getReferenceToAnchor() == null) || this.getReferenceToAnchor().equals(docStruct
+                .getReferenceToAnchor()))) {
             LOGGER.debug("getreferenceAnchor=false");
             return false;
         }
@@ -3242,8 +3249,8 @@ public class DocStruct implements Serializable {
             return false;
         }
 
-        if (lpcResult == ListPairCheck.needsFurtherChecking
-                && this.getAllContentFileReferences().size() != docStruct.getAllContentFileReferences().size()) {
+        if (lpcResult == ListPairCheck.needsFurtherChecking && this.getAllContentFileReferences().size() != docStruct.getAllContentFileReferences()
+                .size()) {
             LOGGER.debug("6 false returned");
             return false;
         }
@@ -3370,7 +3377,8 @@ public class DocStruct implements Serializable {
 
         // If both lists are null, isEqual is returned, no in depth check
         // needed.
-        if (DigitalDocument.quickPairCheck(this.getAllContentFileReferences(), docStruct.getAllContentFileReferences()) != DigitalDocument.ListPairCheck.isEqual) {
+        if (DigitalDocument.quickPairCheck(this.getAllContentFileReferences(), docStruct
+                .getAllContentFileReferences()) != DigitalDocument.ListPairCheck.isEqual) {
 
             // flagFound = true;
             for (ContentFileReference cfr1 : this.getAllContentFileReferences()) {
