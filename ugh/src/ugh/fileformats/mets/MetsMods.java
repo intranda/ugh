@@ -4346,7 +4346,7 @@ public class MetsMods implements ugh.dl.Fileformat {
         Node valueNode = theDocument.createTextNode(theMetadata.getValue());
         createdNode.appendChild(valueNode);
 
-        if (theMetadata.getAuthorityID() != null && theMetadata.getAuthorityURI() != null && theMetadata.getAuthorityValue() != null) {
+        if (StringUtils.isNotBlank(theMetadata.getAuthorityID()) && StringUtils.isNotBlank(theMetadata.getAuthorityURI()) && StringUtils.isNotBlank(theMetadata.getAuthorityValue())) {
             ((Element) createdNode).setAttribute("authority", theMetadata.getAuthorityID());
             ((Element) createdNode).setAttribute("authorityURI", theMetadata.getAuthorityURI());
             if (theMetadata.getAuthorityValue().startsWith("http")) {
