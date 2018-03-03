@@ -22,7 +22,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/mets-1.10.jar"/>
-	<classpathentry kind="lib" path="lib/mods_3-5.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
