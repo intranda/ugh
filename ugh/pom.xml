@@ -3,7 +3,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.intranda.ugh</groupId>
-	<artifactId>ugh</artifactId>
+	<artifactId>ugh-core</artifactId>
 	<version>3.0</version>
 
 	<repositories>
