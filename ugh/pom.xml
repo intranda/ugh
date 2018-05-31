@@ -9,7 +9,7 @@
 	<repositories>
 		<repository>
 			<id>intranda</id>
-			<url>https://maven01.intranda.com/repository/intranda</url>
+			<url>https://nexus.intranda.com/repository/intranda</url>
 		</repository>
 		<repository>
 			<id>enonic</id>
