@@ -3111,85 +3111,89 @@ public class MetsMods implements ugh.dl.Fileformat {
         // Iterate over all the content files.
         List<ContentFile> contentFiles = fs.getAllFiles();
         for (ContentFile cf : contentFiles) {
-            Element file = createDomElementNS(domDoc, this.metsNamespacePrefix, "file");
+            //only add content file to filegroup if it may be contained in the filegroup.
+            //Per default all files may be contained in all filegroups
+            if (theFilegroup.contains(cf)) {
+                Element file = createDomElementNS(domDoc, this.metsNamespacePrefix, "file");
 
-            // We use the mimetype from Goobi if configured, the local one if
-            // not.
-            String mt = cf.getMimetype();
-            if (theFilegroup.getMimetype().equals("")) {
-                file.setAttribute(METS_MIMETYPE_STRING, mt);
-            } else {
-                file.setAttribute(METS_MIMETYPE_STRING, theFilegroup.getMimetype());
-            }
+                // We use the mimetype from Goobi if configured, the local one if
+                // not.
+                String mt = cf.getMimetype();
+                if (theFilegroup.getMimetype().equals("")) {
+                    file.setAttribute(METS_MIMETYPE_STRING, mt);
+                } else {
+                    file.setAttribute(METS_MIMETYPE_STRING, theFilegroup.getMimetype());
+                }
 
-            // We use the ID suffix from Goobi if configured, the filegroup's
-            // name if not.
-            String idSuffix = theFilegroup.getIdSuffix();
-            if (idSuffix == null || idSuffix.equals("")) {
-                idSuffix = "_" + theFilegroup.getName();
-                theFilegroup.setIdSuffix(idSuffix);
-            }
+                // We use the ID suffix from Goobi if configured, the filegroup's
+                // name if not.
+                String idSuffix = theFilegroup.getIdSuffix();
+                if (idSuffix == null || idSuffix.equals("")) {
+                    idSuffix = "_" + theFilegroup.getName();
+                    theFilegroup.setIdSuffix(idSuffix);
+                }
 
-            // Set content file's identifier (if not existing yet).
-            String id = cf.getIdentifier();
-            if (id == null || id.equals("")) {
-                id = FILE_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(++fileidMax);
-                cf.setIdentifier(id);
-            } else {
-                if (id.contains(FILE_PREFIX)) {
-                    String numberPart = id.replace(FILE_PREFIX, "");
-                    try {
-                        int number = Integer.parseInt(numberPart);
-                        fileidMax = number;
-                    } catch (NumberFormatException e) {
-                        // do nothing
+                // Set content file's identifier (if not existing yet).
+                String id = cf.getIdentifier();
+                if (id == null || id.equals("")) {
+                    id = FILE_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(++fileidMax);
+                    cf.setIdentifier(id);
+                } else {
+                    if (id.contains(FILE_PREFIX)) {
+                        String numberPart = id.replace(FILE_PREFIX, "");
+                        try {
+                            int number = Integer.parseInt(numberPart);
+                            fileidMax = number;
+                        } catch (NumberFormatException e) {
+                            // do nothing
+                        }
+
                     }
 
                 }
 
-            }
-
-            // Use the content file's ID if local filegroup is written, append
-            // the filegroup's name if not.
-            if (!theFilegroup.getName().equals(METS_FILEGROUP_LOCAL_STRING)) {
-                id += "_" + theFilegroup.getName();
-            }
-            file.setAttribute(METS_ID_STRING, id);
-
-            if (cf.isRepresentative()) {
-                file.setAttribute("USE", "banner");
-            }
-
-            // write admid attribute is necessary
-            List<Md> mdList = cf.getTechMds();
-            if (mdList != null) {
-                String admid = "";
-                for (Md md : mdList) {
-                    admid += md.getId();
-                    admid += " ";
+                // Use the content file's ID if local filegroup is written, append
+                // the filegroup's name if not.
+                if (!theFilegroup.getName().equals(METS_FILEGROUP_LOCAL_STRING)) {
+                    id += "_" + theFilegroup.getName();
                 }
-                if (!admid.isEmpty()) {
-                    file.setAttribute(METS_ADMID_STRING, admid.trim());
+                file.setAttribute(METS_ID_STRING, id);
+
+                if (cf.isRepresentative()) {
+                    file.setAttribute("USE", "banner");
                 }
+
+                // write admid attribute is necessary
+                List<Md> mdList = cf.getTechMds();
+                if (mdList != null) {
+                    String admid = "";
+                    for (Md md : mdList) {
+                        admid += md.getId();
+                        admid += " ";
+                    }
+                    if (!admid.isEmpty()) {
+                        file.setAttribute(METS_ADMID_STRING, admid.trim());
+                    }
+                }
+
+                // Write location (as URL).
+                Element flocat = createDomElementNS(domDoc, this.metsNamespacePrefix, "FLocat");
+                flocat.setAttribute(METS_LOCTYPE_STRING, "URL");
+
+                // We use the path from Goobi if configured, the local one if not.
+                String lc = cf.getLocation();
+                if (!theFilegroup.getPathToFiles().equals("")) {
+                    // Get the filename and replace the filename suffix, if
+                    // necessary.
+                    String n = new File(lc).getName();
+                    n = n.substring(0, n.lastIndexOf('.') + 1) + theFilegroup.getFileSuffix();
+                    lc = theFilegroup.getPathToFiles() + n;
+                }
+                createDomAttributeNS(flocat, this.xlinkNamespacePrefix, METS_HREF_STRING, lc);
+
+                file.appendChild(flocat);
+                result.appendChild(file);
             }
-
-            // Write location (as URL).
-            Element flocat = createDomElementNS(domDoc, this.metsNamespacePrefix, "FLocat");
-            flocat.setAttribute(METS_LOCTYPE_STRING, "URL");
-
-            // We use the path from Goobi if configured, the local one if not.
-            String lc = cf.getLocation();
-            if (!theFilegroup.getPathToFiles().equals("")) {
-                // Get the filename and replace the filename suffix, if
-                // necessary.
-                String n = new File(lc).getName();
-                n = n.substring(0, n.lastIndexOf('.') + 1) + theFilegroup.getFileSuffix();
-                lc = theFilegroup.getPathToFiles() + n;
-            }
-            createDomAttributeNS(flocat, this.xlinkNamespacePrefix, METS_HREF_STRING, lc);
-
-            file.appendChild(flocat);
-            result.appendChild(file);
         }
 
         return result;
@@ -3377,6 +3381,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             // Pass each file group.
             for (VirtualFileGroup vFileGroup : this.digdoc.getFileSet().getVirtualFileGroups()) {
                 // Write XML elements (METS:fptr).
+                if(vFileGroup.contains(cf)) {
                 Element fptr = createDomElementNS(theDocument, this.metsNamespacePrefix, METS_FPTR_STRING);
                 String id = cf.getIdentifier();
                 if (!vFileGroup.getName().equals(METS_FILEGROUP_LOCAL_STRING)) {
@@ -3388,6 +3393,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
                 LOGGER.trace("File '" + cf.getLocation() + "' written in file group " + vFileGroup.getName() + " for DocStruct '"
                         + theStruct.getType().getName() + "'!");
+                }
             }
         }
     }
