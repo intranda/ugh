@@ -11,10 +11,10 @@
 			<id>intranda</id>
 			<url>https://nexus.intranda.com/repository/intranda</url>
 		</repository>
-		<repository>
-			<id>enonic</id>
-			<url>http://repo.enonic.com/public/</url>
-		</repository>
+<!-- 		<repository> -->
+<!-- 			<id>enonic</id> -->
+<!-- 			<url>http://repo.enonic.com/public/</url> -->
+<!-- 		</repository> -->
 		
 	</repositories>
 
