@@ -397,8 +397,6 @@ public class DocStruct implements Serializable {
 
                         if (mdtypename != null && mdtypename.equals(theMDTypeName)) {
                             mdTypeTestPassed = true;
-                        } else {
-                            mdTypeTestPassed = false;
                         }
                     }
                 }
@@ -1919,7 +1917,7 @@ public class DocStruct implements Serializable {
             }
         }
 
-        if (this.persons != null)
+        if (this.persons != null) {
             for (Person per : this.persons) {
                 MetadataType mdt = per.getType();
                 if (mdt == null) {
@@ -1930,6 +1928,7 @@ public class DocStruct implements Serializable {
                     return true;
                 }
             }
+        }
 
         return false;
     }
@@ -3476,6 +3475,7 @@ public class DocStruct implements Serializable {
          * 
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
+        @Override
         public int compare(Object o1, Object o2) {
 
             Metadata m1 = (Metadata) o1;
@@ -3504,6 +3504,7 @@ public class DocStruct implements Serializable {
          * 
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
+        @Override
         public int compare(Object o1, Object o2) {
 
             MetadataGroup m1 = (MetadataGroup) o1;
