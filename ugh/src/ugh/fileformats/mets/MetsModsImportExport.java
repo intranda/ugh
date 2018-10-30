@@ -521,7 +521,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         for (MatchingMetadataObject mmo : this.modsNamesMD) {
 
             // Get current metdata object list.
-            List<Metadata> currentMdList = new LinkedList<Metadata>();
+            List<Metadata> currentMdList = new LinkedList<>();
             if (inStruct.getAllMetadata() != null) {
                 for (Metadata m : inStruct.getAllMetadata()) {
                     // Only if the metadata has a value AND its type is
@@ -611,7 +611,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 }
             }
             // Get the current person object list.
-            List<Person> currentPerList = new LinkedList<Person>();
+            List<Person> currentPerList = new LinkedList<>();
             if (inStruct.getAllPersons() != null) {
                 for (Person p : inStruct.getAllPersons()) {
                     // Only if the person has a first or last name AND its
@@ -1525,7 +1525,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
      */
     @Override
     protected List<String> checkMissingSettings() {
-        List<String> result = new LinkedList<String>();
+        List<String> result = new LinkedList<>();
 
         if (this.rightsOwner.equals("")) {
             result.add(METS_RIGHTS_OWNER_STRING);
@@ -1587,12 +1587,12 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                     && !perlUtil.match(theMMO.getValueCondition(), theMetadata.getValue())) {
 
                 LOGGER.info("Condition '" + theMMO.getValueCondition() + "' for Metadata '" + theMMO.getInternalName() + " (" + theMetadata.getValue()
-                        + ")" + "' does not match, no node was created...");
+                + ")" + "' does not match, no node was created...");
                 return;
             }
         } catch (MalformedPerl5PatternException e) {
             String message = "The regular expression '" + theMMO.getValueCondition() + "' delivered with Metadata '" + theMMO.getInternalName()
-                    + "' in the " + METS_PREFS_NODE_NAME_STRING + " section of the preferences file is not valid!";
+            + "' in the " + METS_PREFS_NODE_NAME_STRING + " section of the preferences file is not valid!";
             LOGGER.error(message, e);
             throw new PreferencesException(message, e);
         }
@@ -1608,7 +1608,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             }
         } catch (MalformedPerl5PatternException e) {
             String message = "The regular expression '" + theMMO.getValueRegExp() + "' delivered with Metadata '" + theMMO.getInternalName()
-                    + "' in the " + METS_PREFS_NODE_NAME_STRING + " section of the preferences file is not valid!";
+            + "' in the " + METS_PREFS_NODE_NAME_STRING + " section of the preferences file is not valid!";
             LOGGER.error(message, e);
             throw new PreferencesException(message, e);
         }
@@ -1672,6 +1672,40 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             }
         }
     }
+
+    @Override
+    public void writeSingleModsMetadata(String theXQuery, Metadata theMetadata, Node theStartingNode, Document theDocument)
+            throws PreferencesException {
+
+        Node createdNode = createNode(theXQuery, theStartingNode, theDocument);
+
+        if (createdNode == null) {
+            String message = "DOM Node could not be created for metadata '" + theMetadata.getType().getName() + "'! XQuery was '" + theXQuery + "'";
+            LOGGER.error(message);
+            throw new PreferencesException(message);
+        }
+
+        // Add value to node.
+        Node valueNode = theDocument.createTextNode(theMetadata.getValue());
+        createdNode.appendChild(valueNode);
+
+        if (StringUtils.isNotBlank(theMetadata.getAuthorityID()) && StringUtils.isNotBlank(theMetadata.getAuthorityURI())
+                && StringUtils.isNotBlank(theMetadata.getAuthorityValue())) {
+            if (theMetadata.getAuthorityValue().startsWith("http")) {
+                ((Element) createdNode).setAttribute("valueURI", theMetadata.getAuthorityValue());
+            } else {
+                ((Element) createdNode).setAttribute("authority", theMetadata.getAuthorityID());
+                ((Element) createdNode).setAttribute("authorityURI", theMetadata.getAuthorityURI());
+                ((Element) createdNode).setAttribute("valueURI", theMetadata.getAuthorityURI() + theMetadata.getAuthorityValue());
+            }
+        }
+
+
+
+        LOGGER.trace("Value '" + theMetadata.getValue() + "' (" + theMetadata.getType().getName() + ") added to node >>" + createdNode.getNodeName()
+        + "<<");
+    }
+
 
     private void writeSingleGroupPerson(Person thePerson, Map<String, String> xpathMap, Node theDomModsNode, Document theDomDoc)
             throws PreferencesException {
@@ -2228,7 +2262,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
 
                     }
                     if (!elementName.isEmpty() && !xpath.isEmpty()) {
-                        Map<String, String> map = new LinkedHashMap<String, String>();
+                        Map<String, String> map = new LinkedHashMap<>();
                         map.put(elementName, xpath);
                         mmo.addToMap(elementName, map);
                     }
@@ -2237,7 +2271,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                     NodeList metadataChildlist = currentNode.getChildNodes();
 
                     String elementName = "";
-                    Map<String, String> map = new HashMap<String, String>();
+                    Map<String, String> map = new HashMap<>();
                     for (int k = 0; k < metadataChildlist.getLength(); k++) {
                         // Get single node.
 
