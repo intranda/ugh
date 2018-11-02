@@ -1,0 +1,10 @@
+language: java
+jdk:
+- openjdk7
+- openjdk8
+script:
+- cd ugh; ant -f build.xml
+notifications:
+  slack:
+    rooms:
+      secure: eTBiyk2Bq9Du91VJZtGR/OWKOAtzOllndQa1h+s49eD+y51KEN7yGNqvJwA03ZlhZcctdPYnVAzpmqSSOm53KJcErEqZ9LxeoS/X2zVwe0NFdtuXRUO7FzDktn5YfA4VmtoRgKyd1hytuLq/Yyy2rogUUnUFHWf/KBipmu3v12zqj/UPWVITxqK/Jhl5+sCQqW7krmfCxoN2YDMN5ftjNhPDCBIyzi3BMA4CvI87jPbDTR9/YTTWCzzvCPoOxFjeeYWE0LBE7358tC3tvtMjtqeg+mE5HJdioXdGk+1i3ow99amakvxEjQh7sZjBDUzXK4Hwcqb1PmTXjK6PRCS/rCMWi9NqfEwk1R9DQqKYK1SP16uskjsFX8JfeC9m3fXIKNGAFLVEJd71k6ib4ExDYL+GmG2PeVITy6IUHAccGgryZptUrp5fBBoTaKqtFDAIA1U4UXGaS9NW1O9m2RAk8+Q6531bjjRUnj6x2OOVHwu98MipKRWHqqsDBM3MpgR1sYGnPFjgefoYvLzjFu+2HnDHkOL8Xxs3gMaBH9gYZuOJQ2lRpY+LrYiCawfGaAzi4oIB9X62AZBhnE3DQ5K8D4RIrthPnVLTviVwUm5aj6DkFjtSJyj7MQdp35pcyNeSG8MaHeIRB8SDDIa0t/qhuYQGB9i9HvnJFYRfdmoQtxw=
