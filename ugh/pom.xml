@@ -24,8 +24,8 @@
 	</properties>
 	
 	<scm>
-		<url>scm:git:http://github.com/intranda/goobi</url>
-		<connection>scm:git:http://github.com/intranda/goobi</connection>
+		<url>scm:git:http://github.com/intranda/ugh</url>
+		<connection>scm:git:http://github.com/intranda/ugh</connection>
 	</scm>
 
 	<build>
