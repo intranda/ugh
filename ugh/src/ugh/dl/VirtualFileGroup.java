@@ -23,6 +23,10 @@ package ugh.dl;
  ******************************************************************************/
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /*******************************************************************************
  * <p>
@@ -47,13 +51,19 @@ import java.io.Serializable;
 
 public class VirtualFileGroup implements Serializable {
 
+    /**
+     * A list constant representing the state that all files should be allowed for this FileGroup. Per default this is the case
+     */
+    public static final List    ALL_FILES           = Collections.EMPTY_LIST;
 	private static final long	serialVersionUID	= 8594056041230503891L;
+	
 
 	private String				name				= "";
 	private String				pathToFiles			= "";
 	private String				mimetype			= "";
 	private String				fileSuffix			= "";
 	private String				idSuffix			= "";
+	private List<ContentFile>   contentFiles        = ALL_FILES;             
 
 	/***************************************************************************
 	 * Default constructor.
@@ -150,5 +160,84 @@ public class VirtualFileGroup implements Serializable {
 	public void setIdSuffix(String idSuffix) {
 		this.idSuffix = idSuffix;
 	}
+	
+	/**
+	 * Returns the list of content files which should be written for this FileGroup
+	 * If the list is identical to {@link VirtualFileGroup#ALL_FILES ALL_FILES} 
+	 * then all ContentFiles should be included in this FileGroup
+	 * 
+	 * @return the list of allowed ContentFiles for this FileGroup. Never null
+	 */
+	public List<ContentFile> getContentFiles() {
+        return contentFiles;
+    }
+	
+	/**
+	 * Set the list of allowed ContentFiles to {@link VirtualFileGroup#ALL_FILES ALL_FILES}
+	 * so all ContentFiles may be written to this FileGroup
+	 */
+	public void allowAllFiles() {
+	    this.contentFiles = ALL_FILES;
+	}
+	
+	/**
+	 * Set the list to only allow files explicitly added via {@link #addContentFile} or {@link #addContentFiles}
+	 * 
+	 */
+	public void restrictFiles() {
+	    if(this.contentFiles == ALL_FILES) {
+	        this.contentFiles = new ArrayList<>();
+	    }
+	}
+	
+	/**
+	 * Adds a ContentFile to the list of ContentFiles allowed for this FileGroup
+	 * 
+	 * @param contentFile
+	 */
+	public void addContentFile(ContentFile contentFile) {
+        if(this.contentFiles == ALL_FILES) {
+            this.contentFiles = new ArrayList<>();
+        }
+        this.contentFiles.add(contentFile);
+    }
+	
+	/**
+     * Adds a collection of ContentFiles to the list of ContentFiles allowed for this FileGroup
+     * 
+     * @param contentFiles
+     */
+	public void addContentFiles(Collection<ContentFile> contentFiles) {
+        if(this.contentFiles == ALL_FILES) {
+            this.contentFiles = new ArrayList<>();
+        }
+        this.contentFiles.addAll(contentFiles);
+    }
+	
+	/**
+     * Removes a ContentFile from the list of ContentFiles allowed for this FileGroup
+     * 
+     * @param contentFile
+     */
+	public void removeContentFile(ContentFile contentFile) {
+	    if(this.contentFiles.contains(contentFile)) {	        
+	        this.contentFiles.remove(contentFile);
+	    }
+    }
+    
+	/**
+     * Removes a collection of ContentFiles from the list of ContentFiles allowed for this FileGroup
+     * 
+     * @param contentFiles
+     */
+    public void removeContentFiles(Collection<ContentFile> contentFiles) {
+        if(!this.contentFiles.isEmpty()) {            
+            this.contentFiles.removeAll(contentFiles);
+        }
+    }
+    
+    public boolean contains(ContentFile contentFile) {
+        return this.contentFiles == ALL_FILES || this.contentFiles.contains(contentFile);
+    }
 
 }

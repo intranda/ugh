@@ -165,16 +165,16 @@ public class DocStruct implements Serializable {
     // List containing all DocStrct-instances being children of this instance.
     private List<DocStruct> children;
     // List containing all references to Contentfile objects.
-    private List<ContentFileReference> contentFileReferences = new LinkedList<ContentFileReference>();
+    private List<ContentFileReference> contentFileReferences = new LinkedList<>();
     // List of all persons; list containing all Person objects.
     private List<Person> persons;
 
     private DocStruct parent;
     // All references to other DocStrct instances (containing References
     // objects).
-    private List<Reference> docStructRefsTo = new LinkedList<Reference>();
+    private List<Reference> docStructRefsTo = new LinkedList<>();
     // All references from another DocStruct to this one.
-    private List<Reference> docStructRefsFrom = new LinkedList<Reference>();
+    private List<Reference> docStructRefsFrom = new LinkedList<>();
     // Type of this instance.
     private DocStructType type;
     // Local identifier of this docstruct.
@@ -348,7 +348,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public List<DocStruct> getAllChildrenByTypeAndMetadataType(String theDocTypeName, String theMDTypeName) {
 
-        List<DocStruct> resultList = new LinkedList<DocStruct>();
+        List<DocStruct> resultList = new LinkedList<>();
         boolean docTypeTestPassed = false;
         boolean mdTypeTestPassed = false;
         List<Metadata> allMD;
@@ -388,7 +388,6 @@ public class DocStruct implements Serializable {
                 }
             } else {
                 for (Metadata md : allMD) {
-                    mdTypeTestPassed = false;
                     if (theMDTypeName.equals("*")) {
                         mdTypeTestPassed = true;
                     } else {
@@ -397,8 +396,6 @@ public class DocStruct implements Serializable {
 
                         if (mdtypename != null && mdtypename.equals(theMDTypeName)) {
                             mdTypeTestPassed = true;
-                        } else {
-                            mdTypeTestPassed = false;
                         }
                     }
                 }
@@ -446,7 +443,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public List<Metadata> getAllIdentifierMetadata() {
 
-        List<Metadata> result = new LinkedList<Metadata>();
+        List<Metadata> result = new LinkedList<>();
 
         if (this.allMetadata == null) {
             return null;
@@ -529,8 +526,8 @@ public class DocStruct implements Serializable {
                     try {
                         MetadataGroup mdnew = new MetadataGroup(md.getType());
                         mdnew.setDocStruct(newStruct);
-                        List<Metadata> newmdlist = new LinkedList<Metadata>();
-                        List<Person> newPersonList = new LinkedList<Person>();
+                        List<Metadata> newmdlist = new LinkedList<>();
+                        List<Person> newPersonList = new LinkedList<>();
                         for (Metadata meta : md.getMetadataList()) {
                             Metadata newMeta = new Metadata(meta.getType());
                             newMeta.setValue(meta.getValue());
@@ -690,7 +687,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public List<Reference> getAllToReferences(String theType) {
 
-        List<Reference> refs = new LinkedList<Reference>();
+        List<Reference> refs = new LinkedList<>();
 
         if (this.docStructRefsTo != null) {
             for (Reference ref : this.docStructRefsTo) {
@@ -728,7 +725,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public List<Reference> getAllFromReferences(String theType) {
 
-        List<Reference> refs = new LinkedList<Reference>();
+        List<Reference> refs = new LinkedList<>();
 
         if (this.docStructRefsFrom != null) {
             for (Reference ref : this.docStructRefsFrom) {
@@ -847,7 +844,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public List<ContentFile> getAllContentFiles() {
 
-        List<ContentFile> contentFiles = new LinkedList<ContentFile>();
+        List<ContentFile> contentFiles = new LinkedList<>();
 
         if (this.contentFileReferences == null || this.contentFileReferences.isEmpty()) {
             return null;
@@ -961,7 +958,7 @@ public class DocStruct implements Serializable {
 
         if (this.contentFileReferences == null) {
             // Re-added this line, maybe was it's deletion an error?
-            this.contentFileReferences = new LinkedList<ContentFileReference>();
+            this.contentFileReferences = new LinkedList<>();
         }
         // Now we can add the reference to the ContentFile, if the reference is
         // not existing yet.
@@ -991,7 +988,7 @@ public class DocStruct implements Serializable {
 
         if (this.contentFileReferences == null) {
             // Re-added this line, maybe was it's deletion an error?
-            this.contentFileReferences = new LinkedList<ContentFileReference>();
+            this.contentFileReferences = new LinkedList<>();
         }
 
         // Check if ContentFile belongs already to the FileSet.
@@ -1031,7 +1028,7 @@ public class DocStruct implements Serializable {
             return false;
         }
 
-        List<ContentFileReference> copiedContentFileReferences = new LinkedList<ContentFileReference>(this.contentFileReferences);
+        List<ContentFileReference> copiedContentFileReferences = new LinkedList<>(this.contentFileReferences);
 
         for (ContentFileReference cfr : copiedContentFileReferences) {
             if (cfr.getCf() != null && cfr.getCf().equals(theContentFile)) {
@@ -1128,7 +1125,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public boolean removeReferenceTo(DocStruct inStruct) {
 
-        List<Reference> ll = new LinkedList<Reference>(this.docStructRefsTo);
+        List<Reference> ll = new LinkedList<>(this.docStructRefsTo);
 
         for (Reference ref : ll) {
             if (ref.getTarget().equals(inStruct)) {
@@ -1157,7 +1154,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public boolean removeReferenceFrom(DocStruct inStruct) {
 
-        List<Reference> ll = new LinkedList<Reference>(this.docStructRefsFrom);
+        List<Reference> ll = new LinkedList<>(this.docStructRefsFrom);
 
         for (Reference ref : ll) {
             if (ref.getTarget().equals(inStruct)) {
@@ -1269,7 +1266,7 @@ public class DocStruct implements Serializable {
             theMetadataGroup.setDocStruct(this);
             if (this.allMetadataGroups == null) {
                 // Create list, if not already available.
-                this.allMetadataGroups = new LinkedList<MetadataGroup>();
+                this.allMetadataGroups = new LinkedList<>();
             }
             this.allMetadataGroups.add(theMetadataGroup);
         } else {
@@ -1324,7 +1321,7 @@ public class DocStruct implements Serializable {
         theMd.myDocStruct = null;
 
         if (this.removedMetadataGroups == null) {
-            this.removedMetadataGroups = new LinkedList<MetadataGroup>();
+            this.removedMetadataGroups = new LinkedList<>();
         }
 
         this.removedMetadataGroups.add(theMd);
@@ -1422,7 +1419,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public List<MetadataGroup> getAllMetadataGroupsByType(MetadataGroupType inType) {
 
-        List<MetadataGroup> resultList = new LinkedList<MetadataGroup>();
+        List<MetadataGroup> resultList = new LinkedList<>();
 
         // Check all metadata.
         if (inType != null && this.allMetadataGroups != null) {
@@ -1530,7 +1527,7 @@ public class DocStruct implements Serializable {
             theMetadata.setDocStruct(this);
             if (this.allMetadata == null) {
                 // Create list, if not already available.
-                this.allMetadata = new LinkedList<Metadata>();
+                this.allMetadata = new LinkedList<>();
             }
             this.allMetadata.add(theMetadata);
         } else {
@@ -1585,7 +1582,7 @@ public class DocStruct implements Serializable {
         theMd.myDocStruct = null;
 
         if (this.removedMetadata == null) {
-            this.removedMetadata = new LinkedList<Metadata>();
+            this.removedMetadata = new LinkedList<>();
         }
 
         this.removedMetadata.add(theMd);
@@ -1683,7 +1680,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public List<? extends Metadata> getAllMetadataByType(MetadataType inType) {
 
-        List<Metadata> resultList = new LinkedList<Metadata>();
+        List<Metadata> resultList = new LinkedList<>();
 
         // Check all metadata.
         if (inType != null && this.allMetadata != null) {
@@ -1716,7 +1713,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public List<Person> getAllPersonsByType(MetadataType inType) {
 
-        List<Person> resultList = new LinkedList<Person>();
+        List<Person> resultList = new LinkedList<>();
 
         if (inType == null) {
             return null;
@@ -1750,7 +1747,7 @@ public class DocStruct implements Serializable {
     public List<Metadata> getAllVisibleMetadata() {
 
         // Start with the list of all metadata.
-        List<Metadata> result = new LinkedList<Metadata>();
+        List<Metadata> result = new LinkedList<>();
 
         // Iterate over all metadata.
         if (getAllMetadata() != null) {
@@ -1782,7 +1779,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public List<MetadataGroupType> getDefaultDisplayMetadataGroupTypes() {
 
-        List<MetadataGroupType> result = new LinkedList<MetadataGroupType>();
+        List<MetadataGroupType> result = new LinkedList<>();
 
         if (this.type == null) {
             return null;
@@ -1858,7 +1855,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public List<MetadataType> getDefaultDisplayMetadataTypes() {
 
-        List<MetadataType> result = new LinkedList<MetadataType>();
+        List<MetadataType> result = new LinkedList<>();
 
         if (this.type == null) {
             return null;
@@ -1919,7 +1916,7 @@ public class DocStruct implements Serializable {
             }
         }
 
-        if (this.persons != null)
+        if (this.persons != null) {
             for (Person per : this.persons) {
                 MetadataType mdt = per.getType();
                 if (mdt == null) {
@@ -1930,6 +1927,7 @@ public class DocStruct implements Serializable {
                     return true;
                 }
             }
+        }
 
         return false;
     }
@@ -2004,7 +2002,7 @@ public class DocStruct implements Serializable {
         }
 
         // Get all Metadatatypes for my DocStructType.
-        List<MetadataGroupType> addableMetadata = new LinkedList<MetadataGroupType>();
+        List<MetadataGroupType> addableMetadata = new LinkedList<>();
         List<MetadataGroupType> allTypes = this.type.getAllMetadataGroupTypes();
 
         // Get all metadata types which are known, iterate over them and check,
@@ -2047,7 +2045,7 @@ public class DocStruct implements Serializable {
         }
 
         // Get all Metadatatypes for my DocStructType.
-        List<MetadataGroupType> addableMetadata = new LinkedList<MetadataGroupType>();
+        List<MetadataGroupType> addableMetadata = new LinkedList<>();
         List<MetadataGroupType> allTypes = this.type.getAllMetadataGroupTypes();
 
         // Get all metadata types which are known, iterate over them and check,
@@ -2101,7 +2099,7 @@ public class DocStruct implements Serializable {
         }
 
         // Get all Metadatatypes for my DocStructType.
-        List<MetadataType> addableMetadata = new LinkedList<MetadataType>();
+        List<MetadataType> addableMetadata = new LinkedList<>();
         List<MetadataType> allTypes = this.type.getAllMetadataTypes();
 
         // Get all metadata types which are known, iterate over them and check,
@@ -2162,7 +2160,7 @@ public class DocStruct implements Serializable {
         }
 
         // Get all Metadatatypes for my DocStructType.
-        List<MetadataType> addableMetadata = new LinkedList<MetadataType>();
+        List<MetadataType> addableMetadata = new LinkedList<>();
         List<MetadataType> allTypes = this.type.getAllMetadataTypes();
 
         // Get all metadata types which are known, iterate over them and check,
@@ -2261,7 +2259,7 @@ public class DocStruct implements Serializable {
 
         // Create List for children, if not already available.
         if (this.children == null) {
-            this.children = new LinkedList<DocStruct>();
+            this.children = new LinkedList<>();
         }
 
         // Set status to logical or physical.
@@ -2633,7 +2631,7 @@ public class DocStruct implements Serializable {
         // We can add this person.
         if (insert) {
             if (this.persons == null) {
-                this.persons = new LinkedList<Person>();
+                this.persons = new LinkedList<>();
             }
             this.persons.add(in);
 
@@ -2866,7 +2864,7 @@ public class DocStruct implements Serializable {
         }
 
         // Sort all Metadata by typename.
-        LinkedList<Metadata> resultList = new LinkedList<Metadata>();
+        LinkedList<Metadata> resultList = new LinkedList<>();
 
         for (Metadata md : this.getAllMetadata()) {
             // If nothing is in the result list, just add it.
@@ -2943,7 +2941,7 @@ public class DocStruct implements Serializable {
             List<Person> personlist = this.getAllPersons();
             // Copy person list, so we can iterate over this list and delete
             // from the persons list.
-            List<Person> iteratorList = new LinkedList<Person>(personlist);
+            List<Person> iteratorList = new LinkedList<>(personlist);
             for (Person per : iteratorList) {
                 if (per.getLastname() == null && per.getFirstname() == null && per.getInstitution() == null) {
                     // Delete this person from list of all Persons.
@@ -2959,7 +2957,7 @@ public class DocStruct implements Serializable {
             List<Metadata> metadatalist = this.getAllMetadata();
             // Copy Metadata list, so we can iterate over this list and delete
             // from the metadata list.
-            List<Metadata> iteratorList = new LinkedList<Metadata>(metadatalist);
+            List<Metadata> iteratorList = new LinkedList<>(metadatalist);
             for (Metadata md : iteratorList) {
                 if (md.getValue() == null) {
                     if (this.getAllMetadata() != null) {
@@ -2973,7 +2971,7 @@ public class DocStruct implements Serializable {
         if (this.getAllMetadataGroups() != null) {
             List<MetadataGroup> metadatalist = this.getAllMetadataGroups();
 
-            List<MetadataGroup> iteratorList = new LinkedList<MetadataGroup>(metadatalist);
+            List<MetadataGroup> iteratorList = new LinkedList<>(metadatalist);
             for (MetadataGroup md : iteratorList) {
                 boolean isEmpty = true;
                 for (Metadata meta : md.getMetadataList()) {
@@ -2998,16 +2996,16 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public synchronized void sortMetadata(Prefs thePrefs) {
 
-        List<Metadata> newMetadata = new LinkedList<Metadata>();
-        List<Person> newPersons = new LinkedList<Person>();
-        List<Metadata> oldMetadata = new LinkedList<Metadata>();
-        List<Person> oldPersons = new LinkedList<Person>();
+        List<Metadata> newMetadata = new LinkedList<>();
+        List<Person> newPersons = new LinkedList<>();
+        List<Metadata> oldMetadata = new LinkedList<>();
+        List<Person> oldPersons = new LinkedList<>();
 
         if (this.allMetadata != null) {
-            oldMetadata = new LinkedList<Metadata>(this.allMetadata);
+            oldMetadata = new LinkedList<>(this.allMetadata);
         }
         if (this.persons != null) {
-            oldPersons = new LinkedList<Person>(this.persons);
+            oldPersons = new LinkedList<>(this.persons);
         }
 
         // Get all MetadataTypes defined in the prefs for this DocStruct.
@@ -3074,10 +3072,10 @@ public class DocStruct implements Serializable {
     public synchronized void sortMetadataAbcdefg() {
 
         // Create empty (sorted) TreeSets and lists.
-        TreeSet<Metadata> newMetadata = new TreeSet<Metadata>(new MetadataComparator());
-        TreeSet<Person> newPersons = new TreeSet<Person>(new MetadataComparator());
-        List<Metadata> metadataList = new LinkedList<Metadata>();
-        List<Person> personList = new LinkedList<Person>();
+        TreeSet<Metadata> newMetadata = new TreeSet<>(new MetadataComparator());
+        TreeSet<Person> newPersons = new TreeSet<>(new MetadataComparator());
+        List<Metadata> metadataList = new LinkedList<>();
+        List<Person> personList = new LinkedList<>();
 
         // Add all metadata to the new TreeSets (sorted).
         if (this.allMetadata != null) {
@@ -3109,7 +3107,7 @@ public class DocStruct implements Serializable {
     private boolean registerToRef(DocStruct docStruct) {
 
         if (this.signaturesForEqualsMethodRefsTo == null) {
-            this.signaturesForEqualsMethodRefsTo = new HashMap<String, Object>();
+            this.signaturesForEqualsMethodRefsTo = new HashMap<>();
         }
 
         // If not null then we have the case of looping, then we must return
@@ -3134,7 +3132,7 @@ public class DocStruct implements Serializable {
     private boolean registerFromRef(DocStruct docStruct) {
 
         if (this.signaturesForEqualsMethodRefsFrom == null) {
-            this.signaturesForEqualsMethodRefsFrom = new HashMap<String, Object>();
+            this.signaturesForEqualsMethodRefsFrom = new HashMap<>();
         }
 
         // If not null then we have the case of looping, then we must return
@@ -3476,6 +3474,7 @@ public class DocStruct implements Serializable {
          * 
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
+        @Override
         public int compare(Object o1, Object o2) {
 
             Metadata m1 = (Metadata) o1;
@@ -3504,6 +3503,7 @@ public class DocStruct implements Serializable {
          * 
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
+        @Override
         public int compare(Object o1, Object o2) {
 
             MetadataGroup m1 = (MetadataGroup) o1;
@@ -3528,7 +3528,7 @@ public class DocStruct implements Serializable {
 
     public void addTechMd(Md techMd) {
         if (techMdList == null) {
-            techMdList = new ArrayList<Md>();
+            techMdList = new ArrayList<>();
         }
         if (techMd != null) {
             techMdList.add(techMd);
