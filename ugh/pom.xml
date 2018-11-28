@@ -19,6 +19,10 @@
 
 	</repositories>
 	
+	<properties>
+		<buildDate>${maven.build.timestamp}</buildDate>
+	</properties>
+	
 	<scm>
 		<url>scm:git:http://github.com/intranda/goobi</url>
 		<connection>scm:git:http://github.com/intranda/goobi</connection>
