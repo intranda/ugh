@@ -1,45 +1,5 @@
 package ugh.fileformats.mets;
 
-/*******************************************************************************
- * ugh.fileformats.mets / MetsMods.java
- * 
- * Copyright 2010 Center for Retrospective Digitization, Göttingen (GDZ)
- * 
- * http://gdz.sub.uni-goettingen.de
- * 
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or (at your
- * option) any later version.
- * 
- * This Library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
- * for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this library; if not, write to the Free Software Foundation,
- * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
- ******************************************************************************/
-
-import gov.loc.mets.AmdSecType;
-import gov.loc.mets.DivType;
-import gov.loc.mets.DivType.Fptr;
-import gov.loc.mets.FileType;
-import gov.loc.mets.FileType.FLocat;
-import gov.loc.mets.Helper;
-import gov.loc.mets.MdSecType;
-import gov.loc.mets.MdSecType.MdWrap;
-import gov.loc.mets.MdSecType.MdWrap.XmlData;
-import gov.loc.mets.MetsDocument;
-import gov.loc.mets.MetsDocument.Mets;
-import gov.loc.mets.MetsType.FileSec;
-import gov.loc.mets.MetsType.FileSec.FileGrp;
-import gov.loc.mets.MetsType.StructLink;
-import gov.loc.mets.StructLinkType.SmLink;
-import gov.loc.mets.StructMapType;
-import gov.loc.mods.v3.ModsDocument;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -97,21 +57,60 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+/*******************************************************************************
+ * ugh.fileformats.mets / MetsMods.java
+ * 
+ * Copyright 2010 Center for Retrospective Digitization, Göttingen (GDZ)
+ * 
+ * http://gdz.sub.uni-goettingen.de
+ * 
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or (at your
+ * option) any later version.
+ * 
+ * This Library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+ ******************************************************************************/
+
+import gov.loc.mets.AmdSecType;
+import gov.loc.mets.DivType;
+import gov.loc.mets.DivType.Fptr;
+import gov.loc.mets.FileType;
+import gov.loc.mets.FileType.FLocat;
+import gov.loc.mets.Helper;
+import gov.loc.mets.MdSecType;
+import gov.loc.mets.MdSecType.MdWrap;
+import gov.loc.mets.MdSecType.MdWrap.XmlData;
+import gov.loc.mets.MetsDocument;
+import gov.loc.mets.MetsDocument.Mets;
+import gov.loc.mets.MetsType.FileSec;
+import gov.loc.mets.MetsType.FileSec.FileGrp;
+import gov.loc.mets.MetsType.StructLink;
+import gov.loc.mets.StructLinkType.SmLink;
+import gov.loc.mets.StructMapType;
+import gov.loc.mods.v3.ModsDocument;
 import ugh.dl.AmdSec;
 import ugh.dl.ContentFile;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
 import ugh.dl.DocStructType;
 import ugh.dl.FileSet;
-import ugh.dl.MetadataGroup;
+import ugh.dl.Md;
 import ugh.dl.Metadata;
+import ugh.dl.MetadataGroup;
 import ugh.dl.MetadataGroupType;
 import ugh.dl.MetadataType;
 import ugh.dl.NamePart;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
 import ugh.dl.Reference;
-import ugh.dl.Md;
 import ugh.dl.VirtualFileGroup;
 import ugh.exceptions.DocStructHasNoTypeException;
 import ugh.exceptions.ImportException;
@@ -522,12 +521,12 @@ public class MetsMods implements ugh.dl.Fileformat {
 
     // Contains key/value pairs of namespace prefix/namespace and namespace
     // prefix/namespaceDeclaration.
-    protected HashMap<String, Namespace> namespaces = new HashMap<String, Namespace>();
-    protected HashMap<String, String> namespaceDeclarations = new HashMap<String, String>();
+    protected HashMap<String, Namespace> namespaces = new HashMap<>();
+    protected HashMap<String, String> namespaceDeclarations = new HashMap<>();
 
     // SortedMap for mapping file IDs to content files (default sorting order is
     // the key (String).
-    protected SortedMap<String, ContentFile> sortedFileMap = new TreeMap<String, ContentFile>();
+    protected SortedMap<String, ContentFile> sortedFileMap = new TreeMap<>();
 
     // Set mptr things.
     protected String mptrUrl = "";
@@ -549,8 +548,8 @@ public class MetsMods implements ugh.dl.Fileformat {
 
     // Contains MetadataMatchingObjects for mapping MODS to internal
     // MetadataType elements and vice versa.
-    protected List<MatchingMetadataObject> modsNamesMD = new LinkedList<MatchingMetadataObject>();
-    protected List<MatchingDocStructObject> modsNamesDS = new LinkedList<MatchingDocStructObject>();
+    protected List<MatchingMetadataObject> modsNamesMD = new LinkedList<>();
+    protected List<MatchingDocStructObject> modsNamesDS = new LinkedList<>();
 
     protected Element metsNode = null;
     protected Node firstDivNode = null;
@@ -583,7 +582,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
     // A hash to store some tag grouping things.
     // This is a really dirty hack, I will fix it tomorrow! (hihi)
-    protected HashMap<String, String> replaceGroupTags = new HashMap<String, String>();
+    protected HashMap<String, String> replaceGroupTags = new HashMap<>();
 
     /***************************************************************************
      * CONSTRUCTORS
@@ -1197,7 +1196,7 @@ public class MetsMods implements ugh.dl.Fileformat {
         MetadataType physpagetype = this.myPreferences.getMetadataTypeByName(METADATA_PHYSICAL_PAGE_NUMBER);
 
         // List containing DocStruct objects of the children.
-        LinkedList<DocStruct> result = new LinkedList<DocStruct>();
+        LinkedList<DocStruct> result = new LinkedList<>();
 
         // Get all sub <div> elements.
         DivType[] children = inDiv.getDivArray();
@@ -1871,7 +1870,7 @@ public class MetsMods implements ugh.dl.Fileformat {
      **************************************************************************/
     protected String[] getValueForUnambigiousXQuery(Node inNode, String queryExpression) throws ReadException {
 
-        List<String> resultList = new LinkedList<String>();
+        List<String> resultList = new LinkedList<>();
 
         // Check, if currentPath is already available.
         XPathFactory factory = XPathFactory.newInstance();
@@ -2171,7 +2170,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
                                 // Create and add person.
                                 if (mdt.getIsPerson()) {
-                                    List<Person> metadataList = new ArrayList<Person>(metadataGroup.getPersonList());
+                                    List<Person> metadataList = new ArrayList<>(metadataGroup.getPersonList());
                                     for (Person ps : metadataList) {
 
                                         if (ps.getType().getName().equals(mdt.getName())) {
@@ -2364,7 +2363,7 @@ public class MetsMods implements ugh.dl.Fileformat {
      * @return
      **************************************************************************/
     protected List<String> checkMissingSettings() {
-        return new LinkedList<String>();
+        return new LinkedList<>();
     }
 
     /***************************************************************************
@@ -2730,7 +2729,7 @@ public class MetsMods implements ugh.dl.Fileformat {
         try {
 
             // remove techMd list for serialization
-            ArrayList<Md> tempList = new ArrayList<Md>(this.digdoc.getTechMds());
+            ArrayList<Md> tempList = new ArrayList<>(this.digdoc.getTechMds());
             this.digdoc.getTechMds().clear();
 
             // Write the object out to a byte array.
@@ -2835,7 +2834,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             agent.setAttribute("OTHERTYPE", "SOFTWARE");
             // createDomAttributeNS(agent, this.metsNamespacePrefix, "OTHERTYPE", "SOFTWARE");
             Element name = createDomElementNS(domDoc, this.metsNamespacePrefix, "name");
-            name.setTextContent(ugh.Version.PROGRAMNAME + " - " + ugh.Version.BUILDVERSION + " - " + ugh.Version.BUILDDATE);
+            name.setTextContent(ugh.Version.PROGRAMNAME + " - " + ugh.Version.getBUILDVERSION() + " - " + ugh.Version.getBUILDDATE());
             agent.appendChild(name);
             Element note = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
             note.setTextContent(ugh.Version.PROGRAMNAME);
@@ -3382,17 +3381,17 @@ public class MetsMods implements ugh.dl.Fileformat {
             for (VirtualFileGroup vFileGroup : this.digdoc.getFileSet().getVirtualFileGroups()) {
                 // Write XML elements (METS:fptr).
                 if(vFileGroup.contains(cf)) {
-                Element fptr = createDomElementNS(theDocument, this.metsNamespacePrefix, METS_FPTR_STRING);
-                String id = cf.getIdentifier();
-                if (!vFileGroup.getName().equals(METS_FILEGROUP_LOCAL_STRING)) {
-                    id += "_" + vFileGroup.getName();
-                }
+                    Element fptr = createDomElementNS(theDocument, this.metsNamespacePrefix, METS_FPTR_STRING);
+                    String id = cf.getIdentifier();
+                    if (!vFileGroup.getName().equals(METS_FILEGROUP_LOCAL_STRING)) {
+                        id += "_" + vFileGroup.getName();
+                    }
 
-                fptr.setAttribute(METS_FILEID_STRING, id);
-                theDiv.appendChild(fptr);
+                    fptr.setAttribute(METS_FILEID_STRING, id);
+                    theDiv.appendChild(fptr);
 
-                LOGGER.trace("File '" + cf.getLocation() + "' written in file group " + vFileGroup.getName() + " for DocStruct '"
-                        + theStruct.getType().getName() + "'!");
+                    LOGGER.trace("File '" + cf.getLocation() + "' written in file group " + vFileGroup.getName() + " for DocStruct '"
+                            + theStruct.getType().getName() + "'!");
                 }
             }
         }
@@ -3902,7 +3901,7 @@ public class MetsMods implements ugh.dl.Fileformat {
      **************************************************************************/
     private String[] getBracketContents(String in) {
 
-        List<String> resultList = new LinkedList<String>();
+        List<String> resultList = new LinkedList<>();
 
         int firstbracketpos = 0;
         int lastbracketpos = 0;
@@ -3995,7 +3994,7 @@ public class MetsMods implements ugh.dl.Fileformat {
      **************************************************************************/
     private String[] splitPath(String in) {
 
-        List<String> resultList = new LinkedList<String>();
+        List<String> resultList = new LinkedList<>();
 
         int oldsplitpos = -1;
         // "insubpath" is set to true, if we are within a subpath (in square
@@ -4376,7 +4375,7 @@ public class MetsMods implements ugh.dl.Fileformat {
         }
 
         LOGGER.trace("Value '" + theMetadata.getValue() + "' (" + theMetadata.getType().getName() + ") added to node >>" + createdNode.getNodeName()
-                + "<<");
+        + "<<");
     }
 
     /***************************************************************************
@@ -4700,7 +4699,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                     else {
                         String xquery =
                                 "./" + this.modsNamespacePrefix + ":mods/" + this.modsNamespacePrefix + ":extension/" + this.goobiNamespacePrefix
-                                        + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@name='" + m.getType().getName() + "']";
+                                + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@name='" + m.getType().getName() + "']";
                         writeSingleModsMetadata(xquery, m, dommodsnode, domDoc);
                     }
                 }
@@ -5016,7 +5015,7 @@ public class MetsMods implements ugh.dl.Fileformat {
      */
     HashMap<String, String> getAttributesFromNode(String nodeName) {
 
-        HashMap<String, String> attributes = new HashMap<String, String>();
+        HashMap<String, String> attributes = new HashMap<>();
 
         Pattern p = Pattern.compile("\\[[^\\]]+\\]");
         Matcher m = p.matcher(nodeName);
@@ -5071,6 +5070,7 @@ public class MetsMods implements ugh.dl.Fileformat {
         return goobiID;
     }
 
+    @Override
     public void setGoobiID(String goobiID) {
         this.goobiID = goobiID;
     }
