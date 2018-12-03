@@ -25,6 +25,7 @@ public class Version {
         if (BUILDVERSION == null) {
             readConfigurationFile();
         }
+
         return BUILDVERSION;
     }
 
