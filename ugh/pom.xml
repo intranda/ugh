@@ -55,9 +55,11 @@
 				<configuration>
 					<archive>
 						<manifestEntries>
+							<name>${project.name}</name>
 							<version>${project.version}</version>
 							<Implementation-Version>${buildNumber}</Implementation-Version>
 							<Implementation-Build-Date>${buildDate}</Implementation-Build-Date>
+							
 						</manifestEntries>
 					</archive>
 				</configuration>
