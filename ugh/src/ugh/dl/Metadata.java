@@ -26,6 +26,8 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ugh.exceptions.MetadataTypeNotAllowedException;
 
 /*******************************************************************************
@@ -80,7 +82,7 @@ public class Metadata implements Serializable {
     private Object nativeObject;
 
     private String authorityURI;
-    
+
     private String authorityID;
 
     private String authorityValue;
@@ -126,6 +128,7 @@ public class Metadata implements Serializable {
      * 
      * @return DocStruct instance.
      **************************************************************************/
+    @JsonIgnore
     public DocStruct getDocStruct() {
         return this.myDocStruct;
     }
@@ -199,15 +202,15 @@ public class Metadata implements Serializable {
         this.authorityValue = authorityValue;
         return true;
     }
-    
+
     public void setAuthorityID(String authorityID) {
         this.authorityID = authorityID;
     }
-    
+
     public void setAuthorityURI(String authorityURI) {
         this.authorityURI = authorityURI;
     }
-    
+
     public void setAuthorityValue(String authorityValue) {
         this.authorityValue = authorityValue;
     }
@@ -222,8 +225,7 @@ public class Metadata implements Serializable {
     public String getAuthorityID() {
         return this.authorityID;
     }
-    
-    
+
     /***************************************************************************
      * <p>
      * Returns the ID from the value in the authority file.
@@ -361,6 +363,7 @@ public class Metadata implements Serializable {
      * 
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
 
         String result = "";

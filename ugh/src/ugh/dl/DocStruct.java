@@ -35,6 +35,8 @@ import java.util.TreeSet;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ugh.dl.DigitalDocument.ListPairCheck;
 import ugh.exceptions.ContentFileNotLinkedException;
 import ugh.exceptions.DocStructHasNoTypeException;
@@ -295,10 +297,6 @@ public class DocStruct implements Serializable {
      * @deprecated
      * @return
      **************************************************************************/
-    @Deprecated
-    public String getreferenceToAnchor() {
-        return getReferenceToAnchor();
-    }
 
     /**************************************************************************
      * <p>
@@ -711,6 +709,7 @@ public class DocStruct implements Serializable {
      * 
      * @return List containing <code>References</code> objects
      **************************************************************************/
+    @JsonIgnore
     public List<Reference> getAllFromReferences() {
         return this.docStructRefsFrom;
     }
@@ -769,6 +768,7 @@ public class DocStruct implements Serializable {
     /***************************************************************************
      * @return
      **************************************************************************/
+    @JsonIgnore
     public DocStruct getParent() {
         return this.parent;
     }
@@ -842,6 +842,7 @@ public class DocStruct implements Serializable {
      * 
      * @return List containing ContentFile objects; if no content files are available null is returned.
      **************************************************************************/
+    @JsonIgnore
     public List<ContentFile> getAllContentFiles() {
 
         List<ContentFile> contentFiles = new LinkedList<>();
@@ -2738,6 +2739,7 @@ public class DocStruct implements Serializable {
      * @return the orig_object
      **************************************************************************/
     @Deprecated
+    @JsonIgnore
     public Object getOrig_object() {
         return this.origObject;
     }
@@ -2754,6 +2756,7 @@ public class DocStruct implements Serializable {
     /***************************************************************************
      * @return theOrigObject
      **************************************************************************/
+    @JsonIgnore
     public Object getOrigObject() {
         return this.origObject;
     }
