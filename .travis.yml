@@ -1,9 +1,8 @@
 language: java
 jdk:
-- openjdk7
 - openjdk8
 script:
-- cd ugh; ant -f build.xml
+- cd ugh; mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 notifications:
   slack:
     rooms:
