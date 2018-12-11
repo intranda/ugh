@@ -10,8 +10,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -2836,19 +2834,10 @@ public class MetsMods implements ugh.dl.Fileformat {
             agent.setAttribute("OTHERTYPE", "SOFTWARE");
             // createDomAttributeNS(agent, this.metsNamespacePrefix, "OTHERTYPE", "SOFTWARE");
             try {
-                Class version = Class.forName("ugh.Version");
-                Method method = version.getMethod("getBUILDVERSION");
-                String versionText = (String) method.invoke(version);
-
-                method = version.getMethod("getBUILDDATE");
-                String versionDate = (String) method.invoke(version);
-
-
                 Element name = createDomElementNS(domDoc, this.metsNamespacePrefix, "name");
-                name.setTextContent("Goobi" + " - " + versionText + " - " + versionDate);
+                name.setTextContent(ugh.Version.PROGRAMNAME + " - " + ugh.Version.getBUILDVERSION() + " - " + ugh.Version.getBUILDDATE());
                 agent.appendChild(name);
-            } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InvocationTargetException | IllegalAccessException e1) {
-
+            } catch (Exception e1) {
             }
             Element note = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
             note.setTextContent(ugh.Version.PROGRAMNAME);
