@@ -10,6 +10,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -2833,9 +2835,21 @@ public class MetsMods implements ugh.dl.Fileformat {
             // createDomAttributeNS(agent, this.metsNamespacePrefix, "TYPE", "OTHER");
             agent.setAttribute("OTHERTYPE", "SOFTWARE");
             // createDomAttributeNS(agent, this.metsNamespacePrefix, "OTHERTYPE", "SOFTWARE");
-            Element name = createDomElementNS(domDoc, this.metsNamespacePrefix, "name");
-            name.setTextContent(ugh.Version.PROGRAMNAME + " - " + ugh.Version.getBUILDVERSION() + " - " + ugh.Version.getBUILDDATE());
-            agent.appendChild(name);
+            try {
+                Class version = Class.forName("ugh.Version");
+                Method method = version.getMethod("getBUILDVERSION");
+                String versionText = (String) method.invoke(version);
+
+                method = version.getMethod("getBUILDDATE");
+                String versionDate = (String) method.invoke(version);
+
+
+                Element name = createDomElementNS(domDoc, this.metsNamespacePrefix, "name");
+                name.setTextContent("Goobi" + " - " + versionText + " - " + versionDate);
+                agent.appendChild(name);
+            } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InvocationTargetException | IllegalAccessException e1) {
+
+            }
             Element note = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
             note.setTextContent(ugh.Version.PROGRAMNAME);
             agent.appendChild(note);
