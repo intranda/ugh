@@ -2833,11 +2833,14 @@ public class MetsMods implements ugh.dl.Fileformat {
             // createDomAttributeNS(agent, this.metsNamespacePrefix, "TYPE", "OTHER");
             agent.setAttribute("OTHERTYPE", "SOFTWARE");
             // createDomAttributeNS(agent, this.metsNamespacePrefix, "OTHERTYPE", "SOFTWARE");
-            Element name = createDomElementNS(domDoc, this.metsNamespacePrefix, "name");
-            name.setTextContent(ugh.Version.PROGRAMNAME + " - " + ugh.Version.getBUILDVERSION() + " - " + ugh.Version.getBUILDDATE());
-            agent.appendChild(name);
+            try {
+                Element name = createDomElementNS(domDoc, this.metsNamespacePrefix, "name");
+                name.setTextContent(ugh.UghVersion.PROGRAMNAME + " - " + ugh.UghVersion.getBUILDVERSION() + " - " + ugh.UghVersion.getBUILDDATE());
+                agent.appendChild(name);
+            } catch (Exception e1) {
+            }
             Element note = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
-            note.setTextContent(ugh.Version.PROGRAMNAME);
+            note.setTextContent(ugh.UghVersion.PROGRAMNAME);
             agent.appendChild(note);
             metsHdr.appendChild(agent);
 
