@@ -57,7 +57,7 @@
 						<manifestEntries>
 							<name>${project.name}</name>
 							<version>${project.version}</version>
-							<Implementation-Version>${buildNumber}</Implementation-Version>
+							<Implementation-Revision>${buildNumber}</Implementation-Revision>
 							<Implementation-Build-Date>${buildDate}</Implementation-Build-Date>
 
 						</manifestEntries>
@@ -331,6 +331,10 @@
 			<artifactId>jai_imageio</artifactId>
 			<version>1.0_01</version>
 		</dependency>
-
+<dependency>
+  <groupId>com.jcabi</groupId>
+  <artifactId>jcabi-manifests</artifactId>
+  <version>1.1</version>
+</dependency>
 	</dependencies>
 </project>
