@@ -2,6 +2,7 @@ package ugh.fileformats.slimjson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -25,6 +26,9 @@ public class SlimMetadataGroup {
     public static SlimMetadataGroup fromMetadataGroup(MetadataGroup mg, SlimDigitalDocument sdd) {
         SlimMetadataGroup smg = new SlimMetadataGroup();
         smg.digitalDocument = sdd;
+        if (mg.getDocStruct().getIdentifier() == null) {
+            mg.getDocStruct().setIdentifier(UUID.randomUUID().toString());
+        }
         smg.myDocStructId = mg.getDocStruct().getIdentifier();
         //add metadata
         for (Metadata meta : mg.getMetadataList()) {
@@ -32,7 +36,7 @@ public class SlimMetadataGroup {
         }
         //add persons
         smg.personList = mg.getPersonList();
-        return null;
+        return smg;
     }
 
 }

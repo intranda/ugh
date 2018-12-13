@@ -23,6 +23,8 @@ public class SlimDigitalDocument {
     // imagefiles, textfiles etc...).
     private SlimFileSet allImages;
 
+    private SlimAmdSec amdSec;
+
     public static SlimDigitalDocument fromDigitalDocument(DigitalDocument dd) {
         SlimDigitalDocument sdd = new SlimDigitalDocument();
         SlimDocStruct topPhys = SlimDocStruct.fromDocStruct(dd.getPhysicalDocStruct(), sdd);
@@ -30,6 +32,7 @@ public class SlimDigitalDocument {
         sdd.setTopPhysicalStructId(topPhys.getId());
         sdd.setTopLogicalStructId(topLogical.getId());
         sdd.allImages = SlimFileSet.fromFileSet(dd.getFileSet(), sdd);
+        sdd.amdSec = SlimAmdSec.fromAmdSec(dd.getAmdSec(), sdd);
         return sdd;
     }
 
@@ -48,5 +51,11 @@ public class SlimDigitalDocument {
             this.metadataTypeMap.put(type.getName(), type);
         }
 
+    }
+
+    public void addDsType(DocStructType type) {
+        if (!this.dsTypeMap.containsKey(type.getName())) {
+            this.dsTypeMap.put(type.getName(), type);
+        }
     }
 }

@@ -1,5 +1,7 @@
 package ugh.fileformats.slimjson;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
@@ -18,18 +20,14 @@ public class SlimReference {
         SlimReference sr = new SlimReference();
         sr.digitalDocument = sdd;
         sr.type = ref.getType();
-        SlimDocStruct sourceDs = sdd.getDsMap().get(ref.getSource().getIdentifier());
-        if (sourceDs == null) {
-            sourceDs = SlimDocStruct.fromDocStruct(ref.getSource(), sdd);
-            sdd.addSlimDocStruct(sourceDs);
+        if (ref.getSource().getIdentifier() == null) {
+            ref.getSource().setIdentifier(UUID.randomUUID().toString());
         }
-        sr.setSourceDsId(sourceDs.getId());
-        SlimDocStruct targetDs = sdd.getDsMap().get(ref.getTarget().getIdentifier());
-        if (targetDs == null) {
-            targetDs = SlimDocStruct.fromDocStruct(ref.getTarget(), sdd);
-            sdd.addSlimDocStruct(targetDs);
+        sr.sourceDsId = ref.getSource().getIdentifier();
+        if (ref.getTarget().getIdentifier() == null) {
+            ref.getTarget().setIdentifier(UUID.randomUUID().toString());
         }
-        sr.setTargetDsId(targetDs.getId());
+        sr.targetDsId = ref.getTarget().getIdentifier();
         return sr;
     }
 }

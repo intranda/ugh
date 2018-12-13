@@ -1,5 +1,7 @@
 package ugh.fileformats.slimjson;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
@@ -29,6 +31,9 @@ public class SlimMetadata {
         sm.digitalDocument = sdd;
         sdd.addMetadataType(meta.getType());
         sm.MDTypeId = meta.getType().getName();
+        if (meta.getDocStruct().getIdentifier() == null) {
+            meta.getDocStruct().setIdentifier(UUID.randomUUID().toString());
+        }
         sm.myDocStructId = meta.getDocStruct().getIdentifier();
 
         sm.metadataValue = meta.getValue();
@@ -40,6 +45,6 @@ public class SlimMetadata {
         sm.authorityValue = meta.getAuthorityValue();
 
         sm.updated = meta.wasUpdated();
-        return null;
+        return sm;
     }
 }

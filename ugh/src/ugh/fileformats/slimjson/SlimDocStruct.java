@@ -2,12 +2,14 @@ package ugh.fileformats.slimjson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import ugh.dl.ContentFileReference;
 import ugh.dl.DocStruct;
+import ugh.dl.Md;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataGroup;
 import ugh.dl.Person;
@@ -60,6 +62,12 @@ public class SlimDocStruct {
     private boolean logical = false;
     private boolean physical = false;
 
+    private String referenceToAnchor;
+    //the amdSec referenced by this docStruct, if any
+    private SlimAmdSec amdSec;
+    //the list of techMd sections referenced by this docStruct, if any
+    private List<SlimMd> techMdList = new ArrayList<>();
+
     /**
      * Creates a SlimDocStruct from a DocStruct.
      * 
@@ -70,38 +78,65 @@ public class SlimDocStruct {
         SlimDocStruct sds = new SlimDocStruct();
         sds.setDigitalDocument(sdd);
         //set all simple properties
-        sds.setId(ds.getIdentifier());
+        if (ds.getIdentifier() != null) {
+            sds.setId(ds.getIdentifier());
+        } else {
+            sds.id = UUID.randomUUID().toString();
+            ds.setIdentifier(sds.id);
+        }
         sds.setLogical(ds.isLogical());
         sds.setPhysical(ds.isPhysical());
+        sds.type = ds.getType().getName();
+        sdd.addDsType(ds.getType());
         // add metadata
-        for (Metadata meta : ds.getAllMetadata()) {
-            sds.allMetadata.add(SlimMetadata.fromMetadata(meta, sdd));
+        if (ds.getAllMetadata() != null) {
+            for (Metadata meta : ds.getAllMetadata()) {
+                sds.allMetadata.add(SlimMetadata.fromMetadata(meta, sdd));
+            }
         }
         //add metadata groups
-        for (MetadataGroup mg : ds.getAllMetadataGroups()) {
-            sds.allMetadataGroups.add(SlimMetadataGroup.fromMetadataGroup(mg, sdd));
+        if (ds.getAllMetadataGroups() != null) {
+            for (MetadataGroup mg : ds.getAllMetadataGroups()) {
+                sds.allMetadataGroups.add(SlimMetadataGroup.fromMetadataGroup(mg, sdd));
+            }
         }
         //add persons
         sds.persons = ds.getAllPersons();
         // add children
-        for (DocStruct cds : ds.getAllChildren()) {
-            SlimDocStruct scds = sdd.getDsMap().get(cds.getIdentifier());
-            if (scds == null) {
-                scds = SlimDocStruct.fromDocStruct(cds, sdd);
+        if (ds.getAllChildren() != null) {
+            for (DocStruct cds : ds.getAllChildren()) {
+                SlimDocStruct scds = sdd.getDsMap().get(cds.getIdentifier());
+                if (scds == null) {
+                    scds = SlimDocStruct.fromDocStruct(cds, sdd);
+                }
+                sds.children.add(scds.getId());
             }
-            sds.children.add(scds.getId());
         }
         //add contentFileReferences
-        for (ContentFileReference cfr : ds.getAllContentFileReferences()) {
-            sds.contentFileReferences.add(SlimContentFileReference.fromContentFileReference(cfr, sdd));
+        if (ds.getAllContentFileReferences() != null) {
+            for (ContentFileReference cfr : ds.getAllContentFileReferences()) {
+                sds.contentFileReferences.add(SlimContentFileReference.fromContentFileReference(cfr, sdd));
+            }
         }
         //add to-references
-        for (Reference ref : ds.getAllToReferences()) {
-            sds.docStructRefsTo.add(SlimReference.fromReference(ref, sdd));
+        if (ds.getAllToReferences() != null) {
+            for (Reference ref : ds.getAllToReferences()) {
+                sds.docStructRefsFrom.add(SlimReference.fromReference(ref, sdd));
+            }
         }
         //add from-references
-        for (Reference ref : ds.getAllFromReferences()) {
-            sds.docStructRefsFrom.add(SlimReference.fromReference(ref, sdd));
+        if (ds.getAllFromReferences() != null) {
+            for (Reference ref : ds.getAllFromReferences()) {
+                sds.docStructRefsTo.add(SlimReference.fromReference(ref, sdd));
+            }
+        }
+        //add amdSec
+        sds.amdSec = SlimAmdSec.fromAmdSec(ds.getAmdSec(), sdd);
+        //add techMdList
+        if (ds.getTechMds() != null) {
+            for (Md md : ds.getTechMds()) {
+                sds.techMdList.add(SlimMd.fromMd(md));
+            }
         }
         sdd.addSlimDocStruct(sds);
         return sds;

@@ -29,6 +29,6 @@ public class SlimFileSet {
             sfs.allImages.add(scf.getIdentifier());
         }
         sfs.virtualFileGroups = fileSet.getVirtualFileGroups();
-        return null;
+        return sfs;
     }
 }
