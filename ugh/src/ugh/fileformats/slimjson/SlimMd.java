@@ -1,8 +1,13 @@
 package ugh.fileformats.slimjson;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.UUID;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -10,6 +15,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import lombok.Data;
 import lombok.extern.log4j.Log4j;
@@ -47,6 +56,21 @@ public class SlimMd {
         try {
             return TransformerFactory.newInstance().newTransformer();
         } catch (TransformerConfigurationException | TransformerFactoryConfigurationError e) {
+            log.error(e);
+        }
+        return null;
+    }
+
+    public Md ToMd() {
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        Document doc = null;
+        try {
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            doc = dBuilder.parse(new InputSource(new StringReader(content)));
+            Md md = new Md(doc.getFirstChild());
+            return md;
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            // TODO Auto-generated catch block
             log.error(e);
         }
         return null;

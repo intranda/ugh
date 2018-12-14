@@ -3,14 +3,24 @@ package ugh.fileformats.slimjson;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
+import ugh.dl.ContentFile;
 import ugh.dl.DigitalDocument;
+import ugh.dl.DocStruct;
 import ugh.dl.DocStructType;
 import ugh.dl.MetadataGroupType;
 import ugh.dl.MetadataType;
 
 @Data
 public class SlimDigitalDocument {
+    //for conversion back 
+    @JsonIgnore
+    private transient Map<String, DocStruct> origDsMap = new HashMap<>();
+    @JsonIgnore
+    private transient Map<String, ContentFile> origContentFileMap = new HashMap<>();
+
     private Map<String, SlimDocStruct> dsMap = new HashMap<>();
     private Map<String, DocStructType> dsTypeMap = new HashMap<>();
     private Map<String, MetadataType> metadataTypeMap = new HashMap<>();
@@ -37,7 +47,12 @@ public class SlimDigitalDocument {
     }
 
     public DigitalDocument toDigitalDocument() {
-        return null;
+        DigitalDocument dd = new DigitalDocument();
+        dd.setAmdSec(amdSec.toAmdSec());
+        dd.setFileSet(allImages.toFileSet(dd));
+        dd.setLogicalDocStruct(this.dsMap.get(this.topLogicalStructId).toDocStruct(dd));
+        dd.setPhysicalDocStruct(this.dsMap.get(this.topPhysicalStructId).toDocStruct(dd));
+        return dd;
     }
 
     public void addSlimDocStruct(SlimDocStruct sds) {
@@ -56,6 +71,12 @@ public class SlimDigitalDocument {
     public void addDsType(DocStructType type) {
         if (!this.dsTypeMap.containsKey(type.getName())) {
             this.dsTypeMap.put(type.getName(), type);
+        }
+    }
+
+    public void addMetadataGroupType(MetadataGroupType type) {
+        if (!this.metadataGroupTypeMap.containsKey(type.getName())) {
+            this.metadataGroupTypeMap.put(type.getName(), type);
         }
     }
 }

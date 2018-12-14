@@ -5,9 +5,14 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
+import lombok.extern.log4j.Log4j;
+import ugh.dl.DigitalDocument;
+import ugh.dl.DocStruct;
 import ugh.dl.Metadata;
+import ugh.exceptions.MetadataTypeNotAllowedException;
 
 @Data
+@Log4j
 public class SlimMetadata {
     @JsonIgnore
     private transient SlimDigitalDocument digitalDocument;
@@ -46,5 +51,31 @@ public class SlimMetadata {
 
         sm.updated = meta.wasUpdated();
         return sm;
+    }
+
+    public Metadata toMetadata(DigitalDocument dd) {
+        Metadata sm;
+        try {
+            sm = new Metadata(digitalDocument.getMetadataTypeMap().get(this.MDTypeId));
+            DocStruct ds = digitalDocument.getOrigDsMap().get(this.myDocStructId);
+            if (ds == null) {
+                ds = digitalDocument.getDsMap().get(this.myDocStructId).toDocStruct(dd);
+            }
+            sm.setDocStruct(ds);
+
+            sm.setValue(this.metadataValue);
+            sm.setValueQualifier(this.MetadataVQ, this.MetadataVQType);
+
+            sm.setAuthorityID(this.authorityID);
+            sm.setAuthorityURI(this.authorityURI);
+            sm.setAuthorityValue(this.authorityValue);
+
+            sm.wasUpdated(this.updated);
+            return sm;
+        } catch (MetadataTypeNotAllowedException e) {
+            // TODO Auto-generated catch block
+            log.error(e);
+        }
+        return null;
     }
 }

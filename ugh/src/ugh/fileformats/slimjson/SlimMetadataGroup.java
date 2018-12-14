@@ -7,11 +7,16 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
+import lombok.extern.log4j.Log4j;
+import ugh.dl.DigitalDocument;
+import ugh.dl.DocStruct;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataGroup;
 import ugh.dl.Person;
+import ugh.exceptions.MetadataTypeNotAllowedException;
 
 @Data
+@Log4j
 public class SlimMetadataGroup {
     @JsonIgnore
     private transient SlimDigitalDocument digitalDocument;
@@ -26,6 +31,8 @@ public class SlimMetadataGroup {
     public static SlimMetadataGroup fromMetadataGroup(MetadataGroup mg, SlimDigitalDocument sdd) {
         SlimMetadataGroup smg = new SlimMetadataGroup();
         smg.digitalDocument = sdd;
+        smg.mDGroupTypeId = mg.getType().getName();
+        sdd.addMetadataGroupType(mg.getType());
         if (mg.getDocStruct().getIdentifier() == null) {
             mg.getDocStruct().setIdentifier(UUID.randomUUID().toString());
         }
@@ -37,6 +44,28 @@ public class SlimMetadataGroup {
         //add persons
         smg.personList = mg.getPersonList();
         return smg;
+    }
+
+    public MetadataGroup toMetadataGroup(DigitalDocument dd) {
+        try {
+            MetadataGroup mg = new MetadataGroup(digitalDocument.getMetadataGroupTypeMap().get(this.mDGroupTypeId));
+            DocStruct ds = digitalDocument.getOrigDsMap().get(this.myDocStructId);
+            if (ds == null) {
+                ds = digitalDocument.getDsMap().get(this.myDocStructId).toDocStruct(dd);
+            }
+            mg.setDocStruct(ds);
+            //add metadata
+            for (SlimMetadata meta : this.getMetadataList()) {
+                mg.getMetadataList().add(meta.toMetadata(dd));
+            }
+            //add persons
+            mg.setPersonList(this.personList);
+            return mg;
+        } catch (MetadataTypeNotAllowedException e) {
+            // TODO Auto-generated catch block
+            log.error(e);
+        }
+        return null;
     }
 
 }

@@ -46,14 +46,14 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.mapper.MapperWrapper;
+
 import ugh.exceptions.ContentFileNotLinkedException;
 import ugh.exceptions.PreferencesException;
 import ugh.exceptions.TypeNotAllowedForParentException;
 import ugh.exceptions.WriteException;
-
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
-import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 /*******************************************************************************
  * <p>
@@ -279,6 +279,7 @@ public class DigitalDocument implements Serializable {
      * 
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
 
         String result = "";
@@ -359,7 +360,6 @@ public class DigitalDocument implements Serializable {
             }
         }
 
-        
         // Get and print Groups.
         List<MetadataGroup> allGroups = inDocStruct.getAllMetadataGroups();
         if (allGroups != null) {
@@ -367,7 +367,7 @@ public class DigitalDocument implements Serializable {
                 result += hierarchyBuffer + currentGroup.toString();
             }
         }
-        
+
         // Get and print persons.
         List<Person> allPS = inDocStruct.getAllPersons();
         if (allPS != null) {
@@ -1138,6 +1138,10 @@ public class DigitalDocument implements Serializable {
         return null;
     }
 
+    public void setAmdSec(AmdSec sec) {
+        this.amdSec = sec;
+    }
+
     public void setAmdSec(String id) {
         this.amdSec = new AmdSec(new ArrayList<Md>());
         this.amdSec.setId(id);
@@ -1165,10 +1169,11 @@ public class DigitalDocument implements Serializable {
      * @see {@link quickPairCheck}
      **************************************************************************/
     protected static enum ListPairCheck {
-        isEqual, isNotEqual, needsFurtherChecking
+        isEqual,
+        isNotEqual,
+        needsFurtherChecking
     }
 
-    
     /***************************************************************************
      * <p>
      * Creates a deep copy of the DigitalDocument.
@@ -1176,7 +1181,7 @@ public class DigitalDocument implements Serializable {
      * 
      * @return the new DigitalDocument instance
      **************************************************************************/
-    
+
     public DigitalDocument copyDigitalDocument() throws WriteException {
 
         DigitalDocument newDigDoc = null;

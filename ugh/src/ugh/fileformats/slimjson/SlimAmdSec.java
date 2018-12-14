@@ -30,4 +30,13 @@ public class SlimAmdSec {
         }
         return samd;
     }
+
+    public AmdSec toAmdSec() {
+        ArrayList<Md> mdList = new ArrayList<>();
+        for (SlimMd smd : this.techMdList) {
+            mdList.add(smd.ToMd());
+        }
+        AmdSec amd = new AmdSec(mdList);
+        return amd;
+    }
 }

@@ -7,13 +7,19 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
+import lombok.extern.log4j.Log4j;
 import ugh.dl.ContentFileReference;
+import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
 import ugh.dl.Md;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataGroup;
 import ugh.dl.Person;
 import ugh.dl.Reference;
+import ugh.exceptions.IncompletePersonObjectException;
+import ugh.exceptions.MetadataTypeNotAllowedException;
+import ugh.exceptions.TypeNotAllowedAsChildException;
+import ugh.exceptions.TypeNotAllowedForParentException;
 
 /*******************************************************************************
  * ugh.dl / SlimDocStruct.java
@@ -43,6 +49,7 @@ import ugh.dl.Reference;
  * 
  *******************************************************************************/
 @Data
+@Log4j
 public class SlimDocStruct {
     @JsonIgnore
     private transient SlimDigitalDocument digitalDocument;
@@ -140,5 +147,65 @@ public class SlimDocStruct {
         }
         sdd.addSlimDocStruct(sds);
         return sds;
+    }
+
+    public DocStruct toDocStruct(DigitalDocument dd) {
+        try {
+            DocStruct ds = dd.createDocStruct(this.digitalDocument.getDsTypeMap().get(this.type));
+            ds.setLogical(logical);
+            ds.setPhysical(physical);
+            // add metadata
+            for (SlimMetadata meta : this.getAllMetadata()) {
+                ds.getAllMetadata().add(meta.toMetadata(dd));
+            }
+            //add metadata groups
+            for (SlimMetadataGroup smg : this.allMetadataGroups) {
+                ds.getAllMetadataGroups().add(smg.toMetadataGroup(dd));
+            }
+            //add persons
+            for (Person p : this.persons) {
+                ds.addPerson(p);
+            }
+            // add children
+            for (String cId : this.children) {
+                DocStruct cds = digitalDocument.getOrigDsMap().get(cId);
+                if (cds == null) {
+                    cds = digitalDocument.getDsMap().get(cId).toDocStruct(dd);
+                }
+                ds.addChild(cds);
+            }
+            //add contentFileReferences
+            for (SlimContentFileReference scfr : this.contentFileReferences) {
+                ds.addContentFile(scfr.getFile().toContentFile(dd), scfr.getArea());
+            }
+            //add to-references
+            for (SlimReference ref : this.docStructRefsTo) {
+                DocStruct otherDs = digitalDocument.getOrigDsMap().get(ref.getTargetDsId());
+                if (otherDs == null) {
+                    otherDs = digitalDocument.getDsMap().get(ref.getTargetDsId()).toDocStruct(dd);
+                }
+                ds.addReferenceTo(otherDs, ref.getType());
+            }
+            //add from-references
+            for (SlimReference ref : this.docStructRefsFrom) {
+                DocStruct otherDs = digitalDocument.getOrigDsMap().get(ref.getSourceDsId());
+                if (otherDs == null) {
+                    otherDs = digitalDocument.getDsMap().get(ref.getSourceDsId()).toDocStruct(dd);
+                }
+                ds.addReferenceFrom(otherDs, ref.getType());
+            }
+            //add amdSec
+            ds.setAmdSec(this.amdSec.toAmdSec());
+            //add techMdList
+            for (SlimMd md : this.techMdList) {
+                ds.addTechMd(md.ToMd());
+            }
+            digitalDocument.getOrigDsMap().put(ds.getIdentifier(), ds);
+            return ds;
+        } catch (TypeNotAllowedForParentException | MetadataTypeNotAllowedException | IncompletePersonObjectException
+                | TypeNotAllowedAsChildException e) {
+            log.error(e);
+        }
+        return null;
     }
 }

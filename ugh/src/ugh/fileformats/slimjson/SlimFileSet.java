@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import ugh.dl.ContentFile;
+import ugh.dl.DigitalDocument;
 import ugh.dl.FileSet;
 import ugh.dl.VirtualFileGroup;
 
@@ -30,5 +31,16 @@ public class SlimFileSet {
         }
         sfs.virtualFileGroups = fileSet.getVirtualFileGroups();
         return sfs;
+    }
+
+    public FileSet toFileSet(DigitalDocument dd) {
+        FileSet fs = new FileSet();
+        for (String imId : allImages) {
+            fs.addFile(digitalDocument.getImagesMap().get(imId).toContentFile(dd));
+        }
+        for (VirtualFileGroup theFilegroup : virtualFileGroups) {
+            fs.addVirtualFileGroup(theFilegroup);
+        }
+        return fs;
     }
 }
