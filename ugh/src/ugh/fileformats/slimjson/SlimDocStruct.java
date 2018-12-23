@@ -91,6 +91,9 @@ public class SlimDocStruct {
             sds.id = UUID.randomUUID().toString();
             ds.setIdentifier(sds.id);
         }
+        if (ds.getParent() != null) {
+            sds.parentId = ds.getParent().getIdentifier();
+        }
         sds.setLogical(ds.isLogical());
         sds.setPhysical(ds.isPhysical());
         sds.type = ds.getType().getName();
