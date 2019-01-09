@@ -12,6 +12,7 @@ import ugh.dl.DocStruct;
 import ugh.dl.DocStructType;
 import ugh.dl.MetadataGroupType;
 import ugh.dl.MetadataType;
+import ugh.dl.Prefs;
 
 @Data
 public class SlimDigitalDocument {
@@ -35,7 +36,7 @@ public class SlimDigitalDocument {
 
     private SlimAmdSec amdSec;
 
-    public static SlimDigitalDocument fromDigitalDocument(DigitalDocument dd) {
+    public static SlimDigitalDocument fromDigitalDocument(DigitalDocument dd, Prefs prefs) {
         SlimDigitalDocument sdd = new SlimDigitalDocument();
         SlimDocStruct topPhys = SlimDocStruct.fromDocStruct(dd.getPhysicalDocStruct(), sdd);
         SlimDocStruct topLogical = SlimDocStruct.fromDocStruct(dd.getLogicalDocStruct(), sdd);
@@ -43,6 +44,9 @@ public class SlimDigitalDocument {
         sdd.setTopLogicalStructId(topLogical.getId());
         sdd.allImages = SlimFileSet.fromFileSet(dd.getFileSet(), sdd);
         sdd.amdSec = SlimAmdSec.fromAmdSec(dd.getAmdSec(), sdd);
+        for (DocStructType dst : prefs.getAllDocStructTypes()) {
+            sdd.dsTypeMap.put(dst.getName(), dst);
+        }
         return sdd;
     }
 

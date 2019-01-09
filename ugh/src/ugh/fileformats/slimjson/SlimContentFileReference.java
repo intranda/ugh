@@ -16,6 +16,7 @@ public class SlimContentFileReference {
         if (scf == null) {
             scf = SlimContentFile.fromContentFile(cfr.getCf(), sdd);
         }
+        scfr.setFile(scf);
         return scfr;
     }
 }
