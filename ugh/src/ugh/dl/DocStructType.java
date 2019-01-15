@@ -29,6 +29,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /*******************************************************************************
  * <p>
  * A <code>DocStructType</code> object defines a kind of class to which a structure entitiy (represented by a DocStruct object) belongs. All DocStruct
@@ -60,6 +62,7 @@ import java.util.Map;
  * 
  ******************************************************************************/
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DocStructType implements Serializable {
 
     private static final long serialVersionUID = -3819246407494198735L;
@@ -80,7 +83,7 @@ public class DocStructType implements Serializable {
     // instances). PLEASE NOTE: Some tricky inheriting od something else things
     // do not let parameterise this attribute! Don't worry! Nevertheless, it
     // works!
-    protected List allMetadataTypes;
+    protected List<MetadataTypeForDocStructType> allMetadataTypes;
 
     // LinkedList containing all possible document structure types which might
     // be children of this one here.
@@ -95,7 +98,7 @@ public class DocStructType implements Serializable {
      **************************************************************************/
     public DocStructType() {
         this.allChildrenTypes = new LinkedList<String>();
-        this.allMetadataTypes = new LinkedList<String>();
+        this.allMetadataTypes = new LinkedList<>();
         this.allMetadataGroups = new LinkedList<String>();
         this.allLanguages = new HashMap<String, String>();
     }
@@ -439,18 +442,18 @@ public class DocStructType implements Serializable {
      * @param inMDType MetadataType - can be a global type (with same internal name)
      * @return true, if it is allowed; otherwise false
      **************************************************************************/
-    public boolean isMDTypeAllowed(MetadataType inMDType) {
-
-        Iterator<MetadataType> it = this.allMetadataTypes.iterator();
-        while (it.hasNext()) {
-            MetadataType mdt = it.next();
-            if (mdt.getName().equals(inMDType.getName())) {
-                return true; // it is already available
-            }
-        }
-
-        return false; // sorry, not available
-    }
+    //    public boolean isMDTypeAllowed(MetadataType inMDType) {
+    //
+    //        Iterator<MetadataTypeForDocStructType> it = this.allMetadataTypes.iterator();
+    //        while (it.hasNext()) {
+    //            MetadataTypeForDocStructType mdt = it.next();
+    //            if (mdt.getMetadataType().getName().equals(inMDType.getName())) {
+    //                return true; // it is already available
+    //            }
+    //        }
+    //
+    //        return false; // sorry, not available
+    //    }
 
     /***************************************************************************
      * <p>
@@ -714,6 +717,7 @@ public class DocStructType implements Serializable {
      * 
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
 
         return getName();
@@ -763,8 +767,6 @@ public class DocStructType implements Serializable {
         return this.getName().equals(docStructType.getName());
     }
 
-    
-    
     /***************************************************************************
      * <p>
      * Add and remove MetadataGroups.
@@ -826,18 +828,18 @@ public class DocStructType implements Serializable {
         return out;
     }
 
-//    /**************************************************************************
-//     * <p>
-//     * Deprecated method, please use getAllDefaultDisplayMetadataTypes() in the future.
-//     * </p>
-//     * 
-//     * @deprecated
-//     * @return
-//     **************************************************************************/
-//    @Deprecated
-//    public List<MetadataGroup> getAllDefaultGroupTypes() {
-//        return getAllDefaultDisplayMetadataGroups();
-//    }
+    //    /**************************************************************************
+    //     * <p>
+    //     * Deprecated method, please use getAllDefaultDisplayMetadataTypes() in the future.
+    //     * </p>
+    //     * 
+    //     * @deprecated
+    //     * @return
+    //     **************************************************************************/
+    //    @Deprecated
+    //    public List<MetadataGroup> getAllDefaultGroupTypes() {
+    //        return getAllDefaultDisplayMetadataGroups();
+    //    }
 
     /***************************************************************************
      * <p>
@@ -906,8 +908,6 @@ public class DocStructType implements Serializable {
         return false;
     }
 
-   
-
     /***************************************************************************
      * <p>
      * Retrieves the local MetadataGroup object (created when adding a global MetadataGroup object). This is necessary, if you just like to have the
@@ -933,12 +933,11 @@ public class DocStructType implements Serializable {
         return null;
     }
 
-    
     /***************************************************************************
      * <p>
-     * Adds a MetadataGroup object to this DocStructType instance; this means, that all document structures of this type can have at least one metadata
-     * object of this type because for each DocStructType object we have separate MetadataGroup objects, the MetadataGroup instance given as the only
-     * parameter is duplicated; the copy of the given instance is added. If successful, the copy is returned - otherwise null is returned.
+     * Adds a MetadataGroup object to this DocStructType instance; this means, that all document structures of this type can have at least one
+     * metadata object of this type because for each DocStructType object we have separate MetadataGroup objects, the MetadataGroup instance given as
+     * the only parameter is duplicated; the copy of the given instance is added. If successful, the copy is returned - otherwise null is returned.
      * </p>
      * 
      * @param type MetadataType object which should be added
@@ -968,9 +967,9 @@ public class DocStructType implements Serializable {
 
     /***************************************************************************
      * <p>
-     * Adds a MetadataGroup object to this DocStructType instance; this means, that all document structures of this type can have at least one metadata
-     * object of this type because for each DocStructType object we have separate MetadataGroup objects, the MetadataGroup instance given as the only
-     * parameter is duplicated; the copy of the given instance is added. If successful, the copy is returned - otherwise null is returned.
+     * Adds a MetadataGroup object to this DocStructType instance; this means, that all document structures of this type can have at least one
+     * metadata object of this type because for each DocStructType object we have separate MetadataGroup objects, the MetadataGroup instance given as
+     * the only parameter is duplicated; the copy of the given instance is added. If successful, the copy is returned - otherwise null is returned.
      * </p>
      * 
      * @param type MetadataGroup object which should be added
@@ -1000,7 +999,7 @@ public class DocStructType implements Serializable {
 
         return myType;
     }
-    
+
     /***************************************************************************
      * <p>
      * Checks, if the MetadataGroup has already been added and is already available in the list of all MetadataGroup.
@@ -1031,87 +1030,7 @@ public class DocStructType implements Serializable {
 
         return false;
     }
-    
-    
-    /***************************************************************************
-     * <p>
-     * Just a small class to store the MetadataType together with number (which depends on the DocStructType).
-     * </p>
-     **************************************************************************/
 
-    public class MetadataTypeForDocStructType implements Serializable {
-
-        private static final long serialVersionUID = -5908952924188415337L;
-
-        private MetadataType mdt = null;
-        // Number of metadatatypes for this docStruct.
-        private String num = null;
-        // Just a filter to display only default metadata types.
-        private boolean defaultdisplay = false;
-        // Just a filter to avoid displaying invisible fields.
-        private boolean invisible = false;
-
-        /***********************************************************************
-         * @param inType
-         **********************************************************************/
-        public MetadataTypeForDocStructType(MetadataType inType) {
-            this.mdt = inType;
-        }
-
-        /***********************************************************************
-         * @param in
-         **********************************************************************/
-        public void setNumber(String in) {
-            this.num = in;
-        }
-
-        /***********************************************************************
-         * @return
-         **********************************************************************/
-        public String getNumber() {
-            return this.num;
-        }
-
-        /***********************************************************************
-         * @return
-         **********************************************************************/
-        public MetadataType getMetadataType() {
-            return this.mdt;
-        }
-
-        /***********************************************************************
-         * @return the defaultdisplay
-         **********************************************************************/
-        public boolean isDefaultdisplay() {
-            return this.defaultdisplay;
-        }
-
-        /***********************************************************************
-         * Sets the DefaultDisplay variable for this DocStructType. Dosn't make any sense at all!
-         * 
-         * @param inDefaultdisplay the defaultdisplay to set
-         **********************************************************************/
-        public void setDefaultdisplay(boolean inDefaultdisplay) {
-            this.defaultdisplay = inDefaultdisplay;
-        }
-
-        /***********************************************************************
-         * @return the invisible
-         **********************************************************************/
-        public boolean isInvisible() {
-            return this.invisible;
-        }
-
-        /***********************************************************************
-         * @param invisible the invisible to set
-         **********************************************************************/
-        public void setInvisible(boolean invisible) {
-            this.invisible = invisible;
-        }
-
-    }
-
-    
     public class MetadataGroupForDocStructType implements Serializable {
 
         private static final long serialVersionUID = -4571877810721395422L;
@@ -1181,8 +1100,7 @@ public class DocStructType implements Serializable {
         public void setInvisible(boolean invisible) {
             this.invisible = invisible;
         }
-        
+
     }
-    
-    
+
 }

@@ -101,7 +101,7 @@ public class MetadataType implements Serializable {
 
     private boolean allowNameParts = false;
     private boolean allowNormdata = false;
-    
+
     private String validationExpression = "";
 
     /***************************************************************************
@@ -368,11 +368,11 @@ public class MetadataType implements Serializable {
     public void setAllowNormdata(boolean allowNormdata) {
         this.allowNormdata = allowNormdata;
     }
-    
+
     public String getValidationExpression() {
         return validationExpression;
     }
-    
+
     public void setValidationExpression(String validationExpression) {
         this.validationExpression = validationExpression;
     }

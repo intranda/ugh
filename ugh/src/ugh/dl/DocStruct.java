@@ -1502,6 +1502,10 @@ public class DocStruct implements Serializable {
         number = countMDofthisType(inMdName);
 
         // As many as we want (zero or more).
+        if (maxnumberallowed == null) {
+            System.out.println(this.identifier);
+            System.out.println(this.type.getName());
+        }
         if (maxnumberallowed.equals("*")) {
             insert = true;
         }

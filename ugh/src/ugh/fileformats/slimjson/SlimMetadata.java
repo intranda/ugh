@@ -17,7 +17,7 @@ public class SlimMetadata {
     @JsonIgnore
     private transient SlimDigitalDocument digitalDocument;
 
-    private String MDTypeId;
+    private String mdTypeId;
     // Document structure to which this metadata type belongs to.
     private String myDocStructId;
 
@@ -35,7 +35,7 @@ public class SlimMetadata {
         SlimMetadata sm = new SlimMetadata();
         sm.digitalDocument = sdd;
         sdd.addMetadataType(meta.getType());
-        sm.MDTypeId = meta.getType().getName();
+        sm.mdTypeId = meta.getType().getName();
         if (meta.getDocStruct().getIdentifier() == null) {
             meta.getDocStruct().setIdentifier(UUID.randomUUID().toString());
         }
@@ -56,7 +56,7 @@ public class SlimMetadata {
     public Metadata toMetadata(DigitalDocument dd) {
         Metadata sm;
         try {
-            sm = new Metadata(digitalDocument.getMetadataTypeMap().get(this.MDTypeId));
+            sm = new Metadata(digitalDocument.getMetadataTypeMap().get(this.mdTypeId));
             DocStruct ds = digitalDocument.getOrigDsMap().get(this.myDocStructId);
             if (ds == null) {
                 ds = digitalDocument.getDsMap().get(this.myDocStructId).toDocStruct(dd);

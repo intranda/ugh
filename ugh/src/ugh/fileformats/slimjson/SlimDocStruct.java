@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j;
 import ugh.dl.ContentFileReference;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
+import ugh.dl.DocStructType;
 import ugh.dl.Md;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataGroup;
@@ -154,20 +155,25 @@ public class SlimDocStruct {
 
     public DocStruct toDocStruct(DigitalDocument dd) {
         try {
-            DocStruct ds = dd.createDocStruct(this.digitalDocument.getDsTypeMap().get(this.type));
+            DocStructType dsType = this.digitalDocument.getDsTypeMap().get(this.type);
+            DocStruct ds = dd.createDocStruct(dsType);
+            ds.setIdentifier(id);
+            digitalDocument.getOrigDsMap().put(this.id, ds);
             ds.setLogical(logical);
             ds.setPhysical(physical);
             // add metadata
             for (SlimMetadata meta : this.getAllMetadata()) {
-                ds.getAllMetadata().add(meta.toMetadata(dd));
+                ds.addMetadata(meta.toMetadata(dd));
             }
             //add metadata groups
             for (SlimMetadataGroup smg : this.allMetadataGroups) {
-                ds.getAllMetadataGroups().add(smg.toMetadataGroup(dd));
+                ds.addMetadataGroup(smg.toMetadataGroup(dd));
             }
             //add persons
-            for (Person p : this.persons) {
-                ds.addPerson(p);
+            if (this.persons != null) {
+                for (Person p : this.persons) {
+                    ds.addPerson(p);
+                }
             }
             // add children
             for (String cId : this.children) {
@@ -183,22 +189,24 @@ public class SlimDocStruct {
             }
             //add to-references
             for (SlimReference ref : this.docStructRefsTo) {
-                DocStruct otherDs = digitalDocument.getOrigDsMap().get(ref.getTargetDsId());
+                DocStruct otherDs = digitalDocument.getOrigDsMap().get(ref.getSourceDsId());
                 if (otherDs == null) {
-                    otherDs = digitalDocument.getDsMap().get(ref.getTargetDsId()).toDocStruct(dd);
+                    otherDs = digitalDocument.getDsMap().get(ref.getSourceDsId()).toDocStruct(dd);
                 }
                 ds.addReferenceTo(otherDs, ref.getType());
             }
             //add from-references
             for (SlimReference ref : this.docStructRefsFrom) {
-                DocStruct otherDs = digitalDocument.getOrigDsMap().get(ref.getSourceDsId());
+                DocStruct otherDs = digitalDocument.getOrigDsMap().get(ref.getTargetDsId());
                 if (otherDs == null) {
-                    otherDs = digitalDocument.getDsMap().get(ref.getSourceDsId()).toDocStruct(dd);
+                    otherDs = digitalDocument.getDsMap().get(ref.getTargetDsId()).toDocStruct(dd);
                 }
                 ds.addReferenceFrom(otherDs, ref.getType());
             }
             //add amdSec
-            ds.setAmdSec(this.amdSec.toAmdSec());
+            if (this.amdSec != null) {
+                ds.setAmdSec(this.amdSec.toAmdSec());
+            }
             //add techMdList
             for (SlimMd md : this.techMdList) {
                 ds.addTechMd(md.ToMd());
@@ -210,5 +218,24 @@ public class SlimDocStruct {
             log.error(e);
         }
         return null;
+    }
+
+    public void setDigitalDocument(SlimDigitalDocument sdd) {
+        this.digitalDocument = sdd;
+        for (SlimMetadata smd : allMetadata) {
+            smd.setDigitalDocument(sdd);
+        }
+        for (SlimMetadataGroup smg : allMetadataGroups) {
+            smg.setDigitalDocument(sdd);
+        }
+        for (SlimReference sr : docStructRefsTo) {
+            sr.setDigitalDocument(sdd);
+        }
+        for (SlimReference sr : docStructRefsFrom) {
+            sr.setDigitalDocument(sdd);
+        }
+        for (SlimContentFileReference scfr : this.contentFileReferences) {
+            scfr.getFile().setDigitalDocument(sdd);
+        }
     }
 }

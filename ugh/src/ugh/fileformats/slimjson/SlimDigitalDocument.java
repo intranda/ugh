@@ -45,14 +45,27 @@ public class SlimDigitalDocument {
         sdd.allImages = SlimFileSet.fromFileSet(dd.getFileSet(), sdd);
         sdd.amdSec = SlimAmdSec.fromAmdSec(dd.getAmdSec(), sdd);
         for (DocStructType dst : prefs.getAllDocStructTypes()) {
-            sdd.dsTypeMap.put(dst.getName(), dst);
+            if (!sdd.dsTypeMap.containsKey(dst.getName())) {
+                sdd.dsTypeMap.put(dst.getName(), dst);
+            }
         }
         return sdd;
     }
 
     public DigitalDocument toDigitalDocument() {
+        //first, add all references back to this object 
+        allImages.setDigitalDocument(this);
+        for (SlimDocStruct sds : dsMap.values()) {
+            sds.setDigitalDocument(this);
+        }
+        for (SlimContentFile scf : imagesMap.values()) {
+            scf.setDigitalDocument(this);
+        }
+
         DigitalDocument dd = new DigitalDocument();
-        dd.setAmdSec(amdSec.toAmdSec());
+        if (amdSec != null) {
+            dd.setAmdSec(amdSec.toAmdSec());
+        }
         dd.setFileSet(allImages.toFileSet(dd));
         dd.setLogicalDocStruct(this.dsMap.get(this.topLogicalStructId).toDocStruct(dd));
         dd.setPhysicalDocStruct(this.dsMap.get(this.topPhysicalStructId).toDocStruct(dd));

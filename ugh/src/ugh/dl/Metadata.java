@@ -89,6 +89,11 @@ public class Metadata implements Serializable {
 
     private boolean updated = false;
 
+    @Deprecated
+    public Metadata() {
+
+    }
+
     /***************************************************************************
      * <p>
      * Constructor.

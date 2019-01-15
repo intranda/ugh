@@ -213,7 +213,7 @@ public class ContentFile implements Serializable {
      * @param inStruct
      * @return true, if adding was successful
      **************************************************************************/
-    protected boolean addDocStructAsReference(DocStruct inStruct) {
+    public boolean addDocStructAsReference(DocStruct inStruct) {
 
         if (this.referencedDocStructs == null) {
             this.referencedDocStructs = new LinkedList<DocStruct>();
