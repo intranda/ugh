@@ -189,11 +189,14 @@ public class SlimDocStruct {
             }
             //add to-references
             for (SlimReference ref : this.docStructRefsTo) {
-                DocStruct otherDs = digitalDocument.getOrigDsMap().get(ref.getSourceDsId());
-                if (otherDs == null) {
-                    otherDs = digitalDocument.getDsMap().get(ref.getSourceDsId()).toDocStruct(dd);
+                if (ref.getSourceDsId().equals("LOG_0001")) {
+                    System.out.println("refTo");
                 }
-                ds.addReferenceTo(otherDs, ref.getType());
+                DocStruct otherDs = digitalDocument.getOrigDsMap().get(ref.getTargetDsId());
+                if (otherDs == null) {
+                    otherDs = digitalDocument.getDsMap().get(ref.getTargetDsId()).toDocStruct(dd);
+                }
+                ds.addReferenceFrom(otherDs, ref.getType());
             }
             //add from-references
             for (SlimReference ref : this.docStructRefsFrom) {
@@ -201,7 +204,7 @@ public class SlimDocStruct {
                 if (otherDs == null) {
                     otherDs = digitalDocument.getDsMap().get(ref.getTargetDsId()).toDocStruct(dd);
                 }
-                ds.addReferenceFrom(otherDs, ref.getType());
+                ds.addReferenceTo(otherDs, ref.getType());
             }
             //add amdSec
             if (this.amdSec != null) {
