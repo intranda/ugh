@@ -15,6 +15,8 @@ import ugh.dl.DocStructType;
 import ugh.dl.Md;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataGroup;
+import ugh.dl.MetadataGroupType;
+import ugh.dl.MetadataType;
 import ugh.dl.Person;
 import ugh.dl.Reference;
 import ugh.exceptions.IncompletePersonObjectException;
@@ -139,6 +141,16 @@ public class SlimDocStruct {
         if (ds.getAllFromReferences() != null) {
             for (Reference ref : ds.getAllFromReferences()) {
                 sds.docStructRefsTo.add(SlimReference.fromReference(ref, sdd));
+            }
+        }
+        if (ds.getAddableMetadataTypes() != null) {
+            for (MetadataType mdt : ds.getAddableMetadataTypes()) {
+                sds.digitalDocument.addMetadataType(mdt);
+            }
+        }
+        if (ds.getAddableMetadataGroupTypes() != null) {
+            for (MetadataGroupType mdt : ds.getAddableMetadataGroupTypes()) {
+                sds.digitalDocument.addMetadataGroupType(mdt);
             }
         }
         //add amdSec

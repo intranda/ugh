@@ -35,11 +35,13 @@ public class SlimContentFile {
             cf.setIdentifier(scf.identifier);
         }
         sdd.getImagesMap().put(scf.identifier, scf);
-        for (DocStruct ds : cf.getReferencedDocStructs()) {
-            if (ds.getIdentifier() == null) {
-                ds.setIdentifier(UUID.randomUUID().toString());
+        if (cf.getReferencedDocStructs() != null) {
+            for (DocStruct ds : cf.getReferencedDocStructs()) {
+                if (ds.getIdentifier() == null) {
+                    ds.setIdentifier(UUID.randomUUID().toString());
+                }
+                scf.referencedDocStructs.add(ds.getIdentifier());
             }
-            scf.referencedDocStructs.add(ds.getIdentifier());
         }
         return scf;
     }
