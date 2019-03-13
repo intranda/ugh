@@ -351,7 +351,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                         for (Metadata md : parentStruct.getAllMetadataByType(identifierType)) {
                             // Create the node according to the prefs' METS/MODS
                             // section's XQuery.
-                            Node createdNode = createNode(this.xPathAnchorReference, dommodsnode, domDoc);
+                            Node createdNode = createNode(this.xPathAnchorReference, dommodsnode, domDoc, true);
 
                             if (createdNode != null) {
                                 // Get the value of the node.
@@ -1615,7 +1615,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
 
         // Only create node, if a value is existing.
         if (!newMetadataValue.equals("")) {
-            Node createdNode = createNode(theXQuery, theStartingNode, theDocument);
+            Node createdNode = createNode(theXQuery, theStartingNode, theDocument, true);
 
             if (createdNode == null) {
                 String message =
@@ -1650,7 +1650,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         if (mmo.getWriteXPath().equals("./mods:mods")) {
             createdNode = theStartingNode;
         } else {
-            createdNode = createNode(mmo.getWriteXPath(), theStartingNode, theDocument);
+            createdNode = createNode(mmo.getWriteXPath(), theStartingNode, theDocument, false);
         }
         Map<String, Map<String, String>> xpathMap = mmo.getMetadataGroupXQueries();
 
@@ -1659,7 +1659,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 if (md.getType().getName().equals(metadataName) && md.getValue() != null && !md.getValue().isEmpty()) {
                     Map<String, String> xqueryMap = xpathMap.get(metadataName);
                     String xquery = xqueryMap.get(metadataName);
-                    writeSingleModsMetadata(xquery, md, createdNode, theDocument);
+                    writeSingleModsMetadata(xquery, md, createdNode, theDocument, false);
                 }
             }
             for (Person p : theGroup.getPersonList()) {
@@ -1672,10 +1672,10 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
     }
 
     @Override
-    public void writeSingleModsMetadata(String theXQuery, Metadata theMetadata, Node theStartingNode, Document theDocument)
+    public void writeSingleModsMetadata(String theXQuery, Metadata theMetadata, Node theStartingNode, Document theDocument, boolean checkParentNode)
             throws PreferencesException {
 
-        Node createdNode = createNode(theXQuery, theStartingNode, theDocument);
+        Node createdNode = createNode(theXQuery, theStartingNode, theDocument, checkParentNode);
 
         if (createdNode == null) {
             String message = "DOM Node could not be created for metadata '" + theMetadata.getType().getName() + "'! XQuery was '" + theXQuery + "'";
@@ -1721,7 +1721,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         }
 
         String xquery = xpathMap.get(METS_PREFS_WRITEXPATH_STRING);
-        Node createdNode = createNode(xquery, theDomModsNode, theDomDoc);
+        Node createdNode = createNode(xquery, theDomModsNode, theDomDoc, true);
 
         for (String key : xpathMap.keySet()) {
             xquery = xpathMap.get(key);
@@ -1730,7 +1730,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 if (xquery == null) {
                     LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s firstname '" + thePerson.getFirstname() + "'");
                 } else {
-                    Node firstnameNode = createNode(xquery, createdNode, theDomDoc);
+                    Node firstnameNode = createNode(xquery, createdNode, theDomDoc, true);
                     Node firstnamevalueNode = theDomDoc.createTextNode(thePerson.getFirstname());
                     firstnameNode.appendChild(firstnamevalueNode);
                     createdNode.appendChild(firstnameNode);
@@ -1740,7 +1740,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 if (xquery == null) {
                     LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s lastname '" + thePerson.getLastname() + "'");
                 } else {
-                    Node lastnameNode = createNode(xquery, createdNode, theDomDoc);
+                    Node lastnameNode = createNode(xquery, createdNode, theDomDoc, true);
                     Node lastnamevalueNode = theDomDoc.createTextNode(thePerson.getLastname());
                     lastnameNode.appendChild(lastnamevalueNode);
                     createdNode.appendChild(lastnameNode);
@@ -1749,7 +1749,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 if (xquery == null) {
                     LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s affiliation '" + thePerson.getAffiliation() + "'");
                 } else {
-                    Node affiliationNode = createNode(xquery, createdNode, theDomDoc);
+                    Node affiliationNode = createNode(xquery, createdNode, theDomDoc, true);
                     Node affiliationvalueNode = theDomDoc.createTextNode(thePerson.getAffiliation());
                     affiliationNode.appendChild(affiliationvalueNode);
                     createdNode.appendChild(affiliationNode);
@@ -1759,7 +1759,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 if (xquery == null) {
                     LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s displayName '" + thePerson.getDisplayname() + "'");
                 } else {
-                    Node displaynameNode = createNode(xquery, createdNode, theDomDoc);
+                    Node displaynameNode = createNode(xquery, createdNode, theDomDoc, true);
                     Node displaynamevalueNode = theDomDoc.createTextNode(thePerson.getDisplayname());
                     displaynameNode.appendChild(displaynamevalueNode);
                     createdNode.appendChild(displaynameNode);
@@ -1769,7 +1769,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 if (xquery == null) {
                     LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s personType '" + thePerson.getPersontype() + "'");
                 } else {
-                    Node persontypeNode = createNode(xquery, createdNode, theDomDoc);
+                    Node persontypeNode = createNode(xquery, createdNode, theDomDoc, true);
                     Node persontypevalueNode = theDomDoc.createTextNode(thePerson.getPersontype());
                     persontypeNode.appendChild(persontypevalueNode);
                     createdNode.appendChild(persontypeNode);
@@ -1780,7 +1780,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 if (xquery == null) {
                     LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s authorityFileID '" + thePerson.getAuthorityID() + "'");
                 } else {
-                    Node authorityfileidNode = createNode(xquery, createdNode, theDomDoc);
+                    Node authorityfileidNode = createNode(xquery, createdNode, theDomDoc, true);
                     Node authorityfileidvalueNode = theDomDoc.createTextNode(thePerson.getAuthorityID());
                     authorityfileidNode.appendChild(authorityfileidvalueNode);
                     createdNode.appendChild(authorityfileidNode);
@@ -1793,13 +1793,13 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 if (namePart.getValue() != null && !namePart.getValue().isEmpty()) {
                     if (namePart.getType().equals(GOOBI_PERSON_DATEVALUE_STRING)) {
                         xquery = "./mods:namePart[@type='date']";
-                        Node displaynameNode = createNode(xquery, createdNode, theDomDoc);
+                        Node displaynameNode = createNode(xquery, createdNode, theDomDoc, true);
                         Node displaynamevalueNode = theDomDoc.createTextNode(namePart.getValue());
                         displaynameNode.appendChild(displaynamevalueNode);
                         createdNode.appendChild(displaynameNode);
                     } else if (namePart.getType().equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING)) {
                         xquery = "./mods:namePart[@type='termsOfAddress']";
-                        Node displaynameNode = createNode(xquery, createdNode, theDomDoc);
+                        Node displaynameNode = createNode(xquery, createdNode, theDomDoc, true);
                         Node displaynamevalueNode = theDomDoc.createTextNode(namePart.getValue());
                         displaynameNode.appendChild(displaynamevalueNode);
                         createdNode.appendChild(displaynameNode);
@@ -1824,7 +1824,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
     private void writeSingleModsPerson(String xquery, MatchingMetadataObject theMMO, Person thePerson, Node theDomModsNode, Document theDomDoc)
             throws PreferencesException {
 
-        Node createdNode = createNode(xquery, theDomModsNode, theDomDoc);
+        Node createdNode = createNode(xquery, theDomModsNode, theDomDoc, true);
 
         if (createdNode == null) {
             String message = "DOM Node could not be created for person '" + thePerson + "'! XQuery was '" + xquery + "'";
@@ -1860,7 +1860,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             if (xquery == null) {
                 LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s lastname '" + thePerson.getLastname() + "'");
             } else {
-                Node lastnameNode = createNode(xquery, createdNode, theDomDoc);
+                Node lastnameNode = createNode(xquery, createdNode, theDomDoc, true);
                 Node lastnamevalueNode = theDomDoc.createTextNode(thePerson.getLastname());
                 lastnameNode.appendChild(lastnamevalueNode);
                 createdNode.appendChild(lastnameNode);
@@ -1871,7 +1871,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             if (xquery == null) {
                 LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s firstname '" + thePerson.getFirstname() + "'");
             } else {
-                Node firstnameNode = createNode(xquery, createdNode, theDomDoc);
+                Node firstnameNode = createNode(xquery, createdNode, theDomDoc, true);
                 Node firstnamevalueNode = theDomDoc.createTextNode(thePerson.getFirstname());
                 firstnameNode.appendChild(firstnamevalueNode);
                 createdNode.appendChild(firstnameNode);
@@ -1882,7 +1882,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             if (xquery == null) {
                 LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s affiliation '" + thePerson.getAffiliation() + "'");
             } else {
-                Node affiliationNode = createNode(xquery, createdNode, theDomDoc);
+                Node affiliationNode = createNode(xquery, createdNode, theDomDoc, true);
                 Node affiliationvalueNode = theDomDoc.createTextNode(thePerson.getAffiliation());
                 affiliationNode.appendChild(affiliationvalueNode);
                 createdNode.appendChild(affiliationNode);
@@ -1904,7 +1904,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             if (xquery == null) {
                 LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s displayName '" + thePerson.getDisplayname() + "'");
             } else {
-                Node displaynameNode = createNode(xquery, createdNode, theDomDoc);
+                Node displaynameNode = createNode(xquery, createdNode, theDomDoc, true);
                 Node displaynamevalueNode = theDomDoc.createTextNode(thePerson.getDisplayname());
                 displaynameNode.appendChild(displaynamevalueNode);
                 createdNode.appendChild(displaynameNode);
@@ -1915,7 +1915,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             if (xquery == null) {
                 LOGGER.warn("No XQuery given for " + thePerson.getType().getName() + "'s personType '" + thePerson.getPersontype() + "'");
             } else {
-                Node persontypeNode = createNode(xquery, createdNode, theDomDoc);
+                Node persontypeNode = createNode(xquery, createdNode, theDomDoc, true);
                 Node persontypevalueNode = theDomDoc.createTextNode(thePerson.getPersontype());
                 persontypeNode.appendChild(persontypevalueNode);
                 createdNode.appendChild(persontypeNode);
@@ -1927,13 +1927,13 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 if (namePart.getValue() != null && !namePart.getValue().isEmpty()) {
                     if (namePart.getType().equals(GOOBI_PERSON_DATEVALUE_STRING)) {
                         xquery = "./mods:namePart[@type='date']";
-                        Node displaynameNode = createNode(xquery, createdNode, theDomDoc);
+                        Node displaynameNode = createNode(xquery, createdNode, theDomDoc, true);
                         Node displaynamevalueNode = theDomDoc.createTextNode(namePart.getValue());
                         displaynameNode.appendChild(displaynamevalueNode);
                         createdNode.appendChild(displaynameNode);
                     } else if (namePart.getType().equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING)) {
                         xquery = "./mods:namePart[@type='termsOfAddress']";
-                        Node displaynameNode = createNode(xquery, createdNode, theDomDoc);
+                        Node displaynameNode = createNode(xquery, createdNode, theDomDoc, true);
                         Node displaynamevalueNode = theDomDoc.createTextNode(namePart.getValue());
                         displaynameNode.appendChild(displaynamevalueNode);
                         createdNode.appendChild(displaynameNode);
