@@ -4409,7 +4409,7 @@ public class MetsMods implements ugh.dl.Fileformat {
      **************************************************************************/
     protected void writeSingleModsPerson(String theXQuery, Person thePerson, Node theStartingNode, Document theDocument, boolean checkParent) throws PreferencesException {
 
-        Node createdNode = createNode(theXQuery, theStartingNode, theDocument, false);
+        Node createdNode = createNode(theXQuery, theStartingNode, theDocument, checkParent);
 
         // Set the displayname of the current person, use
         // "lastname, name" as we were told in the MODS
