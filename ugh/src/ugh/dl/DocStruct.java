@@ -1310,11 +1310,11 @@ public class DocStruct implements Serializable {
         // How many types must be at least available.
         maxnumbersallowed = this.type.getNumberOfMetadataGroups(inMdType);
 
-        if (force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
+        if (!force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
             // There must be at least one.
             return false;
         }
-        if (force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+        if (!force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
             // There must be at least one.
             return false;
         }
@@ -1575,11 +1575,11 @@ public class DocStruct implements Serializable {
         // How many types must be at least available.
         maxnumbersallowed = this.type.getNumberOfMetadataType(inMdType);
 
-        if (force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
+        if (!force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
             // There must be at least one.
             return false;
         }
-        if (force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+        if (!force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
             // There must be at least one.
             return false;
         }
