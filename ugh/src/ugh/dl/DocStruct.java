@@ -1646,7 +1646,7 @@ public class DocStruct implements Serializable {
         oldName = oldMdt.getName();
         newName = newMdt.getName();
 
-        if (oldName.equals(newName)) {
+        if (!oldName.equals(newName)) {
             // Different metadata types.
             return false;
         }
