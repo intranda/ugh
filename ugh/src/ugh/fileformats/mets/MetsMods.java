@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TimeZone;
@@ -4873,6 +4874,13 @@ public class MetsMods implements ugh.dl.Fileformat {
         }
         opts.setSaveSubstituteCharacters(charEsc);
         opts.setSavePrettyPrint().setSavePrettyPrintIndent(3);
+        opts.setSaveAggressiveNamespaces();
+        Map<String, String> suggestedPrefixes = new HashMap<>();
+        for (String abbrev: namespaces.keySet()) {
+            suggestedPrefixes.put(namespaces.get(abbrev).getUri(), abbrev);
+        }
+
+        opts.setSaveSuggestedPrefixes(suggestedPrefixes);
         try {
             metsBean = MetsDocument.Factory.parse(domDoc, opts);
         } catch (XmlException e) {
