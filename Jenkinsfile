@@ -33,7 +33,7 @@ pipeline {
         }
       }
       steps {
-        sh 'mvn -f Goobi/pom.xml deploy'
+        sh 'mvn -f ugh/pom.xml deploy'
       }
     }
   }
