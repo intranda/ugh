@@ -111,13 +111,6 @@
 		</plugins>
 	</build>
 
-	<distributionManagement>
-		<repository>
-			<id>intranda</id>
-			<url>https://maven01.intranda.com/repository/intranda</url>
-		</repository>
-	</distributionManagement>
-
 	<dependencies>
 
 		<!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
