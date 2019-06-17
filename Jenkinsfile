@@ -18,14 +18,26 @@ pipeline {
       }
     }
 
-    stage('build') {
+  stage('build') {
       steps {
         sh 'mvn -f ugh/pom.xml install'
         recordIssues enabledForFailure: true, aggregatingResults: true, tools: [java(), javaDoc()]
       }
     }
+
+    stage('deployment to maven repository') {
+      when {
+        anyOf {
+          branch 'master'
+            branch 'v*.*.*'
+        }
+      }
+      steps {
+        sh 'mvn -f Goobi/pom.xml deploy'
+      }
+    }
   }
-  
+
   post {
     success {
       archiveArtifacts artifacts: '**/target/*.jar, */plugin_*.xml, plugin_*.xml', fingerprint: true, onlyIfSuccessful: true
