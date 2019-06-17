@@ -7,17 +7,24 @@
 	<artifactId>ugh-core</artifactId>
 	<version>3.0.10</version>
 
-	<repositories>
-		<repository>
-			<id>intranda</id>
-			<url>https://nexus.intranda.com/repository/intranda</url>
-		</repository>
-		<!-- <repository> -->
-		<!-- <id>enonic</id> -->
-		<!-- <url>http://repo.enonic.com/public/</url> -->
-		<!-- </repository> -->
+  <repositories>
+    <repository>
+      <id>intranda-public</id>
+      <url>https://nexus.intranda.com/repository/maven-public</url>
+    </repository>
+  </repositories>
 
-	</repositories>
+  <distributionManagement>
+    <repository>
+      <id>intranda-releases</id>
+      <url>https://nexus.intranda.com/repository/maven-releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>intranda-snapshots</id>
+      <url>https://nexus.intranda.com/repository/maven-snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
 
 	<properties>
 		<buildDate>${maven.build.timestamp}</buildDate>
