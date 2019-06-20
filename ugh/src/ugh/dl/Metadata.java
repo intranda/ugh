@@ -231,7 +231,7 @@ public class Metadata implements Serializable {
      * @param uri
      */
 
-    public void addAuthorityUri(String authorityFile, String uri) {
+    public void addAuthorityUriToMap(String authorityFile, String uri) {
         authorityUriMap.put(authorityFile, uri);
     }
 
@@ -241,7 +241,7 @@ public class Metadata implements Serializable {
      * @param authorityFile
      */
 
-    public void removeAuthorityUri(String authorityFile) {
+    public void removeAuthorityUriFromMap(String authorityFile) {
         if (authorityUriMap.containsKey(authorityFile)) {
             authorityUriMap.remove(authorityFile);
         }

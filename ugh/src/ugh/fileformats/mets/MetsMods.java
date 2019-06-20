@@ -2229,7 +2229,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                                                         ps.addNamePart(new NamePart(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING, value));
                                                     }
                                                     else if (name.equals(GOOBI_PERSON_NAMEIDENTIFIER_STRING)) {
-                                                        ps.addAuthorityUri(personbagu.getAttributes().item(0).getTextContent(), value);
+                                                        ps.addAuthorityUriToMap(personbagu.getAttributes().item(0).getTextContent(), value);
                                                     }
 
 
@@ -2335,7 +2335,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                                     ps.addNamePart(new NamePart(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING, value));
                                 }
                                 else if (name.equals(GOOBI_PERSON_NAMEIDENTIFIER_STRING)) {
-                                    ps.addAuthorityUri(personbagu.getAttributes().item(0).getTextContent(), value);
+                                    ps.addAuthorityUriToMap(personbagu.getAttributes().item(0).getTextContent(), value);
                                 }
                             }
                         }
