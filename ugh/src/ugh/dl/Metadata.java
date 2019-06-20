@@ -23,6 +23,8 @@ package ugh.dl;
  ******************************************************************************/
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -88,6 +90,8 @@ public class Metadata implements Serializable {
     private String authorityValue;
 
     private boolean updated = false;
+
+    private Map<String, String> authorityUriMap = new HashMap<>();
 
     @Deprecated
     public Metadata() {
@@ -205,6 +209,7 @@ public class Metadata implements Serializable {
         this.authorityID = authorityID;
         this.authorityURI = authorityURI;
         this.authorityValue = authorityValue;
+        addAuthorityUri(authorityID, authorityValue);
         return true;
     }
 
@@ -218,6 +223,33 @@ public class Metadata implements Serializable {
 
     public void setAuthorityValue(String authorityValue) {
         this.authorityValue = authorityValue;
+    }
+
+    /**
+     * Add a new authority uri to the list.
+     * 
+     * @param authorityFile
+     * @param uri
+     */
+
+    public void addAuthorityUri(String authorityFile, String uri) {
+        authorityUriMap.put(authorityFile, uri);
+    }
+
+    /**
+     * remove authority information from the list
+     * 
+     * @param authorityFile
+     */
+
+    public void removeAuthorityUri(String authorityFile) {
+        if (authorityUriMap.containsKey(authorityFile)) {
+            authorityUriMap.remove(authorityFile);
+        }
+    }
+
+    public Map<String, String> getAuthorityUriMap() {
+        return authorityUriMap;
     }
 
     /***************************************************************************

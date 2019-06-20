@@ -419,6 +419,8 @@ public class MetsMods implements ugh.dl.Fileformat {
     protected static final String GOOBI_PERSON_DATEVALUE_STRING = "date";
     protected static final String GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING = "termsOfAddress";
 
+    protected static final String GOOBI_PERSON_NAMEIDENTIFIER_STRING  = "nameIdentifier";
+
     // The Goobi internal metadata XPath.
     protected static final String GOOBI_INTERNAL_METADATA_XPATH = "/mods:mods/mods:extension/goobi:goobi/goobi:metadata";
 
@@ -2198,34 +2200,39 @@ public class MetsMods implements ugh.dl.Fileformat {
                                                     if (name.equals(GOOBI_PERSON_FIRSTNAME_STRING)) {
                                                         ps.setFirstname(value);
                                                     }
-                                                    if (name.equals(GOOBI_PERSON_LASTNAME_STRING)) {
+                                                    else if (name.equals(GOOBI_PERSON_LASTNAME_STRING)) {
                                                         ps.setLastname(value);
                                                     }
-                                                    if (name.equals(GOOBI_PERSON_AFFILIATION_STRING)) {
+                                                    else if (name.equals(GOOBI_PERSON_AFFILIATION_STRING)) {
                                                         ps.setAffiliation(value);
                                                     }
-                                                    if (name.equals(GOOBI_PERSON_AUTHORITYID_STRING)) {
+                                                    else if (name.equals(GOOBI_PERSON_AUTHORITYID_STRING)) {
                                                         authorityID = value;
                                                     }
-                                                    if (name.equals(GOOBI_PERSON_AUTHORITYURI_STRING)) {
+                                                    else if (name.equals(GOOBI_PERSON_AUTHORITYURI_STRING)) {
                                                         authorityURI = value;
                                                     }
-                                                    if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
+                                                    else if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
                                                         authortityValue = value;
                                                     }
 
-                                                    if (name.equals(GOOBI_PERSON_PERSONTYPE_STRING)) {
+                                                    else if (name.equals(GOOBI_PERSON_PERSONTYPE_STRING)) {
                                                         ps.setPersontype(value);
                                                     }
-                                                    if (name.equals(GOOBI_PERSON_DISPLAYNAME_STRING)) {
+                                                    else if (name.equals(GOOBI_PERSON_DISPLAYNAME_STRING)) {
                                                         ps.setDisplayname(value);
                                                     }
-                                                    if (name.equals(GOOBI_PERSON_DATEVALUE_STRING) && StringUtils.isNotBlank(value)) {
+                                                    else if (name.equals(GOOBI_PERSON_DATEVALUE_STRING) && StringUtils.isNotBlank(value)) {
                                                         ps.addNamePart(new NamePart(GOOBI_PERSON_DATEVALUE_STRING, value));
                                                     }
-                                                    if (name.equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING) && StringUtils.isNotBlank(value)) {
+                                                    else if (name.equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING) && StringUtils.isNotBlank(value)) {
                                                         ps.addNamePart(new NamePart(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING, value));
                                                     }
+                                                    else if (name.equals(GOOBI_PERSON_NAMEIDENTIFIER_STRING)) {
+                                                        ps.addAuthorityUri(personbagu.getAttributes().item(0).getTextContent(), value);
+                                                    }
+
+
                                                 }
 
                                             }
@@ -2298,34 +2305,37 @@ public class MetsMods implements ugh.dl.Fileformat {
                                 if (name.equals(GOOBI_PERSON_FIRSTNAME_STRING)) {
                                     ps.setFirstname(value);
                                 }
-                                if (name.equals(GOOBI_PERSON_LASTNAME_STRING)) {
+                                else  if (name.equals(GOOBI_PERSON_LASTNAME_STRING)) {
                                     ps.setLastname(value);
                                 }
-                                if (name.equals(GOOBI_PERSON_AFFILIATION_STRING)) {
+                                else if (name.equals(GOOBI_PERSON_AFFILIATION_STRING)) {
                                     ps.setAffiliation(value);
                                 }
-                                if (name.equals(GOOBI_PERSON_AUTHORITYID_STRING)) {
+                                else  if (name.equals(GOOBI_PERSON_AUTHORITYID_STRING)) {
                                     authorityFileID = value;
                                 }
-                                if (name.equals(GOOBI_PERSON_AUTHORITYURI_STRING)) {
+                                else  if (name.equals(GOOBI_PERSON_AUTHORITYURI_STRING)) {
                                     authorityURI = value;
                                 }
-                                if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
+                                else  if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
                                     authortityValue = value;
                                 }
 
-                                if (name.equals(GOOBI_PERSON_PERSONTYPE_STRING)) {
+                                else if (name.equals(GOOBI_PERSON_PERSONTYPE_STRING)) {
                                     ps.setPersontype(value);
                                 }
-                                if (name.equals(GOOBI_PERSON_DISPLAYNAME_STRING)) {
+                                else  if (name.equals(GOOBI_PERSON_DISPLAYNAME_STRING)) {
                                     ps.setDisplayname(value);
                                 }
 
-                                if (name.equals(GOOBI_PERSON_DATEVALUE_STRING)) {
+                                else if (name.equals(GOOBI_PERSON_DATEVALUE_STRING)) {
                                     ps.addNamePart(new NamePart(GOOBI_PERSON_DATEVALUE_STRING, value));
                                 }
-                                if (name.equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING)) {
+                                else if (name.equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING)) {
                                     ps.addNamePart(new NamePart(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING, value));
+                                }
+                                else if (name.equals(GOOBI_PERSON_NAMEIDENTIFIER_STRING)) {
+                                    ps.addAuthorityUri(personbagu.getAttributes().item(0).getTextContent(), value);
                                 }
                             }
                         }
@@ -4479,7 +4489,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             createdNode.appendChild(persontypeNode);
         }
 
-        // TODO write additional nameParts
+        // write additional nameParts
         if (thePerson.getAdditionalNameParts() != null) {
             for (NamePart part : thePerson.getAdditionalNameParts()) {
                 if (part.getType().equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING) && StringUtils.isNotBlank(part.getValue())) {
@@ -4495,6 +4505,16 @@ public class MetsMods implements ugh.dl.Fileformat {
                     persontypeNode.appendChild(persontypevalueNode);
                     createdNode.appendChild(persontypeNode);
                 }
+            }
+        }
+
+        if (!thePerson.getAuthorityUriMap().isEmpty()) {
+            for (Entry<String, String> entry: thePerson.getAuthorityUriMap().entrySet()) {
+                theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_NAMEIDENTIFIER_STRING + "[@name=" + entry.getKey() + "]";
+                Node identifierNode = createNode(theXQuery, createdNode, theDocument);
+                Node persontypevalueNode = theDocument.createTextNode(entry.getValue());
+                identifierNode.appendChild(persontypevalueNode);
+                createdNode.appendChild(identifierNode);
             }
         }
     }

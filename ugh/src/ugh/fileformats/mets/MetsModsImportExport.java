@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -1807,6 +1808,16 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 }
             }
         }
+
+        if (!thePerson.getAuthorityUriMap().isEmpty()) {
+            for (Entry<String, String> entry: thePerson.getAuthorityUriMap().entrySet()) {
+                xquery = "./mods:nameIdentifier[@name=" + entry.getKey() + "]";
+                Node identifierNode = createNode(xquery, createdNode, theDomDoc);
+                Node persontypevalueNode = theDomDoc.createTextNode(entry.getValue());
+                identifierNode.appendChild(persontypevalueNode);
+                createdNode.appendChild(identifierNode);
+            }
+        }
     }
 
     /***************************************************************************
@@ -1941,7 +1952,15 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 }
             }
         }
-
+        if (!thePerson.getAuthorityUriMap().isEmpty()) {
+            for (Entry<String, String> entry: thePerson.getAuthorityUriMap().entrySet()) {
+                xquery = "./mods:nameIdentifier[@type=" + entry.getKey() + "]";
+                Node identifierNode = createNode(xquery, createdNode, theDomDoc);
+                Node persontypevalueNode = theDomDoc.createTextNode(entry.getValue());
+                identifierNode.appendChild(persontypevalueNode);
+                createdNode.appendChild(identifierNode);
+            }
+        }
     }
 
     /***************************************************************************
