@@ -199,12 +199,12 @@
             <artifactId>oro</artifactId>
             <version>2.0.8</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/poi/poi -->
+        <!-- https://mvnrepository.com/artifact/poi/poi 
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>3.16</version>
-        </dependency>
+        </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.apache.xmlbeans/xmlbeans-xpath -->
         <dependency>
             <groupId>org.apache.xmlbeans</groupId>
@@ -252,6 +252,7 @@
             <artifactId>mods</artifactId>
             <version>3.5</version>
         </dependency>
+        <!-- 
         <dependency>
             <groupId>de.intranda.other.jai</groupId>
             <artifactId>jai_codec</artifactId>
@@ -267,6 +268,7 @@
             <artifactId>jai_imageio</artifactId>
             <version>1.0_01</version>
         </dependency>
+         -->
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-manifests</artifactId>
