@@ -196,6 +196,9 @@ public class DocStruct implements Serializable {
     private AmdSec amdSec;
     //the list of techMd sections referenced by this docStruct, if any
     private List<Md> techMdList;
+    // the type of the docstruct, can be div or area
+    private String docsttructType = "div";
+
 
     /***************************************************************************
      * <p>
@@ -3583,4 +3586,11 @@ public class DocStruct implements Serializable {
         }
     }
 
+    public String getDocsttructType() {
+        return docsttructType;
+    }
+
+    public void setDocsttructType(String docsttructType) {
+        this.docsttructType = docsttructType;
+    }
 }

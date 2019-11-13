@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mets:mets OBJID="" xsi:schemaLocation="http://www.loc.gov/standards/premis/ http://www.loc.gov/standards/premis/v2/premis-v2-0.xsd http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-7.xsd http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd http://www.loc.gov/standards/mix/ http://www.loc.gov/standards/mix/mix.xsd" xmlns:mets="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:goobi="http://meta.goobi.org/v1.5.1/" xmlns:xlink="http://www.w3.org/1999/xlink">
+   <mets:metsHdr CREATEDATE="2019-11-13T13:42:36Z">
+      <mets:agent OTHERTYPE="SOFTWARE" ROLE="CREATOR" TYPE="OTHER">
+         <mets:name>Goobi -  - 2019-11-13T10:46:17Z</mets:name>
+         <mets:note>Goobi</mets:note>
+      </mets:agent>
+   </mets:metsHdr>
+   <mets:dmdSec ID="DMDLOG_0000">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="PublicationYear">1792</goobi:metadata>
+                     <goobi:metadata name="SizeSourcePrint">VIII, [1] S.</goobi:metadata>
+                     <goobi:metadata name="SizeSourcePrint">Ill.</goobi:metadata>
+                     <goobi:metadata name="SizeSourcePrint">8</goobi:metadata>
+                     <goobi:metadata name="PlaceOfPublication">In Roma</goobi:metadata>
+                     <goobi:metadata name="PublisherName">Dalle Stampe del Barbiellini alla Minerva</goobi:metadata>
+                     <goobi:metadata name="_purl">hdl:11858/00-001M-0000-0022-AD20-4</goobi:metadata>
+                     <goobi:metadata name="Copyright">fatte da Don Pietro Garcia de la Huerta</goobi:metadata>
+                     <goobi:metadata name="shelfmarksource">E 728 m (RARO)</goobi:metadata>
+                     <goobi:metadata name="singleDigCollection">Numismatische Literatur der Frühen Neuzeit</goobi:metadata>
+                     <goobi:metadata name="DocLanguage">ita</goobi:metadata>
+                     <goobi:metadata name="CatalogIDDigital">7007</goobi:metadata>
+                     <goobi:metadata name="TitleDocMain">Osservazioni sopra una antichissima tavoletta di avorio esistente nel museo di Monsignor Giuseppe Muti Papazzurri già Casali</goobi:metadata>
+                     <goobi:metadata name="Note">fatte da Don Pietro Garcia de la Huerta</goobi:metadata>
+                     <goobi:metadata name="_purlLatest">hdl:11858/00-001M-0000-0029-6D4C-F</goobi:metadata>
+                     <goobi:metadata name="reversePagination">false</goobi:metadata>
+                     <goobi:metadata name="directionRTL">false</goobi:metadata>
+                     <goobi:metadata name="CatalogIdentifier">BV037615327</goobi:metadata>
+                     <goobi:metadata name="_codicological_objectDataset_creationDate">2015-04-17T16:04:54</goobi:metadata>
+                     <goobi:metadata name="_codicological_objectDataset_superIdentificationNumber">ID_b242630f_-_000132453</goobi:metadata>
+                     <goobi:metadata name="_codicological_objectDataset_accessIdentificationNumber">2481</goobi:metadata>
+                     <goobi:metadata name="_codicological_objectDataset_alephSysIdentificationNumber">000132453</goobi:metadata>
+                     <goobi:metadata name="_codicological_objectDataset_allegroIdentificationNumber">b242630f</goobi:metadata>
+                     <goobi:metadata name="_codicological_objectDataset_bvbIdentificationNumber">BV037615327</goobi:metadata>
+                     <goobi:metadata name="_codicological_objectDataset_bookMark">E 728 m (RARO)</goobi:metadata>
+                     <goobi:metadata name="_codicological_objectDataset_volumeNumber">1</goobi:metadata>
+                     <goobi:metadata name="_codicological_objectDataset_origDate">1700-1799</goobi:metadata>
+                     <goobi:metadata name="_codicological_objectDataset_condition">Buchblock mit leichtem mittigen Vertikalknick</goobi:metadata>
+                     <goobi:metadata name="_codicological_objectDataset_conservation">kein</goobi:metadata>
+                     <goobi:metadata name="_codicological_objectDataset_preservationMethod">Einlegeblätter aus säurefreiem Transparentpapier zur Separierung der säurehaltigen Vorsatzblätter vom Buchblock</goobi:metadata>
+                     <goobi:metadata name="_codicological_objectDataset_width">0.3</goobi:metadata>
+                     <goobi:metadata name="_codicological_objectDataset_retention">Oktav</goobi:metadata>
+                     <goobi:metadata name="_codicological_objectDataset_height">21.5</goobi:metadata>
+                     <goobi:metadata name="_codicological_bodyOfVolume_supportDesc">handgeschöpftes Papier</goobi:metadata>
+                     <goobi:metadata name="_codicological_bodyOfVolume_initials">0</goobi:metadata>
+                     <goobi:metadata name="_codicological_bodyOfVolume_paginationDesc">Gedruckt arabisch</goobi:metadata>
+                     <goobi:metadata name="_codicological_bodyOfVolume_endpaper">Vorsatzblätter bei Neubindung</goobi:metadata>
+                     <goobi:metadata name="_codicological_bodyOfVolume_edge">ohne Schnittverzierung</goobi:metadata>
+                     <goobi:metadata name="_codicological_binding_bindingMaterial">Pamphlet-binding</goobi:metadata>
+                     <goobi:metadata name="_codicological_binding_pasteDownMarbeledPaper">0</goobi:metadata>
+                     <goobi:metadata name="_codicological_binding_bindingDesc">Einbindung in beigefarbenen Karton; Titelschild mit rubriziertem Titel auf der Vorderdecke</goobi:metadata>
+                     <goobi:metadata name="_codicological_provenance_shelfMarkMiscellaneous">drei jeweils ausgestrichene (Inventar-)Nummern nebeneinander auf dem Titelblatt: mit blauem Buntstift, mit schwarzer Tinte ausgestrichen “47“; daneben gestempelt und mit Bleistift ausgestrichen “62“; daneben mit Bleistift und mit Bleistift ausgestrichen “708“</goobi:metadata>
+                     <goobi:metadata name="_codicological_provenance_ownerStamp">auf dem Titelblatt in der unteren Ecke ein roter Besitzstempel in Buchform “Libreria Ferrante Gonnelli Via Cavur 50 Firenze“</goobi:metadata>
+                     <goobi:metadata name="_codicological_object_objectType">gedrucktes Buch</goobi:metadata>
+                     <goobi:metadata name="_codicological_provenanceData" type="group">
+                        <goobi:metadata name="_codicological_provenanceData_institution">Florenz, Libreria Ferrante Gonnelli (SWD: PRJA00026)</goobi:metadata>
+                        <goobi:metadata name="_codicological_provenanceData_refId">pnp90000353x</goobi:metadata>
+                        <goobi:metadata name="_codicological_provenanceData_provId">xb242630f_nrx1099</goobi:metadata>
+                     </goobi:metadata>
+                     <goobi:metadata name="_codicological_personDataset" type="group">
+                        <goobi:metadata name="_codicological_personDataset_notes">Besitzer eines Buches von 1826</goobi:metadata>
+                        <goobi:metadata name="_codicological_personDataset_personFeature"/>
+                        <goobi:metadata name="_codicological_personDataset_name">Borgia</goobi:metadata>
+                        <goobi:metadata name="_codicological_personDataset_foreName">F.  Cesare</goobi:metadata>
+                     </goobi:metadata>
+                     <goobi:metadata name="Author" type="person">
+                        <goobi:lastName>Garcia de la Huerta</goobi:lastName>
+                        <goobi:firstName>Pedro</goobi:firstName>
+                        <goobi:displayName>Garcia de la Huerta, Pedro</goobi:displayName>
+                     </goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0000">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="pathimagefiles">./images/</goobi:metadata>
+                     <goobi:metadata name="_representative">4</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0001">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0001.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0002">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0002.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0003">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0003.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0004">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0004.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0005">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0005.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0006">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0006.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0007">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0007.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0008">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0008.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0009">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0009.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0010">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0010.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0011">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0011.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0012">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0012.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0013">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0013.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0014">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0014.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0015">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0015.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0016">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0016.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0017">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0017.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDPHYS_0018">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="_urn">escidoc_7007/flb000045_0018.jpg</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:fileSec>
+      <mets:fileGrp USE="LOCAL">
+         <mets:file ID="FILE_0001" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0001.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0002" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0002.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0003" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0003.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0004" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0004.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0005" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0005.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0006" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0006.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0007" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0007.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0008" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0008.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0009" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0009.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0010" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0010.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0011" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0011.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0012" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0012.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0013" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0013.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0014" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0014.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0015" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0015.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0016" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0016.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0017" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0017.jpg"/>
+         </mets:file>
+         <mets:file ID="FILE_0018" MIMETYPE="">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file://flb000045_0018.jpg"/>
+         </mets:file>
+      </mets:fileGrp>
+   </mets:fileSec>
+   <mets:structMap TYPE="LOGICAL">
+      <mets:div DMDID="DMDLOG_0000" ID="LOG_0000" TYPE="Monograph">
+         <mets:div ID="LOG_0001" TYPE="TitlePage"/>
+      </mets:div>
+   </mets:structMap>
+   <mets:structMap TYPE="PHYSICAL">
+      <mets:div DMDID="DMDPHYS_0000" ID="PHYS_0000" TYPE="BoundBook">
+         <mets:div DMDID="DMDPHYS_0001" ID="PHYS_0001" ORDER="0" ORDERLABEL="uncounted" TYPE="page">
+            <mets:fptr FILEID="FILE_0001">
+               <mets:seq>
+                  <mets:area COORDS="1,2,3,4" FILEID="FILE_0001" ID="PHYS_0002" SHAPE="RECT"/>
+                  <mets:area COORDS="9,8,7,6" FILEID="FILE_0001" ID="PHYS_0003" SHAPE="RECT"/>
+               </mets:seq>
+            </mets:fptr>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0002" ID="PHYS_0004" ORDER="1" ORDERLABEL="uncounted" TYPE="page">
+            <mets:fptr FILEID="FILE_0002">
+               <mets:seq>
+                  <mets:area COORDS="coordinates" FILEID="FILE_0002" ID="PHYS_0005" SHAPE="RECT"/>
+               </mets:seq>
+            </mets:fptr>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0003" ID="PHYS_0006" ORDER="2" ORDERLABEL="uncounted" TYPE="page">
+            <mets:fptr FILEID="FILE_0003"/>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0004" ID="PHYS_0007" ORDER="3" ORDERLABEL="uncounted" TYPE="page">
+            <mets:fptr FILEID="FILE_0004"/>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0005" ID="PHYS_0008" ORDER="4" ORDERLABEL="[o. S.]" TYPE="page">
+            <mets:fptr FILEID="FILE_0005"/>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0006" ID="PHYS_0009" ORDER="5" ORDERLABEL="[o. S.]" TYPE="page">
+            <mets:fptr FILEID="FILE_0006"/>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0007" ID="PHYS_0010" ORDER="6" ORDERLABEL="[I]" TYPE="page">
+            <mets:fptr FILEID="FILE_0007"/>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0008" ID="PHYS_0011" ORDER="7" ORDERLABEL="[II]" TYPE="page">
+            <mets:fptr FILEID="FILE_0008"/>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0009" ID="PHYS_0012" ORDER="8" ORDERLABEL="III" TYPE="page">
+            <mets:fptr FILEID="FILE_0009"/>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0010" ID="PHYS_0013" ORDER="9" ORDERLABEL="IV" TYPE="page">
+            <mets:fptr FILEID="FILE_0010"/>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0011" ID="PHYS_0014" ORDER="10" ORDERLABEL="V" TYPE="page">
+            <mets:fptr FILEID="FILE_0011"/>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0012" ID="PHYS_0015" ORDER="11" ORDERLABEL="VI" TYPE="page">
+            <mets:fptr FILEID="FILE_0012"/>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0013" ID="PHYS_0016" ORDER="12" ORDERLABEL="VII" TYPE="page">
+            <mets:fptr FILEID="FILE_0013"/>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0014" ID="PHYS_0017" ORDER="13" ORDERLABEL="VIII" TYPE="page">
+            <mets:fptr FILEID="FILE_0014"/>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0015" ID="PHYS_0018" ORDER="14" ORDERLABEL="IX" TYPE="page">
+            <mets:fptr FILEID="FILE_0015"/>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0016" ID="PHYS_0019" ORDER="15" ORDERLABEL="X" TYPE="page">
+            <mets:fptr FILEID="FILE_0016"/>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0017" ID="PHYS_0020" ORDER="16" ORDERLABEL="XI" TYPE="page">
+            <mets:fptr FILEID="FILE_0017"/>
+         </mets:div>
+         <mets:div DMDID="DMDPHYS_0018" ID="PHYS_0021" ORDER="17" ORDERLABEL="XII" TYPE="page">
+            <mets:fptr FILEID="FILE_0018"/>
+         </mets:div>
+      </mets:div>
+   </mets:structMap>
+   <mets:structLink>
+      <mets:smLink xlink:to="PHYS_0001" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0004" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0006" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0007" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0008" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0009" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0010" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0011" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0012" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0013" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0014" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0015" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0016" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0017" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0018" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0019" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0020" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0021" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0008" xlink:from="LOG_0001"/>
+   </mets:structLink>
+</mets:mets>
