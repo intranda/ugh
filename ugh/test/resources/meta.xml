@@ -394,8 +394,8 @@
          <mets:div DMDID="DMDPHYS_0001" ID="PHYS_0001" ORDER="0" ORDERLABEL="uncounted" TYPE="page">
             <mets:fptr FILEID="FILE_0001">
                 <mets:seq>
-                    <mets:area FILEID="FILE_0001" CONTENTIDS="some urn" COORDS="1,2,3,4" ID="DMDPHYSAREA_0001" SHAPE="RECT"/>
-                    <mets:area FILEID="FILE_0001" CONTENTIDS="another urn" COORDS="9,8,7,6" ID="DMDPHYSAREA_0002" SHAPE="RECT"/>
+                    <mets:area FILEID="FILE_0001" CONTENTIDS="some urn" COORDS="1,2,3,4" ID="PHYSAREA_0001" SHAPE="RECT"/>
+                    <mets:area FILEID="FILE_0001" CONTENTIDS="another urn" COORDS="9,8,7,6" ID="PHYSAREA_0002" SHAPE="RECT"/>
                 </mets:seq>
             </mets:fptr>
          </mets:div>
@@ -471,6 +471,7 @@
       <mets:smLink xlink:to="PHYS_0016" xlink:from="LOG_0000"/>
       <mets:smLink xlink:to="PHYS_0017" xlink:from="LOG_0000"/>
       <mets:smLink xlink:to="PHYS_0018" xlink:from="LOG_0000"/>
-      <mets:smLink xlink:to="PHYS_0005" xlink:from="LOG_0001"/>
+      <mets:smLink xlink:to="PHYSAREA_0001" xlink:from="LOG_0001"/>
+      <mets:smLink xlink:to="PHYSAREA_0002" xlink:from="LOG_0001"/>
    </mets:structLink>
 </mets:mets>

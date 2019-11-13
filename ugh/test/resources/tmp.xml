@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mets:mets OBJID="" xsi:schemaLocation="http://www.loc.gov/standards/premis/ http://www.loc.gov/standards/premis/v2/premis-v2-0.xsd http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-7.xsd http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd http://www.loc.gov/standards/mix/ http://www.loc.gov/standards/mix/mix.xsd" xmlns:mets="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:goobi="http://meta.goobi.org/v1.5.1/" xmlns:xlink="http://www.w3.org/1999/xlink">
-   <mets:metsHdr CREATEDATE="2019-11-13T13:42:36Z">
+   <mets:metsHdr CREATEDATE="2019-11-13T14:43:49Z">
       <mets:agent OTHERTYPE="SOFTWARE" ROLE="CREATOR" TYPE="OTHER">
          <mets:name>Goobi -  - 2019-11-13T10:46:17Z</mets:name>
          <mets:note>Goobi</mets:note>
@@ -475,6 +475,7 @@
       <mets:smLink xlink:to="PHYS_0019" xlink:from="LOG_0000"/>
       <mets:smLink xlink:to="PHYS_0020" xlink:from="LOG_0000"/>
       <mets:smLink xlink:to="PHYS_0021" xlink:from="LOG_0000"/>
-      <mets:smLink xlink:to="PHYS_0008" xlink:from="LOG_0001"/>
+      <mets:smLink xlink:to="PHYS_0002" xlink:from="LOG_0001"/>
+      <mets:smLink xlink:to="PHYS_0003" xlink:from="LOG_0001"/>
    </mets:structLink>
 </mets:mets>

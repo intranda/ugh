@@ -1037,11 +1037,20 @@ public class MetsMods implements ugh.dl.Fileformat {
         // Get the related METS div object.
         Object o = inStruct.getOrigObject();
         if (o != null) {
-            // Convert object to div.
-            DivType div = (DivType) o;
-            if (div.getID() != null) {
-                if (div.getID().equals(id)) {
-                    return inStruct;
+            if (o instanceof DivType) {
+                DivType div = (DivType) o;
+                if (div.getID() != null) {
+                    if (div.getID().equals(id)) {
+                        return inStruct;
+                    }
+                }
+            } else if (o instanceof AreaType) {
+                // Convert object to area.
+                AreaType area = (AreaType) o;
+                if (area.getID() != null) {
+                    if (area.getID().equals(id)) {
+                        return inStruct;
+                    }
                 }
             }
         }
@@ -1153,7 +1162,6 @@ public class MetsMods implements ugh.dl.Fileformat {
      * @param inStruct
      **************************************************************************/
     private void addToList(LinkedList<DocStruct> result, DocStruct inStruct) {
-
         DivType currentDiv = (DivType) inStruct.getOrigObject();
         BigInteger currentOrder = currentDiv.getORDER();
 
@@ -1206,6 +1214,12 @@ public class MetsMods implements ugh.dl.Fileformat {
         // Get all sub <div> elements.
         DivType[] children = inDiv.getDivArray();
         //        List<DivType> children = inDiv.getDivList();
+
+        // TODO check for <area>
+        Fptr[] fptrArray = inDiv.getFptrArray();
+        if (fptrArray != null ) {
+
+        }
 
         if (children == null | children.length == 0) {
             // No children available, so there is nothing to read.
@@ -1298,7 +1312,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             // Get the original div.
             DivType div = (DivType) ds.getOrigObject();
             // No div element.
-            if (div == null) {
+            if (div == null ) {
                 continue;
             }
 
@@ -1663,8 +1677,11 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         // Contains the whole MODS metadata section as a string.
         String modsstring = null;
-
-        DivType div = (DivType) inStruct.getOrigObject();
+        Object o = inStruct.getOrigObject();
+        DivType div =null;
+        if (o instanceof DivType) {
+            div = (DivType) o;
+        }
         if (div == null) {
             LOGGER.warn("Can't get div object for DocStruct to find appropriate metadata sections!");
             return null;
@@ -1710,8 +1727,11 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         // Contains the whole MODS metadata section as a string.
         Node modsnode = null;
-
-        DivType div = (DivType) inStruct.getOrigObject();
+        Object o = inStruct.getOrigObject();
+        DivType div =null;
+        if (o instanceof DivType) {
+            div = (DivType) o;
+        }
         if (div == null) {
             LOGGER.warn("Can't get DIV object for DocStruct to find appropriate metadata sections");
             return null;
@@ -2472,7 +2492,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                                                     areaDocStruct.addMetadata(coordinates);
 
                                                     String ID = area.getID(); // ID: xsd:ID   optional
-
+                                                    areaDocStruct.setOrigObject(area);
                                                     String fileId = area.getFILEID(); // FILEID: xsd:IDREF   required
 
                                                     AreaType.SHAPE.Enum currentShape = area.getSHAPE(); //  SHAPE:   optional   | RECT | CIRCLE | POLY
@@ -2589,8 +2609,10 @@ public class MetsMods implements ugh.dl.Fileformat {
                 throw new ReadException(message, e);
             }
         }
-        DivType div = (DivType) inStruct.getOrigObject();
-        if (div == null) {
+
+        Object o = inStruct.getOrigObject();
+
+        if (o == null) {
             LOGGER.warn("Can't get div object for DocStruct to find appropriate metadata sections!");
             return;
         }
@@ -2604,8 +2626,10 @@ public class MetsMods implements ugh.dl.Fileformat {
         // If type="page", check if logical and physical page numbers are set.
         // If not, add them and set them both to "1".
         if (inStruct.getType().getName().equals(METADATA_PHYSICAL_PAGE_STRING)) {
-
-            DivType pagediv = (DivType) inStruct.getOrigObject();
+            DivType pagediv = null;
+            if (o instanceof DivType) {
+                pagediv = (DivType) o;
+            }
             if (pagediv != null) {
                 // DivType object available, get and set ORDER and ORDERLABEL.
                 //
@@ -3390,13 +3414,13 @@ public class MetsMods implements ugh.dl.Fileformat {
             NodeList fptrList = parentNode.getChildNodes();
             // TODO write this to all groups?
             for (int x = 0; x < fptrList.getLength(); x++) {
-                Element fptr = (Element)fptrList.item(x);
+                Element fptr = (Element) fptrList.item(x);
                 // check for seq element
                 Node seq = null;
                 if (fptr.getChildNodes().getLength() > 0) {
                     seq = fptr.getChildNodes().item(0);
                 } else {
-                    seq =  createDomElementNS(domDoc, this.metsNamespacePrefix, "seq");
+                    seq = createDomElementNS(domDoc, this.metsNamespacePrefix, "seq");
                     fptr.appendChild(seq);
                 }
                 // create area element
@@ -3411,18 +3435,14 @@ public class MetsMods implements ugh.dl.Fileformat {
                 for (Metadata md : inStruct.getAllMetadata()) {
                     if (md.getType().getName().equals("_urn")) {
                         area.setAttribute("CONTENTIDS", md.getValue());
-                    }else  if (md.getType().getName().equals("_COORDS")) {
+                    } else if (md.getType().getName().equals("_COORDS")) {
                         area.setAttribute("COORDS", md.getValue());
-                    } else  if (md.getType().getName().equals("_SHAPE")) {
+                    } else if (md.getType().getName().equals("_SHAPE")) {
                         area.setAttribute("SHAPE", md.getValue());
                     }
                 }
                 area.setAttribute(METS_FILEID_STRING, fptr.getAttribute(METS_FILEID_STRING));
-
             }
-
-
-
             return area;
         }
     }
