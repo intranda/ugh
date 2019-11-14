@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import ugh.dl.DocStruct;
@@ -116,6 +118,24 @@ public class MetsModsAreaTest {
         assertEquals("main title", chapterFromMets.getAllMetadata().get(0).getValue());
         DocStruct linkedArea = chapterFromMets.getAllToReferences().get(0).getTarget();
         assertEquals("coordinates", linkedArea.getAllMetadataByType(prefs.getMetadataTypeByName("_COORDS")).get(0).getValue());
+
+    }
+
+    @Test
+    public void testGetPhysicalStructureAsFlatList() throws Exception {
+        Prefs prefs = new Prefs();
+        prefs.loadPrefs("test/resources/ruleset.xml");
+        MetsMods mm = null;
+        mm = new MetsMods(prefs);
+        mm.read("test/resources/meta.xml");
+
+        DocStruct boundBook = mm.getDigitalDocument().getPhysicalDocStruct();
+        List<DocStruct> phys = boundBook.getAllChildrenAsFlatList();
+
+        assertEquals("page", phys.get(0).getType().getName());
+        assertEquals("area", phys.get(1).getType().getName());
+        assertEquals("area", phys.get(2).getType().getName());
+        assertEquals("page", phys.get(3).getType().getName());
 
     }
 }

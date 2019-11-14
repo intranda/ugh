@@ -3593,4 +3593,18 @@ public class DocStruct implements Serializable {
     public void setDocsttructType(String docsttructType) {
         this.docsttructType = docsttructType;
     }
+
+    public List<DocStruct> getAllChildrenAsFlatList() {
+        List<DocStruct> list = new LinkedList<>();
+        if (children != null) {
+            for (DocStruct ds : children) {
+                list.add(ds);
+                if (ds.getAllChildren()!=null) {
+                    list.addAll(ds.getAllChildrenAsFlatList());
+                }
+            }
+        }
+
+        return list;
+    }
 }
