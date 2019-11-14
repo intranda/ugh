@@ -1217,7 +1217,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         // TODO check for <area>
         Fptr[] fptrArray = inDiv.getFptrArray();
-        if (fptrArray != null ) {
+        if (fptrArray != null) {
 
         }
 
@@ -1312,7 +1312,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             // Get the original div.
             DivType div = (DivType) ds.getOrigObject();
             // No div element.
-            if (div == null ) {
+            if (div == null) {
                 continue;
             }
 
@@ -1678,7 +1678,7 @@ public class MetsMods implements ugh.dl.Fileformat {
         // Contains the whole MODS metadata section as a string.
         String modsstring = null;
         Object o = inStruct.getOrigObject();
-        DivType div =null;
+        DivType div = null;
         if (o instanceof DivType) {
             div = (DivType) o;
         }
@@ -1728,7 +1728,7 @@ public class MetsMods implements ugh.dl.Fileformat {
         // Contains the whole MODS metadata section as a string.
         Node modsnode = null;
         Object o = inStruct.getOrigObject();
-        DivType div =null;
+        DivType div = null;
         if (o instanceof DivType) {
             div = (DivType) o;
         }
@@ -2972,8 +2972,9 @@ public class MetsMods implements ugh.dl.Fileformat {
                 this.metsNode.appendChild(structMapPhys);
                 structMapPhys.setAttribute(METS_STRUCTMAPTYPE_STRING, METS_STRUCTMAP_TYPE_PHYSICAL_STRING);
                 Element physdiv = writePhysDivs(this.metsNode, topphysdiv);
-                structMapPhys.appendChild(physdiv);
-
+                if (physdiv != null) {
+                    structMapPhys.appendChild(physdiv);
+                }
                 if (topphysdiv.getAllChildren() != null && !topphysdiv.getAllChildren().isEmpty()) {
                     // Write smLinks.
                     LOGGER.info("Creating structLink element");
@@ -3400,10 +3401,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             List<DocStruct> allChildren = inStruct.getAllChildren();
             if (allChildren != null) {
                 for (DocStruct child : allChildren) {
-                    if (writePhysDivs(div, child) == null) {
-                        // Error occured while writing div for child.
-                        return null;
-                    }
+                    writePhysDivs(div, child) ;
                 }
             }
 
@@ -3412,36 +3410,48 @@ public class MetsMods implements ugh.dl.Fileformat {
             Element area = null;
             // get fptr from parent
             NodeList fptrList = parentNode.getChildNodes();
-            // TODO write this to all groups?
+
+            String mainGroupName = null;
+            for (VirtualFileGroup vFileGroup : this.digdoc.getFileSet().getVirtualFileGroups()) {
+                if (vFileGroup.isMainGroup()) {
+                    mainGroupName = vFileGroup.getName();
+                    break;
+                }
+            }
+
             for (int x = 0; x < fptrList.getLength(); x++) {
                 Element fptr = (Element) fptrList.item(x);
-                // check for seq element
-                Node seq = null;
-                if (fptr.getChildNodes().getLength() > 0) {
-                    seq = fptr.getChildNodes().item(0);
-                } else {
-                    seq = createDomElementNS(domDoc, this.metsNamespacePrefix, "seq");
-                    fptr.appendChild(seq);
-                }
-                // create area element
-                area = createDomElementNS(domDoc, this.metsNamespacePrefix, "area");
-                seq.appendChild(area);
-                String idphys = PHYS_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(this.divphysidMax);
-                this.divphysidMax++;
+                // check if it is the main file group
+                if (mainGroupName == null || fptr.getAttribute("FILEID").endsWith(mainGroupName)) {
 
-                inStruct.setIdentifier(idphys);
-                area.setAttribute(METS_ID_STRING, idphys);
-
-                for (Metadata md : inStruct.getAllMetadata()) {
-                    if (md.getType().getName().equals("_urn")) {
-                        area.setAttribute("CONTENTIDS", md.getValue());
-                    } else if (md.getType().getName().equals("_COORDS")) {
-                        area.setAttribute("COORDS", md.getValue());
-                    } else if (md.getType().getName().equals("_SHAPE")) {
-                        area.setAttribute("SHAPE", md.getValue());
+                    // check for seq element
+                    Node seq = null;
+                    if (fptr.getChildNodes().getLength() > 0) {
+                        seq = fptr.getChildNodes().item(0);
+                    } else {
+                        seq = createDomElementNS(domDoc, this.metsNamespacePrefix, "seq");
+                        fptr.appendChild(seq);
                     }
+                    // create area element
+                    area = createDomElementNS(domDoc, this.metsNamespacePrefix, "area");
+                    seq.appendChild(area);
+                    String idphys = PHYS_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(this.divphysidMax);
+                    this.divphysidMax++;
+
+                    inStruct.setIdentifier(idphys);
+                    area.setAttribute(METS_ID_STRING, idphys);
+
+                    for (Metadata md : inStruct.getAllMetadata()) {
+                        if (md.getType().getName().equals("_urn")) {
+                            area.setAttribute("CONTENTIDS", md.getValue());
+                        } else if (md.getType().getName().equals("_COORDS")) {
+                            area.setAttribute("COORDS", md.getValue());
+                        } else if (md.getType().getName().equals("_SHAPE")) {
+                            area.setAttribute("SHAPE", md.getValue());
+                        }
+                    }
+                    area.setAttribute(METS_FILEID_STRING, fptr.getAttribute(METS_FILEID_STRING));
                 }
-                area.setAttribute(METS_FILEID_STRING, fptr.getAttribute(METS_FILEID_STRING));
             }
             return area;
         }

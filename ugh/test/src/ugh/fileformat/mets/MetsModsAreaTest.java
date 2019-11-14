@@ -11,6 +11,7 @@ import org.junit.Test;
 import ugh.dl.DocStruct;
 import ugh.dl.Metadata;
 import ugh.dl.Prefs;
+import ugh.dl.VirtualFileGroup;
 import ugh.fileformats.mets.MetsMods;
 
 public class MetsModsAreaTest {
@@ -136,6 +137,64 @@ public class MetsModsAreaTest {
         assertEquals("area", phys.get(1).getType().getName());
         assertEquals("area", phys.get(2).getType().getName());
         assertEquals("page", phys.get(3).getType().getName());
+    }
 
+
+    @Test
+    public void testWriteSeveralFileGroups() throws Exception {
+        Prefs prefs = new Prefs();
+        prefs.loadPrefs("test/resources/ruleset.xml");
+
+        MetsMods mm = new MetsMods(prefs);
+        mm.read("test/resources/meta.xml");
+
+        DocStruct boundBook = mm.getDigitalDocument().getPhysicalDocStruct();
+
+        DocStruct secondPage = boundBook.getAllChildren().get(1);
+        DocStruct area = mm.getDigitalDocument().createDocStruct(prefs.getDocStrctTypeByName("area"));
+        area.setDocstructType("area");
+
+        secondPage.addChild(area);
+
+        Metadata md1 = new Metadata(prefs.getMetadataTypeByName("_COORDS"));
+        md1.setValue("coordinates");
+        Metadata md2 = new Metadata(prefs.getMetadataTypeByName("_SHAPE"));
+        md2.setValue("RECT");
+        area.addMetadata(md1);
+        area.addMetadata(md2);
+
+        VirtualFileGroup vfg1 = new VirtualFileGroup();
+        vfg1.setFileSuffix("jpg");
+        vfg1.setIdSuffix("iiif");
+        vfg1.setMainGroup(false);
+        vfg1.setMimetype("image/jpeg");
+        vfg1.setName("iiif");
+        vfg1.setPathToFiles("https://example.com/viewer/");
+
+        mm.getDigitalDocument().getFileSet().addVirtualFileGroup(vfg1);
+
+        VirtualFileGroup vfg2 = new VirtualFileGroup();
+        vfg2.setFileSuffix("tif");
+        vfg2.setIdSuffix("main");
+        vfg2.setMainGroup(true);
+        vfg2.setMimetype("image/tiff");
+        vfg2.setName("main");
+        vfg2.setPathToFiles("file:///tmp/");
+        mm.getDigitalDocument().getFileSet().addVirtualFileGroup(vfg2);
+        mm.setWriteLocal(false);
+
+        // save, load, compare
+        mm.write("test/resources/tmp3.xml");
+
+        MetsMods mm2 = new MetsMods(prefs);
+        mm2.read("test/resources/tmp3.xml");
+        DocStruct boundBook2 = mm2.getDigitalDocument().getPhysicalDocStruct();
+        DocStruct pageFromMets = boundBook2.getAllChildren().get(1);
+        DocStruct areaFromMets = pageFromMets.getAllChildren().get(0);
+
+        Metadata coords = areaFromMets.getAllMetadataByType(prefs.getMetadataTypeByName("_COORDS")).get(0);
+        Metadata shape = areaFromMets.getAllMetadataByType(prefs.getMetadataTypeByName("_SHAPE")).get(0);
+        assertEquals(md1.getValue(), coords.getValue());
+        assertEquals(md2.getValue(), shape.getValue());
     }
 }
