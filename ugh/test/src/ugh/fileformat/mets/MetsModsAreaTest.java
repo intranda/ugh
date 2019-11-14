@@ -27,9 +27,9 @@ public class MetsModsAreaTest {
         assertNotNull(mm);
         DocStruct boundBook = mm.getDigitalDocument().getPhysicalDocStruct();
         DocStruct firstPage = boundBook.getAllChildren().get(0);
-        assertEquals(firstPage.getDocsttructType(), "div");
+        assertEquals(firstPage.getDocstructType(), "div");
         DocStruct firstArea = firstPage.getAllChildren().get(0);
-        assertEquals(firstArea.getDocsttructType(), "area");
+        assertEquals(firstArea.getDocstructType(), "area");
         for (Metadata md : firstArea.getAllMetadata()) {
             if (md.getType().getName().equals("_urn")) {
                 assertEquals(md.getValue(), "some urn");
@@ -55,7 +55,7 @@ public class MetsModsAreaTest {
 
         DocStruct secondPage = boundBook.getAllChildren().get(1);
         DocStruct area = mm.getDigitalDocument().createDocStruct(prefs.getDocStrctTypeByName("area"));
-        area.setDocsttructType("area");
+        area.setDocstructType("area");
 
         secondPage.addChild(area);
 
@@ -98,7 +98,7 @@ public class MetsModsAreaTest {
         monograph.addChild(chapter);
         DocStruct secondPage = boundBook.getAllChildren().get(1);
         DocStruct area = mm.getDigitalDocument().createDocStruct(prefs.getDocStrctTypeByName("area"));
-        area.setDocsttructType("area");
+        area.setDocstructType("area");
 
         secondPage.addChild(area);
         chapter.addReferenceTo(area, "logical_physical");

@@ -197,7 +197,7 @@ public class DocStruct implements Serializable {
     //the list of techMd sections referenced by this docStruct, if any
     private List<Md> techMdList;
     // the type of the docstruct, can be div or area
-    private String docsttructType = "div";
+    private String docstructType = "div";
 
 
     /***************************************************************************
@@ -3586,13 +3586,30 @@ public class DocStruct implements Serializable {
         }
     }
 
-    public String getDocsttructType() {
-        return docsttructType;
+    /**
+     * Get the element type, can be div or area
+     * 
+     * @return
+     */
+
+    public String getDocstructType() {
+        return docstructType;
     }
 
-    public void setDocsttructType(String docsttructType) {
-        this.docsttructType = docsttructType;
+    /**
+     * Set the element type, can be div or area
+     * 
+     */
+
+    public void setDocstructType(String docstructType) {
+        this.docstructType = docstructType;
     }
+
+    /**
+     * Get all children of the current docstruct as a flat list
+     * 
+     * @return
+     */
 
     public List<DocStruct> getAllChildrenAsFlatList() {
         List<DocStruct> list = new LinkedList<>();

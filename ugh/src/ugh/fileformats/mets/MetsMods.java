@@ -2485,7 +2485,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                                                 try {
                                                     DocStruct areaDocStruct =
                                                             getDigitalDocument().createDocStruct(myPreferences.getDocStrctTypeByName("area"));
-                                                    areaDocStruct.setDocsttructType("area");
+                                                    areaDocStruct.setDocstructType("area");
                                                     String coords = area.getCOORDS(); // COORDS: xsd:string   optional
                                                     Metadata coordinates = new Metadata(myPreferences.getMetadataTypeByName("_COORDS"));
                                                     coordinates.setValue(coords);
@@ -3361,7 +3361,7 @@ public class MetsMods implements ugh.dl.Fileformat {
      */
     protected Element writePhysDivs(Node parentNode, DocStruct inStruct) throws PreferencesException {
         Document domDoc = parentNode.getOwnerDocument();
-        if (inStruct.getDocsttructType().equals("div")) {
+        if (inStruct.getDocstructType().equals("div")) {
             // Write div element.
             Element div = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_DIV_STRING);
 
