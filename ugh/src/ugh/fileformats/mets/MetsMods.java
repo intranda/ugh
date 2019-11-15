@@ -2692,6 +2692,19 @@ public class MetsMods implements ugh.dl.Fileformat {
                         throw new ReadException(message, e);
                     }
                 }
+                if (inStruct.getAllChildren() != null) {
+                    for (DocStruct ds : inStruct.getAllChildren()) {
+                        Metadata logmd = new Metadata(logpageType);
+                        logmd.setValue(logpageString);
+                        Metadata physmd = new Metadata(physpageType);
+                        physmd.setValue(physpageString);
+                        try {
+                            ds.addMetadata(physmd);
+                            ds.addMetadata(logmd);
+                        } catch (DocStructHasNoTypeException | MetadataTypeNotAllowedException e) {
+                        }
+                    }
+                }
 
             }
         }
@@ -3401,7 +3414,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             List<DocStruct> allChildren = inStruct.getAllChildren();
             if (allChildren != null) {
                 for (DocStruct child : allChildren) {
-                    writePhysDivs(div, child) ;
+                    writePhysDivs(div, child);
                 }
             }
 
