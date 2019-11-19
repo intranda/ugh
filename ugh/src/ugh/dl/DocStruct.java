@@ -835,6 +835,10 @@ public class DocStruct implements Serializable {
         return true;
     }
 
+    public void setAllPersons(List<Person> personList) {
+        this.persons =personList;
+    }
+
     /***************************************************************************
      * <p>
      * Retrieves all ContentFile objects, which belong to this instance.
