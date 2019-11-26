@@ -2497,7 +2497,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
                                                     AreaType.SHAPE.Enum currentShape = area.getSHAPE(); //  SHAPE:   optional   | RECT | CIRCLE | POLY
                                                     Metadata shape = new Metadata(myPreferences.getMetadataTypeByName("_SHAPE"));
-                                                    shape.setValue(currentShape.toString());
+                                                    shape.setValue(currentShape== null ? AreaType.SHAPE.RECT.toString() :  currentShape.toString());
                                                     areaDocStruct.addMetadata(shape);
                                                     List<String> admid = area.getADMID(); // ADMID: xsd:IDREFS   optional
                                                     child.addChild(areaDocStruct);
