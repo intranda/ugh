@@ -28,6 +28,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /*******************************************************************************
  * <p>
  * A <code>VirtualFileGroup</code> contains all file groups needed for the class
@@ -65,6 +68,12 @@ public class VirtualFileGroup implements Serializable {
     private String				idSuffix			= "";
     private List<ContentFile>   contentFiles        = ALL_FILES;
     private boolean mainGroup;
+
+    @Getter @Setter
+    private boolean ignoreConfiguredMimetypeAndSuffix;
+
+    @Getter @Setter
+    private String fileExtensionsToIgnore;
 
     /***************************************************************************
      * Default constructor.

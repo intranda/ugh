@@ -11,6 +11,9 @@ import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -2497,7 +2500,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
                                                     AreaType.SHAPE.Enum currentShape = area.getSHAPE(); //  SHAPE:   optional   | RECT | CIRCLE | POLY
                                                     Metadata shape = new Metadata(myPreferences.getMetadataTypeByName("_SHAPE"));
-                                                    shape.setValue(currentShape== null ? AreaType.SHAPE.RECT.toString() :  currentShape.toString());
+                                                    shape.setValue(currentShape == null ? AreaType.SHAPE.RECT.toString() : currentShape.toString());
                                                     areaDocStruct.addMetadata(shape);
                                                     List<String> admid = area.getADMID(); // ADMID: xsd:IDREFS   optional
                                                     child.addChild(areaDocStruct);
@@ -3175,18 +3178,22 @@ public class MetsMods implements ugh.dl.Fileformat {
                         + theFilegroup.getFileSuffix() + "'.");
             }
         }
-
         // Iterate over all the content files.
         List<ContentFile> contentFiles = fs.getAllFiles();
         for (ContentFile cf : contentFiles) {
             //only add content file to filegroup if it may be contained in the filegroup.
             //Per default all files may be contained in all filegroups
             if (theFilegroup.contains(cf)) {
-                Element file = createDomElementNS(domDoc, this.metsNamespacePrefix, "file");
 
-                // We use the mimetype from Goobi if configured, the local one if
-                // not.
+                if (checkIfFiletypeIsSkipped(theFilegroup.getFileExtensionsToIgnore(), cf.getLocation())) {
+                    // remove current content file from theFilegroup
+                    theFilegroup.removeContentFile(cf);
+                    continue;
+                }
+
+                Element file = createDomElementNS(domDoc, this.metsNamespacePrefix, "file");
                 String mt = cf.getMimetype();
+                // We use the mimetype from Goobi if configured, the local one if not.
                 if (theFilegroup.getMimetype().equals("")) {
                     file.setAttribute(METS_MIMETYPE_STRING, mt);
                 } else {
@@ -3253,9 +3260,21 @@ public class MetsMods implements ugh.dl.Fileformat {
                 if (!theFilegroup.getPathToFiles().equals("")) {
                     // Get the filename and replace the filename suffix, if
                     // necessary.
-                    String n = new File(lc).getName();
-                    n = n.substring(0, n.lastIndexOf('.') + 1) + theFilegroup.getFileSuffix();
-                    lc = theFilegroup.getPathToFiles() + n;
+                    if (theFilegroup.isIgnoreConfiguredMimetypeAndSuffix()) {
+                        Path path = Paths.get(lc);
+                        try {
+                            // TODO check different mimetypes for 3d objects
+                            String mimeType = Files.probeContentType(path);
+                            file.setAttribute(METS_MIMETYPE_STRING, mimeType);
+                        } catch (IOException e) {
+                            LOGGER.info("Could not detect mimetype for file " + path.getFileName().toString());
+                        }
+                        lc = theFilegroup.getPathToFiles() + path.getFileName().toString();
+                    } else {
+                        String n = new File(lc).getName();
+                        n = n.substring(0, n.lastIndexOf('.') + 1) + theFilegroup.getFileSuffix();
+                        lc = theFilegroup.getPathToFiles() + n;
+                    }
                 }
                 createDomAttributeNS(flocat, this.xlinkNamespacePrefix, METS_HREF_STRING, lc);
 
@@ -3265,6 +3284,30 @@ public class MetsMods implements ugh.dl.Fileformat {
         }
 
         return result;
+    }
+
+    /**
+     * Check if filetype of is mentioned in extension list. Return true if this is the case
+     * 
+     * @param extensionsToSkip list of file extensions to skip. Can be comma separated or semicolon separated
+     * @param filename filename to test
+     * @return
+     */
+    private boolean checkIfFiletypeIsSkipped(String extensionsToSkip, String filename) {
+        if (StringUtils.isNotBlank(extensionsToSkip)) {
+            String[] extensions;
+            if (extensionsToSkip.contains(",")) {
+                extensions = extensionsToSkip.split(",");
+            } else {
+                extensions = extensionsToSkip.split(";");
+            }
+            for (String ext : extensions) {
+                if (StringUtils.isNotBlank(ext) && filename.endsWith(ext.trim())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /***************************************************************************
@@ -3496,6 +3539,11 @@ public class MetsMods implements ugh.dl.Fileformat {
             for (VirtualFileGroup vFileGroup : this.digdoc.getFileSet().getVirtualFileGroups()) {
                 // Write XML elements (METS:fptr).
                 if (vFileGroup.contains(cf)) {
+                    if (checkIfFiletypeIsSkipped(vFileGroup.getFileExtensionsToIgnore(), cf.getLocation())) {
+                        // remove current content file from theFilegroup
+                        vFileGroup.removeContentFile(cf);
+                        continue;
+                    }
                     Element fptr = createDomElementNS(theDocument, this.metsNamespacePrefix, METS_FPTR_STRING);
                     String id = cf.getIdentifier();
                     if (!vFileGroup.getName().equals(METS_FILEGROUP_LOCAL_STRING)) {
