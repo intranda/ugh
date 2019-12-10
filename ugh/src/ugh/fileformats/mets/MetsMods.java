@@ -492,7 +492,7 @@ public class MetsMods implements ugh.dl.Fileformat {
     protected static final String METADATA_PHYSICAL_PAGE_NUMBER = "physPageNumber";
     protected static final String METADATA_PAGE_UNCOUNTED_VALUE = "uncounted";
     protected static final String METADATA_PHYSICAL_BOUNDBOOK_STRING = "BoundBook";
-    protected static final String METADATA_PHYSICAL_PAGE_STRING = "page";
+    protected static final String METADATA_PHYSICAL_PAGE_STRING1 = "page";
 
     // Reference type name for logical <> physical references.
     protected static final String LOGICAL_PHYSICAL_MAPPING_TYPE_STRING = "logical_physical";
@@ -2556,7 +2556,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
             // If the fileSet is still empty, iterate over all DocStructs "page"
             // with metadata "physPageNumber" and add a content file each.
-            List<DocStruct> pages = newDocStruct.getAllChildrenByTypeAndMetadataType(METADATA_PHYSICAL_PAGE_STRING, METADATA_PHYSICAL_PAGE_NUMBER);
+            List<DocStruct> pages = newDocStruct.getAllChildren();
             if (this.digdoc.getFileSet().getAllFiles().isEmpty() && pages != null) {
                 for (DocStruct ds : pages) {
                     // Get the content file and add it to the DocStruct.
@@ -2628,7 +2628,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         // If type="page", check if logical and physical page numbers are set.
         // If not, add them and set them both to "1".
-        if (inStruct.getType().getName().equals(METADATA_PHYSICAL_PAGE_STRING)) {
+        if ( DigitalDocument.PhysicalElement.checkPhysicalType(inStruct.getType().getName())) {
             DivType pagediv = null;
             if (o instanceof DivType) {
                 pagediv = (DivType) o;

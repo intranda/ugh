@@ -191,6 +191,42 @@ public class DigitalDocument implements Serializable {
 
     // private List<Node> techMd = new ArrayList<Node>();
 
+
+    public enum PhysicalElement {
+        PAGE("page"),
+        AUDIO("audio"),
+        VIDEO("video"),
+        OBJECT("object");
+
+        private String name;
+
+        private PhysicalElement(String elementName) {
+            name = elementName;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public static PhysicalElement getTypeFromValue(String type) {
+            for (PhysicalElement ss : values()) {
+                if (ss.getName().equals(type)) {
+                    return ss;
+                }
+            }
+            return PAGE;
+        }
+
+        public static boolean checkPhysicalType (String type) {
+            for (PhysicalElement ss : values()) {
+                if (ss.getName().equals(type)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
     /***************************************************************************
      * <p>
      * Constructor.
@@ -408,7 +444,7 @@ public class DigitalDocument implements Serializable {
 
         List<DocStruct> physicallist = null;
         List<DocStruct> logicallist = null;
-        List<DocStruct> commonlist = new LinkedList<DocStruct>();
+        List<DocStruct> commonlist = new LinkedList<>();
 
         if (this.topPhysicalStruct != null) {
             physicallist = getAllDocStructsByTypePrivate(this.topPhysicalStruct, inTypeName);
@@ -438,7 +474,7 @@ public class DigitalDocument implements Serializable {
      **************************************************************************/
     private List<DocStruct> getAllDocStructsByTypePrivate(DocStruct inStruct, String inTypeName) {
 
-        List<DocStruct> selectedChildren = new LinkedList<DocStruct>();
+        List<DocStruct> selectedChildren = new LinkedList<>();
         List<DocStruct> children = inStruct.getAllChildren();
 
         if (children == null) {
@@ -780,10 +816,9 @@ public class DigitalDocument implements Serializable {
      * @param theStruct
      **************************************************************************/
     public void addContentFileFromPhysicalPage(DocStruct theStruct) {
-
         // Return, if called with a DocStruct other than "page" or a content
         // file is already existing.
-        if (!theStruct.getType().getName().equals("page") || theStruct.getAllContentFiles() != null) {
+        if (!PhysicalElement.checkPhysicalType(theStruct.getType().getName()) || theStruct.getAllContentFiles() != null) {
             return;
         }
 
@@ -840,7 +875,7 @@ public class DigitalDocument implements Serializable {
                 for (DocStruct ds : tp.getAllChildren()) {
                     ContentFile cf = new ContentFile();
 
-                    if (ds.getType().getName().equals("page")) {
+                    if (PhysicalElement.checkPhysicalType(ds.getType().getName())) {
                         // Iterate over all metadata.
                         for (Metadata md : ds.getAllMetadata()) {
                             if (md.getType().getName().equals("physPageNumber")) {
@@ -914,8 +949,7 @@ public class DigitalDocument implements Serializable {
             if (tp.getAllChildren() != null) {
                 for (DocStruct ds : tp.getAllChildren()) {
                     ContentFile cf = new ContentFile();
-
-                    if (ds.getType().getName().equals("page")) {
+                    if (PhysicalElement.checkPhysicalType(ds.getType().getName())) {
                         // Iterate over all metadata.
                         for (Metadata md : ds.getAllMetadata()) {
                             if (md.getType().getName().equals("physPageNumber")) {
@@ -1120,7 +1154,7 @@ public class DigitalDocument implements Serializable {
      */
     public List<Md> getTechMds() {
         if (amdSec == null) {
-            return new ArrayList<Md>();
+            return new ArrayList<>();
         }
         return amdSec.getTechMdList();
     }
@@ -1189,7 +1223,7 @@ public class DigitalDocument implements Serializable {
         try {
 
             // remove techMd list for serialization
-            ArrayList<Md> tempList = new ArrayList<Md>(getTechMds());
+            ArrayList<Md> tempList = new ArrayList<>(getTechMds());
             getTechMds().clear();
 
             // Write the object out to a byte array.
