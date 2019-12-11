@@ -28,6 +28,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /*******************************************************************************
  * <p>
  * A <code>VirtualFileGroup</code> contains all file groups needed for the class
@@ -54,190 +57,205 @@ public class VirtualFileGroup implements Serializable {
     /**
      * A list constant representing the state that all files should be allowed for this FileGroup. Per default this is the case
      */
-    public static final List    ALL_FILES           = Collections.EMPTY_LIST;
-	private static final long	serialVersionUID	= 8594056041230503891L;
-	
+    public static final List<ContentFile>     ALL_FILES           = Collections.emptyList();
+    private static final long	serialVersionUID	= 8594056041230503891L;
 
-	private String				name				= "";
-	private String				pathToFiles			= "";
-	private String				mimetype			= "";
-	private String				fileSuffix			= "";
-	private String				idSuffix			= "";
-	private List<ContentFile>   contentFiles        = ALL_FILES;             
 
-	/***************************************************************************
-	 * Default constructor.
-	 **************************************************************************/
-	public VirtualFileGroup() {
-		super();
-	}
+    private String				name				= "";
+    private String				pathToFiles			= "";
+    private String				mimetype			= "";
+    private String				fileSuffix			= "";
+    private String				idSuffix			= "";
+    private List<ContentFile>   contentFiles        = ALL_FILES;
+    private boolean mainGroup;
 
-	/***************************************************************************
-	 * Constructor.
-	 **************************************************************************/
-	public VirtualFileGroup(String theFilegroupName, String thePath,
-			String theMimetype, String theFileSuffix) {
+    @Getter @Setter
+    private boolean ignoreConfiguredMimetypeAndSuffix;
 
-		super();
-		this.name = theFilegroupName;
-		this.pathToFiles = thePath;
-		this.mimetype = theMimetype;
-		this.fileSuffix = theFileSuffix;
-	}
+    @Getter @Setter
+    private String fileExtensionsToIgnore;
 
-	/***************************************************************************
-	 * @return
-	 **************************************************************************/
-	public String getName() {
-		return this.name;
-	}
+    /***************************************************************************
+     * Default constructor.
+     **************************************************************************/
+    public VirtualFileGroup() {
+        super();
+    }
 
-	/***************************************************************************
-	 * @param name
-	 **************************************************************************/
-	public void setName(String name) {
-		this.name = name;
-	}
+    /***************************************************************************
+     * Constructor.
+     **************************************************************************/
+    public VirtualFileGroup(String theFilegroupName, String thePath,
+            String theMimetype, String theFileSuffix) {
 
-	/***************************************************************************
-	 * @return
-	 **************************************************************************/
-	public String getPathToFiles() {
-		return this.pathToFiles;
-	}
+        super();
+        this.name = theFilegroupName;
+        this.pathToFiles = thePath;
+        this.mimetype = theMimetype;
+        this.fileSuffix = theFileSuffix;
+    }
 
-	/***************************************************************************
-	 * @param pathToFiles
-	 **************************************************************************/
-	public void setPathToFiles(String pathToFiles) {
-		this.pathToFiles = pathToFiles;
-	}
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public String getName() {
+        return this.name;
+    }
 
-	/***************************************************************************
-	 * @return
-	 **************************************************************************/
-	public String getMimetype() {
-		return this.mimetype;
-	}
+    /***************************************************************************
+     * @param name
+     **************************************************************************/
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/***************************************************************************
-	 * @param mimetype
-	 **************************************************************************/
-	public void setMimetype(String mimetype) {
-		this.mimetype = mimetype;
-	}
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public String getPathToFiles() {
+        return this.pathToFiles;
+    }
 
-	/***************************************************************************
-	 * @return
-	 **************************************************************************/
-	public String getFileSuffix() {
-		return this.fileSuffix;
-	}
+    /***************************************************************************
+     * @param pathToFiles
+     **************************************************************************/
+    public void setPathToFiles(String pathToFiles) {
+        this.pathToFiles = pathToFiles;
+    }
 
-	/***************************************************************************
-	 * @param fileSuffix
-	 **************************************************************************/
-	public void setFileSuffix(String fileSuffix) {
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public String getMimetype() {
+        return this.mimetype;
+    }
 
-		// If the given file suffix starts with a ".", remove the ".".
-		if (fileSuffix.startsWith(".")) {
-			this.fileSuffix = fileSuffix.replaceFirst("\\.", "");
-		} else {
-			this.fileSuffix = fileSuffix;
-		}
-	}
+    /***************************************************************************
+     * @param mimetype
+     **************************************************************************/
+    public void setMimetype(String mimetype) {
+        this.mimetype = mimetype;
+    }
 
-	/***************************************************************************
-	 * @return
-	 **************************************************************************/
-	public String getIdSuffix() {
-		return this.idSuffix;
-	}
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public String getFileSuffix() {
+        return this.fileSuffix;
+    }
 
-	/***************************************************************************
-	 * @param idSuffix
-	 **************************************************************************/
-	public void setIdSuffix(String idSuffix) {
-		this.idSuffix = idSuffix;
-	}
-	
-	/**
-	 * Returns the list of content files which should be written for this FileGroup
-	 * If the list is identical to {@link VirtualFileGroup#ALL_FILES ALL_FILES} 
-	 * then all ContentFiles should be included in this FileGroup
-	 * 
-	 * @return the list of allowed ContentFiles for this FileGroup. Never null
-	 */
-	public List<ContentFile> getContentFiles() {
+    /***************************************************************************
+     * @param fileSuffix
+     **************************************************************************/
+    public void setFileSuffix(String fileSuffix) {
+
+        // If the given file suffix starts with a ".", remove the ".".
+        if (fileSuffix.startsWith(".")) {
+            this.fileSuffix = fileSuffix.replaceFirst("\\.", "");
+        } else {
+            this.fileSuffix = fileSuffix;
+        }
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public String getIdSuffix() {
+        return this.idSuffix;
+    }
+
+    /***************************************************************************
+     * @param idSuffix
+     **************************************************************************/
+    public void setIdSuffix(String idSuffix) {
+        this.idSuffix = idSuffix;
+    }
+
+    /**
+     * Returns the list of content files which should be written for this FileGroup
+     * If the list is identical to {@link VirtualFileGroup#ALL_FILES ALL_FILES}
+     * then all ContentFiles should be included in this FileGroup
+     * 
+     * @return the list of allowed ContentFiles for this FileGroup. Never null
+     */
+    public List<ContentFile> getContentFiles() {
         return contentFiles;
     }
-	
-	/**
-	 * Set the list of allowed ContentFiles to {@link VirtualFileGroup#ALL_FILES ALL_FILES}
-	 * so all ContentFiles may be written to this FileGroup
-	 */
-	public void allowAllFiles() {
-	    this.contentFiles = ALL_FILES;
-	}
-	
-	/**
-	 * Set the list to only allow files explicitly added via {@link #addContentFile} or {@link #addContentFiles}
-	 * 
-	 */
-	public void restrictFiles() {
-	    if(this.contentFiles == ALL_FILES) {
-	        this.contentFiles = new ArrayList<>();
-	    }
-	}
-	
-	/**
-	 * Adds a ContentFile to the list of ContentFiles allowed for this FileGroup
-	 * 
-	 * @param contentFile
-	 */
-	public void addContentFile(ContentFile contentFile) {
+
+    /**
+     * Set the list of allowed ContentFiles to {@link VirtualFileGroup#ALL_FILES ALL_FILES}
+     * so all ContentFiles may be written to this FileGroup
+     */
+    public void allowAllFiles() {
+        this.contentFiles = ALL_FILES;
+    }
+
+    /**
+     * Set the list to only allow files explicitly added via {@link #addContentFile} or {@link #addContentFiles}
+     * 
+     */
+    public void restrictFiles() {
+        if(this.contentFiles == ALL_FILES) {
+            this.contentFiles = new ArrayList<>();
+        }
+    }
+
+    /**
+     * Adds a ContentFile to the list of ContentFiles allowed for this FileGroup
+     * 
+     * @param contentFile
+     */
+    public void addContentFile(ContentFile contentFile) {
         if(this.contentFiles == ALL_FILES) {
             this.contentFiles = new ArrayList<>();
         }
         this.contentFiles.add(contentFile);
     }
-	
-	/**
+
+    /**
      * Adds a collection of ContentFiles to the list of ContentFiles allowed for this FileGroup
      * 
      * @param contentFiles
      */
-	public void addContentFiles(Collection<ContentFile> contentFiles) {
+    public void addContentFiles(Collection<ContentFile> contentFiles) {
         if(this.contentFiles == ALL_FILES) {
             this.contentFiles = new ArrayList<>();
         }
         this.contentFiles.addAll(contentFiles);
     }
-	
-	/**
+
+    /**
      * Removes a ContentFile from the list of ContentFiles allowed for this FileGroup
      * 
      * @param contentFile
      */
-	public void removeContentFile(ContentFile contentFile) {
-	    if(this.contentFiles.contains(contentFile)) {	        
-	        this.contentFiles.remove(contentFile);
-	    }
+    public void removeContentFile(ContentFile contentFile) {
+        if(this.contentFiles.contains(contentFile)) {
+            this.contentFiles.remove(contentFile);
+        }
     }
-    
-	/**
+
+    /**
      * Removes a collection of ContentFiles from the list of ContentFiles allowed for this FileGroup
      * 
      * @param contentFiles
      */
     public void removeContentFiles(Collection<ContentFile> contentFiles) {
-        if(!this.contentFiles.isEmpty()) {            
+        if(!this.contentFiles.isEmpty()) {
             this.contentFiles.removeAll(contentFiles);
         }
     }
-    
+
     public boolean contains(ContentFile contentFile) {
         return this.contentFiles == ALL_FILES || this.contentFiles.contains(contentFile);
+    }
+
+    public boolean isMainGroup() {
+        return mainGroup;
+    }
+
+    public void setMainGroup(boolean mainGroup) {
+        this.mainGroup = mainGroup;
     }
 
 }
