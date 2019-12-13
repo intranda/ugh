@@ -3432,6 +3432,10 @@ public class MetsMods implements ugh.dl.Fileformat {
             String type = inStruct.getType().getName();
             div.setAttribute(METS_DIVTYPE_STRING, type);
 
+            if (StringUtils.isNotBlank(inStruct.getAdmId())) {
+                div.setAttribute(METS_ADMID_STRING, inStruct.getAdmId());
+            }
+
             // Add div element as child to parentNode.
             parentNode.appendChild(div);
 

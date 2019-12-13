@@ -1140,6 +1140,10 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         inStruct.setIdentifier(idphys);
         div.setAttribute(METS_ID_STRING, idphys);
 
+        if (StringUtils.isNotBlank(inStruct.getAdmId())) {
+            div.setAttribute(METS_ADMID_STRING, inStruct.getAdmId());
+        }
+
         // Write METS type given in preferences, if existing.
         String type = getMetsType(inStruct.getType());
         if (type == null) {

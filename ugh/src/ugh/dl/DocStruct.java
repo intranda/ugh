@@ -199,6 +199,8 @@ public class DocStruct implements Serializable {
     // the type of the docstruct, can be div or area
     private String docstructType = "div";
 
+    private String admId;
+
 
     /***************************************************************************
      * <p>
@@ -3627,5 +3629,13 @@ public class DocStruct implements Serializable {
         }
 
         return list;
+    }
+
+    public String getAdmId() {
+        return admId;
+    }
+
+    public void setAdmId(String admId) {
+        this.admId = admId;
     }
 }
