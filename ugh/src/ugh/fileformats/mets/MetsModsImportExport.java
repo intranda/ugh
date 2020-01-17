@@ -75,6 +75,7 @@ import ugh.dl.MetadataType;
 import ugh.dl.NamePart;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
+import ugh.dl.VirtualFileGroup;
 import ugh.exceptions.DocStructHasNoTypeException;
 import ugh.exceptions.ImportException;
 import ugh.exceptions.MetadataTypeNotAllowedException;
@@ -1132,65 +1133,115 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
 
         // Write div element.
         Document domDoc = parentNode.getOwnerDocument();
-        Element div = domDoc.createElementNS(this.namespaces.get("mets").getUri(), METS_DIV_STRING);
+        if (inStruct.getDocstructType().equals("div")) {
+            Element div = domDoc.createElementNS(this.namespaces.get("mets").getUri(), METS_DIV_STRING);
 
-        String idphys = PHYS_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(this.divphysidMax);
-        this.divphysidMax++;
+            String idphys = PHYS_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(this.divphysidMax);
+            this.divphysidMax++;
 
-        inStruct.setIdentifier(idphys);
-        div.setAttribute(METS_ID_STRING, idphys);
+            inStruct.setIdentifier(idphys);
+            div.setAttribute(METS_ID_STRING, idphys);
 
-        if (StringUtils.isNotBlank(inStruct.getAdmId())) {
-            div.setAttribute(METS_ADMID_STRING, inStruct.getAdmId());
-        }
+            if (StringUtils.isNotBlank(inStruct.getAdmId())) {
+                div.setAttribute(METS_ADMID_STRING, inStruct.getAdmId());
+            }
 
-        // Write METS type given in preferences, if existing.
-        String type = getMetsType(inStruct.getType());
-        if (type == null) {
-            // If no METS type was configured, use internal type.
-            type = inStruct.getType().getName();
-        }
-        div.setAttribute(METS_DIVTYPE_STRING, type);
+            // Write METS type given in preferences, if existing.
+            String type = getMetsType(inStruct.getType());
+            if (type == null) {
+                // If no METS type was configured, use internal type.
+                type = inStruct.getType().getName();
+            }
+            div.setAttribute(METS_DIVTYPE_STRING, type);
 
-        // Add physical CONTENTIDS attribute, if existing.
-        if (!this.contentIDs.equals("")) {
-            div.setAttribute(METS_CONTENTIDS_STRING, this.contentIDs);
-        }
+            // Add physical CONTENTIDS attribute, if existing.
+            if (!this.contentIDs.equals("")) {
+                div.setAttribute(METS_CONTENTIDS_STRING, this.contentIDs);
+            }
 
-        // Add div element as child to parentNode.
-        parentNode.appendChild(div);
+            // Add div element as child to parentNode.
+            parentNode.appendChild(div);
 
-        // Write metdata.
-        if (this.metsNode == null) {
-            LOGGER.error("METS node is null... can't write anything");
-            return null;
-        }
+            // Write metdata.
+            if (this.metsNode == null) {
+                LOGGER.error("METS node is null... can't write anything");
+                return null;
+            }
 
-        int dmdid = writePhysDmd(this.metsNode, div, inStruct);
+            int dmdid = writePhysDmd(this.metsNode, div, inStruct);
 
-        // If dmdid is != -1 then the appropriate metadata section has been
-        // written, if dmdid == -1, the inStruct has no metadata.
-        String dmdidString = "";
-        if (dmdid != -1) {
-            dmdidString = DMDPHYS_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(dmdid);
-            div.setAttribute("DMDID", dmdidString);
-        }
+            // If dmdid is != -1 then the appropriate metadata section has been
+            // written, if dmdid == -1, the inStruct has no metadata.
+            String dmdidString = "";
+            if (dmdid != -1) {
+                dmdidString = DMDPHYS_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(dmdid);
+                div.setAttribute("DMDID", dmdidString);
+            }
 
-        // Write links to ContentFiles (FPTRs)
-        writeFptrs(inStruct, domDoc, div);
+            // Write links to ContentFiles (FPTRs)
+            writeFptrs(inStruct, domDoc, div);
 
-        // Get all children and write their divs recursive.
-        List<DocStruct> allChildren = inStruct.getAllChildren();
-        if (allChildren != null) {
-            for (DocStruct child : allChildren) {
-                if (writePhysDivs(div, child) == null) {
-                    // Error occured while writing div for child.
-                    return null;
+            // Get all children and write their divs recursive.
+            List<DocStruct> allChildren = inStruct.getAllChildren();
+            if (allChildren != null) {
+                for (DocStruct child : allChildren) {
+                    if (writePhysDivs(div, child) == null) {
+                        // Error occured while writing div for child.
+                        return null;
+                    }
                 }
             }
-        }
 
-        return div;
+            return div;
+        } else {
+            Element area = null;
+            // get fptr from parent
+            NodeList fptrList = parentNode.getChildNodes();
+
+            String mainGroupName = null;
+            for (VirtualFileGroup vFileGroup : this.digdoc.getFileSet().getVirtualFileGroups()) {
+                if (vFileGroup.isMainGroup()) {
+                    mainGroupName = vFileGroup.getName();
+                    break;
+                }
+            }
+
+            for (int x = 0; x < fptrList.getLength(); x++) {
+                Element fptr = (Element) fptrList.item(x);
+                // check if it is the main file group
+                if (mainGroupName == null || fptr.getAttribute("FILEID").endsWith(mainGroupName)) {
+
+                    // check for seq element
+                    Node seq = null;
+                    if (fptr.getChildNodes().getLength() > 0) {
+                        seq = fptr.getChildNodes().item(0);
+                    } else {
+                        seq = createDomElementNS(domDoc, this.metsNamespacePrefix, "seq");
+                        fptr.appendChild(seq);
+                    }
+                    // create area element
+                    area = createDomElementNS(domDoc, this.metsNamespacePrefix, "area");
+                    seq.appendChild(area);
+                    String idphys = PHYS_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(this.divphysidMax);
+                    this.divphysidMax++;
+
+                    inStruct.setIdentifier(idphys);
+                    area.setAttribute(METS_ID_STRING, idphys);
+
+                    for (Metadata md : inStruct.getAllMetadata()) {
+                        if (md.getType().getName().equals("_urn")) {
+                            area.setAttribute("CONTENTIDS", md.getValue());
+                        } else if (md.getType().getName().equals("_COORDS")) {
+                            area.setAttribute("COORDS", md.getValue());
+                        } else if (md.getType().getName().equals("_SHAPE")) {
+                            area.setAttribute("SHAPE", md.getValue());
+                        }
+                    }
+                    area.setAttribute(METS_FILEID_STRING, fptr.getAttribute(METS_FILEID_STRING));
+                }
+            }
+            return area;
+        }
     }
 
     /*
