@@ -4956,6 +4956,9 @@ public class MetsMods implements ugh.dl.Fileformat {
         Element amdSec = createDomElementNS(theDomDoc, this.metsNamespacePrefix, METS_AMDSEC_STRING);
         AmdSec amd = this.digdoc.getAmdSec();
         if (amd != null) {
+            if (StringUtils.isBlank(amd.getId())) {
+                amd.setId(AMD_PREFIX);
+            }
             amdSec.setAttribute(METS_ID_STRING, amd.getId());
         } else {
             amdSec.setAttribute(METS_ID_STRING, AMD_PREFIX);
