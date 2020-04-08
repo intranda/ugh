@@ -3016,7 +3016,9 @@ public class MetsMods implements ugh.dl.Fileformat {
             // Write amdSec, if needed.
             LOGGER.info("Writing amdSec");
 
-            writeAmdSec(domDoc, isAnchorFile, !digdoc.getFileSet().getAllFiles().isEmpty());
+            boolean hasFileSec = digdoc.getFileSet() != null && digdoc.getFileSet().getAllFiles() != null && !digdoc.getFileSet().getAllFiles().isEmpty();
+
+            writeAmdSec(domDoc, isAnchorFile, hasFileSec);
 
             // Serialize the document.
             LOGGER.info("Serializing METS document to file");
