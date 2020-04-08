@@ -3015,7 +3015,8 @@ public class MetsMods implements ugh.dl.Fileformat {
 
             // Write amdSec, if needed.
             LOGGER.info("Writing amdSec");
-            writeAmdSec(domDoc, isAnchorFile);
+
+            writeAmdSec(domDoc, isAnchorFile, !digdoc.getFileSet().getAllFiles().isEmpty());
 
             // Serialize the document.
             LOGGER.info("Serializing METS document to file");
@@ -4951,7 +4952,7 @@ public class MetsMods implements ugh.dl.Fileformat {
      * @param theDomDoc
      * @param isAnchorFile
      **************************************************************************/
-    protected void writeAmdSec(Document theDomDoc, boolean isAnchorFile) {
+    protected void writeAmdSec(Document theDomDoc, boolean isAnchorFile, boolean hasImages) {
         List<Md> techMdList = this.digdoc.getTechMds();
         Element amdSec = createDomElementNS(theDomDoc, this.metsNamespacePrefix, METS_AMDSEC_STRING);
         AmdSec amd = this.digdoc.getAmdSec();

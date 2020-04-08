@@ -1409,7 +1409,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
      * @see ugh.fileformats.mets.MetsMods#writeAmdSec(org.w3c.dom.Document, boolean)
      */
     @Override
-    protected void writeAmdSec(Document domDoc, boolean isAnchorFile) {
+    protected void writeAmdSec(Document domDoc, boolean isAnchorFile, boolean hasImages) {
 
         boolean rightsMDExists = false;
         boolean digiprovMDExists = false;
@@ -1565,11 +1565,13 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         // if anchor file).
         //
         String element;
-        if (isAnchorFile) {
+        if (isAnchorFile || !hasImages) {
             element = this.metsNamespacePrefix + ":" + METS_STRUCTMAP_STRING;
         } else {
             element = this.metsNamespacePrefix + ":" + METS_FILESEC_STRING;
         }
+
+
         NodeList dmdList = this.metsNode.getElementsByTagName(element);
         Node refChild = dmdList.item(0);
         if (refChild != null) {
