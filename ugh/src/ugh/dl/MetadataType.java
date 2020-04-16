@@ -113,26 +113,21 @@ public class MetadataType implements Serializable {
 
     /***************************************************************************
      * @param in
-     * @return
      **************************************************************************/
-    public boolean setName(String in) {
+    public void setName(String in) {
         this.name = in;
-        return true;
     }
 
     /***************************************************************************
      * @param in
-     * @return
      **************************************************************************/
-    public boolean setNum(String in) {
+    public void setNum(String in) {
 
         if (!in.equals("1m") && !in.equals("1o") && !in.equals("+") && !in.equals("*")) {
             // Unknown syntax.
-            return false;
+            return ;
         }
         this.max_number = in;
-
-        return true;
     }
 
     /***************************************************************************
@@ -206,11 +201,9 @@ public class MetadataType implements Serializable {
 
     /***************************************************************************
      * @param in
-     * @return
      **************************************************************************/
-    public boolean setAllLanguages(HashMap<String, String> in) {
+    public void setAllLanguages(HashMap<String, String> in) {
         this.allLanguages = in;
-        return true;
     }
 
     /***************************************************************************

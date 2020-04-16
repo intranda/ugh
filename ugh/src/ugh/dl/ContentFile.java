@@ -128,11 +128,9 @@ public class ContentFile implements Serializable {
      * TODO Check, if file is really available!
      * 
      * @param in
-     * @return always true
      **************************************************************************/
-    public boolean setLocation(String in) {
+    public void setLocation(String in) {
         this.Location = in;
-        return true;
     }
 
     /***************************************************************************
@@ -148,11 +146,9 @@ public class ContentFile implements Serializable {
 
     /**************************************************************************
      * @param in
-     * @return
      **************************************************************************/
-    public boolean setMimetype(String in) {
+    public void setMimetype(String in) {
         this.MimeType = in;
-        return true;
     }
 
     /***************************************************************************
@@ -161,8 +157,8 @@ public class ContentFile implements Serializable {
      * @return
      **************************************************************************/
     @Deprecated
-    public boolean setMimeType(String in) {
-        return setMimetype(in);
+    public void setMimeType(String in) {
+        setMimetype(in);
     }
 
     /***************************************************************************
@@ -183,11 +179,9 @@ public class ContentFile implements Serializable {
 
     /***************************************************************************
      * @param in
-     * @return
      **************************************************************************/
-    public boolean setIdentifier(String in) {
+    public void setIdentifier(String in) {
         this.identifier = in;
-        return true;
     }
 
     /***************************************************************************
@@ -216,7 +210,7 @@ public class ContentFile implements Serializable {
     public boolean addDocStructAsReference(DocStruct inStruct) {
 
         if (this.referencedDocStructs == null) {
-            this.referencedDocStructs = new LinkedList<DocStruct>();
+            this.referencedDocStructs = new LinkedList<>();
         }
         this.referencedDocStructs.add(inStruct);
 
@@ -289,7 +283,7 @@ public class ContentFile implements Serializable {
         }
         if ((this.getAllMetadata() == null && contentFile.getAllMetadata() != null)
                 || (this.getAllMetadata() != null && contentFile
-                        .getAllMetadata() == null)) {
+                .getAllMetadata() == null)) {
             return false;
         }
 
@@ -322,7 +316,7 @@ public class ContentFile implements Serializable {
 
     public void addTechMd(Md techMd) {
         if (techMdList == null) {
-            techMdList = new ArrayList<Md>();
+            techMdList = new ArrayList<>();
         }
         if (techMd != null) {
             techMdList.add(techMd);

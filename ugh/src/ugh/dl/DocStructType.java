@@ -97,19 +97,17 @@ public class DocStructType implements Serializable {
      * </p>
      **************************************************************************/
     public DocStructType() {
-        this.allChildrenTypes = new LinkedList<String>();
+        this.allChildrenTypes = new LinkedList<>();
         this.allMetadataTypes = new LinkedList<>();
         this.allMetadataGroups = new LinkedList<String>();
-        this.allLanguages = new HashMap<String, String>();
+        this.allLanguages = new HashMap<>();
     }
 
     /***************************************************************************
      * @param in
-     * @return
      **************************************************************************/
-    public boolean setName(String in) {
+    public void setName(String in) {
         this.name = in;
-        return true;
     }
 
     /***************************************************************************
@@ -228,13 +226,10 @@ public class DocStructType implements Serializable {
      * </p>
      * 
      * @param in HashMap containing language code and value
-     * @return always true
      **************************************************************************/
-    public boolean setAllLanguages(HashMap<String, String> in) {
+    public void setAllLanguages(HashMap<String, String> in) {
 
         this.allLanguages = in;
-
-        return true;
     }
 
     /***************************************************************************
@@ -344,16 +339,13 @@ public class DocStructType implements Serializable {
      * </p>
      * 
      * @param in
-     * @return
      **************************************************************************/
-    public boolean setAllMetadataTypes(List<MetadataType> in) {
+    public void setAllMetadataTypes(List<MetadataType> in) {
 
         for (MetadataType mdt : in) {
             MetadataTypeForDocStructType mdtfdst = new MetadataTypeForDocStructType(mdt);
             this.allMetadataTypes.add(mdtfdst);
         }
-
-        return true;
     }
 
     /***************************************************************************
@@ -365,7 +357,7 @@ public class DocStructType implements Serializable {
      **************************************************************************/
     public List<MetadataType> getAllMetadataTypes() {
 
-        List<MetadataType> out = new LinkedList<MetadataType>();
+        List<MetadataType> out = new LinkedList<>();
 
         Iterator<MetadataTypeForDocStructType> it = this.allMetadataTypes.iterator();
         while (it.hasNext()) {
@@ -386,7 +378,7 @@ public class DocStructType implements Serializable {
      **************************************************************************/
     public List<MetadataType> getAllDefaultDisplayMetadataTypes() {
 
-        List<MetadataType> out = new LinkedList<MetadataType>();
+        List<MetadataType> out = new LinkedList<>();
 
         Iterator<MetadataTypeForDocStructType> it = this.allMetadataTypes.iterator();
         while (it.hasNext()) {
@@ -773,16 +765,14 @@ public class DocStructType implements Serializable {
      * </p>
      * 
      * @param in
-     * @return
      **************************************************************************/
-    public boolean setAllMetadataGroups(List<MetadataGroupType> in) {
+    @SuppressWarnings("unchecked")
+    public void setAllMetadataGroups(List<MetadataGroupType> in) {
 
         for (MetadataGroupType mdt : in) {
             MetadataGroupForDocStructType mdtfdst = new MetadataGroupForDocStructType(mdt);
             this.allMetadataGroups.add(mdtfdst);
         }
-
-        return true;
     }
 
     /***************************************************************************
@@ -794,7 +784,7 @@ public class DocStructType implements Serializable {
      **************************************************************************/
     public List<MetadataGroupType> getAllMetadataGroupTypes() {
 
-        List<MetadataGroupType> out = new LinkedList<MetadataGroupType>();
+        List<MetadataGroupType> out = new LinkedList<>();
 
         Iterator<MetadataGroupForDocStructType> it = this.allMetadataGroups.iterator();
         while (it.hasNext()) {
@@ -815,7 +805,7 @@ public class DocStructType implements Serializable {
      **************************************************************************/
     public List<MetadataGroupType> getAllDefaultDisplayMetadataGroups() {
 
-        List<MetadataGroupType> out = new LinkedList<MetadataGroupType>();
+        List<MetadataGroupType> out = new LinkedList<>();
 
         Iterator<MetadataGroupForDocStructType> it = this.allMetadataGroups.iterator();
         while (it.hasNext()) {
@@ -832,7 +822,7 @@ public class DocStructType implements Serializable {
     //     * <p>
     //     * Deprecated method, please use getAllDefaultDisplayMetadataTypes() in the future.
     //     * </p>
-    //     * 
+    //     *
     //     * @deprecated
     //     * @return
     //     **************************************************************************/

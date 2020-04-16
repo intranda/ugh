@@ -262,9 +262,8 @@ public class DigitalDocument implements Serializable {
 
     /***************************************************************************
      * @param inStruct
-     * @return
      **************************************************************************/
-    public boolean setLogicalDocStruct(DocStruct inStruct) {
+    public void setLogicalDocStruct(DocStruct inStruct) {
 
         if (this.topLogicalStruct != null) {
             this.topLogicalStruct.setLogical(false);
@@ -273,8 +272,6 @@ public class DigitalDocument implements Serializable {
         this.topLogicalStruct = inStruct;
         // Set DocStruct and all children to logical.
         inStruct.setLogical(true);
-
-        return true;
     }
 
     /***************************************************************************
@@ -286,9 +283,8 @@ public class DigitalDocument implements Serializable {
 
     /***************************************************************************
      * @param inStruct
-     * @return
      **************************************************************************/
-    public boolean setPhysicalDocStruct(DocStruct inStruct) {
+    public void setPhysicalDocStruct(DocStruct inStruct) {
 
         if (this.topPhysicalStruct != null) {
             this.topPhysicalStruct.setPhysical(false);
@@ -297,8 +293,6 @@ public class DigitalDocument implements Serializable {
         this.topPhysicalStruct = inStruct;
         // Set DocStruct and all children to physical.
         inStruct.setPhysical(true);
-
-        return true;
     }
 
     /***************************************************************************
@@ -502,11 +496,9 @@ public class DigitalDocument implements Serializable {
 
     /***************************************************************************
      * @param inSet
-     * @return
      **************************************************************************/
-    public boolean setFileSet(FileSet inSet) {
+    public void setFileSet(FileSet inSet) {
         this.allImages = inSet;
-        return true;
     }
 
     /***************************************************************************

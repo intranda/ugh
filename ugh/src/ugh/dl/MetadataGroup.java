@@ -1,31 +1,5 @@
 package ugh.dl;
 
-/***************************************************************
- * Copyright notice
- *
- * ugh.dl / MetadataGroup.java
- *
- * (c) 2013 Robert Sehr <robert.sehr@intranda.com>
- *
- * All rights reserved
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or (at your
- * option) any later version.
- * 
- * This Library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
- * for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this library; if not, write to the Free Software Foundation,
- * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
- ***************************************************************/
-
-import gov.loc.mets.MdSecType.MdRef.MDTYPE;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -82,8 +56,8 @@ public class MetadataGroup implements Serializable {
 
         this.MDType = theType;
 
-        metadataList = new LinkedList<Metadata>();
-        personList = new LinkedList<Person>();
+        metadataList = new LinkedList<>();
+        personList = new LinkedList<>();
         for (MetadataType mdt : MDType.getMetadataTypeList()) {
             if (mdt.getIsPerson()) {
                 Person p = new Person(mdt);
@@ -139,11 +113,9 @@ public class MetadataGroup implements Serializable {
      * </p>
      * 
      * @param inType
-     * @return
      **************************************************************************/
-    public boolean setType(MetadataGroupType inType) {
+    public void setType(MetadataGroupType inType) {
         this.MDType = inType;
-        return true;
     }
 
     public List<Metadata> getMetadataList() {
@@ -196,7 +168,7 @@ public class MetadataGroup implements Serializable {
     }
 
     public List<Metadata> getMetadataByType(String theType) {
-        List<Metadata> returnList = new ArrayList<Metadata>();
+        List<Metadata> returnList = new ArrayList<>();
         for (Metadata md : metadataList) {
             if (md.getType().getName().equals(theType)) {
                 returnList.add(md);
@@ -206,7 +178,7 @@ public class MetadataGroup implements Serializable {
     }
 
     public List<Person> getPersonByType(String theType) {
-        List<Person> returnList = new ArrayList<Person>();
+        List<Person> returnList = new ArrayList<>();
         for (Person md : personList) {
             if (md.getType().getName().equals(theType)) {
                 returnList.add(md);
@@ -228,33 +200,44 @@ public class MetadataGroup implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         MetadataGroup other = (MetadataGroup) obj;
         if (MDType == null) {
-            if (other.MDType != null)
+            if (other.MDType != null) {
                 return false;
-        } else if (!MDType.equals(other.MDType))
+            }
+        } else if (!MDType.equals(other.MDType)) {
             return false;
+        }
         if (metadataList == null) {
-            if (other.metadataList != null)
+            if (other.metadataList != null) {
                 return false;
-        } else if (!metadataList.equals(other.metadataList))
+            }
+        } else if (!metadataList.equals(other.metadataList)) {
             return false;
+        }
         if (personList == null) {
-            if (other.personList != null)
+            if (other.personList != null) {
                 return false;
-        } else if (!personList.equals(other.personList))
+            }
+        } else if (!personList.equals(other.personList)) {
             return false;
+        }
         if (myDocStruct == null) {
-            if (other.myDocStruct != null)
+            if (other.myDocStruct != null) {
                 return false;
-        } else if (!myDocStruct.equals(other.myDocStruct))
+            }
+        } else if (!myDocStruct.equals(other.myDocStruct)) {
             return false;
+        }
         return true;
     }
 

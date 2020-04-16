@@ -147,13 +147,10 @@ public class Reference implements Serializable {
 
     /***************************************************************************
      * @param intype
-     * @return
      **************************************************************************/
-    public boolean setType(String intype) {
+    public void setType(String intype) {
         // TODO Check, if it's a valid type!
         this.type = intype;
-
-        return true;
     }
 
 }

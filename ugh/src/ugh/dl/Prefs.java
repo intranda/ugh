@@ -101,10 +101,10 @@ public class Prefs implements Serializable {
      * </p>
      **************************************************************************/
     public Prefs() {
-        this.allDocStrctTypes = new LinkedList<DocStructType>();
-        this.allMetadataTypes = new LinkedList<MetadataType>();
-        this.allMetadataGroupTypes = new LinkedList<MetadataGroupType>();
-        this.allFormats = new Hashtable<String, Node>();
+        this.allDocStrctTypes = new LinkedList<>();
+        this.allMetadataTypes = new LinkedList<>();
+        this.allMetadataGroupTypes = new LinkedList<>();
+        this.allFormats = new Hashtable<>();
     }
 
     /***************************************************************************
@@ -297,7 +297,7 @@ public class Prefs implements Serializable {
 
         // Get all children.
         allchildren = theDocStrctTypeNode.getChildNodes();
-        HashMap<String, String> allLanguages = new HashMap<String, String>();
+        HashMap<String, String> allLanguages = new HashMap<>();
 
         // Get attributes for docstructtype first.
         //
@@ -338,7 +338,7 @@ public class Prefs implements Serializable {
                     attribNode = attributeNodelist.getNamedItem("name");
                     if (attribNode == null) {
                         LOGGER.error("No name definition for language (" + currentDocStrctType.getName() + "); " + currentDocStrctType.getName()
-                                + "; Error Code: p005");
+                        + "; Error Code: p005");
                         return null;
                     }
                     languageName = attribNode.getNodeValue();
@@ -533,7 +533,7 @@ public class Prefs implements Serializable {
                         Node textnode = textnodes.item(0);
                         if (textnode.getNodeType() != Node.TEXT_NODE) {
                             LOGGER.error("Syntax Error reading config for DocStrctType '" + currentDocStrctType.getName()
-                                    + "'! Expected a text node under <allowedchildtype> element containing the DocStructType's name");
+                            + "'! Expected a text node under <allowedchildtype> element containing the DocStructType's name");
                             // No text node available; maybe it's another
                             // element etc. anyhow: an error.
                             return null;
@@ -547,7 +547,7 @@ public class Prefs implements Serializable {
                         // Error occured; so exit this method; no new
                         // DocStrctType.
                         LOGGER.error("Error reading config for DocStructType '" + currentDocStrctType.getName()
-                                + "'! Can't addDocStructType as child '" + allowedChild + "'");
+                        + "'! Can't addDocStructType as child '" + allowedChild + "'");
                         return null;
                     }
                 }
@@ -565,7 +565,7 @@ public class Prefs implements Serializable {
      * @return
      **************************************************************************/
     public MetadataType parseMetadataType(Node theMetadataTypeNode) {
-// TODO
+        // TODO
         NodeList allchildren;
         // NamedNodeMap containing all attributes.
         NamedNodeMap attributeNodelist;
@@ -577,7 +577,7 @@ public class Prefs implements Serializable {
         String languageName;
         String languageValue;
         String validationExpression = "";
-        HashMap<String, String> allLanguages = new HashMap<String, String>();
+        HashMap<String, String> allLanguages = new HashMap<>();
 
         MetadataType currenMdType = new MetadataType();
 
@@ -593,7 +593,7 @@ public class Prefs implements Serializable {
             }
 
         }
-               
+
         Node normdata = nnm.getNamedItem("normdata");
         if (normdata != null) {
             String nodevalue = normdata.getNodeValue();
@@ -609,7 +609,7 @@ public class Prefs implements Serializable {
                 currenMdType.setAllowNameParts(true);
             }
         }
-        
+
         allchildren = theMetadataTypeNode.getChildNodes(); // get allchildren
         for (int i = 0; i < allchildren.getLength(); i++) {
             currentNode = allchildren.item(i);
@@ -622,8 +622,8 @@ public class Prefs implements Serializable {
                         Node textnode = textnodes.item(0);
                         if (textnode == null) {
                             LOGGER.error("Syntax Error reading config for MetadataType " + currenMdType.getName()
-                                    + "; Error Code: p002b! Expected a text node under <Name> attribute at '" + theMetadataTypeNode.getNodeName()
-                                    + "'. <Name> must not be empty!");
+                            + "; Error Code: p002b! Expected a text node under <Name> attribute at '" + theMetadataTypeNode.getNodeName()
+                            + "'. <Name> must not be empty!");
                             return null;
                         } else if (textnode.getNodeType() != Node.TEXT_NODE) {
                             LOGGER.error("Error reading config for MetadataType unknown; Error Code: p002! Expected a text node under <Name> element at '"
@@ -646,13 +646,13 @@ public class Prefs implements Serializable {
                         Node textnode = textnodes.item(0);
                         if (textnode == null) {
                             LOGGER.error("Syntax Error reading config for MetadataType " + currenMdType.getName()
-                                    + "; Error Code: p001b! Expected a text node under <language> attribute at '" + theMetadataTypeNode.getNodeName()
-                                    + "'. <language> must not be empty!");
+                            + "; Error Code: p001b! Expected a text node under <language> attribute at '" + theMetadataTypeNode.getNodeName()
+                            + "'. <language> must not be empty!");
                             return null;
                         } else if (textnode.getNodeType() != Node.TEXT_NODE) {
                             LOGGER.error("Syntax Error reading config for MetadataType " + currenMdType.getName()
-                                    + "; Error Code: p001! Wrong node type under <language> attribute - a text node was expected at "
-                                    + theMetadataTypeNode.getNodeName());
+                            + "; Error Code: p001! Wrong node type under <language> attribute - a text node was expected at "
+                            + theMetadataTypeNode.getNodeName());
                             return null;
                         }
                         languageValue = textnode.getNodeValue();
@@ -694,7 +694,7 @@ public class Prefs implements Serializable {
 
         String languageName;
         String languageValue;
-        HashMap<String, String> allLanguages = new HashMap<String, String>();
+        HashMap<String, String> allLanguages = new HashMap<>();
 
         MetadataGroupType currenGroup = new MetadataGroupType();
 
@@ -767,13 +767,13 @@ public class Prefs implements Serializable {
                         Node textnode = textnodes.item(0);
                         if (textnode == null) {
                             LOGGER.error("Syntax Error reading config for MetadataType " + currenGroup.getName()
-                                    + "; Error Code: p001b! Expected a text node under <language> attribute at '"
-                                    + theMetadataGroupNode.getNodeName() + "'. <language> must not be empty!");
+                            + "; Error Code: p001b! Expected a text node under <language> attribute at '"
+                            + theMetadataGroupNode.getNodeName() + "'. <language> must not be empty!");
                             return null;
                         } else if (textnode.getNodeType() != Node.TEXT_NODE) {
                             LOGGER.error("Syntax Error reading config for MetadataType " + currenGroup.getName()
-                                    + "; Error Code: p001! Wrong node type under <language> attribute - a text node was expected at "
-                                    + theMetadataGroupNode.getNodeName());
+                            + "; Error Code: p001! Wrong node type under <language> attribute - a text node was expected at "
+                            + theMetadataGroupNode.getNodeName());
                             return null;
                         }
                         languageValue = textnode.getNodeValue();
@@ -821,7 +821,7 @@ public class Prefs implements Serializable {
      **************************************************************************/
     public List<DocStructType> getAllAnchorDocStructTypes() {
 
-        List<DocStructType> result = new LinkedList<DocStructType>();
+        List<DocStructType> result = new LinkedList<>();
 
         // Get all DocStructTypes.
         List<DocStructType> allTypes = this.getAllDocStructTypes();
@@ -916,46 +916,6 @@ public class Prefs implements Serializable {
 
     /***************************************************************************
      * @deprecated
-     * @param inList
-     * @return
-     **************************************************************************/
-    @Deprecated
-    public boolean SetAllMetadataTypes(List<MetadataType> inList) {
-        return setAllMetadataTypes(inList);
-    }
-
-    /***************************************************************************
-     * @param inList
-     * @return
-     **************************************************************************/
-    public boolean setAllMetadataTypes(List<MetadataType> inList) {
-        this.allMetadataTypes = inList;
-
-        return true;
-    }
-
-    /***************************************************************************
-     * @deprecetad
-     * @param inList
-     * @return
-     **************************************************************************/
-    @Deprecated
-    public boolean SetAllDocStructTypes(List<DocStructType> inList) {
-        return setAllDocStructTypes(inList);
-    }
-
-    /***************************************************************************
-     * @param inList
-     * @return
-     **************************************************************************/
-    public boolean setAllDocStructTypes(List<DocStructType> inList) {
-        this.allDocStrctTypes = inList;
-
-        return true;
-    }
-
-    /***************************************************************************
-     * @deprecated
      * @param inType
      * @return
      **************************************************************************/
@@ -1000,7 +960,7 @@ public class Prefs implements Serializable {
     public List<MetadataType> getAllPersonTypes() {
 
         MetadataType currentMdType;
-        List<MetadataType> allPersons = new LinkedList<MetadataType>();
+        List<MetadataType> allPersons = new LinkedList<>();
 
         Iterator<MetadataType> it = this.allMetadataTypes.iterator();
         while (it.hasNext()) {

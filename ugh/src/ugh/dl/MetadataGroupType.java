@@ -38,7 +38,7 @@ public class MetadataGroupType implements Serializable {
 
     private static final long serialVersionUID = -2935555025180170310L;
 
-    private List<MetadataType> metadataTypeList = new ArrayList<MetadataType>();
+    private List<MetadataType> metadataTypeList = new ArrayList<>();
 
     // Unique name of MetadataType.
     private String name;
@@ -93,17 +93,15 @@ public class MetadataGroupType implements Serializable {
 
     /***************************************************************************
      * @param in
-     * @return
      **************************************************************************/
-    public boolean setNum(String in) {
+    public void setNum(String in) {
 
         if (!in.equals("1m") && !in.equals("1o") && !in.equals("+") && !in.equals("*")) {
             // Unknown syntax.
-            return false;
+            return;
         }
         this.max_number = in;
 
-        return true;
     }
 
     public String getLanguage(String theLanguage) {
@@ -139,7 +137,7 @@ public class MetadataGroupType implements Serializable {
         if (this.max_number != null) {
             newMDType.setNum(this.max_number);
         }
-        List<MetadataType> newList = new LinkedList<MetadataType>();
+        List<MetadataType> newList = new LinkedList<>();
         for (MetadataType mdt : metadataTypeList) {
             newList.add(mdt.copy());
         }
