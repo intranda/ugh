@@ -157,12 +157,12 @@ public class PicaPlus implements ugh.dl.Fileformat {
     private ugh.dl.Prefs myPreferences;
 
     // Contains all PicaPlusGroups.
-    private Set<MatchingMetadataGroup> allGroups = new HashSet<MatchingMetadataGroup>();
+    private Set<MatchingMetadataGroup> allGroups = new HashSet<>();
 
     // Contains all rules for metadata matching.
-    private Set<MatchingMetadataObject> mmoList = new HashSet<MatchingMetadataObject>();
+    private Set<MatchingMetadataObject> mmoList = new HashSet<>();
 
-    private Map<String, String> metadataGroups = new HashMap<String, String>();
+    private Map<String, String> metadataGroups = new HashMap<>();
 
     /***************************************************************************
      * @param inPrefs
@@ -334,7 +334,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
      **************************************************************************/
     private Set<MatchingMetadataObject> readPerson(Node inNode) {
 
-        HashSet<MatchingMetadataObject> result = new HashSet<MatchingMetadataObject>();
+        HashSet<MatchingMetadataObject> result = new HashSet<>();
 
         String maintag = null;
         String internal = null;
@@ -471,6 +471,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
      * 
      * @see ugh.dl.Fileformat#getDigitalDocument()
      */
+    @Override
     public DigitalDocument getDigitalDocument() throws PreferencesException {
         return this.mydoc;
     }
@@ -480,9 +481,9 @@ public class PicaPlus implements ugh.dl.Fileformat {
      * 
      * @see ugh.dl.Fileformat#setDigitalDocument(ugh.dl.DigitalDocument)
      */
-    public boolean setDigitalDocument(DigitalDocument inDoc) {
+    @Override
+    public void setDigitalDocument(DigitalDocument inDoc) {
         this.mydoc = inDoc;
-        return false;
     }
 
     /***************************************************************************
@@ -562,6 +563,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
      * Read XMLfile.
      * </p>
      **************************************************************************/
+    @Override
     public boolean read(String filename) throws ReadException {
 
         // DOM Document.
@@ -679,11 +681,11 @@ public class PicaPlus implements ugh.dl.Fileformat {
     private DocStruct parsePicaPlusRecord(Node inNode) throws MetadataTypeNotAllowedException, ReadException {
 
         // Contains all metadata.
-        LinkedList<Metadata> allMDs = new LinkedList<Metadata>();
+        LinkedList<Metadata> allMDs = new LinkedList<>();
         // Contains all persons.
-        LinkedList<Person> allPer = new LinkedList<Person>();
+        LinkedList<Person> allPer = new LinkedList<>();
         // Contains all metadata groups.
-        LinkedList<MetadataGroup> allGroups = new LinkedList<MetadataGroup>();
+        LinkedList<MetadataGroup> allGroups = new LinkedList<>();
 
         DocStruct ds = null;
         Metadata md = null;
@@ -833,7 +835,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
     private HashSet<Serializable> parsePicaPlusField(Node inNode) throws MetadataTypeNotAllowedException, ReadException {
 
         // Contains the result objects.
-        HashSet<Serializable> result = new HashSet<Serializable>();
+        HashSet<Serializable> result = new HashSet<>();
 
         // Content of "field" attribute in <picaplus> element.
         String fieldAttribute = null;
@@ -911,7 +913,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 } catch (MalformedPerl5PatternException e) {
                     String message =
                             "The regular expression '" + mmo.getValueCondition() + "' delivered with " + mmo.getType() + " '" + mmo.getInternalName()
-                                    + "' in the " + PICAPLUS_PREFS_NODE_NAME_STRING + " section of the preferences file is not valid!";
+                            + "' in the " + PICAPLUS_PREFS_NODE_NAME_STRING + " section of the preferences file is not valid!";
                     LOGGER.error(message, e);
                     throw new ReadException(message, e);
                 }
@@ -931,7 +933,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 } catch (MalformedPerl5PatternException e) {
                     String message =
                             "The regular expression '" + mmo.getValueRegExp() + "' delivered with " + mmo.getType() + " '" + mmo.getInternalName()
-                                    + "' in the " + PICAPLUS_PREFS_NODE_NAME_STRING + " section of the preferences file is not valid!";
+                            + "' in the " + PICAPLUS_PREFS_NODE_NAME_STRING + " section of the preferences file is not valid!";
                     LOGGER.error(message, e);
                     throw new ReadException(message, e);
                 }
@@ -1162,7 +1164,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     LOGGER.warn("Can't add a " + content.getClass().getSimpleName() + " to a MetadataGroup.");
                 }
             }
-            result = new HashSet<Serializable>();
+            result = new HashSet<>();
             result.add(createdGroup);
         }
         return result;
@@ -1224,6 +1226,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
      * 
      * @see ugh.dl.Fileformat#update(java.lang.String)
      */
+    @Override
     public boolean update(String filename) {
         return false;
     }
@@ -1233,6 +1236,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
      * 
      * @see ugh.dl.Fileformat#write(java.lang.String)
      */
+    @Override
     public boolean write(String theFilename) throws WriteException {
         return false;
     }
@@ -1563,6 +1567,6 @@ public class PicaPlus implements ugh.dl.Fileformat {
     @Override
     public void setGoobiID(String goobiId) {
         // TODO Auto-generated method stub
-        
+
     }
 }

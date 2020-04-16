@@ -57,139 +57,142 @@ import ugh.exceptions.WriteException;
 
 public class XStream implements ugh.dl.Fileformat {
 
-	/***************************************************************************
-	 * VERSION STRING
-	 **************************************************************************/
+    /***************************************************************************
+     * VERSION STRING
+     **************************************************************************/
 
-	private static final String	VERSION	= "1.2-20100215";
+    private static final String	VERSION	= "1.2-20100215";
 
-	/***************************************************************************
-	 * STATIC FINALS
-	 **************************************************************************/
+    /***************************************************************************
+     * STATIC FINALS
+     **************************************************************************/
 
-	private static final Logger	LOGGER	= Logger
-												.getLogger(ugh.dl.DigitalDocument.class);
+    private static final Logger	LOGGER	= Logger
+            .getLogger(ugh.dl.DigitalDocument.class);
 
-	private DigitalDocument		digdoc	= null;
-	private Prefs				myPreferences;
+    private DigitalDocument		digdoc	= null;
+    private Prefs				myPreferences;
 
-	public XStream() {
-	}
-	
-	/***************************************************************************
-	 * <p>
-	 * Default Constructor.
-	 * </p>
-	 * 
-	 * @throws PreferencesException
-	 **************************************************************************/
-	public XStream(Prefs thePrefs) throws PreferencesException {
-		this.myPreferences = thePrefs;
+    public XStream() {
+    }
 
-		LOGGER.info(this.getClass().getName() + " " + getVersion());
-	}
+    /***************************************************************************
+     * <p>
+     * Default Constructor.
+     * </p>
+     * 
+     * @throws PreferencesException
+     **************************************************************************/
+    public XStream(Prefs thePrefs) throws PreferencesException {
+        this.myPreferences = thePrefs;
 
-	/*
-	 * Read the DigitalDocument from XStream XML.
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see ugh.dl.Fileformat#read(java.lang.String)
-	 */
-	public boolean read(String filename) throws ugh.exceptions.ReadException {
+        LOGGER.info(this.getClass().getName() + " " + getVersion());
+    }
 
-		LOGGER.info("Reading XStream");
+    /*
+     * Read the DigitalDocument from XStream XML.
+     * 
+     * (non-Javadoc)
+     * 
+     * @see ugh.dl.Fileformat#read(java.lang.String)
+     */
+    @Override
+    public boolean read(String filename) throws ugh.exceptions.ReadException {
 
-		try {
-			this.digdoc = new DigitalDocument().readXStreamXml(filename,
-					this.myPreferences);
-		} catch (FileNotFoundException e) {
-			String message = "Can't find file '" + filename + "'!";
-			LOGGER.error(message, e);
-			throw new ReadException(message, e);
-		} catch (UnsupportedEncodingException e) {
-			String message = "Can't read file '" + filename
-					+ "' because of wrong encoding!";
-			LOGGER.error(message, e);
-			throw new ReadException(message, e);
-		}
+        LOGGER.info("Reading XStream");
 
-		LOGGER
-				.info("Sorting metadata according to occurance in the Preferences");
+        try {
+            this.digdoc = new DigitalDocument().readXStreamXml(filename,
+                    this.myPreferences);
+        } catch (FileNotFoundException e) {
+            String message = "Can't find file '" + filename + "'!";
+            LOGGER.error(message, e);
+            throw new ReadException(message, e);
+        } catch (UnsupportedEncodingException e) {
+            String message = "Can't read file '" + filename
+                    + "' because of wrong encoding!";
+            LOGGER.error(message, e);
+            throw new ReadException(message, e);
+        }
 
-		this.digdoc.sortMetadataRecursively(this.myPreferences);
+        LOGGER
+        .info("Sorting metadata according to occurance in the Preferences");
 
-		LOGGER.info("Reading XStream complete");
+        this.digdoc.sortMetadataRecursively(this.myPreferences);
 
-		return true;
-	}
+        LOGGER.info("Reading XStream complete");
 
-	/*
-	 * Write the DigitalDocument to XStream XML.
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see ugh.fileformats.mets.MetsModsGdz#write(java.lang.String)
-	 */
-	@Deprecated
-	public boolean write(String filename) throws WriteException {
+        return true;
+    }
 
-		LOGGER.info("Writing XStream");
+    /*
+     * Write the DigitalDocument to XStream XML.
+     * 
+     * (non-Javadoc)
+     * 
+     * @see ugh.fileformats.mets.MetsModsGdz#write(java.lang.String)
+     */
+    @Override
+    @Deprecated
+    public boolean write(String filename) throws WriteException {
 
-		try {
-			this.digdoc.writeXStreamXml(filename);
-		} catch (FileNotFoundException e) {
-			String message = "Can't find file '" + filename + "'!";
-			LOGGER.error(message, e);
-			throw new WriteException(message, e);
-		} catch (UnsupportedEncodingException e) {
-			String message = "Can't write file '" + filename
-					+ "' because of wrong encoding!";
-			LOGGER.error(message, e);
-			throw new WriteException(message, e);
-		}
+        LOGGER.info("Writing XStream");
 
-		LOGGER.info("Writing XStream complete");
+        try {
+            this.digdoc.writeXStreamXml(filename);
+        } catch (FileNotFoundException e) {
+            String message = "Can't find file '" + filename + "'!";
+            LOGGER.error(message, e);
+            throw new WriteException(message, e);
+        } catch (UnsupportedEncodingException e) {
+            String message = "Can't write file '" + filename
+                    + "' because of wrong encoding!";
+            LOGGER.error(message, e);
+            throw new WriteException(message, e);
+        }
 
-		return true;
-	}
+        LOGGER.info("Writing XStream complete");
 
-	/***************************************************************************
-	 * @return
-	 **************************************************************************/
-	public static String getVersion() {
-		return VERSION;
-	}
+        return true;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ugh.dl.Fileformat#GetDigitalDocument()
-	 */
-	public DigitalDocument getDigitalDocument() {
-		return this.digdoc;
-	}
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public static String getVersion() {
+        return VERSION;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ugh.dl.Fileformat#Update(java.lang.String)
-	 */
-	@Deprecated
-	public boolean update(String filename) {
-		return false;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see ugh.dl.Fileformat#GetDigitalDocument()
+     */
+    @Override
+    public DigitalDocument getDigitalDocument() {
+        return this.digdoc;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ugh.dl.Fileformat#SetDigitalDocument(ugh.dl.DigitalDocument)
-	 */
-	public boolean setDigitalDocument(DigitalDocument inDoc) {
-		this.digdoc = inDoc;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see ugh.dl.Fileformat#Update(java.lang.String)
+     */
+    @Override
+    @Deprecated
+    public boolean update(String filename) {
+        return false;
+    }
 
-		return false;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see ugh.dl.Fileformat#SetDigitalDocument(ugh.dl.DigitalDocument)
+     */
+    @Override
+    public void setDigitalDocument(DigitalDocument inDoc) {
+        this.digdoc = inDoc;
+    }
 
     @Override
     public boolean isWritable() {
@@ -205,15 +208,15 @@ public class XStream implements ugh.dl.Fileformat {
     public String getDisplayName() {
         return "XStream";
     }
-    
+
     @Override
     public void setPrefs(Prefs prefs) throws PreferencesException {
-        myPreferences = prefs;        
+        myPreferences = prefs;
     }
 
     @Override
     public void setGoobiID(String goobiId) {
         // TODO Auto-generated method stub
-        
+
     }
 }
