@@ -167,16 +167,16 @@ public class DocStruct implements Serializable {
     // List containing all DocStrct-instances being children of this instance.
     private List<DocStruct> children;
     // List containing all references to Contentfile objects.
-    private List<ContentFileReference> contentFileReferences = new LinkedList<>();
+    private List<ContentFileReference> contentFileReferences = new ArrayList<>();
     // List of all persons; list containing all Person objects.
     private List<Person> persons;
 
     private DocStruct parent;
     // All references to other DocStrct instances (containing References
     // objects).
-    private List<Reference> docStructRefsTo = new LinkedList<>();
+    private List<Reference> docStructRefsTo = new ArrayList<>();
     // All references from another DocStruct to this one.
-    private List<Reference> docStructRefsFrom = new LinkedList<>();
+    private List<Reference> docStructRefsFrom = new ArrayList<>();
     // Type of this instance.
     private DocStructType type;
     // Local identifier of this docstruct.
@@ -684,7 +684,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public List<Reference> getAllToReferences(String theType) {
 
-        List<Reference> refs = new LinkedList<>();
+        List<Reference> refs = new ArrayList<>();
 
         if (this.docStructRefsTo != null) {
             for (Reference ref : this.docStructRefsTo) {
@@ -723,7 +723,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public List<Reference> getAllFromReferences(String theType) {
 
-        List<Reference> refs = new LinkedList<>();
+        List<Reference> refs = new ArrayList<>();
 
         if (this.docStructRefsFrom != null) {
             for (Reference ref : this.docStructRefsFrom) {
@@ -839,7 +839,7 @@ public class DocStruct implements Serializable {
     @JsonIgnore
     public List<ContentFile> getAllContentFiles() {
 
-        List<ContentFile> contentFiles = new LinkedList<>();
+        List<ContentFile> contentFiles = new ArrayList<>();
 
         if (this.contentFileReferences == null || this.contentFileReferences.isEmpty()) {
             return null;
@@ -983,7 +983,7 @@ public class DocStruct implements Serializable {
 
         if (this.contentFileReferences == null) {
             // Re-added this line, maybe was it's deletion an error?
-            this.contentFileReferences = new LinkedList<>();
+            this.contentFileReferences = new ArrayList<>();
         }
 
         // Check if ContentFile belongs already to the FileSet.
@@ -1023,7 +1023,7 @@ public class DocStruct implements Serializable {
             return false;
         }
 
-        List<ContentFileReference> copiedContentFileReferences = new LinkedList<>(this.contentFileReferences);
+        List<ContentFileReference> copiedContentFileReferences = new ArrayList<>(this.contentFileReferences);
 
         for (ContentFileReference cfr : copiedContentFileReferences) {
             if (cfr.getCf() != null && cfr.getCf().equals(theContentFile)) {
@@ -1120,7 +1120,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public boolean removeReferenceTo(DocStruct inStruct) {
 
-        List<Reference> ll = new LinkedList<>(this.docStructRefsTo);
+        List<Reference> ll = new ArrayList<>(this.docStructRefsTo);
 
         for (Reference ref : ll) {
             if (ref.getTarget().equals(inStruct)) {
@@ -1132,6 +1132,7 @@ public class DocStruct implements Serializable {
                 if (ll2 != null) {
                     ll2.remove(ref);
                 }
+                break;
             }
         }
 
@@ -1149,7 +1150,7 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public boolean removeReferenceFrom(DocStruct inStruct) {
 
-        List<Reference> ll = new LinkedList<>(this.docStructRefsFrom);
+        List<Reference> ll = new ArrayList<>(this.docStructRefsFrom);
 
         for (Reference ref : ll) {
             if (ref.getTarget().equals(inStruct)) {
@@ -1161,6 +1162,7 @@ public class DocStruct implements Serializable {
                 if (ll2 != null) {
                     ll2.remove(ref);
                 }
+                break;
             }
         }
 
