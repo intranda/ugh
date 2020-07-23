@@ -24,12 +24,14 @@ package ugh.dl;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /*******************************************************************************
  * <p>
- * A ContentFileReference stores a single reference from a DocStruct to a
- * ContentFile. This reference can contain additional information as the an area
- * information An Area defines a special part of the ContentFile to which it is
- * linked to. An Area is defined in a <code>ContentFileArea</code> object.
+ * A ContentFileReference stores a single reference from a DocStruct to a ContentFile. This reference can contain additional information as the an
+ * area information An Area defines a special part of the ContentFile to which it is linked to. An Area is defined in a <code>ContentFileArea</code>
+ * object.
  * </p>
  * 
  * @author Markus Enders
@@ -39,54 +41,29 @@ import java.io.Serializable;
 
 public class ContentFileReference implements Serializable {
 
-	private static final long	serialVersionUID	= 3878365395668660681L;
+    private static final long serialVersionUID = 3878365395668660681L;
 
-	// Contentfile Area.
-	private ContentFileArea		cfa					= null;
-	// ContentFile object.
-	private ContentFile			cf					= null;
+    // Contentfile Area.
+    @Getter
+    @Setter
+    private ContentFileArea cfa = null;
+    // ContentFile object.
+    @Getter
+    @Setter
+    private ContentFile cf = null;
 
-	/***************************************************************************
-	 * @return
-	 **************************************************************************/
-	public ContentFile getCf() {
-		return this.cf;
-	}
-
-	/***************************************************************************
-	 * @param cf
-	 **************************************************************************/
-	public void setCf(ContentFile cf) {
-		this.cf = cf;
-	}
-
-	/***************************************************************************
-	 * @return
-	 **************************************************************************/
-	public ContentFileArea getCfa() {
-		return this.cfa;
-	}
-
-	/***************************************************************************
-	 * @param cfa
-	 **************************************************************************/
-	public void setCfa(ContentFileArea cfa) {
-		this.cfa = cfa;
-	}
-
-	/***************************************************************************
-	 * <p>
-	 * Passing on to referred ContentFile.
-	 * </p>
-	 * 
-	 * TODO Find out, if same ContentFileArea would be a requirement.
-	 * 
-	 * @author Wulf Riebensahm
-	 * @param ContentFileReference
-	 *            contentFileReference
-	 ***************************************************************************/
-	public boolean equals(ContentFileReference contentFileReference) {
-		return this.getCf().equals(contentFileReference.getCf());
-	}
+    /***************************************************************************
+     * <p>
+     * Passing on to referred ContentFile.
+     * </p>
+     * 
+     * TODO Find out, if same ContentFileArea would be a requirement.
+     * 
+     * @author Wulf Riebensahm
+     * @param ContentFileReference contentFileReference
+     ***************************************************************************/
+    public boolean equals(ContentFileReference contentFileReference) {
+        return this.getCf().equals(contentFileReference.getCf());
+    }
 
 }

@@ -85,7 +85,6 @@ public class Person extends Metadata {
     private String institution = null;
     private String role = null;
     private String persontype = null;
-    private boolean isCorporation = false;
 
     private List<NamePart> additionalNameParts = null;
 
@@ -284,19 +283,6 @@ public class Person extends Metadata {
         this.displayname = displayname;
     }
 
-    /***************************************************************************
-     * @return the isCorporation
-     **************************************************************************/
-    public boolean isCorporation() {
-        return this.isCorporation;
-    }
-
-    /***************************************************************************
-     * @param isCorporation the isCorporation to set
-     **************************************************************************/
-    public void setCorporation(boolean isCorporation) {
-        this.isCorporation = isCorporation;
-    }
 
     /*
      * (non-Javadoc)
@@ -406,9 +392,6 @@ public class Person extends Metadata {
                 return false;
             }
 
-            if (this.isCorporation() != person.isCorporation()) {
-                return false;
-            }
         }
         // TODO Teldemokles says: "Do never catch a NullPointerException"!
         catch (NullPointerException npe) {
