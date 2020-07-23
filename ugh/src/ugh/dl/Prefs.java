@@ -586,10 +586,18 @@ public class Prefs implements Serializable {
         Node node = nnm.getNamedItem("type");
         if (node != null) {
             String nodevalue = node.getNodeValue();
-            if (nodevalue != null && nodevalue.equals("person")) {
-                currenMdType.setIsPerson(true);
-            } else if (nodevalue != null && nodevalue.equals("identifier")) {
-                currenMdType.setIdentifier(true);
+            if (nodevalue != null) {
+                switch (nodevalue) {
+                    case "person":
+                        currenMdType.setIsPerson(true);
+                        break;
+                    case "identifier":
+                        currenMdType.setIdentifier(true);
+                        break;
+                    case "corporate":
+                        currenMdType.setCorporate(true);
+                        break;
+                }
             }
 
         }
@@ -626,16 +634,16 @@ public class Prefs implements Serializable {
                             + "'. <Name> must not be empty!");
                             return null;
                         } else if (textnode.getNodeType() != Node.TEXT_NODE) {
-                            LOGGER.error("Error reading config for MetadataType unknown; Error Code: p002! Expected a text node under <Name> element at '"
-                                    + theMetadataTypeNode.getNodeName() + "'");
+                            LOGGER.error(
+                                    "Error reading config for MetadataType unknown; Error Code: p002! Expected a text node under <Name> element at '"
+                                            + theMetadataTypeNode.getNodeName() + "'");
                             // No text node available; maybe it's another
                             // element etc. anyhow: an error.
                             return null;
                         }
                         currenMdType.setName(textnode.getNodeValue());
                     }
-                }
-                else if (currentNode.getNodeName().equals("language")) {
+                } else if (currentNode.getNodeName().equals("language")) {
                     attributeNodelist = currentNode.getAttributes();
                     attributeNode = attributeNodelist.getNamedItem("name");
                     languageName = attributeNode.getNodeValue();
@@ -714,8 +722,9 @@ public class Prefs implements Serializable {
                                     + theMetadataGroupNode.getNodeName() + "'. <Name> must not be empty!");
                             return null;
                         } else if (textnode.getNodeType() != Node.TEXT_NODE) {
-                            LOGGER.error("Error reading config for MetadataType unknown; Error Code: p002! Expected a text node under <Name> element at '"
-                                    + theMetadataGroupNode.getNodeName() + "'");
+                            LOGGER.error(
+                                    "Error reading config for MetadataType unknown; Error Code: p002! Expected a text node under <Name> element at '"
+                                            + theMetadataGroupNode.getNodeName() + "'");
                             // No text node available; maybe it's another
                             // element etc. anyhow: an error.
                             return null;
@@ -767,8 +776,8 @@ public class Prefs implements Serializable {
                         Node textnode = textnodes.item(0);
                         if (textnode == null) {
                             LOGGER.error("Syntax Error reading config for MetadataType " + currenGroup.getName()
-                            + "; Error Code: p001b! Expected a text node under <language> attribute at '"
-                            + theMetadataGroupNode.getNodeName() + "'. <language> must not be empty!");
+                            + "; Error Code: p001b! Expected a text node under <language> attribute at '" + theMetadataGroupNode.getNodeName()
+                            + "'. <language> must not be empty!");
                             return null;
                         } else if (textnode.getNodeType() != Node.TEXT_NODE) {
                             LOGGER.error("Syntax Error reading config for MetadataType " + currenGroup.getName()
