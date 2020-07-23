@@ -311,133 +311,133 @@
   </MetadataType>
   <!-- Persons end -->
   <!-- Corporations start -->
-  <MetadataType normdata="true">
+  <MetadataType  type="corporate" normdata="true">
     <Name>Corporation</Name>
     <language name="de">Körperschaft</language>
     <language name="en">Corporation</language>
     <language name="es">Corporation zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateAddressee</Name>
     <language name="de">Korporativer Adressat</language>
     <language name="en">Corporate addressee</language>
     <language name="es">Corporate addressee zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateArtist</Name>
     <language name="de">Korporativer Künstler</language>
     <language name="en">Corporate artist</language>
     <language name="es">Corporate artist zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateAuthorOfAfterword</Name>
     <language name="de">Korporativer Verfasser eines Nachworts</language>
     <language name="en">Corporate author of afterword</language>
     <language name="es">Corporate author of afterword zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateAuthor</Name>
     <language name="de">Korporativer Author</language>
     <language name="en">CorporateAuthor zzz</language>
     <language name="es">CorporateAuthor zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateCompiler</Name>
     <language name="de">Korporativer Zusammensteller</language>
     <language name="en">Corporate compiler</language>
     <language name="es">Corporate compiler zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateContributor</Name>
     <language name="de">Mitwirkende Körperschaft</language>
     <language name="en">Corporate contributor</language>
     <language name="es">Corporate contributor zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateCurator</Name>
     <language name="de">Korporativer Kurator</language>
     <language name="en">Corporate curator</language>
     <language name="es">Corporate curator zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateEngraver</Name>
     <language name="de">Korporativer Stecher</language>
     <language name="en">Corporate engraver</language>
     <language name="es">Corporate engraver zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateIllustrator</Name>
     <language name="de">Korporativer Illustrator</language>
     <language name="en">Corporate illustrator</language>
     <language name="es">Corporate illustrator zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateOrganizer</Name>
     <language name="de">Veranstalter</language>
     <language name="en">Organizer</language>
     <language name="es">Organizer zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateOther</Name>
     <language name="de">Sonstige Körperschaft</language>
     <language name="en">Other corporation</language>
     <language name="es">Other corporation zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporatePhotographer</Name>
     <language name="de">Korporativer Photograph</language>
     <language name="en">Corporate photographer</language>
     <language name="es">Corporate photographer zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateTranslator</Name>
     <language name="de">Korporativer Übersetzer</language>
     <language name="en">Corporate translator</language>
     <language name="es">Corporate translator zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateWriterOfAddedText</Name>
     <language name="de">Korporativer Verfasser von Zusatztexten</language>
     <language name="en">Corporate writer of added text</language>
     <language name="es">Corporate writer of added text zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateWriterOfIntroduction</Name>
     <language name="de">Korporativer Verfasser einer Einleitung</language>
     <language name="en">Corporate writer of introduction</language>
     <language name="es">Corporate writer of introduction zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateWriterOfPreface</Name>
     <language name="de">Korporativer Verfasser einer Vorworts</language>
     <language name="en">Corporate writer of preface</language>
     <language name="es">Corporate writer of preface zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateWriterOfSupplementaryTextualContent</Name>
     <language name="de">Korporativer Verfasser von ergänzendem Text</language>
     <language name="en">Corporate writer of supplementary textual content</language>
     <language name="es">Corporate writer of supplementary textual content zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>HostInstitution</Name>
     <language name="de">Gastgebende Institution</language>
     <language name="en">Host institution</language>
     <language name="es">Host institution zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>IssuingBody</Name>
     <language name="de">Herausgebendes Organ</language>
     <language name="en">Issuing body</language>
     <language name="es">Issuing body zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>LegislativeBody</Name>
     <language name="de">Gesetzgebende Körperschaft</language>
     <language name="en">Legislative body</language>
     <language name="es">Legislative body zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>WriterCorporate</Name>
     <language name="de">Korporativer Verfasser</language>
     <language name="en">Corporate writer</language>

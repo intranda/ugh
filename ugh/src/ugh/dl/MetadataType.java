@@ -26,6 +26,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /*******************************************************************************
  * <p>
  * When using, storing, writing or reading metadata, groups or classes of special metadata objects can be formed, which have something in common. They
@@ -95,6 +98,11 @@ public class MetadataType implements Serializable {
     // Is set to true, if metadata is a person.
     protected boolean isPerson = false;
 
+    // is set to true, if metadata is a corporate
+    @Getter @Setter
+    protected boolean isCorporate = false;
+
+
     // Is set to true, if this MetadataType acts as an element; which means,
     // that a metadata with the same value cannot be available twice.
     protected boolean isIdentifier = false;
@@ -152,6 +160,7 @@ public class MetadataType implements Serializable {
         }
         newMDType.setIdentifier(this.isIdentifier());
         newMDType.setIsPerson(this.isPerson);
+        newMDType.setCorporate(isCorporate);
         newMDType.setAllowNameParts(this.allowNameParts);
         newMDType.setAllowNormdata(this.allowNormdata);
         newMDType.setValidationExpression(validationExpression);
