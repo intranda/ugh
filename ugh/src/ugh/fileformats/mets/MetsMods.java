@@ -3266,7 +3266,11 @@ public class MetsMods implements ugh.dl.Fileformat {
                         Path path = Paths.get(lc);
                         try {
                             // TODO check different mimetypes for 3d objects
+                            //partly solved by getting the mimetype from fc, but probably not for all cases
                             String mimeType = Files.probeContentType(path);
+                            if(StringUtils.isBlank(mimeType) && StringUtils.isNotBlank(cf.getMimetype())) {
+                                mimeType = cf.getMimetype();
+                            }
                             file.setAttribute(METS_MIMETYPE_STRING, mimeType);
                         } catch (IOException e) {
                             LOGGER.info("Could not detect mimetype for file " + path.getFileName().toString());
