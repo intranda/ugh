@@ -11,7 +11,6 @@ import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigInteger;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
@@ -2627,7 +2626,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         // If type="page", check if logical and physical page numbers are set.
         // If not, add them and set them both to "1".
-        if ( DigitalDocument.PhysicalElement.checkPhysicalType(inStruct.getType().getName())) {
+        if (DigitalDocument.PhysicalElement.checkPhysicalType(inStruct.getType().getName())) {
             DivType pagediv = null;
             if (o instanceof DivType) {
                 pagediv = (DivType) o;
@@ -3015,7 +3014,8 @@ public class MetsMods implements ugh.dl.Fileformat {
             // Write amdSec, if needed.
             LOGGER.info("Writing amdSec");
 
-            boolean hasFileSec = digdoc.getFileSet() != null && digdoc.getFileSet().getAllFiles() != null && !digdoc.getFileSet().getAllFiles().isEmpty();
+            boolean hasFileSec =
+                    digdoc.getFileSet() != null && digdoc.getFileSet().getAllFiles() != null && !digdoc.getFileSet().getAllFiles().isEmpty();
 
             writeAmdSec(domDoc, isAnchorFile, hasFileSec);
 
@@ -3264,17 +3264,13 @@ public class MetsMods implements ugh.dl.Fileformat {
                     // necessary.
                     if (theFilegroup.isIgnoreConfiguredMimetypeAndSuffix()) {
                         Path path = Paths.get(lc);
-                        try {
-                            // TODO check different mimetypes for 3d objects
-                            //partly solved by getting the mimetype from fc, but probably not for all cases
-                            String mimeType = Files.probeContentType(path);
-                            if(StringUtils.isBlank(mimeType) && StringUtils.isNotBlank(cf.getMimetype())) {
-                                mimeType = cf.getMimetype();
-                            }
-                            file.setAttribute(METS_MIMETYPE_STRING, mimeType);
-                        } catch (IOException e) {
-                            LOGGER.info("Could not detect mimetype for file " + path.getFileName().toString());
+
+                        String mimeType = DigitalDocument.detectMimeType(path);
+                        if (StringUtils.isBlank(mimeType) && StringUtils.isNotBlank(cf.getMimetype())) {
+                            mimeType = cf.getMimetype();
                         }
+                        file.setAttribute(METS_MIMETYPE_STRING, mimeType);
+
                         lc = theFilegroup.getPathToFiles() + path.getFileName().toString();
                     } else {
                         String n = new File(lc).getName();
