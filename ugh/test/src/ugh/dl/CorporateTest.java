@@ -1,4 +1,4 @@
-package ugh.fileformat.mets;
+package ugh.dl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
