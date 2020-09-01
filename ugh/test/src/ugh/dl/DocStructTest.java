@@ -66,7 +66,7 @@ public class DocStructTest {
 
         assertNotNull(ds);
         assertEquals("Monograph", ds.getType().getName());
-        assertNull(ds.getAllCorporate());
+        assertNull(ds.getAllCorporates());
 
         Corporate c = new Corporate(prefs.getMetadataTypeByName("Corporation"));
         c.setMainName("main");
@@ -74,12 +74,12 @@ public class DocStructTest {
         c.setPartName("part");
         ds.addCorporate(c);
 
-        assertNotNull(ds.getAllCorporate());
-        assertEquals(1, ds.getAllCorporate().size());
-        assertEquals("main", ds.getAllCorporate().get(0).getMainName());
+        assertNotNull(ds.getAllCorporates());
+        assertEquals(1, ds.getAllCorporates().size());
+        assertEquals("main", ds.getAllCorporates().get(0).getMainName());
 
         ds.removeCorporate(c, true);
-        assertNull(ds.getAllCorporate());
+        assertNull(ds.getAllCorporates());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class DocStructTest {
 
         assertNotNull(ds);
         assertEquals("Monograph", ds.getType().getName());
-        assertNull(ds.getAllCorporate());
+        assertNull(ds.getAllCorporates());
         assertNull(ds.getAllPersons());
         assertNull(ds.getAllMetadata());
 
@@ -116,9 +116,9 @@ public class DocStructTest {
         assertEquals(1, ds.getAllPersons().size());
         assertEquals("lastname", ds.getAllPersons().get(0).getLastname());
 
-        assertNotNull(ds.getAllCorporate());
-        assertEquals(1, ds.getAllCorporate().size());
-        assertEquals("main", ds.getAllCorporate().get(0).getMainName());
+        assertNotNull(ds.getAllCorporates());
+        assertEquals(1, ds.getAllCorporates().size());
+        assertEquals("main", ds.getAllCorporates().get(0).getMainName());
     }
 
 }
