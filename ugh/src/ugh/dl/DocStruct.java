@@ -2871,7 +2871,7 @@ public class DocStruct implements Serializable {
         return this.persons;
     }
 
-    public List<Corporate> getAllCorporate() {
+    public List<Corporate> getAllCorporates() {
         if (this.corporates == null || this.corporates.isEmpty()) {
             return null;
         }
@@ -3130,11 +3130,11 @@ public class DocStruct implements Serializable {
                 }
             }
         }
-        if (getAllCorporate()!= null) {
-            List<Corporate> corporateList = getAllCorporate();
+        if (getAllCorporates()!= null) {
+            List<Corporate> corporateList = getAllCorporates();
             for (Corporate corp : corporateList) {
                 if (StringUtils.isBlank(corp.getMainName()) && StringUtils.isBlank(corp.getPartName()) && corp.getSubNames().isEmpty()) {
-                    getAllCorporate().remove(corp);
+                    getAllCorporates().remove(corp);
                 }
             }
         }
@@ -3228,7 +3228,7 @@ public class DocStruct implements Serializable {
                     }
                 }
             }
-            List<Corporate> oc = getAllCorporate();
+            List<Corporate> oc = getAllCorporates();
             if (oc != null) {
                 for (Corporate p : oc) {
                     if (p.getType() != null && mType.getName().equals(p.getType().getName())) {

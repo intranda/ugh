@@ -103,6 +103,7 @@ import gov.loc.mets.StructMapType;
 import gov.loc.mods.v3.ModsDocument;
 import ugh.dl.AmdSec;
 import ugh.dl.ContentFile;
+import ugh.dl.Corporate;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
 import ugh.dl.DocStructType;
@@ -424,6 +425,11 @@ public class MetsMods implements ugh.dl.Fileformat {
     protected static final String GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING = "termsOfAddress";
 
     protected static final String GOOBI_PERSON_NAMEIDENTIFIER_STRING = "nameIdentifier";
+
+    protected static final String GOOBI_CORPORATE_MAINNAME_STRING = "mainName";
+    protected static final String GOOBI_CORPORATE_SUBNAME_STRING = "subName";
+    protected static final String GOOBI_CORPORATE_PARTNAME_STRING = "partName";
+
 
     // The Goobi internal metadata XPath.
     protected static final String GOOBI_INTERNAL_METADATA_XPATH = "/mods:mods/mods:extension/goobi:goobi/goobi:metadata";
@@ -2260,8 +2266,10 @@ public class MetsMods implements ugh.dl.Fileformat {
                                     }
                                 }
                             }
+                            // TODO corporate in group
 
                         }
+
 
                         LOGGER.debug("Added metadataGroup '" + mgt.getName() + "' to DocStruct '" + inStruct.getType().getName() + "'");
 
@@ -2278,90 +2286,37 @@ public class MetsMods implements ugh.dl.Fileformat {
                     }
                 }
 
+                if (metabagu.getNodeType() == ELEMENT_NODE && metabagu.getAttributes().getNamedItem("anchorId") == null
+                        && metabagu.getAttributes().getNamedItem("type") != null
+                        && metabagu.getAttributes().getNamedItem("type").getTextContent().equals("corporate")) {
+                    Corporate corp= parseModsCorporate( metabagu);
+                    if (corp != null) {
+                        try {
+                            inStruct.addCorporate(corp);
+                        } catch (MetadataTypeNotAllowedException e) {
+                            String message = "Corporate '" + corp.getType().getName() + "' " + corp.getMainName() + ") is not allowed as a child for '"
+                                    + inStruct.getType().getName() + "' during MODS import!";
+                            LOGGER.error(message, e);
+                            throw new ImportException(message);
+                        }
+                    }
+                }
+
                 // We have a person node here!
                 if (metabagu.getNodeType() == ELEMENT_NODE && metabagu.getAttributes().getNamedItem("anchorId") == null
                         && metabagu.getAttributes().getNamedItem("type") != null
                         && metabagu.getAttributes().getNamedItem("type").getTextContent().equals("person")) {
-                    String role = metabagu.getAttributes().item(0).getTextContent();
-
-                    LOGGER.debug("Person metadata '" + role + "' found in Goobi's MODS extension");
-
-                    // Ccheck if person does exist in prefs.
-                    MetadataType mdt = this.myPreferences.getMetadataTypeByName(role);
-                    if (mdt == null) {
-                        // No valid metadata type found.
-                        String message = "Can't find person with name '" + role + "' in prefs";
-                        LOGGER.error(message);
-                        throw new ImportException(message);
-                    }
-
-                    // Create and add person.
-                    if (mdt.getIsPerson()) {
-                        Person ps;
-                        try {
-                            ps = new Person(mdt);
-                        } catch (MetadataTypeNotAllowedException e) {
-                            String message = "Can't add person! MetadataType must not be null!";
-                            LOGGER.error(message, e);
-                            throw new ReadException(message, e);
-                        }
-                        ps.setRole(mdt.getName());
-
-                        // Iterate over every person's data.
-                        NodeList personNodelist = metabagu.getChildNodes();
-                        String authorityFileID = null;
-                        String authorityURI = null;
-                        String authortityValue = null;
-                        for (int j = 0; j < personNodelist.getLength(); j++) {
-
-                            Node personbagu = personNodelist.item(j);
-                            if (personbagu.getNodeType() == ELEMENT_NODE) {
-                                String name = personbagu.getLocalName();
-                                String value = personbagu.getTextContent();
-
-                                // Get and set values.
-                                if (name.equals(GOOBI_PERSON_FIRSTNAME_STRING)) {
-                                    ps.setFirstname(value);
-                                } else if (name.equals(GOOBI_PERSON_LASTNAME_STRING)) {
-                                    ps.setLastname(value);
-                                } else if (name.equals(GOOBI_PERSON_AFFILIATION_STRING)) {
-                                    ps.setAffiliation(value);
-                                } else if (name.equals(GOOBI_PERSON_AUTHORITYID_STRING)) {
-                                    authorityFileID = value;
-                                } else if (name.equals(GOOBI_PERSON_AUTHORITYURI_STRING)) {
-                                    authorityURI = value;
-                                } else if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
-                                    authortityValue = value;
-                                }
-
-                                else if (name.equals(GOOBI_PERSON_PERSONTYPE_STRING)) {
-                                    ps.setPersontype(value);
-                                } else if (name.equals(GOOBI_PERSON_DISPLAYNAME_STRING)) {
-                                    ps.setDisplayname(value);
-                                }
-
-                                else if (name.equals(GOOBI_PERSON_DATEVALUE_STRING)) {
-                                    ps.addNamePart(new NamePart(GOOBI_PERSON_DATEVALUE_STRING, value));
-                                } else if (name.equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING)) {
-                                    ps.addNamePart(new NamePart(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING, value));
-                                } else if (name.equals(GOOBI_PERSON_NAMEIDENTIFIER_STRING)) {
-                                    ps.addAuthorityUriToMap(personbagu.getAttributes().item(0).getTextContent(), value);
-                                }
-                            }
-                        }
-                        if (authorityFileID != null && authorityURI != null && authortityValue != null) {
-                            ps.setAutorityFile(authorityFileID, authorityURI, authortityValue);
-                        }
+                    Person ps = parseModsPerson( metabagu);
+                    if (ps != null) {
                         try {
                             inStruct.addPerson(ps);
-
-                            LOGGER.debug("Added person '" + mdt.getName() + "' to DocStruct '" + inStruct.getType().getName() + "'");
+                            LOGGER.debug("Added person '" + ps.getType().getName() + "' to DocStruct '" + inStruct.getType().getName() + "'");
                         } catch (DocStructHasNoTypeException e) {
                             String message = "DocumentStructure for which metadata should be added has no type!";
                             LOGGER.error(message, e);
                             throw new ImportException(message, e);
                         } catch (MetadataTypeNotAllowedException e) {
-                            String message = "Person '" + mdt.getName() + "' " + ps.getDisplayname() + ") is not allowed as a child for '"
+                            String message = "Person '" + ps.getType().getName() + "' " + ps.getDisplayname() + ") is not allowed as a child for '"
                                     + inStruct.getType().getName() + "' during MODS import!";
                             LOGGER.error(message, e);
                             throw new ImportException(message);
@@ -2370,6 +2325,151 @@ public class MetsMods implements ugh.dl.Fileformat {
                 }
             }
         }
+    }
+
+    private Corporate parseModsCorporate(Node metabagu) throws ReadException {
+
+        Corporate corporate = null;
+
+        String role = metabagu.getAttributes().item(0).getTextContent();
+
+        LOGGER.debug("Corporate metadata '" + role + "' found in Goobi's MODS extension");
+
+        // Ccheck if corporate does exist in prefs.
+        MetadataType mdt = this.myPreferences.getMetadataTypeByName(role);
+        if (mdt == null) {
+            // No valid metadata type found.
+            String message = "Can't find corporate with name '" + role + "' in prefs";
+            LOGGER.error(message);
+            throw new ImportException(message);
+        }
+
+        // Create and add corporate.
+        if (mdt.isCorporate()) {
+
+            try {
+                corporate = new Corporate(mdt);
+            } catch (MetadataTypeNotAllowedException e) {
+                String message = "Can't add corporate! MetadataType must not be null!";
+                LOGGER.error(message, e);
+                throw new ReadException(message, e);
+            }
+            corporate.setRole(mdt.getName());
+
+            // Iterate over every person's data.
+            NodeList corporateNodelist = metabagu.getChildNodes();
+            String authorityFileID = null;
+            String authorityURI = null;
+            String authortityValue = null;
+            for (int j = 0; j < corporateNodelist.getLength(); j++) {
+
+                Node personbagu = corporateNodelist.item(j);
+                if (personbagu.getNodeType() == ELEMENT_NODE) {
+                    String name = personbagu.getLocalName();
+                    String value = personbagu.getTextContent();
+
+                    // Get and set values.
+                    if (name.equals(GOOBI_CORPORATE_MAINNAME_STRING)) {
+                        corporate.setMainName(value);
+                    } else if (name.equals(GOOBI_CORPORATE_SUBNAME_STRING)) {
+                        corporate.addSubName(value);
+                    } else if (name.equals(GOOBI_CORPORATE_PARTNAME_STRING)) {
+                        corporate.setPartName(value);
+                    } else if (name.equals(GOOBI_PERSON_AUTHORITYID_STRING)) {
+                        authorityFileID = value;
+                    } else if (name.equals(GOOBI_PERSON_AUTHORITYURI_STRING)) {
+                        authorityURI = value;
+                    } else if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
+                        authortityValue = value;
+                    }
+                }
+            }
+            if (authorityFileID != null && authorityURI != null && authortityValue != null) {
+                corporate.setAutorityFile(authorityFileID, authorityURI, authortityValue);
+            }
+
+        }
+        return corporate;
+    }
+
+
+    private Person parseModsPerson(Node metabagu) throws ReadException {
+
+        Person ps = null;
+
+        String role = metabagu.getAttributes().item(0).getTextContent();
+
+        LOGGER.debug("Person metadata '" + role + "' found in Goobi's MODS extension");
+
+        // Ccheck if person does exist in prefs.
+        MetadataType mdt = this.myPreferences.getMetadataTypeByName(role);
+        if (mdt == null) {
+            // No valid metadata type found.
+            String message = "Can't find person with name '" + role + "' in prefs";
+            LOGGER.error(message);
+            throw new ImportException(message);
+        }
+
+        // Create and add person.
+        if (mdt.getIsPerson()) {
+
+            try {
+                ps = new Person(mdt);
+            } catch (MetadataTypeNotAllowedException e) {
+                String message = "Can't add person! MetadataType must not be null!";
+                LOGGER.error(message, e);
+                throw new ReadException(message, e);
+            }
+            ps.setRole(mdt.getName());
+
+            // Iterate over every person's data.
+            NodeList personNodelist = metabagu.getChildNodes();
+            String authorityFileID = null;
+            String authorityURI = null;
+            String authortityValue = null;
+            for (int j = 0; j < personNodelist.getLength(); j++) {
+
+                Node personbagu = personNodelist.item(j);
+                if (personbagu.getNodeType() == ELEMENT_NODE) {
+                    String name = personbagu.getLocalName();
+                    String value = personbagu.getTextContent();
+
+                    // Get and set values.
+                    if (name.equals(GOOBI_PERSON_FIRSTNAME_STRING)) {
+                        ps.setFirstname(value);
+                    } else if (name.equals(GOOBI_PERSON_LASTNAME_STRING)) {
+                        ps.setLastname(value);
+                    } else if (name.equals(GOOBI_PERSON_AFFILIATION_STRING)) {
+                        ps.setAffiliation(value);
+                    } else if (name.equals(GOOBI_PERSON_AUTHORITYID_STRING)) {
+                        authorityFileID = value;
+                    } else if (name.equals(GOOBI_PERSON_AUTHORITYURI_STRING)) {
+                        authorityURI = value;
+                    } else if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
+                        authortityValue = value;
+                    }
+
+                    else if (name.equals(GOOBI_PERSON_PERSONTYPE_STRING)) {
+                        ps.setPersontype(value);
+                    } else if (name.equals(GOOBI_PERSON_DISPLAYNAME_STRING)) {
+                        ps.setDisplayname(value);
+                    }
+
+                    else if (name.equals(GOOBI_PERSON_DATEVALUE_STRING)) {
+                        ps.addNamePart(new NamePart(GOOBI_PERSON_DATEVALUE_STRING, value));
+                    } else if (name.equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING)) {
+                        ps.addNamePart(new NamePart(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING, value));
+                    } else if (name.equals(GOOBI_PERSON_NAMEIDENTIFIER_STRING)) {
+                        ps.addAuthorityUriToMap(personbagu.getAttributes().item(0).getTextContent(), value);
+                    }
+                }
+            }
+            if (authorityFileID != null && authorityURI != null && authortityValue != null) {
+                ps.setAutorityFile(authorityFileID, authorityURI, authortityValue);
+            }
+
+        }
+        return ps;
     }
 
     /***************************************************************************
@@ -4508,7 +4608,8 @@ public class MetsMods implements ugh.dl.Fileformat {
             }
 
         }
-
+        // write all corporates
+        writeDmdCorporates(inStruct, dommodsnode, domDoc);
         // Write all persons.
         writeDmdPersons(inStruct, dommodsnode, domDoc);
     }
@@ -4675,6 +4776,62 @@ public class MetsMods implements ugh.dl.Fileformat {
                 createdNode.appendChild(identifierNode);
             }
         }
+    }
+
+
+
+    protected void writeSingleModsCorporate(String theXQuery, Corporate corp, Node theStartingNode, Document theDocument)
+            throws PreferencesException {
+
+        Node createdNode = createNode(theXQuery, theStartingNode, theDocument);
+
+        if (StringUtils.isNotBlank(corp.getMainName())) {
+            theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_CORPORATE_MAINNAME_STRING;
+            Node node = createNode(theXQuery, createdNode, theDocument);
+            Node lastnamevalueNode = theDocument.createTextNode(corp.getMainName());
+            node.appendChild(lastnamevalueNode);
+            createdNode.appendChild(node);
+        }
+        if (corp.getSubNames() != null) {
+            for (String subName : corp.getSubNames()) {
+                theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_CORPORATE_SUBNAME_STRING;
+                Node node = createNode(theXQuery, createdNode, theDocument);
+                Node lastnamevalueNode = theDocument.createTextNode(subName);
+                node.appendChild(lastnamevalueNode);
+                createdNode.appendChild(node);
+            }
+        }
+
+        if (StringUtils.isNotBlank(corp.getPartName())) {
+            theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_CORPORATE_PARTNAME_STRING;
+            Node node = createNode(theXQuery, createdNode, theDocument);
+            Node lastnamevalueNode = theDocument.createTextNode(corp.getPartName());
+            node.appendChild(lastnamevalueNode);
+            createdNode.appendChild(node);
+        }
+
+        if (StringUtils.isNotBlank(corp.getAuthorityID())) {
+            theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYID_STRING;
+            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument);
+            Node authorityfileidvalueNode = theDocument.createTextNode(corp.getAuthorityID());
+            authorityfileidNode.appendChild(authorityfileidvalueNode);
+            createdNode.appendChild(authorityfileidNode);
+        }
+        if (StringUtils.isNotBlank(corp.getAuthorityURI())) {
+            theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYURI_STRING;
+            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument);
+            Node authorityfileidvalueNode = theDocument.createTextNode(corp.getAuthorityURI());
+            authorityfileidNode.appendChild(authorityfileidvalueNode);
+            createdNode.appendChild(authorityfileidNode);
+        }
+        if (StringUtils.isNotBlank(corp.getAuthorityValue())) {
+            theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYVALUE_STRING;
+            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument);
+            Node authorityfileidvalueNode = theDocument.createTextNode(corp.getAuthorityValue());
+            authorityfileidNode.appendChild(authorityfileidvalueNode);
+            createdNode.appendChild(authorityfileidNode);
+        }
+
     }
 
     protected void writeSingleModsGroup(String theXQuery, MetadataGroup theGroup, Node theStartingNode, Document theDocument)
@@ -4940,6 +5097,19 @@ public class MetsMods implements ugh.dl.Fileformat {
                     String xquery = "./" + this.modsNamespacePrefix + ":mods/" + this.modsNamespacePrefix + ":extension/" + this.goobiNamespacePrefix
                             + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@type='person'][@name='" + p.getRole() + "']";
                     writeSingleModsPerson(xquery, p, domModsNode, domDoc);
+                }
+            }
+        }
+    }
+
+    private void writeDmdCorporates(DocStruct inStruct, Node domModsNode, Document domDoc) throws PreferencesException {
+        if (inStruct.getAllCorporates() != null) {
+            for (Corporate corp : inStruct.getAllCorporates()) {
+                if (corp != null && StringUtils.isNotBlank(corp.getRole()) && StringUtils.isNotBlank(corp.getMainName())) {
+                    String xquery = "./" + this.modsNamespacePrefix + ":mods/" + this.modsNamespacePrefix + ":extension/" + this.goobiNamespacePrefix
+                            + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@type='corporate'][@name='" + corp.getRole() + "']";
+                    writeSingleModsCorporate(xquery, corp, domModsNode, domDoc);
+
                 }
             }
         }
