@@ -2267,10 +2267,29 @@ public class MetsMods implements ugh.dl.Fileformat {
                                     }
                                 }
                             }
-                            // TODO corporate in group
+                            // corporate in group
+                            else if (metadata.getNodeType() == ELEMENT_NODE && metadata.getAttributes().getNamedItem("type") != null
+                                    && metadata.getAttributes().getNamedItem("type").getTextContent().equals("corporate")) {
+                                Corporate corp= parseModsCorporate( metadata);
+                                if (corp != null) {
 
+                                    List<Corporate> metadataList = new ArrayList<>(metadataGroup.getCorporateList());
+                                    for (Corporate corpOld : metadataList) {
+
+                                        if (corpOld.getType().getName().equals(corp.getType().getName())) {
+                                            if (StringUtils.isBlank(corpOld.getMainName())) {
+                                                corpOld.setMainName(corp.getMainName());
+                                                corpOld.setSubNames(corp.getSubNames());
+                                                corpOld.setPartName(corp.getPartName());
+                                                corpOld.setAutorityFile(corp.getAuthorityID(), corp.getAuthorityURI(), corp.getAuthorityValue());
+                                            }else {
+                                                metadataList.add(corp);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
-
 
                         LOGGER.debug("Added metadataGroup '" + mgt.getName() + "' to DocStruct '" + inStruct.getType().getName() + "'");
 
@@ -4852,6 +4871,13 @@ public class MetsMods implements ugh.dl.Fileformat {
                     && (p.getFirstname() != null || p.getLastname() != null || p.getDisplayname() != null)) {
                 String xquery = "./#" + this.goobiNamespacePrefix + ":metadata[@type='person'][@name='" + p.getRole() + "']";
                 writeSingleModsPerson(xquery, p, createdNode, theDocument);
+            }
+        }
+
+        for (Corporate corp : theGroup.getCorporateList()) {
+            if (corp != null && StringUtils.isNotBlank(corp.getRole()) && StringUtils.isNotBlank(corp.getMainName())) {
+                String xquery = "./#" + this.goobiNamespacePrefix + ":metadata[@type='person'][@corporate='" + corp.getRole() + "']";
+                writeSingleModsCorporate(xquery, corp, createdNode, theDocument);
             }
         }
     }
