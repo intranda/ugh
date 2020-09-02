@@ -4875,7 +4875,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         for (Corporate corp : theGroup.getCorporateList()) {
             if (corp != null && StringUtils.isNotBlank(corp.getRole()) && StringUtils.isNotBlank(corp.getMainName())) {
-                String xquery = "./#" + this.goobiNamespacePrefix + ":metadata[@type='person'][@corporate='" + corp.getRole() + "']";
+                String xquery = "./#" + this.goobiNamespacePrefix + ":metadata[@type='corporate'][@name='" + corp.getRole() + "']";
                 writeSingleModsCorporate(xquery, corp, createdNode, theDocument);
             }
         }
