@@ -22,6 +22,9 @@ import org.junit.rules.TemporaryFolder;
 import ugh.dl.Corporate;
 import ugh.dl.DocStruct;
 import ugh.dl.Fileformat;
+import ugh.dl.Metadata;
+import ugh.dl.MetadataGroup;
+import ugh.dl.Person;
 import ugh.dl.Prefs;
 import ugh.exceptions.UGHException;
 import ugh.fileformats.mets.MetsMods;
@@ -134,6 +137,115 @@ public class CorporateMetsExportTest {
         assertEquals("first sub name", nameParts.get(1).getText());
         assertEquals("additional sub name", nameParts.get(2).getText());
         assertEquals("part name", nameParts.get(3).getText());
+
+    }
+
+    @Test
+    public void testCorporateInGroup() throws Exception {
+
+        // create group with metadata, person, corporate
+        MetadataGroup publisherGroup = new MetadataGroup(prefs.getMetadataGroupTypeByName("PublisherGroup"));
+
+        for (Metadata md :publisherGroup.getMetadataList()) {
+            if (md.getType().getName().equals("PlaceOfPublication")) {
+                md.setValue("Place");
+                md.setAutorityFile("111", "url", "http://example.com/111");
+            } else {
+                md.setValue("666");
+            }
+        }
+        for (Person p : publisherGroup.getPersonList()) {
+            p.setFirstname("Firstname");
+            p.setLastname("Lastname");
+            p.setAutorityFile("ABC", "url", "http://example.com/ABC");
+        }
+        for (Corporate c : publisherGroup.getCorporateList()) {
+            c.setMainName("Main name");
+            c.addSubName("Sub name");
+            c.setPartName("Part name");
+            c.setAutorityFile("1234", "url", "http://example.com/1234");
+        }
+        fileformat.getDigitalDocument().getLogicalDocStruct().addMetadataGroup(publisherGroup);
+
+        // save it as internal format
+
+        Path metadataFile = Paths.get(exportFolder.toString(), "meta.xml");
+        fileformat.write(metadataFile.toString());
+
+        assertTrue(Files.exists(metadataFile));
+
+        // read internal format
+        Fileformat fileformat2 = new MetsMods(prefs);
+        fileformat2.read(metadataFile.toString());
+        DocStruct mono = fileformat2.getDigitalDocument().getLogicalDocStruct();
+
+        // group is still here
+        MetadataGroup mdg = mono.getAllMetadataGroups().get(0);
+
+        for (Metadata md :mdg.getMetadataList()) {
+            if (md.getType().getName().equals("PlaceOfPublication")) {
+                assertEquals("Place", md.getValue());
+            } else {
+                assertEquals("666", md.getValue());
+            }
+        }
+        for (Person p : mdg.getPersonList()) {
+            assertEquals("Firstname", p.getFirstname());
+            assertEquals("Lastname", p.getLastname());
+        }
+        for (Corporate c : mdg.getCorporateList()) {
+            assertEquals("Main name", c.getMainName());
+            assertEquals("Sub name", c.getSubNames().get(0));
+            assertEquals("Part name", c.getPartName());
+            assertEquals("http://example.com/1234", c.getAuthorityValue());
+        }
+
+        // export as external format
+        MetsModsImportExport metsModsExport = new MetsModsImportExport(prefs);
+        metsModsExport.setDigitalDocument(fileformat2.getDigitalDocument());
+
+        metadataFile = Paths.get(exportFolder.toString(), "meta_export.xml");
+        metsModsExport.write(metadataFile.toString());
+
+        assertTrue(Files.exists(metadataFile));
+
+        // read exported file
+        SAXBuilder sb = new SAXBuilder();
+        Document doc = sb.build(metadataFile.toFile());
+
+        Element mets = doc.getRootElement();
+        Element dmdSec = mets.getChild("dmdSec", metsNamespace);
+        Element mods = dmdSec.getChild("mdWrap", metsNamespace).getChild("xmlData", metsNamespace).getChild("mods", modsNamespace);
+        List<Element> originInfoList = mods.getChildren("originInfo", modsNamespace);
+
+        // group elements are still here
+        Element originInfo = originInfoList.get(1);
+        List<Element> publisher = originInfo.getChildren("publisher", modsNamespace);
+
+        Element placeTerm = originInfo.getChild("place", modsNamespace).getChild("placeTerm", modsNamespace);
+        Element dateIssued = originInfo.getChild("dateIssued", modsNamespace);
+        Element publisherPerson = publisher.get(0).getChild("name", modsNamespace);
+        Element publisherCorporate = publisher.get(1).getChild("name", modsNamespace);
+
+        assertEquals("Place", placeTerm.getText());
+        assertEquals("http://example.com/111",placeTerm.getAttributeValue("valueURI"));
+        assertEquals("666", dateIssued.getValue());
+
+        assertEquals("personal", publisherPerson.getAttributeValue("type"));
+        assertEquals("dte", publisherPerson.getChild("role", modsNamespace).getChildText("roleTerm", modsNamespace));
+        List<Element> nameParts = publisherPerson.getChildren("namePart", modsNamespace);
+        assertEquals("Firstname", nameParts.get(0).getText());
+        assertEquals("given", nameParts.get(0).getAttributeValue("type"));
+        assertEquals("Lastname", nameParts.get(1).getText());
+        assertEquals("family", nameParts.get(1).getAttributeValue("type"));
+        assertEquals("Lastname, Firstname", publisherPerson.getChildText("displayForm", modsNamespace));
+
+        assertEquals("corporate", publisherCorporate.getAttributeValue("type"));
+        assertEquals("aut", publisherCorporate.getChild("role", modsNamespace).getChildText("roleTerm", modsNamespace));
+        nameParts = publisherCorporate.getChildren("namePart", modsNamespace);
+        assertEquals("Main name", nameParts.get(0).getText());
+        assertEquals("Sub name", nameParts.get(1).getText());
+        assertEquals("Part name", nameParts.get(2).getText());
 
     }
 
