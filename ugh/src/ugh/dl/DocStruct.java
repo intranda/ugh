@@ -894,13 +894,15 @@ public class DocStruct implements Serializable {
      * @return true, if available; otherwise false
      **************************************************************************/
     public boolean hasMetadataType(MetadataType inMDT) {
-
+        if (inMDT == null) {
+            return false;
+        }
         // Check metadata.
         List<Metadata> allMDs = this.getAllMetadata();
         if (allMDs != null) {
             for (Metadata md : allMDs) {
                 MetadataType mdt = md.getType();
-                if (inMDT != null && inMDT.getName().equals(mdt.getName())) {
+                if (inMDT.getName().equals(mdt.getName())) {
                     return true;
                 }
             }
@@ -911,7 +913,15 @@ public class DocStruct implements Serializable {
         if (allPersons != null) {
             for (Person per : allPersons) {
                 MetadataType mdt = per.getType();
-                if (inMDT != null && inMDT.getName().equals(mdt.getName())) {
+                if (inMDT.getName().equals(mdt.getName())) {
+                    return true;
+                }
+            }
+        }
+        // Check corporates
+        if (corporates!= null) {
+            for (Corporate corp : corporates) {
+                if (inMDT.getName().equals(corp.getType().getName())) {
                     return true;
                 }
             }

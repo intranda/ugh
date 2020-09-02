@@ -8246,109 +8246,16 @@
         <IdentifierXPath>../mods:name[@authority='gbv'][@ID='']
         </IdentifierXPath>
       </Metadata>
-      <!-- Persons end -->
-      <!-- Corporations start -->
+   
       <Metadata>
-        <InternalName>CorporateAddressee</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="rcp"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
+        <InternalName>Corporation</InternalName>
+        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="aut"[@authority='marcrelator'][@type='code']]</WriteXPath>
+        <MainNameXPath>./mods:namePart</MainNameXPath>
+        <SubNameXPath>./mods:namePart</SubNameXPath>
+        <PartNameXPath>./mods:namePart</PartNameXPath>
       </Metadata>
-      <Metadata>
-        <InternalName>CorporateArtist</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="art"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateAuthorOfAfterword</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="aft"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateCompiler</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="com"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateContributor</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="ctb"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateCurator</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="cur"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateEngraver</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="egr"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateIllustrator</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="ill"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateOrganizer</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="orm"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateOther</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="oth"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporatePhotographer</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="pht"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateTranslator</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="trl"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateWriterOfAddedText</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="wat"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateWriterOfIntroduction</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="win"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateWriterOfPreface</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="wpr"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateWriterOfSupplementaryTextualContent</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="wst"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>HostInstitution</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="his"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>IssuingBody</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="isb"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>LegislativeBody</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="pma"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>WriterCorporate</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="aut"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <!-- Corporations end -->
+
+
       <!-- Subjects start -->
       <Metadata>
         <InternalName>Subject</InternalName>

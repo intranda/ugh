@@ -63,6 +63,7 @@ import org.xml.sax.SAXParseException;
 
 import gov.loc.mods.v3.ModsDocument;
 import ugh.dl.AmdSec;
+import ugh.dl.Corporate;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
 import ugh.dl.DocStructType;
@@ -205,6 +206,10 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
     protected static final String METS_PREFS_DATABASE_SOURCE = "DatabaseXpath";
     protected static final String METS_PREFS_DATABASE_IDENTIFIER = "IdentifierXpath";
 
+    protected static final String METS_PREFS_MAINNAMEXPATH_STRING = "MainNameXPath";
+    protected static final String METS_PREFS_SUBNAMEXPATH_STRING = "SubNameXPath";
+    protected static final String METS_PREFS_PARTNAMEXPATH_STRING = "PartNameXPath";
+
     protected static final String METS_RIGHTS_OWNER_STRING = "rightsOwner";
     protected static final String METS_RIGHTS_OWNER_LOGO_STRING = "rightsOwnerLogo";
     protected static final String METS_RIGHTS_OWNER_SITE_STRING = "rightsOwnerSiteUrl";
@@ -310,6 +315,10 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         // Add groups to list
         if (inStruct.getAllMetadataGroups() != null) {
             notMappedMetadataAndPersons.addAll(inStruct.getAllMetadataGroups());
+        }
+
+        if (inStruct.getAllCorporates() != null) {
+            notMappedMetadataAndPersons.addAll(inStruct.getAllCorporates());
         }
 
         // Check if we already have written the anchor reference.
@@ -435,7 +444,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                                     break;
                                 }
                             }
-
+                            // TODO corp in groups
                             // only write groups with values
 
                             if (!isEmpty) {
@@ -481,6 +490,20 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                                 }
                             }
                         }
+                    }
+                }
+
+                // TODO export corporates
+                if (inStruct.getAllCorporates() != null) {
+                    MetadataType mdt = this.myPreferences.getMetadataTypeByName(mmo.getInternalName());
+                    if (inStruct.hasMetadataType(mdt) && inStruct.getAllCorporatesByType(mdt) != null) {
+                        for (Corporate corp : inStruct.getAllCorporatesByType(mdt)) {
+                            if (StringUtils.isNotBlank(corp.getMainName()) && mmo.getWriteXPath() != null) {
+                                writeSingleModsCorporate(mmo.getWriteXPath(), mmo, corp, dommodsnode, domDoc);
+                                notMappedMetadataAndPersons.remove(corp);
+                            }
+                        }
+
                     }
                 }
             }
@@ -644,6 +667,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                     notMappedMetadataAndPersons.remove(currentPer);
                 }
             }
+            // TODO export corporates
         }
 
         // Check for not mapped metadata and persons.
@@ -1570,7 +1594,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             element = this.metsNamespacePrefix + ":" + METS_FILESEC_STRING;
         }
 
-
         NodeList dmdList = this.metsNode.getElementsByTagName(element);
         Node refChild = dmdList.item(0);
         if (refChild != null) {
@@ -1758,12 +1781,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             }
         }
 
-
-
         LOGGER.trace("Value '" + theMetadata.getValue() + "' (" + theMetadata.getType().getName() + ") added to node >>" + createdNode.getNodeName()
         + "<<");
     }
-
 
     private void writeSingleGroupPerson(Person thePerson, Map<String, String> xpathMap, Node theDomModsNode, Document theDomDoc)
             throws PreferencesException {
@@ -1869,7 +1889,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         }
 
         if (!thePerson.getAuthorityUriMap().isEmpty()) {
-            for (Entry<String, String> entry: thePerson.getAuthorityUriMap().entrySet()) {
+            for (Entry<String, String> entry : thePerson.getAuthorityUriMap().entrySet()) {
                 xquery = "./mods:nameIdentifier[@name=" + entry.getKey() + "]";
                 Node identifierNode = createNode(xquery, createdNode, theDomDoc);
                 Node persontypevalueNode = theDomDoc.createTextNode(entry.getValue());
@@ -2012,7 +2032,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             }
         }
         if (!thePerson.getAuthorityUriMap().isEmpty()) {
-            for (Entry<String, String> entry: thePerson.getAuthorityUriMap().entrySet()) {
+            for (Entry<String, String> entry : thePerson.getAuthorityUriMap().entrySet()) {
                 xquery = "./mods:nameIdentifier[@type=" + entry.getKey() + "]";
                 Node identifierNode = createNode(xquery, createdNode, theDomDoc);
                 Node persontypevalueNode = theDomDoc.createTextNode(entry.getValue());
@@ -2020,6 +2040,80 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 createdNode.appendChild(identifierNode);
             }
         }
+    }
+
+    private void writeSingleModsCorporate(String xquery, MatchingMetadataObject theMMO, Corporate corporate, Node theDomModsNode, Document theDomDoc)
+            throws PreferencesException {
+
+        Node createdNode = createNode(xquery, theDomModsNode, theDomDoc);
+
+        if (createdNode == null) {
+            String message = "DOM Node could not be created for corporate '" + corporate + "'! XQuery was '" + xquery + "'";
+            LOGGER.error(message);
+            throw new PreferencesException(message);
+        }
+
+        // Create the subnodes.
+        if (StringUtils.isNotBlank(corporate.getMainName())) {
+            xquery = theMMO.getMainNameXQuery();
+            if (xquery == null) {
+                LOGGER.warn("No XQuery given for " + corporate.getType().getName() + "'s main name '" + corporate.getMainName() + "'");
+            } else {
+                Node lastnameNode = createNode(xquery, createdNode, theDomDoc);
+                Node lastnamevalueNode = theDomDoc.createTextNode(corporate.getMainName());
+                lastnameNode.appendChild(lastnamevalueNode);
+                createdNode.appendChild(lastnameNode);
+            }
+        }
+
+        if (corporate.getSubNames() != null) {
+            xquery = theMMO.getSubNameXQuery();
+            if (xquery == null) {
+                LOGGER.warn("No XQuery given for " + corporate.getType().getName() + "'s sub names '");
+            } else {
+                for (String subName : corporate.getSubNames()) {
+                    if (StringUtils.isNotBlank(subName)) {
+                        Node firstnameNode = createNode(xquery, createdNode, theDomDoc);
+                        Node firstnamevalueNode = theDomDoc.createTextNode(subName);
+                        firstnameNode.appendChild(firstnamevalueNode);
+                        createdNode.appendChild(firstnameNode);
+                    }
+                }
+            }
+        }
+        if (StringUtils.isNotBlank(corporate.getPartName())) {
+            xquery = theMMO.getPartNameXQuery();
+            if (xquery == null) {
+                LOGGER.warn("No XQuery given for " + corporate.getType().getName() + "'s part name '" + corporate.getPartName() + "'");
+            } else {
+                Node affiliationNode = createNode(xquery, createdNode, theDomDoc);
+                Node affiliationvalueNode = theDomDoc.createTextNode(corporate.getPartName());
+                affiliationNode.appendChild(affiliationvalueNode);
+                createdNode.appendChild(affiliationNode);
+            }
+        }
+
+        if (StringUtils.isNotBlank(corporate.getAuthorityID()) && StringUtils.isNotBlank(corporate.getAuthorityURI())
+                && StringUtils.isNotBlank(corporate.getAuthorityValue())) {
+            if (corporate.getAuthorityValue().startsWith("http")) {
+                ((Element) createdNode).setAttribute("valueURI", corporate.getAuthorityValue());
+            } else {
+                ((Element) createdNode).setAttribute("authority", corporate.getAuthorityID());
+                ((Element) createdNode).setAttribute("authorityURI", corporate.getAuthorityURI());
+                ((Element) createdNode).setAttribute("valueURI", corporate.getAuthorityURI() + corporate.getAuthorityValue());
+            }
+        }
+        //        if (corporate.getDisplayname() != null) {
+        //            xquery = theMMO.getDisplayNameXQuery();
+        //            if (xquery == null) {
+        //                LOGGER.warn("No XQuery given for " + corporate.getType().getName() + "'s displayName '" + corporate.getDisplayname() + "'");
+        //            } else {
+        //                Node displaynameNode = createNode(xquery, createdNode, theDomDoc);
+        //                Node displaynamevalueNode = theDomDoc.createTextNode(corporate.getDisplayname());
+        //                displaynameNode.appendChild(displaynamevalueNode);
+        //                createdNode.appendChild(displaynameNode);
+        //            }
+        //        }
     }
 
     /***************************************************************************
@@ -2192,6 +2286,26 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                         mmo.setAuthorityIDXquery(personName.trim());
                     }
                 }
+
+                if (currentNode.getNodeName().equalsIgnoreCase(METS_PREFS_MAINNAMEXPATH_STRING)) {
+                    personName = getTextNodeValue(currentNode);
+                    if (personName != null) {
+                        mmo.setMainNameXQuery(personName.trim());
+                    }
+                }
+                if (currentNode.getNodeName().equalsIgnoreCase(METS_PREFS_SUBNAMEXPATH_STRING)) {
+                    personName = getTextNodeValue(currentNode);
+                    if (personName != null) {
+                        mmo.setSubNameXQuery(personName.trim());
+                    }
+                }
+                if (currentNode.getNodeName().equalsIgnoreCase(METS_PREFS_PARTNAMEXPATH_STRING)) {
+                    personName = getTextNodeValue(currentNode);
+                    if (personName != null) {
+                        mmo.setPartNameXQuery(personName.trim());
+                    }
+                }
+
                 if (currentNode.getNodeName().equalsIgnoreCase(METS_PREFS_IDENTIFIERXPATH_STRING)) {
                     modsName = getTextNodeValue(currentNode);
                     if (personName != null) {
@@ -2472,6 +2586,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                     }
                     mmo.addToMap(elementName, map);
                 }
+                // TODO corporate
             }
         }
 
