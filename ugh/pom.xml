@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.intranda.ugh</groupId>
     <artifactId>ugh-core</artifactId>
-    <version>4.0.3</version>
+    <version>4.0.4</version>
     <repositories>
         <repository>
             <id>intranda-public</id>
@@ -251,7 +251,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
