@@ -35,6 +35,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.oro.text.perl.MalformedPerl5PatternException;
 import org.apache.oro.text.perl.Perl5Util;
@@ -45,6 +46,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import lombok.Getter;
+import lombok.Setter;
+import ugh.dl.Corporate;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
 import ugh.dl.DocStructType;
@@ -79,9 +83,7 @@ import ugh.exceptions.WriteException;
  * @version 2014-09-19
  * 
  *          TODOLOG
- * 
- *          TODO add NormMetadata
- * 
+ *
  *          CHANGELOG
  * 
  *          19.09.2014 --- Ronge --- Add import into metadata groups
@@ -215,6 +217,8 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     readPicaGroup(n);
                 } else if (n.getNodeName().equalsIgnoreCase(PREFS_METADATAGROUP_STRING)) {
                     readMetadataGroup(n);
+                } else if (n.getNodeName().equalsIgnoreCase("Corporate")) {
+                    mmoList.addAll(readPicaCorporateNode(n));
                 }
 
                 if (mmo != null) {
@@ -326,6 +330,81 @@ public class PicaPlus implements ugh.dl.Fileformat {
         }
 
         return mmo;
+    }
+
+    private Set<MatchingMetadataObject> readPicaCorporateNode(Node inNode) {
+
+        HashSet<MatchingMetadataObject> result = new HashSet<>();
+
+        String maintag = null;
+        String internal = null;
+
+        MatchingMetadataObject mmo = new MatchingMetadataObject();
+        mmo.setType("Corporate");
+
+        NodeList nl = inNode.getChildNodes();
+        for (int i = 0; i < nl.getLength(); i++) {
+            Node n = nl.item(i);
+            if (n.getNodeType() == ELEMENT_NODE) {
+                if (n.getNodeName().equalsIgnoreCase(PREFS_PICAMAINTAG_STRING)) {
+                    maintag = readTextNode(n);
+                    mmo.setPicaplusField(maintag);
+                }
+                if (n.getNodeName().equalsIgnoreCase(PREFS_PICASUBTAG_STRING)) {
+                    String subtag = readTextNode(n);
+                    mmo.setPicaplusSubfield(subtag);
+
+                    NamedNodeMap nnm = n.getAttributes();
+                    Node tn = nnm.getNamedItem("type");
+                    String attributeValue = tn.getNodeValue();
+
+                    if (attributeValue.equalsIgnoreCase("mainName")) {
+                        mmo.setMainField(true);
+                    } else if (attributeValue.equalsIgnoreCase("subName")) {
+                        mmo.setSubField(true);
+                    } else if (attributeValue.equalsIgnoreCase("partName")) {
+                        mmo.setPartField(true);
+                    } else if (attributeValue.equalsIgnoreCase("identifier")) {
+                        mmo.setIdentifier(true);
+                    }
+                } else if (n.getNodeName().equalsIgnoreCase(PREFS_NAME_STRING)) {
+                    mmo.setInternalName(readTextNode(n));
+                } else if (n.getNodeName().equalsIgnoreCase(PREFS_VALUECONDITION_STRING)) {
+                    mmo.setValueCondition(readTextNode(n));
+                } else if (n.getNodeName().equalsIgnoreCase(PREFS_VALUEREGEXP_STRING)) {
+                    mmo.setValueRegExp(readTextNode(n));
+                }
+
+                // Create new MMO object, this is necessary, because in this
+                // case we have several subtags, each one will be a new MMO.
+                if (StringUtils.isNotBlank(mmo.getPicaplusSubfield())) {
+                    result.add(mmo);
+                }
+                mmo = new MatchingMetadataObject();
+                mmo.setType("Corporate");
+
+                if (maintag != null) {
+                    mmo.setPicaplusField(maintag);
+                }
+                if (internal != null) {
+                    mmo.setInternalName(internal);
+                }
+
+                if (n.getNodeName().equalsIgnoreCase(PREFS_NAME_STRING)) {
+                    internal = readTextNode(n);
+                    mmo.setInternalName(internal);
+
+                    // Add it also to MMOs with other subfields.
+                    Iterator<MatchingMetadataObject> it = result.iterator();
+                    while (it.hasNext()) {
+                        MatchingMetadataObject mmo2 = it.next();
+                        mmo2.setInternalName(internal);
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     /***************************************************************************
@@ -684,6 +763,8 @@ public class PicaPlus implements ugh.dl.Fileformat {
         LinkedList<Metadata> allMDs = new LinkedList<>();
         // Contains all persons.
         LinkedList<Person> allPer = new LinkedList<>();
+        // Contains all corporations
+        LinkedList<Corporate> allCorp = new LinkedList<>();
         // Contains all metadata groups.
         LinkedList<MetadataGroup> allGroups = new LinkedList<>();
 
@@ -720,6 +801,8 @@ public class PicaPlus implements ugh.dl.Fileformat {
                             MetadataGroup group = (MetadataGroup) pprObject;
                             allGroups.add(group);
                             LOGGER.debug("MetadataGroup '" + group.getType().getName() + "' found");
+                        } else if (pprObject != null && pprObject.getClass() == ugh.dl.Corporate.class) {
+                            allCorp.add((Corporate) pprObject);
                         }
                     }
                 }
@@ -801,6 +884,17 @@ public class PicaPlus implements ugh.dl.Fileformat {
             }
         }
 
+        if (allCorp != null) {
+            for (Corporate corp : allCorp) {
+                try {
+                    ds.addCorporate(corp);
+                } catch (MetadataTypeNotAllowedException e) {
+                    String message = "Ignoring MetadataTypeNotAllowedException at OPAC import!";
+                    LOGGER.warn(message, e);
+                }
+            }
+        }
+
         // Add metadata groups to DocStruct.
         for (MetadataGroup group : allGroups) {
             try {
@@ -841,7 +935,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
         String fieldAttribute = null;
         DocStruct ds;
         Person per = null;
-
+        Corporate corp = null;
         // Set Metadata to null for every new picaplus node.
         Metadata md = null;
         NamedNodeMap nnm = null;
@@ -903,11 +997,10 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 try {
                     if (mmo != null && mmo.getValueCondition() != null && !mmo.getValueCondition().equals("")
                             && !perlUtil.match(mmo.getValueCondition(), content)) {
-                        // TODO Check what happens to "\"s in the String from
+                        //  Check what happens to "\"s in the String from
                         // the Prefs' XML value.
-                        // TODO Generalise regExp tings!
-                        LOGGER.info("Condition '" + mmo.getValueCondition() + "' for " + mmo.getType() + " '" + mmo.getInternalName() + " ("
-                                + content + ")" + "' does not match, skipping...");
+                        LOGGER.info("Condition '" + mmo.getValueCondition() + "' for " + mmo.getType() + " '" + mmo.getInternalName() + " (" + content
+                                + ")" + "' does not match, skipping...");
                         continue;
                     }
                 } catch (MalformedPerl5PatternException e) {
@@ -923,9 +1016,8 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 try {
                     if (mmo != null && mmo.getValueRegExp() != null && !mmo.getValueRegExp().equals("")) {
                         String oldContent = content;
-                        // TODO Check what happens to "\"s in the String from
+                        // Check what happens to "\"s in the String from
                         // the Prefs' XML value.
-                        // TODO
                         content = new String(perlUtil.substitute(mmo.getValueRegExp(), content));
                         LOGGER.info("Regular expression '" + mmo.getValueRegExp() + "' changed value of " + mmo.getType() + " '"
                                 + mmo.getInternalName() + "' from '" + oldContent + "' to '" + content + "'");
@@ -1019,8 +1111,55 @@ public class PicaPlus implements ugh.dl.Fileformat {
                             }
                         }
                     }
+                } else if (mmo != null && mmo.getType().equals("Corporate")) {
+                    // TODO
+                    String internalname = mmo.getInternalName();
+                    if (corp == null) {
+
+                        MetadataType mdt = this.myPreferences.getMetadataTypeByName(internalname);
+                        if (mdt == null) {
+                            LOGGER.warn("Can't find MetadataType with internal name '" + internalname + "'");
+                            return null;
+                        }
+                        corp = new Corporate(mdt);
+                        corp.setRole(internalname);
+                    }
+                    if (mmo.getInternalName().equals(corp.getRole())) {
+                        if (mmo.isIdentifier()) {
+                            // gnd/123456 or gnd123456 or 123456 or (DE-588)123456
+                            if (content.contains("/")) {
+                                String catalogue = content.substring(0, content.indexOf("/"));
+                                String identifier = content.substring(content.indexOf("/") + 1);
+                                if (catalogue.equals("gnd")) {
+                                    corp.setAutorityFile(catalogue, "http://d-nb.info/gnd/", identifier);
+                                }
+                            } else if (content.matches("gnd\\.+")) {
+                                corp.setAutorityFile("gnd", "http://d-nb.info/gnd/", content.replace("gnd", ""));
+                            } else if (content.matches("\\(.*\\).+")) {
+                                corp.setAutorityFile("gnd", "http://d-nb.info/gnd/", content.replaceAll("\\(.*\\)", ""));
+                            } else {
+                                corp.setAutorityFile("gnd", "http://d-nb.info/gnd/", content);
+                            }
+                        }
+                    }
+                    if (mmo.isMainField()) {
+                        if (StringUtils.isBlank(corp.getMainName())) {
+                            corp.setMainName(content);
+                        }
+                    }
+                    if (mmo.isSubField()) {
+                        corp.addSubName(content);
+                    }
+                    if (mmo.isPartField()) {
+                        if (StringUtils.isNotBlank(corp.getPartName())) {
+                            corp.setPartName(corp.getPartName() + "; " + content);
+                        } else {
+                            corp.setPartName(content);
+                        }
+                    }
+
                 }
-                // TODO add NormMetadata
+
                 else if (mmo != null && mmo.getType().equals("Person")) {
                     // It's a person; we can get to this point several times, as
                     // person's metadata information is split over several
@@ -1142,6 +1281,10 @@ public class PicaPlus implements ugh.dl.Fileformat {
         if (per != null) {
             result.add(per);
         }
+        if (corp != null) {
+            result.add(corp);
+        }
+
         if (hasNoSubfields) {
             result.add(md);
         }
@@ -1334,6 +1477,8 @@ public class PicaPlus implements ugh.dl.Fileformat {
      * Implements an object which translates a PicaPlus record (with a picaplus number and subnumber) to a MetadataType object.
      * </p>
      **************************************************************************/
+    @Getter
+    @Setter
     private class MatchingMetadataObject {
 
         private String picaplusField = null;
@@ -1353,195 +1498,10 @@ public class PicaPlus implements ugh.dl.Fileformat {
         // Role of other involved.
         private boolean isFunction = false;
 
-        /***********************************************************************
-         * Constructor.
-         **********************************************************************/
-        public MatchingMetadataObject() {
-            // Nothing to construct here.
-        }
-
-        /***********************************************************************
-         * @return the picaplusGroupname
-         **********************************************************************/
-        public String getPicaplusGroupname() {
-            return this.picaplusGroupname;
-        }
-
-        /***********************************************************************
-         * @param picaplusGroupname the picaplusGroupname to set
-         **********************************************************************/
-        public void setPicaplusGroupname(String picaplusGroupname) {
-            this.picaplusGroupname = picaplusGroupname;
-        }
-
-        /***********************************************************************
-         * @param inField
-         **********************************************************************/
-        public void setPicaplusField(String inField) {
-            this.picaplusField = inField;
-        }
-
-        /***********************************************************************
-         * @return
-         **********************************************************************/
-        public String getPicaplusField() {
-            return this.picaplusField;
-        }
-
-        /***********************************************************************
-         * @param in
-         **********************************************************************/
-        public void setPicaplusSubfield(String in) {
-            this.picaplusSubfield = in;
-        }
-
-        /***********************************************************************
-         * @return
-         **********************************************************************/
-        public String getPicaplusSubfield() {
-            return this.picaplusSubfield;
-        }
-
-        /***********************************************************************
-         * @param inType
-         **********************************************************************/
-        public void setType(String inType) {
-            this.type = inType;
-        }
-
-        /***********************************************************************
-         * @return
-         **********************************************************************/
-        public String getType() {
-            return this.type;
-        }
-
-        /***********************************************************************
-         * @return
-         **********************************************************************/
-        public String getContent() {
-            return this.content;
-        }
-
-        /***********************************************************************
-         * @param in
-         **********************************************************************/
-        public void setContent(String in) {
-            this.content = in;
-        }
-
-        /***********************************************************************
-         * @return the internalName
-         **********************************************************************/
-        public String getInternalName() {
-            return this.internalName;
-        }
-
-        /***********************************************************************
-         * @param internalName the internalName to set
-         **********************************************************************/
-        public void setInternalName(String internalName) {
-            this.internalName = internalName;
-        }
-
-        /***********************************************************************
-         * @return the isFirstname
-         **********************************************************************/
-        public boolean isFirstname() {
-            return this.isFirstname;
-        }
-
-        /***********************************************************************
-         * @param isFirstname the isFirstname to set
-         **********************************************************************/
-        public void setFirstname(boolean isFirstname) {
-            this.isFirstname = isFirstname;
-        }
-
-        /***********************************************************************
-         * @return the isLastname
-         **********************************************************************/
-        public boolean isLastname() {
-            return this.isLastname;
-        }
-
-        /***********************************************************************
-         * @param isLastname the isLastname to set
-         **********************************************************************/
-        public void setLastname(boolean isLastname) {
-            this.isLastname = isLastname;
-        }
-
-        /***********************************************************************
-         * @return the isIdentifier
-         **********************************************************************/
-        public boolean isIdentifier() {
-            return this.isIdentifier;
-        }
-
-        /***********************************************************************
-         * @param isIdentifier the isIdentifier to set
-         **********************************************************************/
-        public void setIdentifier(boolean isIdentifier) {
-            this.isIdentifier = isIdentifier;
-        }
-
-        /***********************************************************************
-         * @return
-         **********************************************************************/
-        public boolean isExpansion() {
-            return this.isExpansion;
-        }
-
-        /***********************************************************************
-         * @param _isExpansion
-         * @return
-         **********************************************************************/
-        public void setExpansion(boolean isExpansion) {
-            this.isExpansion = isExpansion;
-        }
-
-        /***********************************************************************
-         * @return
-         **********************************************************************/
-        public boolean isFunction() {
-            return this.isFunction;
-        }
-
-        /***********************************************************************
-         * @param isFunction
-         **********************************************************************/
-        public void setFunction(boolean isFunction) {
-            this.isFunction = isFunction;
-        }
-
-        /**************************************************************************
-         * @return
-         **************************************************************************/
-        public String getValueCondition() {
-            return this.valueCondition;
-        }
-
-        /**************************************************************************
-         * @param valueCondition
-         **************************************************************************/
-        public void setValueCondition(String valueCondition) {
-            this.valueCondition = valueCondition;
-        }
-
-        /**************************************************************************
-         * @return
-         **************************************************************************/
-        public String getValueRegExp() {
-            return this.valueRegExp;
-        }
-
-        /**************************************************************************
-         * @param valueRegExp
-         **************************************************************************/
-        public void setValueRegExp(String valueRegExp) {
-            this.valueRegExp = valueRegExp;
-        }
+        // Fields for corporations
+        private boolean isMainField = false;
+        private boolean isSubField = false;
+        private boolean isPartField = false;
     }
 
     @Override

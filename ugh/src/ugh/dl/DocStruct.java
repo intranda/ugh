@@ -44,6 +44,7 @@ import ugh.exceptions.IncompletePersonObjectException;
 import ugh.exceptions.MetadataTypeNotAllowedException;
 import ugh.exceptions.TypeNotAllowedAsChildException;
 import ugh.exceptions.TypeNotAllowedForParentException;
+import ugh.exceptions.UGHException;
 
 /*******************************************************************************
  * <p>
@@ -76,7 +77,6 @@ import ugh.exceptions.TypeNotAllowedForParentException;
  * 
  *      TODOLOG
  * 
- *      TODO Remove all the boolean results that always are TRUE!!
  * 
  *      TODO Maybe use the equals() method for comparing the things from the ruleset and the things from the DigitalDocument?? This may only be
  *      interesting for XStream serialisation!!
@@ -171,6 +171,8 @@ public class DocStruct implements Serializable {
     // List of all persons; list containing all Person objects.
     private List<Person> persons;
 
+    private List<Corporate> corporates;
+
     private DocStruct parent;
     // All references to other DocStrct instances (containing References
     // objects).
@@ -200,7 +202,6 @@ public class DocStruct implements Serializable {
     private String docstructType = "div";
 
     private String admId;
-
 
     /***************************************************************************
      * <p>
@@ -826,7 +827,11 @@ public class DocStruct implements Serializable {
     }
 
     public void setAllPersons(List<Person> personList) {
-        this.persons =personList;
+        this.persons = personList;
+    }
+
+    public void setAllCorporates(List<Corporate> corporateList) {
+        corporates = corporateList;
     }
 
     /***************************************************************************
@@ -889,13 +894,15 @@ public class DocStruct implements Serializable {
      * @return true, if available; otherwise false
      **************************************************************************/
     public boolean hasMetadataType(MetadataType inMDT) {
-
+        if (inMDT == null) {
+            return false;
+        }
         // Check metadata.
         List<Metadata> allMDs = this.getAllMetadata();
         if (allMDs != null) {
             for (Metadata md : allMDs) {
                 MetadataType mdt = md.getType();
-                if (inMDT != null && inMDT.getName().equals(mdt.getName())) {
+                if (inMDT.getName().equals(mdt.getName())) {
                     return true;
                 }
             }
@@ -906,7 +913,15 @@ public class DocStruct implements Serializable {
         if (allPersons != null) {
             for (Person per : allPersons) {
                 MetadataType mdt = per.getType();
-                if (inMDT != null && inMDT.getName().equals(mdt.getName())) {
+                if (inMDT.getName().equals(mdt.getName())) {
+                    return true;
+                }
+            }
+        }
+        // Check corporates
+        if (corporates!= null) {
+            for (Corporate corp : corporates) {
+                if (inMDT.getName().equals(corp.getType().getName())) {
                     return true;
                 }
             }
@@ -1700,7 +1715,13 @@ public class DocStruct implements Serializable {
                 }
             }
         }
-
+        if (inType != null && corporates != null) {
+            for (Metadata md : corporates) {
+                if (md.getType() != null && md.getType().getName().equals(inType.getName())) {
+                    resultList.add(md);
+                }
+            }
+        }
         return resultList;
     }
 
@@ -1725,6 +1746,31 @@ public class DocStruct implements Serializable {
             for (Person per : this.persons) {
                 if (per.getType() != null && per.getType().getName().equals(inType.getName())) {
                     resultList.add(per);
+                }
+            }
+        }
+
+        // List is empty.
+        if (resultList.size() == 0) {
+            return null;
+        }
+
+        return resultList;
+    }
+
+    public List<Corporate> getAllCorporatesByType(MetadataType inType) {
+
+        List<Corporate> resultList = new LinkedList<>();
+
+        if (inType == null) {
+            return null;
+        }
+
+        // Check all persons.
+        if (corporates != null) {
+            for (Corporate corp : corporates) {
+                if (corp.getType() != null && corp.getType().getName().equals(inType.getName())) {
+                    resultList.add(corp);
                 }
             }
         }
@@ -1930,6 +1976,18 @@ public class DocStruct implements Serializable {
             }
         }
 
+        if (corporates != null) {
+            for (Corporate corp : corporates) {
+                MetadataType mdt = corp.getType();
+                if (mdt == null) {
+                    continue;
+                }
+                String name = mdt.getName();
+                if (name.equals(metadataTypeName)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -1982,6 +2040,15 @@ public class DocStruct implements Serializable {
             }
         }
 
+        if (corporates != null) {
+            for (Corporate corp : corporates) {
+                testtype = corp.getType();
+                if (testtype != null && testtype.getName().equals(inTypeName)) {
+                    // Another one is available.
+                    counter++;
+                }
+            }
+        }
         return counter;
     }
 
@@ -2122,7 +2189,7 @@ public class DocStruct implements Serializable {
                         // Metadata is NOT available; we are allowed to add it.
                         addableMetadata.add(mdt);
                     }
-
+                    //TODO
                     // Then check persons here.
                     boolean used = false;
                     if (mdt.getIsPerson() && this.getAllPersons() != null) {
@@ -2183,7 +2250,7 @@ public class DocStruct implements Serializable {
                     // Metadata is NOT available; we are allowed to add it.
                     addableMetadata.add(mdt);
                 }
-
+                //TODOs
                 // Then check persons here.
                 boolean used = false;
                 if (mdt.getIsPerson() && this.getAllPersons() != null) {
@@ -2644,6 +2711,71 @@ public class DocStruct implements Serializable {
         throw mtnae;
     }
 
+    public void addCorporate(Corporate corp) throws MetadataTypeNotAllowedException {
+
+        // Max number of persons (from configuration).
+        String maxnumberallowed = null;
+        // Number of persons currently available.
+        int number = 0;
+        // Store, wether we can or cannot add information.
+        boolean insert = false;
+
+        // Check, if person is complete.
+        if (corp.getType() == null) {
+            IncompletePersonObjectException ipoe = new IncompletePersonObjectException();
+            LOGGER.error("Incomplete data for person metadata");
+            throw ipoe;
+        }
+
+        // Get MetadataType of this person get MetadataType from docstructType
+        // object with the same name.
+        MetadataType mdtype = this.type.getMetadataTypeByType(corp.getType());
+        if (mdtype == null) {
+            MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException();
+            LOGGER.error("MetadataType " + corp.getType().getName() + " is not available for DocStruct '" + this.getType().getName() + "'");
+            throw mtnae;
+        }
+
+        // Check, if docstruct may have this person ??? depends on the role
+        // value of person.
+        maxnumberallowed = this.type.getNumberOfMetadataType(mdtype);
+
+        // Check, if another Person of this type is allowed. How many persons
+        // are already available.
+        number = countMDofthisType(mdtype.getName());
+
+        // As many as we want (zero or more).
+        if (maxnumberallowed.equals("*")) {
+            insert = true;
+        }
+        // One or more.
+        if (maxnumberallowed.equals("+") || maxnumberallowed.equals("+")) {
+            insert = true;
+        }
+        // Only one, if we have already one, we cannot add it.
+        if (maxnumberallowed.equals("1m") || maxnumberallowed.equals("1o")) {
+            if (number < 1) {
+                insert = true;
+            } else {
+                insert = false;
+            }
+        }
+
+        // We can add this person.
+        if (insert) {
+            if (this.corporates == null) {
+                this.corporates = new LinkedList<>();
+            }
+            this.corporates.add(corp);
+
+        } else {
+
+            MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException();
+            LOGGER.error("Corporate MetadataType '" + corp.getType().getName() + "' not allowed for DocStruct '" + this.getType().getName() + "'");
+            throw mtnae;
+        }
+    }
+
     /***************************************************************************
      * <p>
      * Removes a Person object.
@@ -2687,6 +2819,39 @@ public class DocStruct implements Serializable {
         return true;
     }
 
+    public boolean removeCorporate(Corporate in, boolean force) throws IncompletePersonObjectException {
+
+        if (this.corporates == null) {
+            return false;
+        }
+
+        MetadataType inMDType = in.getType();
+        // Incomplete person.
+        if (inMDType == null) {
+            IncompletePersonObjectException ipoe = new IncompletePersonObjectException();
+            LOGGER.error("Incomplete data for corporate metadata '" + in.getType().getName() + "'");
+            throw ipoe;
+        }
+
+        // How many metadata of this type do we have already.
+        int typesavailable = countMDofthisType(inMDType.getName());
+        // How many types must be at least available.
+        String maxnumbersallowed = this.type.getNumberOfMetadataType(inMDType);
+
+        if (force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
+            // There must be at least one.
+            return false;
+        }
+        if (force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+            // There must be at least one.
+            return false;
+        }
+
+        this.corporates.remove(in);
+
+        return true;
+    }
+
     /***************************************************************************
      * @param in
      * @return true, if removed; otherwise false
@@ -2694,6 +2859,10 @@ public class DocStruct implements Serializable {
      **************************************************************************/
     public boolean removePerson(Person in) throws IncompletePersonObjectException {
         return removePerson(in, false);
+    }
+
+    public boolean removeCorporate(Corporate in) throws IncompletePersonObjectException {
+        return removeCorporate(in, false);
     }
 
     /***************************************************************************
@@ -2710,6 +2879,13 @@ public class DocStruct implements Serializable {
         }
 
         return this.persons;
+    }
+
+    public List<Corporate> getAllCorporates() {
+        if (this.corporates == null || this.corporates.isEmpty()) {
+            return null;
+        }
+        return this.corporates;
     }
 
     /***************************************************************************
@@ -2851,7 +3027,17 @@ public class DocStruct implements Serializable {
                     } catch (MetadataTypeNotAllowedException e) {
                         continue;
                     }
-                } else {
+                } else if (mdt.isCorporate) {
+                    Corporate corp = new Corporate(mdt);
+                    corp.setRole(mdt.getName());
+                    try {
+                        addCorporate(corp);
+                    } catch (UGHException e) {
+                        continue;
+                    }
+                }
+
+                else {
                     // It's metadata, so create a new Metadata element.
                     Metadata metaFoo = new Metadata(mdt);
                     try {
@@ -2954,6 +3140,14 @@ public class DocStruct implements Serializable {
                 }
             }
         }
+        if (getAllCorporates()!= null) {
+            List<Corporate> corporateList = getAllCorporates();
+            for (Corporate corp : corporateList) {
+                if (StringUtils.isBlank(corp.getMainName()) && StringUtils.isBlank(corp.getPartName()) && corp.getSubNames().isEmpty()) {
+                    getAllCorporates().remove(corp);
+                }
+            }
+        }
 
         // Handle Metadata: Metadata objects are available.
         if (this.getAllMetadata() != null) {
@@ -3004,6 +3198,9 @@ public class DocStruct implements Serializable {
         List<Metadata> oldMetadata = new LinkedList<>();
         List<Person> oldPersons = new LinkedList<>();
 
+        List<Corporate> oldCorporates = new LinkedList();
+        List<Corporate> newCorporates = new LinkedList();
+
         if (this.allMetadata != null) {
             oldMetadata = new LinkedList<>(this.allMetadata);
         }
@@ -3011,6 +3208,10 @@ public class DocStruct implements Serializable {
             oldPersons = new LinkedList<>(this.persons);
         }
 
+        if (corporates != null) {
+            oldCorporates = new LinkedList<>(corporates) ;
+        }
+        //TODO
         // Get all MetadataTypes defined in the prefs for this DocStruct.
         DocStructType docStructType = thePrefs.getDocStrctTypeByName(this.getType().getName());
 
@@ -3037,6 +3238,15 @@ public class DocStruct implements Serializable {
                     }
                 }
             }
+            List<Corporate> oc = getAllCorporates();
+            if (oc != null) {
+                for (Corporate p : oc) {
+                    if (p.getType() != null && mType.getName().equals(p.getType().getName())) {
+                        newCorporates.add(p);
+                        oldCorporates.remove(p);
+                    }
+                }
+            }
 
             // Go throught all metadata of the curretn DocStruct.
             List<Metadata> om = this.getAllMetadata();
@@ -3059,12 +3269,15 @@ public class DocStruct implements Serializable {
         if (oldMetadata != null && oldMetadata.size() > 0) {
             newMetadata.addAll(oldMetadata);
         }
+        if (oldCorporates!= null && oldCorporates.size()>0) {
+            newCorporates.addAll(oldCorporates);
+        }
+
 
         // Re-set the lists.
         this.allMetadata = newMetadata;
         this.persons = newPersons;
-
-        // TODO groups
+        corporates=newCorporates;
     }
 
     /***************************************************************************
@@ -3095,7 +3308,7 @@ public class DocStruct implements Serializable {
         // Re-set the lists.
         this.allMetadata = metadataList;
         this.persons = personList;
-        // TODO groups
+
     }
 
     /****************************************************************************
@@ -3194,8 +3407,8 @@ public class DocStruct implements Serializable {
             return false;
         }
 
-        if (!((this.getReferenceToAnchor() == null && docStruct.getReferenceToAnchor() == null) || this.getReferenceToAnchor().equals(docStruct
-                .getReferenceToAnchor()))) {
+        if (!((this.getReferenceToAnchor() == null && docStruct.getReferenceToAnchor() == null)
+                || this.getReferenceToAnchor().equals(docStruct.getReferenceToAnchor()))) {
             LOGGER.debug("getreferenceAnchor=false");
             return false;
         }
@@ -3250,8 +3463,8 @@ public class DocStruct implements Serializable {
             return false;
         }
 
-        if (lpcResult == ListPairCheck.needsFurtherChecking && this.getAllContentFileReferences().size() != docStruct.getAllContentFileReferences()
-                .size()) {
+        if (lpcResult == ListPairCheck.needsFurtherChecking
+                && this.getAllContentFileReferences().size() != docStruct.getAllContentFileReferences().size()) {
             LOGGER.debug("6 false returned");
             return false;
         }
@@ -3378,8 +3591,8 @@ public class DocStruct implements Serializable {
 
         // If both lists are null, isEqual is returned, no in depth check
         // needed.
-        if (DigitalDocument.quickPairCheck(this.getAllContentFileReferences(), docStruct
-                .getAllContentFileReferences()) != DigitalDocument.ListPairCheck.isEqual) {
+        if (DigitalDocument.quickPairCheck(this.getAllContentFileReferences(),
+                docStruct.getAllContentFileReferences()) != DigitalDocument.ListPairCheck.isEqual) {
 
             // flagFound = true;
             for (ContentFileReference cfr1 : this.getAllContentFileReferences()) {
@@ -3609,7 +3822,7 @@ public class DocStruct implements Serializable {
         if (children != null) {
             for (DocStruct ds : children) {
                 list.add(ds);
-                if (ds.getAllChildren()!=null) {
+                if (ds.getAllChildren() != null) {
                     list.addAll(ds.getAllChildrenAsFlatList());
                 }
             }

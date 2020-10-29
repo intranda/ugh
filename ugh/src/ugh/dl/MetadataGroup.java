@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import lombok.Getter;
+import lombok.Setter;
 import ugh.exceptions.MetadataTypeNotAllowedException;
 
 /*******************************************************************************
@@ -36,8 +38,12 @@ public class MetadataGroup implements Serializable {
     // Document structure to which this metadata type belongs to.
     protected DocStruct myDocStruct;
 
+    @Getter @Setter
     private List<Metadata> metadataList;
+    @Getter @Setter
     private List<Person> personList;
+    @Getter @Setter
+    private List<Corporate> corporateList;
 
     /***************************************************************************
      * <p>
@@ -58,11 +64,16 @@ public class MetadataGroup implements Serializable {
 
         metadataList = new LinkedList<>();
         personList = new LinkedList<>();
+        corporateList = new LinkedList<>();
         for (MetadataType mdt : MDType.getMetadataTypeList()) {
             if (mdt.getIsPerson()) {
                 Person p = new Person(mdt);
                 p.setRole(mdt.getName());
                 personList.add(p);
+            } else if (mdt.isCorporate()) {
+                Corporate c = new Corporate(mdt);
+                c.setRole(mdt.getName());
+                corporateList.add(c);
             } else {
                 Metadata md = new Metadata(mdt);
                 metadataList.add(md);
@@ -118,28 +129,16 @@ public class MetadataGroup implements Serializable {
         this.MDType = inType;
     }
 
-    public List<Metadata> getMetadataList() {
-        return metadataList;
-    }
-
-    public void setMetadataList(List<Metadata> metadataList) {
-        this.metadataList = metadataList;
-    }
-
     public void addMetadata(Metadata metadata) {
         this.metadataList.add(metadata);
     }
 
-    public List<Person> getPersonList() {
-        return personList;
-    }
-
-    public void setPersonList(List<Person> personList) {
-        this.personList = personList;
-    }
-
     public void addPerson(Person person) {
         this.personList.add(person);
+    }
+    
+    public void addCorporate(Corporate corporate) {
+        corporateList.add(corporate);
     }
 
     @Override
@@ -187,6 +186,17 @@ public class MetadataGroup implements Serializable {
         return returnList;
     }
 
+    public List<Corporate> getCorporateByType(String theType) {
+        List<Corporate> returnList = new ArrayList<>();
+        for (Corporate md : corporateList) {
+            if (md.getType().getName().equals(theType)) {
+                returnList.add(md);
+            }
+        }
+        return returnList;
+    }
+
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -194,6 +204,7 @@ public class MetadataGroup implements Serializable {
         result = prime * result + ((MDType == null) ? 0 : MDType.hashCode());
         result = prime * result + ((metadataList == null) ? 0 : metadataList.hashCode());
         result = prime * result + ((personList == null) ? 0 : personList.hashCode());
+        result = prime * result + ((corporateList == null) ? 0 : corporateList.hashCode());
         result = prime * result + ((myDocStruct == null) ? 0 : myDocStruct.hashCode());
         return result;
     }

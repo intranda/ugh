@@ -311,138 +311,145 @@
   </MetadataType>
   <!-- Persons end -->
   <!-- Corporations start -->
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>Corporation</Name>
     <language name="de">Körperschaft</language>
     <language name="en">Corporation</language>
     <language name="es">Corporation zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateAddressee</Name>
     <language name="de">Korporativer Adressat</language>
     <language name="en">Corporate addressee</language>
     <language name="es">Corporate addressee zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateArtist</Name>
     <language name="de">Korporativer Künstler</language>
     <language name="en">Corporate artist</language>
     <language name="es">Corporate artist zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateAuthorOfAfterword</Name>
     <language name="de">Korporativer Verfasser eines Nachworts</language>
     <language name="en">Corporate author of afterword</language>
     <language name="es">Corporate author of afterword zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateAuthor</Name>
     <language name="de">Korporativer Author</language>
     <language name="en">CorporateAuthor zzz</language>
     <language name="es">CorporateAuthor zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateCompiler</Name>
     <language name="de">Korporativer Zusammensteller</language>
     <language name="en">Corporate compiler</language>
     <language name="es">Corporate compiler zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateContributor</Name>
     <language name="de">Mitwirkende Körperschaft</language>
     <language name="en">Corporate contributor</language>
     <language name="es">Corporate contributor zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateCurator</Name>
     <language name="de">Korporativer Kurator</language>
     <language name="en">Corporate curator</language>
     <language name="es">Corporate curator zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateEngraver</Name>
     <language name="de">Korporativer Stecher</language>
     <language name="en">Corporate engraver</language>
     <language name="es">Corporate engraver zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateIllustrator</Name>
     <language name="de">Korporativer Illustrator</language>
     <language name="en">Corporate illustrator</language>
     <language name="es">Corporate illustrator zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateOrganizer</Name>
     <language name="de">Veranstalter</language>
     <language name="en">Organizer</language>
     <language name="es">Organizer zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateOther</Name>
     <language name="de">Sonstige Körperschaft</language>
     <language name="en">Other corporation</language>
     <language name="es">Other corporation zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporatePhotographer</Name>
     <language name="de">Korporativer Photograph</language>
     <language name="en">Corporate photographer</language>
     <language name="es">Corporate photographer zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateTranslator</Name>
     <language name="de">Korporativer Übersetzer</language>
     <language name="en">Corporate translator</language>
     <language name="es">Corporate translator zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateWriterOfAddedText</Name>
     <language name="de">Korporativer Verfasser von Zusatztexten</language>
     <language name="en">Corporate writer of added text</language>
     <language name="es">Corporate writer of added text zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateWriterOfIntroduction</Name>
     <language name="de">Korporativer Verfasser einer Einleitung</language>
     <language name="en">Corporate writer of introduction</language>
     <language name="es">Corporate writer of introduction zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateWriterOfPreface</Name>
     <language name="de">Korporativer Verfasser einer Vorworts</language>
     <language name="en">Corporate writer of preface</language>
     <language name="es">Corporate writer of preface zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>CorporateWriterOfSupplementaryTextualContent</Name>
     <language name="de">Korporativer Verfasser von ergänzendem Text</language>
     <language name="en">Corporate writer of supplementary textual content</language>
     <language name="es">Corporate writer of supplementary textual content zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>HostInstitution</Name>
     <language name="de">Gastgebende Institution</language>
     <language name="en">Host institution</language>
     <language name="es">Host institution zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>IssuingBody</Name>
     <language name="de">Herausgebendes Organ</language>
     <language name="en">Issuing body</language>
     <language name="es">Issuing body zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>LegislativeBody</Name>
     <language name="de">Gesetzgebende Körperschaft</language>
     <language name="en">Legislative body</language>
     <language name="es">Legislative body zzz</language>
   </MetadataType>
-  <MetadataType normdata="true">
+  <MetadataType type="corporate" normdata="true">
     <Name>WriterCorporate</Name>
     <language name="de">Korporativer Verfasser</language>
     <language name="en">Corporate writer</language>
     <language name="es">Corporate writer zzz</language>
   </MetadataType>
+
+  <MetadataType type="corporate" normdata="true">
+    <Name>PublisherCorporate</Name>
+    <language name="de">Verlag</language>
+    <language name="en">Publisher</language>
+  </MetadataType>
+
   <!-- Corporations end -->
   <!-- Partner -->
   <MetadataType>
@@ -480,7 +487,7 @@
     <Name>_SHAPE</Name>
     <language name="de">Form</language>
     <language name="en">Shape</language>
-  </MetadataType>  
+  </MetadataType>
 
   <MetadataType>
     <Name>pagesize</Name>
@@ -1183,772 +1190,15 @@
 
 
 
-  <MetadataType>
-    <Name>_codicological_objectDataset_creationDate</Name>
-    <language name="de">codicological generated date (objectDesc)</language>
-    <language name="en">codicological generated date (objectDesc)</language>
-  </MetadataType>
-
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_superIdentificationNumber</Name>
-    <language name="de">codicological superIdentificationNumber (objectDataset)</language>
-    <language name="en">codicological superIdentificationNumber (objectDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_accessIdentificationNumber</Name>
-    <language name="de">codicological access identification number (objectDataset)</language>
-    <language name="en">codicological access identification number (objectDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_alephSysIdentificationNumber</Name>
-    <language name="de">codicological Aleph identification number (objectDataset)</language>
-    <language name="en">codicological Aleph identification number (objectDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_allegroIdentificationNumber</Name>
-    <language name="de">codicological Allegro identification number (objectDataset)</language>
-    <language name="en">codicological Allegro identification number (objectDataset)</language>
-  </MetadataType>
-
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_bvbIdentificationNumber</Name>
-    <language name="de">codicological BVB identification number (objectDataset)</language>
-    <language name="en">codicological BVB identification number (objectDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_bookMark</Name>
-    <language name="de">codicological bookmark (objectDataset)</language>
-    <language name="en">codicological bookmark (objectDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_volumeNumber</Name>
-    <language name="de">codicological volumenumber (objectDataset)</language>
-    <language name="en">codicological volumenumber (objectDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_miscellaneous</Name>
-    <language name="de">codicological miscellaneous (objectDataset)</language>
-    <language name="en">codicological miscellaneous (objectDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_conservationMethodDesc</Name>
-    <language name="de">codicological conservation method (objectDataset)</language>
-    <language name="en">codicological conservation method (objectDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_origDate</Name>
-    <language name="de">codicological orig date (objectDataset)</language>
-    <language name="en">codicological orig date (objectDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_condition</Name>
-    <language name="de">codicological condition (objectDataset)</language>
-    <language name="en">codicological condition (objectDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_conservation</Name>
-    <language name="de">codicological conservation (objectDataset)</language>
-    <language name="en">codicological conservation (objectDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_iccuNumber</Name>
-    <language name="de">codicological iccuNumber (objectDataset)</language>
-    <language name="en">codicological iccuNumber (objectDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_preservationMethod</Name>
-    <language name="de">codicological preservation method (objectDataset)</language>
-    <language name="en">codicological preservation method (objectDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_width</Name>
-    <language name="de">codicological width (objectDataset)</language>
-    <language name="en">codicological width (objectDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_conservationMethod</Name>
-    <language name="de">codicological conservation method (objectDataset)</language>
-    <language name="en">codicological conservation method (objectDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_retention</Name>
-    <language name="de">codicological retention (objectDataset)</language>
-    <language name="en">codicological retention (objectDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_objectDataset_height</Name>
-    <language name="de">codicological height (objectDataset)</language>
-    <language name="en">codicological height (objectDataset)</language>
-  </MetadataType>
-
-
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_supportDesc</Name>
-    <language name="de">codicological support desc (bodyOfVolume)</language>
-    <language name="en">codicological support desc (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_watermark</Name>
-    <language name="de">codicological watermark (bodyOfVolume)</language>
-    <language name="en">codicological watermark (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_pagesTrimmed</Name>
-    <language name="de">codicological pages trimmed (bodyOfVolume)</language>
-    <language name="en">codicological pages trimmed (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_initials</Name>
-    <language name="de">codicological initials (bodyOfVolume)</language>
-    <language name="en">codicological initials (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_endpaperDesc</Name>
-    <language name="de">codicological endpaper desc (bodyOfVolume)</language>
-    <language name="en">codicological endpaper desc (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_heraldry</Name>
-    <language name="de">codicological heraldy (bodyOfVolume)</language>
-    <language name="en">codicological heraldy (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_paginationDesc</Name>
-    <language name="de">codicological pagination desc (bodyOfVolume)</language>
-    <language name="en">codicological pagination desc (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_lacuna</Name>
-    <language name="de">codicological lacuna (bodyOfVolume)</language>
-    <language name="en">codicological lacuna (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_graphicDesc</Name>
-    <language name="de">codicological graphic desc (bodyOfVolume)</language>
-    <language name="en">codicological graphic desc (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_marginalDecoration</Name>
-    <language name="de">codicological marginal decoration (bodyOfVolume)</language>
-    <language name="en">codicological marginal decoration (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_marginaliaDesc</Name>
-    <language name="de">codicological marginal description (bodyOfVolume)</language>
-    <language name="en">codicological marginal description (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_leavesMisbound</Name>
-    <language name="de">codicological leaves misbound (bodyOfVolume)</language>
-    <language name="en">codicological leaves misbound (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_endpaper</Name>
-    <language name="de">codicological endpaper (bodyOfVolume)</language>
-    <language name="en">codicological endpaper (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_edge</Name>
-    <language name="de">codicological edge (bodyOfVolume)</language>
-    <language name="en">codicological edge (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_marginalia</Name>
-    <language name="de">codicological marginalia (bodyOfVolume)</language>
-    <language name="en">codicological marginalia (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_tippedInPastedDesc</Name>
-    <language name="de">codicological tipped in pasted desc (bodyOfVolume)</language>
-    <language name="en">codicological tipped in pasted desc (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_leavesLoosePrinted</Name>
-    <language name="de">codicological leaves loose printed (bodyOfVolume)</language>
-    <language name="en">codicological leaves loose printed (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_tippedInLooseDesc</Name>
-    <language name="de">codicological tipped in loose desc (bodyOfVolume)</language>
-    <language name="en">codicological tipped in loose desc (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_tippedIn</Name>
-    <language name="de">codicological tipped in (bodyOfVolume)</language>
-    <language name="en">codicological tipped in (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_edgeDesc</Name>
-    <language name="de">codicological edge desc (bodyOfVolume)</language>
-    <language name="en">codicological edge desc (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_notesHandwrittenMiscellaneous</Name>
-    <language name="de">codicological handwritten notes (bodyOfVolume)</language>
-    <language name="en">codicological handwritten notes (bodyOfVolume)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_bodyOfVolume_graphic</Name>
-    <language name="de">codicological graphic (bodyOfVolume)</language>
-    <language name="en">codicological graphic (bodyOfVolume)</language>
-  </MetadataType>
-
-
-
-
-
-  <MetadataType>
-    <Name>_codicological_binding_bookCoverDecorationDesc</Name>
-    <language name="de">codicological book cover decoration desc (binding)</language>
-    <language name="en">codicological book cover decoration desc (binding)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_binding_papersPastedCover</Name>
-    <language name="de">codicological papers pasted cover (binding)</language>
-    <language name="en">codicological papers pasted cover (binding)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_binding_bindingMaterial</Name>
-    <language name="de">codicological binding material (binding)</language>
-    <language name="en">codicological binding material (binding)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_binding_sewingDesc</Name>
-    <language name="de">codicological sewing desc (binding)</language>
-    <language name="en">codicological sewing desc (binding)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_binding_ribbonMarker</Name>
-    <language name="de">codicological ribbon marker (binding)</language>
-    <language name="en">codicological ribbon marker (binding)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_binding_pasteDownMarbeledPaper</Name>
-    <language name="de">codicological paste down marbeled paper (binding)</language>
-    <language name="en">codicological paste down marbeled paper (binding)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_binding_bookCoverRebound</Name>
-    <language name="de">codicological book cover rebound (binding)</language>
-    <language name="en">codicological book cover rebound (binding)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_binding_bookCoverDecoration</Name>
-    <language name="de">codicological book cover decoration (binding)</language>
-    <language name="en">codicological book cover decoration (binding)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_binding_headbandDesc</Name>
-    <language name="de">codicological head band desc (binding)</language>
-    <language name="en">codicological head band desc (binding)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_binding_bindingDesc</Name>
-    <language name="de">codicological binding desc (binding)</language>
-    <language name="en">codicological binding desc (binding)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenance_exLibrisRemarkHandwritten</Name>
-    <language name="de">codicological exLibris remark handwritten (provenance)</language>
-    <language name="en">codicological exLibris remark handwritten (provenance)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenance_acquisitionModeDesc</Name>
-    <language name="de">codicological acquisition mode desc (provenance)</language>
-    <language name="en">codicological acquisition mode desc (provenance)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenance_label</Name>
-    <language name="de">codicological label (provenance)</language>
-    <language name="en">codicological label (provenance)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenance_stampMiscellaneous</Name>
-    <language name="de">codicological stamp miscellaneous (provenance)</language>
-    <language name="en">codicological stamp miscellaneous (provenance)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenance_acquisitionMode</Name>
-    <language name="de">codicological acquisition mode (provenance)</language>
-    <language name="en">codicological acquisition mode (provenance)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenance_notesBookseller</Name>
-    <language name="de">codicological notes bookseller (provenance)</language>
-    <language name="en">codicological notes bookseller (provenance)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenance_shelfMarkMiscellaneous</Name>
-    <language name="de">codicological shelfmark miscellaneous (provenance)</language>
-    <language name="en">codicological shelfmark miscellaneous (provenance)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenance_bookPlate</Name>
-    <language name="de">codicological book plate (provenance)</language>
-    <language name="en">codicological book plate (provenance)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenance_bookPlateDesc</Name>
-    <language name="de">codicological book plate desc (provenance)</language>
-    <language name="en">codicological book plate desc (provenance)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenance_dedicationText</Name>
-    <language name="de">codicological dedication text (provenance)</language>
-    <language name="en">codicological dedication text (provenance)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenance_acquisitionDateInstitution</Name>
-    <language name="de">codicological acquisition date institution (provenance)</language>
-    <language name="en">codicological acquisition date institution (provenance)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenance_pricePaid</Name>
-    <language name="de">codicological price paid (provenance)</language>
-    <language name="en">codicological price paid (provenance)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenance_ownerStamp</Name>
-    <language name="de">codicological owner stamp (provenance)</language>
-    <language name="en">codicological owner stamp (provenance)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenance_provenanceReference</Name>
-    <language name="de">codicological provenance reference (provenance)</language>
-    <language name="en">codicological provenance reference (provenance)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_object_objectType</Name>
-    <language name="de">codicological object type</language>
-    <language name="en">codicological object type</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenanceData_institution</Name>
-    <language name="de">Institution (provenanceData)</language>
-    <language name="en">Institution (provenanceData)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenanceData_refId</Name>
-    <language name="de">RefId (provenanceData)</language>
-    <language name="en">RefId (provenanceData)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_provenanceData_provId</Name>
-    <language name="de">ProvId (provenanceData)</language>
-    <language name="en">ProvId (provenanceData)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_personDataset_notes</Name>
-    <language name="de">Notes (personDataset)</language>
-    <language name="en">Notes (personDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_personDataset_personFeature</Name>
-    <language name="de">Person feature (personDataset)</language>
-    <language name="en">Person feature (personDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_personDataset_name</Name>
-    <language name="de">Name (personDataset)</language>
-    <language name="en">Name (personDataset)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_codicological_personDataset_foreName</Name>
-    <language name="de">ForeName (personDataset)</language>
-    <language name="en">ForeName (personDataset)</language>
-  </MetadataType>
-
-  <!--TEI -->
-
-  <MetadataType>
-    <Name>_tei_textId</Name>
-    <language name="de">tei textId</language>
-    <language name="en">tei textId</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_text</Name>
-    <language name="de">tei text</language>
-    <language name="en">tei text</language>
-  </MetadataType>
-
-
-  <MetadataType>
-    <Name>_tei_fileDesc_titleStmt_funder</Name>
-    <language name="de">tei funder (titleStmt)</language>
-    <language name="en">tei funder (titleStmt)</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_titleStmt_resp</Name>
-    <language name="de">tei resp (titleStmt)</language>
-    <language name="en">tei resp (titleStmt)</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_titleStmt_author</Name>
-    <language name="de">tei author (titleStmt)</language>
-    <language name="en">tei author (titleStmt)</language>
-  </MetadataType>
-
-
-  <MetadataType>
-    <Name>_tei_fileDesc_editionStmt_edition</Name>
-    <language name="de">tei edition (editionStmt)</language>
-    <language name="en">tei edition (editionStmt)</language>
-  </MetadataType>
-
-
-
-  <MetadataType>
-    <Name>_tei_fileDesc_publicationStmt_date</Name>
-    <language name="de">tei date (publicationStmt)</language>
-    <language name="en">tei date (publicationStmt)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_tei_fileDesc_publicationStmt_distributor</Name>
-    <language name="de">tei distributor (publicationStmt)</language>
-    <language name="en">tei distributor (publicationStmt)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_tei_fileDesc_publicationStmt_publisher_url</Name>
-    <language name="de">tei publisher url (publicationStmt)</language>
-    <language name="en">tei publisher url (publicationStmt)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_tei_fileDesc_publicationStmt_publisher_orgName</Name>
-    <language name="de">tei publisher orgName (publicationStmt)</language>
-    <language name="en">tei publisher orgName (publicationStmt)</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_publicationStmt_publisher_name</Name>
-    <language name="de">tei publisher name (publicationStmt)</language>
-    <language name="en">tei publisher name (publicationStmt)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_tei_fileDesc_publicationStmt_availability_licenseUrl</Name>
-    <language name="de">tei license url (publicationStmt)</language>
-    <language name="en">tei license url (publicationStmt)</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_publicationStmt_availability_licenseText</Name>
-    <language name="de">tei license text (publicationStmt)</language>
-    <language name="en">tei license text (publicationStmt)</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_publicationStmt_availability_status</Name>
-    <language name="de">tei status (publicationStmt)</language>
-    <language name="en">tei status (publicationStmt)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_tei_fileDesc_publicationStmt_pubPlace_name</Name>
-    <language name="de">tei publication place (publicationStmt)</language>
-    <language name="en">tei publication place (publicationStmt)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_tei_fileDesc_publicationStmt_pubPlace_url</Name>
-    <language name="de">tei publication place url (publicationStmt)</language>
-    <language name="en">tei publication place url (publicationStmt)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_tei_fileDesc_sourceDesc_listBibl_url</Name>
-    <language name="de">tei litBibl url (sourceDesc)</language>
-    <language name="en">tei litBibl url (sourceDesc)</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_sourceDesc_biblStruct_idno</Name>
-    <language name="de">tei biblStruct idno (sourceDesc)</language>
-    <language name="en">tei biblStruct idno (sourceDesc)</language>
-  </MetadataType>
-
-  <MetadataType normdata="true">
-    <Name>_tei_fileDesc_sourceDesc_author</Name>
-    <language name="de">tei author (sourceDesc)</language>
-    <language name="en">tei author (sourceDesc)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_tei_fileDesc_sourceDesc_imprint_date</Name>
-    <language name="de">tei imprint date (sourceDesc)</language>
-    <language name="en">tei imprint date (sourceDesc)</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_sourceDesc_imprint_note</Name>
-    <language name="de">tei imprint note (sourceDesc)</language>
-    <language name="en">tei imprint note (sourceDesc)</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_sourceDesc_imprint_publisher</Name>
-    <language name="de">tei imprint publisher (sourceDesc)</language>
-    <language name="en">tei imprint publisher (sourceDesc)</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_sourceDesc_imprint_pubPlace</Name>
-    <language name="de">tei imprint publication place (sourceDesc)</language>
-    <language name="en">tei imprint publication place (sourceDesc)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_tei_encodingDesc_refsDecl</Name>
-    <language name="de">tei refsDecl (encodingDesc)</language>
-    <language name="en">tei refsDecl (encodingDesc)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_tei_encodingDesc_projectDesc</Name>
-    <language name="de">tei projectDesc (encodingDesc)</language>
-    <language name="en">tei projectDesc (encodingDesc)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_tei_encodingDesc_editorialDecl_hyphenation</Name>
-    <language name="de">tei editiorial decl hyphenation (encodingDesc)</language>
-    <language name="en">tei editiorial decl hyphenation (encodingDesc)</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_encodingDesc_editorialDecl_normalization</Name>
-    <language name="de">tei editiorial decl normalization (encodingDesc)</language>
-    <language name="en">tei editiorial decl normalization (encodingDesc)</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_encodingDesc_editorialDecl_correction</Name>
-    <language name="de">tei editiorial decl correction (encodingDesc)</language>
-    <language name="en">tei editiorial decl correction (encodingDesc)</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_encodingDesc_editorialDecl_quotation</Name>
-    <language name="de">tei editiorial decl quotation (encodingDesc)</language>
-    <language name="en">tei editiorial decl quotation (encodingDesc)</language>
-  </MetadataType>
-
-  <MetadataType>
-    <Name>_tei_encodingDesc_profileDesc_language</Name>
-    <language name="de">tei editiorial decl language (encodingDesc)</language>
-    <language name="en">tei editiorial decl language (encodingDesc)</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_encodingDesc_revisionDesc</Name>
-    <language name="de">tei revisionDesc (encodingDesc)</language>
-    <language name="en">tei revisionDesc (encodingDesc)</language>
-  </MetadataType>
-
-
-  <MetadataType>
-    <Name>_tei_text_pageOrientation</Name>
-    <language name="de">tei pageOrientation</language>
-    <language name="en">tei pageOrientation</language>
-  </MetadataType>
-  
-  <MetadataType>
-    <Name>_tei_encodingDesc_profileDesc_sheme</Name>
-    <language name="de">tei profileDesc sheme</language>
-    <language name="en">tei profileDesc sheme</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_encodingDesc_profileDesc_term</Name>
-    <language name="de">tei profileDesc term</language>
-    <language name="en">tei profileDesc term</language>
-  </MetadataType>
-
-
-
-  <MetadataType>
-    <Name>_tei_fileDesc_sourceDesc_biblScope_type</Name>
-    <language name="de">tei biblScope type</language>
-    <language name="en">tei biblScope type</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_sourceDesc_biblScope_value</Name>
-    <language name="de">tei biblScope value</language>
-    <language name="en">tei biblScope value</language>
-  </MetadataType>
-
-
-
-  <MetadataType>
-    <Name>_tei_fileDesc_editionStmt_respStmt_resp</Name>
-    <language name="de">tei respStmt resp</language>
-    <language name="en">tei respStmt resp</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_editionStmt_respStmt_name</Name>
-    <language name="de">tei respStmt name</language>
-    <language name="en">tei respStmt name</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_sourceDesc_note_type</Name>
-    <language name="de">tei note type</language>
-    <language name="en">tei note type</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_sourceDesc_note_target</Name>
-    <language name="de">tei note target</language>
-    <language name="en">tei note target</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_sourceDesc_note_comment</Name>
-    <language name="de">tei note comment</language>
-    <language name="en">tei note comment</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_sourceDesc_note_url</Name>
-    <language name="de">tei note url</language>
-    <language name="en">tei note url</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_titleStmt_title_name</Name>
-    <language name="de">tei title name</language>
-    <language name="en">tei title name</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_titleStmt_title_level</Name>
-    <language name="de">tei title level</language>
-    <language name="en">tei title level</language>
-  </MetadataType>
-  <MetadataType>
-    <Name>_tei_fileDesc_titleStmt_title_type</Name>
-    <language name="de">tei title type</language>
-    <language name="en">tei title type</language>
-  </MetadataType>
-<!--tei groups-->
-
   <Group>
-    <Name>_tei_fileDesc_sourceDesc_note</Name>
-    <language name="de">tei note (sourceDesc)</language>
-    <language name="en">tei note (sourceDesc)</language>
-    <metadata>_tei_fileDesc_sourceDesc_note_type</metadata>
-    <metadata>_tei_fileDesc_sourceDesc_note_target</metadata>
-    <metadata>_tei_fileDesc_sourceDesc_note_comment</metadata>
-    <metadata>_tei_fileDesc_sourceDesc_note_url</metadata>
+    <Name>PublisherGroup</Name>
+    <language name="de">PublisherGroup</language>
+    <language name="en">PublisherGroup</language>
+    <metadata>PublisherPerson</metadata>
+    <metadata>PlaceOfPublication</metadata>
+    <metadata>PublicationYear</metadata>
+    <metadata>PublisherCorporate</metadata>
   </Group>
-  <Group>
-    <Name>__tei_fileDesc_editionStmt_respStmt_group</Name>
-    <language name="de">tei respStmt (editionStmt)</language>
-    <language name="en">tei respStmt (editionStmt)</language>
-    <metadata>_tei_fileDesc_editionStmt_respStmt_name</metadata>
-    <metadata>_tei_fileDesc_editionStmt_respStmt_resp</metadata>
-  </Group>
-  <Group>
-    <Name>_tei_fileDesc_titleStmt_titleGroup</Name>
-    <language name="de">tei titleStmt (fileDesc)</language>
-    <language name="en">tei titleStmt (fileDesc)</language>
-    <metadata>_tei_fileDesc_titleStmt_title_name</metadata>
-    <metadata>_tei_fileDesc_titleStmt_title_level</metadata>
-    <metadata>_tei_fileDesc_titleStmt_title_type</metadata>
-  </Group>
-  <Group>
-    <Name>_tei_fileDesc_sourceDesc_biblScope</Name>
-    <language name="de">tei biblScope (sourceDesc)</language>
-    <language name="en">tei biblScope (sourceDesc)</language>
-    <metadata>_tei_fileDesc_sourceDesc_biblScope_type</metadata>
-    <metadata>_tei_fileDesc_sourceDesc_biblScope_value</metadata>
-  </Group>
-
-  <Group>
-    <Name>_tei_encodingDesc_profileDesc_keyword</Name>
-    <language name="de">tei profileDesc keyword (encodingDesc)</language>
-    <language name="en">tei profileDesc keyword (encodingDesc)</language>
-    <metadata>_tei_encodingDesc_profileDesc_sheme</metadata>
-    <metadata>_tei_encodingDesc_profileDesc_term</metadata>
-  </Group>
-
-
-  <!--codicological groups-->
-
-  <Group>
-    <Name>_codicological_provenanceData</Name>
-    <language name="de">codicological provenanceData</language>
-    <language name="en">codicological provenanceData</language>
-    <metadata>_codicological_provenanceData_institution</metadata>
-    <metadata>_codicological_provenanceData_refId</metadata>
-    <metadata>_codicological_provenanceData_provId</metadata>
-  </Group>
-
-  <Group>
-    <Name>_codicological_personDataset</Name>
-    <language name="de">codicological person</language>
-    <language name="en">codicological person</language>
-    <metadata>_codicological_personDataset_notes</metadata>
-    <metadata>_codicological_personDataset_personFeature</metadata>
-    <metadata>_codicological_personDataset_name</metadata>
-    <metadata>_codicological_personDataset_foreName</metadata>
-  </Group>
-
 
 
 
@@ -2815,118 +2065,8 @@
     <metadata num="*">directionRTL</metadata>
     <metadata num="*">CurrentNoSorting</metadata>
     <metadata num="*">CurrentNo</metadata>
-    <metadata num="*">CatalogIdentifier</metadata>    
-
-    <metadata num="*">_codicological_objectDataset_creationDate</metadata>
-    <metadata num="*">_codicological_objectDataset_superIdentificationNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_accessIdentificationNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_alephSysIdentificationNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_allegroIdentificationNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_bvbIdentificationNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_bookMark</metadata>
-    <metadata num="*">_codicological_objectDataset_volumeNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_miscellaneous</metadata>
-    <metadata num="*">_codicological_objectDataset_conservationMethodDesc</metadata>
-    <metadata num="*">_codicological_objectDataset_origDate</metadata>
-    <metadata num="*">_codicological_objectDataset_condition</metadata>
-    <metadata num="*">_codicological_objectDataset_conservation</metadata>
-    <metadata num="*">_codicological_objectDataset_iccuNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_preservationMethod</metadata>
-    <metadata num="*">_codicological_objectDataset_width</metadata>
-    <metadata num="*">_codicological_objectDataset_conservationMethod</metadata>
-    <metadata num="*">_codicological_objectDataset_retention</metadata>
-    <metadata num="*">_codicological_objectDataset_height</metadata>
-
-    <metadata num="*">_codicological_bodyOfVolume_supportDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_watermark</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_pagesTrimmed</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_initials</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_endpaperDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_heraldry</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_paginationDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_lacuna</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_graphicDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_marginalDecoration</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_marginaliaDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_leavesMisbound</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_endpaper</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_edge</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_marginalia</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_tippedInPastedDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_leavesLoosePrinted</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_tippedInLooseDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_tippedIn</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_edgeDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_notesHandwrittenMiscellaneous</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_graphic</metadata>
-
-    <metadata num="*">_codicological_binding_bookCoverDecorationDesc</metadata>
-    <metadata num="*">_codicological_binding_papersPastedCover</metadata>
-    <metadata num="*">_codicological_binding_bindingMaterial</metadata>
-    <metadata num="*">_codicological_binding_sewingDesc</metadata>
-    <metadata num="*">_codicological_binding_ribbonMarker</metadata>
-    <metadata num="*">_codicological_binding_pasteDownMarbeledPaper</metadata>
-    <metadata num="*">_codicological_binding_bookCoverRebound</metadata>
-    <metadata num="*">_codicological_binding_bookCoverDecoration</metadata>
-    <metadata num="*">_codicological_binding_headbandDesc</metadata>
-    <metadata num="*">_codicological_binding_bindingDesc</metadata>
-
-    <metadata num="*">_codicological_provenance_exLibrisRemarkHandwritten</metadata>
-    <metadata num="*">_codicological_provenance_acquisitionModeDesc</metadata>
-    <metadata num="*">_codicological_provenance_label</metadata>
-    <metadata num="*">_codicological_provenance_stampMiscellaneous</metadata>
-    <metadata num="*">_codicological_provenance_acquisitionMode</metadata>
-    <metadata num="*">_codicological_provenance_notesBookseller</metadata>
-    <metadata num="*">_codicological_provenance_shelfMarkMiscellaneous</metadata>
-    <metadata num="*">_codicological_provenance_bookPlate</metadata>
-    <metadata num="*">_codicological_provenance_bookPlateDesc</metadata>
-    <metadata num="*">_codicological_provenance_dedicationText</metadata>
-    <metadata num="*">_codicological_provenance_acquisitionDateInstitution</metadata>
-    <metadata num="*">_codicological_provenance_pricePaid</metadata>
-    <metadata num="*">_codicological_provenance_ownerStamp</metadata>
-    <metadata num="*">_codicological_provenance_provenanceReference</metadata>
-
-
-    <metadata num="*">_codicological_object_objectType</metadata>
-
-    <group num="*">_codicological_provenanceData</group>
-    <group num="*">_codicological_personDataset</group>
-
-    <metadata num="*">_tei_textId</metadata>
-    <metadata num="*">_tei_fileDesc_titleStmt_funder</metadata>
-    <metadata num="*">_tei_fileDesc_titleStmt_resp</metadata>
-    <metadata num="*">_tei_fileDesc_titleStmt_author</metadata>
-    <metadata num="*">_tei_fileDesc_editionStmt_edition</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_date</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_distributor</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_publisher_url</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_publisher_orgName</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_publisher_name</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_availability_licenseUrl</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_availability_licenseText</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_availability_status</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_pubPlace_name</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_pubPlace_url</metadata>
-    <metadata num="*">_tei_fileDesc_sourceDesc_listBibl_url</metadata>
-    <metadata num="*">_tei_fileDesc_sourceDesc_biblStruct_idno</metadata>
-    <metadata num="*">_tei_fileDesc_sourceDesc_author</metadata>
-    <metadata num="*">_tei_fileDesc_sourceDesc_imprint_date</metadata>
-    <metadata num="*">_tei_fileDesc_sourceDesc_imprint_note</metadata>
-    <metadata num="*">_tei_fileDesc_sourceDesc_imprint_publisher</metadata>
-    <metadata num="*">_tei_fileDesc_sourceDesc_imprint_pubPlace</metadata>
-    <metadata num="*">_tei_encodingDesc_refsDecl</metadata>
-    <metadata num="*">_tei_encodingDesc_projectDesc</metadata>
-    <metadata num="*">_tei_encodingDesc_editorialDecl_hyphenation</metadata>
-    <metadata num="*">_tei_encodingDesc_editorialDecl_normalization</metadata>
-    <metadata num="*">_tei_encodingDesc_editorialDecl_correction</metadata>
-    <metadata num="*">_tei_encodingDesc_editorialDecl_quotation</metadata>
-    <metadata num="*">_tei_encodingDesc_profileDesc_language</metadata>
-    <metadata num="*">_tei_encodingDesc_revisionDesc</metadata>
-    <group num="*">_tei_fileDesc_sourceDesc_note</group>
-    <group num="*">__tei_fileDesc_editionStmt_respStmt_group</group>
-    <group num="*">_tei_fileDesc_titleStmt_titleGroup</group>
-    <group num="*">_tei_fileDesc_sourceDesc_biblScope</group>
-    <group num="*">_tei_encodingDesc_profileDesc_keyword</group>
+    <metadata num="*">CatalogIdentifier</metadata>
+    <group num="*">PublisherGroup</group>
   </DocStrctType>
   <DocStrctType topStruct="true">
     <Name>Incunable</Name>
@@ -3831,117 +2971,7 @@
     <metadata num="*">SubjectTopic</metadata>
     <metadata num="*">SizeSourcePrint</metadata>
     <metadata num="*">EditionStatement</metadata>
-    <metadata num="*">CatalogIdentifier</metadata>    
-
-    <metadata num="*">_codicological_objectDataset_creationDate</metadata>
-    <metadata num="*">_codicological_objectDataset_superIdentificationNumber</metadata>
-
-    <metadata num="*">_codicological_objectDataset_accessIdentificationNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_alephSysIdentificationNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_allegroIdentificationNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_bvbIdentificationNumber</metadata>
-
-    <metadata num="*">_codicological_objectDataset_bookMark</metadata>
-    <metadata num="*">_codicological_objectDataset_volumeNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_miscellaneous</metadata>
-    <metadata num="*">_codicological_objectDataset_conservationMethodDesc</metadata>
-    <metadata num="*">_codicological_objectDataset_origDate</metadata>
-    <metadata num="*">_codicological_objectDataset_condition</metadata>
-    <metadata num="*">_codicological_objectDataset_conservation</metadata>
-    <metadata num="*">_codicological_objectDataset_iccuNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_preservationMethod</metadata>
-    <metadata num="*">_codicological_objectDataset_width</metadata>
-    <metadata num="*">_codicological_objectDataset_conservationMethod</metadata>
-    <metadata num="*">_codicological_objectDataset_retention</metadata>
-    <metadata num="*">_codicological_objectDataset_height</metadata>
-
-    <metadata num="*">_codicological_bodyOfVolume_supportDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_watermark</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_pagesTrimmed</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_initials</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_endpaperDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_heraldry</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_paginationDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_lacuna</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_graphicDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_marginalDecoration</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_marginaliaDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_leavesMisbound</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_endpaper</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_edge</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_marginalia</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_tippedInPastedDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_leavesLoosePrinted</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_tippedInLooseDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_tippedIn</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_edgeDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_notesHandwrittenMiscellaneous</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_graphic</metadata>
-
-    <metadata num="*">_codicological_binding_bookCoverDecorationDesc</metadata>
-    <metadata num="*">_codicological_binding_papersPastedCover</metadata>
-    <metadata num="*">_codicological_binding_bindingMaterial</metadata>
-    <metadata num="*">_codicological_binding_sewingDesc</metadata>
-    <metadata num="*">_codicological_binding_ribbonMarker</metadata>
-    <metadata num="*">_codicological_binding_pasteDownMarbeledPaper</metadata>
-    <metadata num="*">_codicological_binding_bookCoverRebound</metadata>
-    <metadata num="*">_codicological_binding_bookCoverDecoration</metadata>
-    <metadata num="*">_codicological_binding_headbandDesc</metadata>
-    <metadata num="*">_codicological_binding_bindingDesc</metadata>
-
-    <metadata num="*">_codicological_provenance_exLibrisRemarkHandwritten</metadata>n
-    <metadata num="*">_codicological_provenance_acquisitionModeDesc</metadata>
-    <metadata num="*">_codicological_provenance_label</metadata>
-    <metadata num="*">_codicological_provenance_stampMiscellaneous</metadata>
-    <metadata num="*">_codicological_provenance_acquisitionMode</metadata>
-    <metadata num="*">_codicological_provenance_notesBookseller</metadata>
-    <metadata num="*">_codicological_provenance_shelfMarkMiscellaneous</metadata>
-    <metadata num="*">_codicological_provenance_bookPlate</metadata>
-    <metadata num="*">_codicological_provenance_bookPlateDesc</metadata>
-    <metadata num="*">_codicological_provenance_dedicationText</metadata>
-    <metadata num="*">_codicological_provenance_acquisitionDateInstitution</metadata>
-    <metadata num="*">_codicological_provenance_pricePaid</metadata>
-    <metadata num="*">_codicological_provenance_ownerStamp</metadata>
-    <metadata num="*">_codicological_provenance_provenanceReference</metadata>
-    <metadata num="*">_codicological_object_objectType</metadata>
-
-    <group num="*">_codicological_provenanceData</group>
-    <group num="*">_codicological_personDataset</group>
-    <metadata num="*">_tei_textId</metadata>
-    <metadata num="*">_tei_fileDesc_titleStmt_funder</metadata>
-    <metadata num="*">_tei_fileDesc_titleStmt_resp</metadata>
-    <metadata num="*">_tei_fileDesc_titleStmt_author</metadata>
-    <metadata num="*">_tei_fileDesc_editionStmt_edition</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_date</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_distributor</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_publisher_url</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_publisher_orgName</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_publisher_name</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_availability_licenseUrl</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_availability_licenseText</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_availability_status</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_pubPlace_name</metadata>
-    <metadata num="*">_tei_fileDesc_publicationStmt_pubPlace_url</metadata>
-    <metadata num="*">_tei_fileDesc_sourceDesc_listBibl_url</metadata>
-    <metadata num="*">_tei_fileDesc_sourceDesc_biblStruct_idno</metadata>
-    <metadata num="*">_tei_fileDesc_sourceDesc_author</metadata>
-    <metadata num="*">_tei_fileDesc_sourceDesc_imprint_date</metadata>
-    <metadata num="*">_tei_fileDesc_sourceDesc_imprint_note</metadata>
-    <metadata num="*">_tei_fileDesc_sourceDesc_imprint_publisher</metadata>
-    <metadata num="*">_tei_fileDesc_sourceDesc_imprint_pubPlace</metadata>
-    <metadata num="*">_tei_encodingDesc_refsDecl</metadata>
-    <metadata num="*">_tei_encodingDesc_projectDesc</metadata>
-    <metadata num="*">_tei_encodingDesc_editorialDecl_hyphenation</metadata>
-    <metadata num="*">_tei_encodingDesc_editorialDecl_normalization</metadata>
-    <metadata num="*">_tei_encodingDesc_editorialDecl_correction</metadata>
-    <metadata num="*">_tei_encodingDesc_editorialDecl_quotation</metadata>
-    <metadata num="*">_tei_encodingDesc_profileDesc_language</metadata>
-    <metadata num="*">_tei_encodingDesc_revisionDesc</metadata>
-    <group num="*">_tei_fileDesc_sourceDesc_note</group>
-    <group num="*">__tei_fileDesc_editionStmt_respStmt_group</group>
-    <group num="*">_tei_fileDesc_titleStmt_titleGroup</group>
-    <group num="*">_tei_fileDesc_sourceDesc_biblScope</group>
-    <group num="*">_tei_encodingDesc_profileDesc_keyword</group>
+    <metadata num="*">CatalogIdentifier</metadata>
   </DocStrctType>
   <DocStrctType topStruct="true">
     <Name>Volume</Name>
@@ -4074,101 +3104,7 @@
     <metadata num="*">_purlLatest</metadata>
     <metadata num="*">reversePagination</metadata>
     <metadata num="*">directionRTL</metadata>
-    <metadata num="*">CatalogIdentifier</metadata>    
-    
-    <metadata num="*">_codicological_objectDataset_creationDate</metadata>
-    <metadata num="*">_codicological_objectDataset_superIdentificationNumber</metadata>
-
-    <metadata num="*">_codicological_objectDataset_accessIdentificationNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_alephSysIdentificationNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_allegroIdentificationNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_bvbIdentificationNumber</metadata>
-
-    <metadata num="*">_codicological_objectDataset_bookMark</metadata>
-    <metadata num="*">_codicological_objectDataset_volumeNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_miscellaneous</metadata>
-    <metadata num="*">_codicological_objectDataset_conservationMethodDesc</metadata>
-    <metadata num="*">_codicological_objectDataset_origDate</metadata>
-    <metadata num="*">_codicological_objectDataset_condition</metadata>
-    <metadata num="*">_codicological_objectDataset_conservation</metadata>
-    <metadata num="*">_codicological_objectDataset_iccuNumber</metadata>
-    <metadata num="*">_codicological_objectDataset_preservationMethod</metadata>
-    <metadata num="*">_codicological_objectDataset_width</metadata>
-    <metadata num="*">_codicological_objectDataset_conservationMethod</metadata>
-    <metadata num="*">_codicological_objectDataset_retention</metadata>
-    <metadata num="*">_codicological_objectDataset_height</metadata>
-
-
-
-    <metadata num="*">_codicological_bodyOfVolume_supportDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_watermark</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_pagesTrimmed</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_initials</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_endpaperDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_heraldry</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_paginationDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_lacuna</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_graphicDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_marginalDecoration</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_marginaliaDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_leavesMisbound</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_endpaper</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_edge</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_marginalia</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_tippedInPastedDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_leavesLoosePrinted</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_tippedInLooseDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_tippedIn</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_edgeDesc</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_notesHandwrittenMiscellaneous</metadata>
-    <metadata num="*">_codicological_bodyOfVolume_graphic</metadata>
-
-
-
-
-    <metadata num="*">_codicological_binding_bookCoverDecorationDesc</metadata>
-    <metadata num="*">_codicological_binding_papersPastedCover</metadata>
-    <metadata num="*">_codicological_binding_bindingMaterial</metadata>
-    <metadata num="*">_codicological_binding_sewingDesc</metadata>
-    <metadata num="*">_codicological_binding_ribbonMarker</metadata>
-    <metadata num="*">_codicological_binding_pasteDownMarbeledPaper</metadata>
-    <metadata num="*">_codicological_binding_bookCoverRebound</metadata>
-    <metadata num="*">_codicological_binding_bookCoverDecoration</metadata>
-    <metadata num="*">_codicological_binding_headbandDesc</metadata>
-    <metadata num="*">_codicological_binding_bindingDesc</metadata>
-
-
-
-    <metadata num="*">_codicological_provenance_exLibrisRemarkHandwritten</metadata>n
-    <metadata num="*">_codicological_provenance_acquisitionModeDesc</metadata>
-    <metadata num="*">_codicological_provenance_label</metadata>
-    <metadata num="*">_codicological_provenance_stampMiscellaneous</metadata>
-    <metadata num="*">_codicological_provenance_acquisitionMode</metadata>
-    <metadata num="*">_codicological_provenance_notesBookseller</metadata>
-    <metadata num="*">_codicological_provenance_shelfMarkMiscellaneous</metadata>
-    <metadata num="*">_codicological_provenance_bookPlate</metadata>
-    <metadata num="*">_codicological_provenance_bookPlateDesc</metadata>
-    <metadata num="*">_codicological_provenance_dedicationText</metadata>
-    <metadata num="*">_codicological_provenance_acquisitionDateInstitution</metadata>
-    <metadata num="*">_codicological_provenance_pricePaid</metadata>
-    <metadata num="*">_codicological_provenance_ownerStamp</metadata>
-    <metadata num="*">_codicological_provenance_provenanceReference</metadata>
-
-
-    <metadata num="*">_codicological_object_objectType</metadata>
-
-
-    <group num="*">_codicological_provenanceData</group>
-    <group num="*">_codicological_personDataset</group>
-
-
-
-
-
-
-
-
-
+    <metadata num="*">CatalogIdentifier</metadata>
   </DocStrctType>
   <DocStrctType>
     <Name>Obituary</Name>
@@ -4513,18 +3449,16 @@
     <metadata num="*">_ucc_id</metadata>
     <metadata num="1m">physPageNumber</metadata>
     <metadata num="1o">_urn</metadata>
-    <metadata num="1o">_tei_text_pageOrientation</metadata>
-    <metadata num="1o">_tei_text</metadata>
   </DocStrctType>
 
-    <DocStrctType>
+  <DocStrctType>
     <Name>area</Name>
     <language name="de">area</language>
     <language name="en">area</language>
     <metadata num="*">_ucc_id</metadata>
     <metadata num="1o">_urn</metadata>
-    <metadata num="1o">_COORDS</metadata> 
-    <metadata num="1o">_SHAPE</metadata> 
+    <metadata num="1o">_COORDS</metadata>
+    <metadata num="1o">_SHAPE</metadata>
   </DocStrctType>
   <DocStrctType>
     <Name>BoundBook</Name>
@@ -4998,6 +3932,21 @@
         <picaSubTag type="identifier">0</picaSubTag>
         <picaSubTag type="expansion">8</picaSubTag>
       </Person>
+
+      <Corporate>
+        <Name>Corporation</Name>
+        <picaMainTag>029F</picaMainTag>
+        <picaSubTag type="mainName">A</picaSubTag>
+        <picaSubTag type="subName">b</picaSubTag>
+        <picaSubTag type="subName">B</picaSubTag>
+        <picaSubTag type="partName">c</picaSubTag>
+        <picaSubTag type="partName">d</picaSubTag>
+        <picaSubTag type="partName">n</picaSubTag>
+        <picaSubTag type="partName">g</picaSubTag>
+        <picaSubTag type="identifier">7</picaSubTag>        
+      </Corporate>      
+      
+      
       <Metadata>
         <Name>ContentDescription</Name>
         <picaMainTag>ooe001</picaMainTag>
@@ -8246,109 +7195,43 @@
         <IdentifierXPath>../mods:name[@authority='gbv'][@ID='']
         </IdentifierXPath>
       </Metadata>
-      <!-- Persons end -->
-      <!-- Corporations start -->
+      <!--  test metadata start-->
       <Metadata>
-        <InternalName>CorporateAddressee</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="rcp"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
+        <InternalName>Corporation</InternalName>
+        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="aut"[@authority='marcrelator'][@type='code']]</WriteXPath>
+        <MainNameXPath>./mods:namePart</MainNameXPath>
+        <SubNameXPath>./mods:namePart</SubNameXPath>
+        <PartNameXPath>./mods:namePart</PartNameXPath>
       </Metadata>
-      <Metadata>
-        <InternalName>CorporateArtist</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="art"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateAuthorOfAfterword</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="aft"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateCompiler</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="com"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateContributor</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="ctb"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateCurator</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="cur"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateEngraver</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="egr"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateIllustrator</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="ill"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateOrganizer</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="orm"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateOther</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="oth"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporatePhotographer</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="pht"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateTranslator</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="trl"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateWriterOfAddedText</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="wat"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateWriterOfIntroduction</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="win"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateWriterOfPreface</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="wpr"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>CorporateWriterOfSupplementaryTextualContent</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="wst"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>HostInstitution</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="his"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>IssuingBody</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="isb"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>LegislativeBody</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="pma"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <Metadata>
-        <InternalName>WriterCorporate</InternalName>
-        <WriteXPath>./mods:mods/#mods:name[@type='corporate'][mods:role/mods:roleTerm="aut"[@authority='marcrelator'][@type='code']]/mods:namePart
-        </WriteXPath>
-      </Metadata>
-      <!-- Corporations end -->
+
+      <Group>
+        <InternalName>PublisherGroup</InternalName>
+        <WriteXPath>./mods:mods/#mods:originInfo</WriteXPath>
+        <Metadata>
+          <InternalName>PlaceOfPublication</InternalName>
+          <WriteXPath>./mods:place/#mods:placeTerm[@type='text']</WriteXPath>
+        </Metadata>
+        <Metadata>
+          <InternalName>PublicationYear</InternalName>
+          <WriteXPath>./#mods:dateIssued[@encoding='iso8601'][@keyDate='yes']</WriteXPath>
+        </Metadata>
+        <Person>
+          <InternalName>PublisherPerson</InternalName>
+          <WriteXPath>./mods:publisher/mods:name[@type='personal'][mods:role/mods:roleTerm='dte'[@authority='marcrelator'][@type='code'][@valueURI='http://id.loc.gov/vocabulary/relators/dte']]</WriteXPath>
+          <FirstnameXPath>./mods:namePart[@type='given']</FirstnameXPath>
+          <LastnameXPath>./mods:namePart[@type='family']</LastnameXPath>
+          <DisplayNameXPath>./mods:displayForm</DisplayNameXPath>
+        </Person>
+        <Corporate>
+          <InternalName>PublisherCorporate</InternalName>
+          <WriteXPath>mods:publisher/#mods:name[@type='corporate'][mods:role/mods:roleTerm="aut"[@authority='marcrelator'][@type='code']]</WriteXPath>
+          <MainNameXPath>./mods:namePart</MainNameXPath>
+          <SubNameXPath>./mods:namePart</SubNameXPath>
+          <PartNameXPath>./mods:namePart</PartNameXPath>
+        </Corporate>
+      </Group>
+      <!-- test metadata end -->
+
       <!-- Subjects start -->
       <Metadata>
         <InternalName>Subject</InternalName>
