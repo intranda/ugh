@@ -3932,6 +3932,21 @@
         <picaSubTag type="identifier">0</picaSubTag>
         <picaSubTag type="expansion">8</picaSubTag>
       </Person>
+
+      <Corporate>
+        <Name>Corporation</Name>
+        <picaMainTag>029F</picaMainTag>
+        <picaSubTag type="mainName">A</picaSubTag>
+        <picaSubTag type="subName">b</picaSubTag>
+        <picaSubTag type="subName">B</picaSubTag>
+        <picaSubTag type="partName">c</picaSubTag>
+        <picaSubTag type="partName">d</picaSubTag>
+        <picaSubTag type="partName">n</picaSubTag>
+        <picaSubTag type="partName">g</picaSubTag>
+        <picaSubTag type="identifier">7</picaSubTag>        
+      </Corporate>      
+      
+      
       <Metadata>
         <Name>ContentDescription</Name>
         <picaMainTag>ooe001</picaMainTag>

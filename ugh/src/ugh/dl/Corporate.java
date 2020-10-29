@@ -69,7 +69,7 @@ public class Corporate extends Metadata {
      */
     @Getter
     @Setter
-    private List<String> subNames = new ArrayList();
+    private List<String> subNames = new ArrayList<>();
 
     /**
      * Location, dates, numeric entries

@@ -1,0 +1,534 @@
+<collection>
+  <record>
+    <field tag="001@">
+      <subfield code="0">20-22,60,70,105,110,132,161,213,293,2007,2403</subfield>
+    </field>
+    <field tag="001A">
+      <subfield code="0">KNUB:18-09-20</subfield>
+    </field>
+    <field tag="001B">
+      <subfield code="0">2001:07-10-20</subfield>
+      <subfield code="t">21:55:36.000</subfield>
+    </field>
+    <field tag="001D">
+      <subfield code="0">KNUB:18-09-20</subfield>
+    </field>
+    <field tag="001U">
+      <subfield code="0">utf8</subfield>
+    </field>
+    <field tag="001X">
+      <subfield code="0">0</subfield>
+    </field>
+    <field tag="002@">
+      <subfield code="0">Oau</subfield>
+    </field>
+    <field tag="002C">
+      <subfield code="a">Text</subfield>
+      <subfield code="b">txt</subfield>
+    </field>
+    <field tag="002D">
+      <subfield code="a">Computermedien</subfield>
+      <subfield code="b">c</subfield>
+    </field>
+    <field tag="002E">
+      <subfield code="a">Online-Ressource</subfield>
+      <subfield code="b">cr</subfield>
+    </field>
+    <field tag="003@">
+      <subfield code="0">1733284826</subfield>
+    </field>
+    <field tag="003O">
+      <subfield code="a">OCoLC</subfield>
+      <subfield code="0">1196907456</subfield>
+    </field>
+    <field tag="004U">
+      <subfield code="0">urn:nbn:de:bsz:352-2-1tjgd01tlkx2q1</subfield>
+    </field>
+    <field tag="006G">
+      <subfield code="0">1218018615</subfield>
+    </field>
+    <field tag="006L">
+      <subfield code="i">DNB</subfield>
+      <subfield code="0">1218018615</subfield>
+    </field>
+    <field tag="007G">
+      <subfield code="i">KXP</subfield>
+      <subfield code="0">1733284826</subfield>
+    </field>
+    <field tag="010@">
+      <subfield code="a">eng</subfield>
+    </field>
+    <field tag="010E">
+      <subfield code="e">rda</subfield>
+    </field>
+    <field tag="011@">
+      <subfield code="a">2020</subfield>
+    </field>
+    <field tag="013D">
+      <subfield code="9">105825778</subfield>
+      <subfield code="V">Tsvz</subfield>
+      <subfield code="3">209480580</subfield>
+      <subfield code="7">gnd/4113937-9</subfield>
+      <subfield code="a">Hochschulschrift</subfield>
+    </field>
+    <field tag="017C">
+      <subfield code="u">http://nbn-resolving.de/urn:nbn:de:bsz:352-2-1tjgd01tlkx2q1</subfield>
+      <subfield code="q">application/pdf</subfield>
+      <subfield code="x">R</subfield>
+      <subfield code="3">Volltext</subfield>
+      <subfield code="4">LF</subfield>
+      <subfield code="5">34</subfield>
+    </field>
+    <field tag="017C">
+      <subfield code="u">https://nbn-resolving.org/urn:nbn:de:bsz:352-2-1tjgd01tlkx2q1</subfield>
+      <subfield code="v">2020-10-07</subfield>
+      <subfield code="x">R</subfield>
+      <subfield code="A">DNB</subfield>
+      <subfield code="B">1</subfield>
+    </field>
+    <field tag="017C">
+      <subfield code="u">https://d-nb.info/1218018615/34</subfield>
+      <subfield code="v">2020-10-07</subfield>
+      <subfield code="x">N</subfield>
+      <subfield code="A">DNB</subfield>
+      <subfield code="B">1</subfield>
+    </field>
+    <field tag="017C">
+      <subfield code="u">https://kops.uni-konstanz.de/handle/123456789/50871</subfield>
+      <subfield code="q">application/pdf</subfield>
+      <subfield code="v">2020-10-07</subfield>
+      <subfield code="x">H</subfield>
+      <subfield code="z">kostenfrei</subfield>
+      <subfield code="A">DNB</subfield>
+      <subfield code="B">1</subfield>
+    </field>
+    <field tag="017L">
+      <subfield code="a">GBV-ODiss</subfield>
+    </field>
+    <field tag="019@">
+      <subfield code="a">XA-DE-BW</subfield>
+    </field>
+    <field tag="021A">
+      <subfield code="a">Anaphoric Dependencies in Spanish and European Portuguese</subfield>
+      <subfield code="d">A Minimalist Analysis</subfield>
+      <subfield code="h">Anja Weingart</subfield>
+    </field>
+    <field tag="028A">
+      <subfield code="d">Anja</subfield>
+      <subfield code="a">Weingart</subfield>
+      <subfield code="B">VerfasserIn</subfield>
+      <subfield code="4">aut</subfield>
+    </field>
+    <field tag="029F">
+      <subfield code="9">102160279</subfield>
+      <subfield code="V">Tbv1</subfield>
+      <subfield code="7">gnd/2024315-7</subfield>
+      <subfield code="3">191769223</subfield>
+      <subfield code="w">kiz</subfield>
+      <subfield code="A">Georg-August-Universität Göttingen</subfield>
+      <subfield code="B">Grad-verleihende Institution</subfield>
+      <subfield code="c">Göttingen</subfield>
+      <subfield code="c">2014</subfield>
+      <subfield code="4">dgg</subfield>
+    </field>
+    <field tag="033A">
+      <subfield code="p">Konstanz</subfield>
+    </field>
+    <field tag="033D">
+      <subfield code="9">106313819</subfield>
+      <subfield code="V">Tgv1</subfield>
+      <subfield code="7">gnd/4021477-1</subfield>
+      <subfield code="3">20893815X</subfield>
+      <subfield code="w">gik</subfield>
+      <subfield code="p">Göttingen</subfield>
+      <subfield code="4">uvp</subfield>
+    </field>
+    <field tag="034D">
+      <subfield code="a">1 Online-Ressource</subfield>
+    </field>
+    <field tag="037C">
+      <subfield code="d">Dissertation</subfield>
+      <subfield code="e">Georg-August-Universität Göttingen</subfield>
+      <subfield code="f">2020</subfield>
+    </field>
+    <field tag="045G">
+      <subfield code="a">460</subfield>
+      <subfield code="A">DE-101</subfield>
+    </field>
+    <field tag="047A">
+      <subfield code="a">doctoralThesis</subfield>
+    </field>
+    <field tag="101@">
+      <subfield code="a">20</subfield>
+      <subfield code="c">PICA</subfield>
+      <subfield code="d">Braunschweig, Universitätsbibliothek der TU &lt;84&gt;</subfield>
+    </field>
+    <field occurrence="01" tag="201B">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="t">00:55:55.000</subfield>
+    </field>
+    <field occurrence="01" tag="201U">
+      <subfield code="0">utf8</subfield>
+    </field>
+    <field occurrence="01" tag="202D">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="b">add_edisex</subfield>
+      <subfield code="a">1999</subfield>
+    </field>
+    <field occurrence="01" tag="203@">
+      <subfield code="0">3782428161</subfield>
+    </field>
+    <field occurrence="01" tag="208@">
+      <subfield code="a">20-10-20</subfield>
+      <subfield code="b">x</subfield>
+    </field>
+    <field occurrence="01" tag="209C">
+      <subfield code="a">OLRD</subfield>
+      <subfield code="x">00</subfield>
+    </field>
+    <field occurrence="01" tag="209R">
+      <subfield code="u">http://nbn-resolving.de/urn:nbn:de:bsz:352-2-1tjgd01tlkx2q1</subfield>
+    </field>
+    <field tag="101@">
+      <subfield code="a">21</subfield>
+      <subfield code="c">PICA</subfield>
+      <subfield code="d">Bremen, Staats- und Universitätsbibliothek &lt;46&gt;</subfield>
+    </field>
+    <field occurrence="01" tag="201B">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="t">01:03:32.000</subfield>
+    </field>
+    <field occurrence="01" tag="201U">
+      <subfield code="0">utf8</subfield>
+    </field>
+    <field occurrence="01" tag="202D">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="b">add_edisex</subfield>
+      <subfield code="a">1999</subfield>
+    </field>
+    <field occurrence="01" tag="203@">
+      <subfield code="0">3782467582</subfield>
+    </field>
+    <field occurrence="01" tag="208@">
+      <subfield code="a">20-10-20</subfield>
+      <subfield code="b">z</subfield>
+    </field>
+    <field occurrence="01" tag="209R">
+      <subfield code="u">http://nbn-resolving.de/urn:nbn:de:bsz:352-2-1tjgd01tlkx2q1</subfield>
+    </field>
+    <field tag="101@">
+      <subfield code="a">60</subfield>
+      <subfield code="c">PICA</subfield>
+      <subfield code="d">Hamburg, Helmut-Schmidt-Universität, Universität der Bundeswehr Hamburg &lt;705&gt;</subfield>
+    </field>
+    <field occurrence="01" tag="201B">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="t">01:51:35.000</subfield>
+    </field>
+    <field occurrence="01" tag="201U">
+      <subfield code="0">utf8</subfield>
+    </field>
+    <field occurrence="01" tag="202D">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="b">add_edisex</subfield>
+      <subfield code="a">1999</subfield>
+    </field>
+    <field occurrence="01" tag="203@">
+      <subfield code="0">3782628985</subfield>
+    </field>
+    <field occurrence="01" tag="208@">
+      <subfield code="a">20-10-20</subfield>
+      <subfield code="b">z</subfield>
+    </field>
+    <field occurrence="01" tag="209O">
+      <subfield code="a">OLRD</subfield>
+      <subfield code="x">00</subfield>
+    </field>
+    <field occurrence="01" tag="209R">
+      <subfield code="u">http://nbn-resolving.de/urn:nbn:de:bsz:352-2-1tjgd01tlkx2q1</subfield>
+    </field>
+    <field occurrence="01" tag="245Z">
+      <subfield code="a">ho</subfield>
+      <subfield code="x">10</subfield>
+    </field>
+    <field tag="101@">
+      <subfield code="a">22</subfield>
+      <subfield code="c">PICA</subfield>
+      <subfield code="d">Hamburg, Staats- und Universitätsbibliothek Hamburg / Universität Hamburg &lt;18&gt;</subfield>
+    </field>
+    <field occurrence="01" tag="201B">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="t">01:13:09.000</subfield>
+    </field>
+    <field occurrence="01" tag="201U">
+      <subfield code="0">utf8</subfield>
+    </field>
+    <field occurrence="01" tag="202D">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="b">add_edisex</subfield>
+      <subfield code="a">1999</subfield>
+    </field>
+    <field occurrence="01" tag="203@">
+      <subfield code="0">378250710X</subfield>
+    </field>
+    <field occurrence="01" tag="208@">
+      <subfield code="a">20-10-20</subfield>
+      <subfield code="b">xu</subfield>
+    </field>
+    <field occurrence="01" tag="209O">
+      <subfield code="a">SUBolrd</subfield>
+      <subfield code="x">00</subfield>
+    </field>
+    <field occurrence="01" tag="209R">
+      <subfield code="u">http://nbn-resolving.de/urn:nbn:de:bsz:352-2-1tjgd01tlkx2q1</subfield>
+    </field>
+    <field tag="101@">
+      <subfield code="a">293</subfield>
+      <subfield code="c">PICA</subfield>
+      <subfield code="d">Hannover, Bibliothek im Kurt-Schwitters-Forum HMTMH / HsH &lt;3293&gt;</subfield>
+    </field>
+    <field occurrence="01" tag="201B">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="t">03:01:36.000</subfield>
+    </field>
+    <field occurrence="01" tag="201U">
+      <subfield code="0">utf8</subfield>
+    </field>
+    <field occurrence="01" tag="202D">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="b">add_edisex</subfield>
+      <subfield code="a">1999</subfield>
+    </field>
+    <field occurrence="01" tag="203@">
+      <subfield code="0">3782857844</subfield>
+    </field>
+    <field occurrence="01" tag="208@">
+      <subfield code="a">20-10-20</subfield>
+      <subfield code="b">z</subfield>
+    </field>
+    <field occurrence="01" tag="209O">
+      <subfield code="a">ORD</subfield>
+      <subfield code="x">00</subfield>
+    </field>
+    <field occurrence="01" tag="209R">
+      <subfield code="u">http://nbn-resolving.de/urn:nbn:de:bsz:352-2-1tjgd01tlkx2q1</subfield>
+    </field>
+    <field tag="101@">
+      <subfield code="a">161</subfield>
+      <subfield code="c">PICA</subfield>
+      <subfield code="d">Hannover, Hochschule Hannover Bibliothek &lt;960&gt;</subfield>
+    </field>
+    <field occurrence="01" tag="201B">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="t">02:40:01.000</subfield>
+    </field>
+    <field occurrence="01" tag="201U">
+      <subfield code="0">utf8</subfield>
+    </field>
+    <field occurrence="01" tag="202D">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="b">add_edisex</subfield>
+      <subfield code="a">1999</subfield>
+    </field>
+    <field occurrence="01" tag="203@">
+      <subfield code="0">3782782305</subfield>
+    </field>
+    <field occurrence="01" tag="208@">
+      <subfield code="a">20-10-20</subfield>
+      <subfield code="b">z</subfield>
+    </field>
+    <field occurrence="01" tag="209O">
+      <subfield code="a">ORD</subfield>
+      <subfield code="x">00</subfield>
+    </field>
+    <field occurrence="01" tag="209R">
+      <subfield code="u">http://nbn-resolving.de/urn:nbn:de:bsz:352-2-1tjgd01tlkx2q1</subfield>
+    </field>
+    <field tag="101@">
+      <subfield code="a">70</subfield>
+      <subfield code="c">PICA</subfield>
+      <subfield code="d">Hannover, TIB Hannover &lt;89&gt;</subfield>
+    </field>
+    <field occurrence="01" tag="201B">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="t">02:07:06.000</subfield>
+    </field>
+    <field occurrence="01" tag="201U">
+      <subfield code="0">utf8</subfield>
+    </field>
+    <field occurrence="01" tag="202D">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="b">add_edisex</subfield>
+      <subfield code="a">1999</subfield>
+    </field>
+    <field occurrence="01" tag="203@">
+      <subfield code="0">3782677811</subfield>
+    </field>
+    <field occurrence="01" tag="208@">
+      <subfield code="a">20-10-20</subfield>
+      <subfield code="b">zdo</subfield>
+    </field>
+    <field occurrence="01" tag="209R">
+      <subfield code="u">http://nbn-resolving.de/urn:nbn:de:bsz:352-2-1tjgd01tlkx2q1</subfield>
+    </field>
+    <field tag="101@">
+      <subfield code="a">2007</subfield>
+      <subfield code="c">PICA</subfield>
+      <subfield code="d">Konstanz, Universität Konstanz, Kommunikations-, Informations-, Medienzentrum (KIM)&gt;</subfield>
+    </field>
+    <field occurrence="01" tag="201A">
+      <subfield code="0">18-09-20</subfield>
+    </field>
+    <field occurrence="01" tag="201B">
+      <subfield code="0">18-09-20</subfield>
+      <subfield code="t">08:10:10.000</subfield>
+    </field>
+    <field occurrence="01" tag="201D">
+      <subfield code="0">KNUB:18-09-20</subfield>
+    </field>
+    <field occurrence="01" tag="201U">
+      <subfield code="0">utf8</subfield>
+    </field>
+    <field occurrence="01" tag="203@">
+      <subfield code="0">3758349273</subfield>
+    </field>
+    <field occurrence="01" tag="208@">
+      <subfield code="a">18-09-20</subfield>
+      <subfield code="b">l01</subfield>
+    </field>
+    <field occurrence="01" tag="209A">
+      <subfield code="B">352</subfield>
+      <subfield code="x">00</subfield>
+    </field>
+    <field occurrence="01" tag="209B">
+      <subfield code="a">opus</subfield>
+      <subfield code="x">12</subfield>
+    </field>
+    <field occurrence="01" tag="209R">
+      <subfield code="u">http://nbn-resolving.de/urn:nbn:de:bsz:352-2-1tjgd01tlkx2q1</subfield>
+    </field>
+    <field occurrence="01" tag="237A">
+      <subfield code="a">Elektronischer Volltext - Zugang über WWW</subfield>
+    </field>
+    <field tag="101@">
+      <subfield code="a">105</subfield>
+      <subfield code="c">PICA</subfield>
+      <subfield code="d">Lübeck, Zentrale Hochschulbibliothek &lt;841&gt;</subfield>
+    </field>
+    <field occurrence="01" tag="201B">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="t">03:17:59.000</subfield>
+    </field>
+    <field occurrence="01" tag="201U">
+      <subfield code="0">utf8</subfield>
+    </field>
+    <field occurrence="01" tag="202D">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="b">add_edisex</subfield>
+      <subfield code="a">1999</subfield>
+    </field>
+    <field occurrence="01" tag="203@">
+      <subfield code="0">3782893611</subfield>
+    </field>
+    <field occurrence="01" tag="208@">
+      <subfield code="a">20-10-20</subfield>
+      <subfield code="b">z</subfield>
+    </field>
+    <field occurrence="01" tag="209R">
+      <subfield code="u">http://nbn-resolving.de/urn:nbn:de:bsz:352-2-1tjgd01tlkx2q1</subfield>
+    </field>
+    <field tag="101@">
+      <subfield code="a">110</subfield>
+      <subfield code="c">PICA</subfield>
+      <subfield code="d">Lüneburg, Universitätsbibliothek &lt;LUEN 4&gt;</subfield>
+    </field>
+    <field occurrence="01" tag="201B">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="t">02:20:01.000</subfield>
+    </field>
+    <field occurrence="01" tag="201U">
+      <subfield code="0">utf8</subfield>
+    </field>
+    <field occurrence="01" tag="202D">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="b">add_edisex</subfield>
+      <subfield code="a">1999</subfield>
+    </field>
+    <field occurrence="01" tag="203@">
+      <subfield code="0">378270326X</subfield>
+    </field>
+    <field occurrence="01" tag="208@">
+      <subfield code="a">20-10-20</subfield>
+      <subfield code="b">x</subfield>
+    </field>
+    <field occurrence="01" tag="209C">
+      <subfield code="a">OLRD</subfield>
+      <subfield code="x">00</subfield>
+    </field>
+    <field occurrence="01" tag="209R">
+      <subfield code="u">http://nbn-resolving.de/urn:nbn:de:bsz:352-2-1tjgd01tlkx2q1</subfield>
+    </field>
+    <field tag="101@">
+      <subfield code="a">213</subfield>
+      <subfield code="c">PICA</subfield>
+      <subfield code="d">Magdeburg, Hochschule Magdeburg-Stendal Bibliothek &lt;551&gt;</subfield>
+    </field>
+    <field occurrence="01" tag="201B">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="t">02:46:40.000</subfield>
+    </field>
+    <field occurrence="01" tag="201U">
+      <subfield code="0">utf8</subfield>
+    </field>
+    <field occurrence="01" tag="202D">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="b">add_edisex</subfield>
+      <subfield code="a">1999</subfield>
+    </field>
+    <field occurrence="01" tag="203@">
+      <subfield code="0">3782809831</subfield>
+    </field>
+    <field occurrence="01" tag="208@">
+      <subfield code="a">20-10-20</subfield>
+      <subfield code="b">x</subfield>
+    </field>
+    <field occurrence="01" tag="209O">
+      <subfield code="a">ORD</subfield>
+      <subfield code="x">00</subfield>
+    </field>
+    <field occurrence="01" tag="209R">
+      <subfield code="u">http://nbn-resolving.de/urn:nbn:de:bsz:352-2-1tjgd01tlkx2q1</subfield>
+    </field>
+    <field tag="101@">
+      <subfield code="a">132</subfield>
+      <subfield code="c">PICA</subfield>
+      <subfield code="d">Osnabrueck, Hochschule Osnabrueck - Bibliothek - &lt;959&gt;</subfield>
+    </field>
+    <field occurrence="01" tag="201B">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="t">02:27:12.000</subfield>
+    </field>
+    <field occurrence="01" tag="201U">
+      <subfield code="0">utf8</subfield>
+    </field>
+    <field occurrence="01" tag="202D">
+      <subfield code="0">20-10-20</subfield>
+      <subfield code="b">add_edisex</subfield>
+      <subfield code="a">1999</subfield>
+    </field>
+    <field occurrence="01" tag="203@">
+      <subfield code="0">3782736672</subfield>
+    </field>
+    <field occurrence="01" tag="208@">
+      <subfield code="a">20-10-20</subfield>
+      <subfield code="b">x</subfield>
+    </field>
+    <field occurrence="01" tag="209O">
+      <subfield code="a">OLR-DISS</subfield>
+      <subfield code="x">00</subfield>
+    </field>
+    <field occurrence="01" tag="209R">
+      <subfield code="u">http://nbn-resolving.de/urn:nbn:de:bsz:352-2-1tjgd01tlkx2q1</subfield>
+    </field>
+  </record>
+  </collection>
