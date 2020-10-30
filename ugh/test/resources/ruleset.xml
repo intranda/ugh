@@ -5320,17 +5320,29 @@
       </Person>
       <!-- Persons end -->
       <!-- Corporations start -->
-      <Metadata>
+      <Corporate>
         <Name>Corporation</Name>
         <field>
           <fieldMainTag>110</fieldMainTag>
-          <fieldSubTag>a</fieldSubTag>
+          <fieldMainName>a</fieldMainName>
+          <fieldSubName>b</fieldSubName>
+          <fieldSubName>p</fieldSubName>          
+          <fieldPartName>c</fieldPartName>
+          <fieldPartName>n</fieldPartName>
+          <fieldPartName>d</fieldPartName>
+          <fieldPartName>g</fieldPartName>
           <fieldInd1>any</fieldInd1>
           <fieldInd2>any</fieldInd2>
         </field>
         <field>
           <fieldMainTag>710</fieldMainTag>
-          <fieldSubTag>a</fieldSubTag>
+          <fieldMainName>a</fieldMainName>
+          <fieldSubName>b</fieldSubName>
+          <fieldSubName>p</fieldSubName>
+          <fieldPartName>c</fieldPartName>
+          <fieldPartName>n</fieldPartName>
+          <fieldPartName>d</fieldPartName>
+          <fieldPartName>g</fieldPartName>
           <fieldInd1>any</fieldInd1>
           <fieldInd2>any</fieldInd2>
         </field>
@@ -5338,10 +5350,10 @@
         <identifierConditionField>/DE-588/</identifierConditionField>
         <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>/empty/</conditionValue>
+		<conditionValue>/dgg/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
-      </Metadata>
+      </Corporate>
       <Metadata>
         <Name>CorporateAddressee</Name>
         <field>
