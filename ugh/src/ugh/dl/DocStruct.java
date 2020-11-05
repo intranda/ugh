@@ -1498,14 +1498,14 @@ public class DocStruct implements Serializable {
             throw e;
         }
 
-        // Check, if it's an internal MetadataType - all internal types begin
-        // with the HIDDEN_METADATA_CHAR, we can have as many as we want.
-        if (inMdName.startsWith(HIDDEN_METADATA_CHAR)) {
-            maxnumberallowed = "*";
-            prefsMdType = inMdType;
-        } else {
-            maxnumberallowed = this.type.getNumberOfMetadataType(prefsMdType);
-        }
+        //        // Check, if it's an internal MetadataType - all internal types begin
+        //        // with the HIDDEN_METADATA_CHAR, we can have as many as we want.
+        //        if (inMdName.startsWith(HIDDEN_METADATA_CHAR)) {
+        //            maxnumberallowed = "*";
+        //            prefsMdType = inMdType;
+        //        } else {
+        maxnumberallowed = this.type.getNumberOfMetadataType(prefsMdType);
+        //        }
 
         // Check, if another Metadata instance is allowed.
         //
