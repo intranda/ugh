@@ -1492,7 +1492,7 @@ public class DocStruct implements Serializable {
 
         // Ask DocStructType instance to get MetadataType by Type. At this point
         // we are creating a local copy of the MetadataType object.
-        if (prefsMdType == null && !(inMdName.startsWith(HIDDEN_METADATA_CHAR))) {
+        if (prefsMdType == null ) {
             MetadataTypeNotAllowedException e = new MetadataTypeNotAllowedException(inMdType, this.getType());
             LOGGER.error(e.getMessage());
             throw e;
