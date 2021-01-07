@@ -56,6 +56,7 @@ import ugh.dl.Metadata;
 import ugh.dl.MetadataGroup;
 import ugh.dl.MetadataGroupType;
 import ugh.dl.MetadataType;
+import ugh.dl.NamePart;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
 import ugh.exceptions.DocStructHasNoTypeException;
@@ -1148,7 +1149,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                         }
                     }
                     if (mmo.isSubField()) {
-                        corp.addSubName(content);
+                        corp.addSubName(new NamePart("subname", content));
                     }
                     if (mmo.isPartField()) {
                         if (StringUtils.isNotBlank(corp.getPartName())) {

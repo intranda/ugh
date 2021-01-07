@@ -1929,10 +1929,10 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             if (xquery == null) {
                 LOGGER.warn("No XQuery given for " + corporate.getType().getName() + "'s sub names '");
             } else {
-                for (String subName : corporate.getSubNames()) {
-                    if (StringUtils.isNotBlank(subName)) {
+                for (NamePart subName : corporate.getSubNames()) {
+                    if (StringUtils.isNotBlank(subName.getValue())) {
                         Node firstnameNode = createNode(xquery, createdNode, theDomDoc);
-                        Node firstnamevalueNode = theDomDoc.createTextNode(subName);
+                        Node firstnamevalueNode = theDomDoc.createTextNode(subName.getValue());
                         firstnameNode.appendChild(firstnamevalueNode);
                         createdNode.appendChild(firstnameNode);
                     }
@@ -2137,10 +2137,10 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             if (xquery == null) {
                 LOGGER.warn("No XQuery given for " + corporate.getType().getName() + "'s sub names '");
             } else {
-                for (String subName : corporate.getSubNames()) {
-                    if (StringUtils.isNotBlank(subName)) {
+                for (NamePart subName : corporate.getSubNames()) {
+                    if (StringUtils.isNotBlank(subName.getValue())) {
                         Node firstnameNode = createNode(xquery, createdNode, theDomDoc);
-                        Node firstnamevalueNode = theDomDoc.createTextNode(subName);
+                        Node firstnamevalueNode = theDomDoc.createTextNode(subName.getValue());
                         firstnameNode.appendChild(firstnamevalueNode);
                         createdNode.appendChild(firstnameNode);
                     }

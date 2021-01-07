@@ -24,6 +24,7 @@ import ugh.dl.DocStruct;
 import ugh.dl.Fileformat;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataGroup;
+import ugh.dl.NamePart;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
 import ugh.exceptions.UGHException;
@@ -60,8 +61,8 @@ public class CorporateMetsExportTest {
         // add corporate
         Corporate corp = new Corporate(prefs.getMetadataTypeByName("Corporation"));
         corp.setMainName("main");
-        corp.addSubName("sub1");
-        corp.addSubName("sub2");
+        corp.addSubName(new NamePart("subname","sub1"));
+        corp.addSubName(new NamePart("subname","sub2"));
         corp.setPartName("part");
         corp.setAutorityFile("1234", "url", "http://example.com/1234");
 
@@ -81,8 +82,8 @@ public class CorporateMetsExportTest {
         DocStruct mono = fileformat2.getDigitalDocument().getLogicalDocStruct();
         Corporate fixture = mono.getAllCorporates().get(0);
         assertEquals("main", fixture.getMainName());
-        assertEquals("sub1", fixture.getSubNames().get(0));
-        assertEquals("sub2", fixture.getSubNames().get(1));
+        assertEquals("sub1", fixture.getSubNames().get(0).getValue());
+        assertEquals("sub2", fixture.getSubNames().get(1).getValue());
         assertEquals("part", fixture.getPartName());
 
         assertEquals("1234", fixture.getAuthorityID());
@@ -96,8 +97,8 @@ public class CorporateMetsExportTest {
         // add corporate
         Corporate corp = new Corporate(prefs.getMetadataTypeByName("Corporation"));
         corp.setMainName("main name");
-        corp.addSubName("first sub name");
-        corp.addSubName("additional sub name");
+        corp.addSubName(new NamePart("subname","first sub name"));
+        corp.addSubName(new NamePart("subname","additional sub name"));
         corp.setPartName("part name");
         corp.setAutorityFile("1234", "url", "http://example.com/1234");
 
@@ -161,7 +162,7 @@ public class CorporateMetsExportTest {
         }
         for (Corporate c : publisherGroup.getCorporateList()) {
             c.setMainName("Main name");
-            c.addSubName("Sub name");
+            c.addSubName(new NamePart("subname","Sub name"));
             c.setPartName("Part name");
             c.setAutorityFile("1234", "url", "http://example.com/1234");
         }
@@ -195,7 +196,7 @@ public class CorporateMetsExportTest {
         }
         for (Corporate c : mdg.getCorporateList()) {
             assertEquals("Main name", c.getMainName());
-            assertEquals("Sub name", c.getSubNames().get(0));
+            assertEquals("Sub name", c.getSubNames().get(0).getValue());
             assertEquals("Part name", c.getPartName());
             assertEquals("http://example.com/1234", c.getAuthorityValue());
         }

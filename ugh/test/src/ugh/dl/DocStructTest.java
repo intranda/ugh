@@ -70,7 +70,7 @@ public class DocStructTest {
 
         Corporate c = new Corporate(prefs.getMetadataTypeByName("Corporation"));
         c.setMainName("main");
-        c.addSubName("sub");
+        c.addSubName(new NamePart("subname","sub"));
         c.setPartName("part");
         ds.addCorporate(c);
 
@@ -94,7 +94,7 @@ public class DocStructTest {
 
         Corporate c = new Corporate(prefs.getMetadataTypeByName("Corporation"));
         c.setMainName("main");
-        c.addSubName("sub");
+        c.addSubName(new NamePart("subname","sub"));
         c.setPartName("part");
         ds.addCorporate(c);
 

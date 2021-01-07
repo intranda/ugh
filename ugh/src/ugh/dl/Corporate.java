@@ -69,7 +69,7 @@ public class Corporate extends Metadata {
      */
     @Getter
     @Setter
-    private List<String> subNames = new ArrayList<>();
+    private List<NamePart> subNames = new ArrayList<>();
 
     /**
      * Location, dates, numeric entries
@@ -102,13 +102,13 @@ public class Corporate extends Metadata {
         role = type.getName();
     }
 
-    public void addSubName(String name) {
+    public void addSubName(NamePart name) {
         if (!subNames.contains(name)) {
             subNames.add(name);
         }
     }
 
-    public void removeSubName(String name) {
+    public void removeSubName(NamePart name) {
         if (subNames.contains(name)) {
             subNames.remove(name);
         }

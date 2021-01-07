@@ -62,7 +62,7 @@ public class PicaPlusTest {
 
         assertEquals("Corporation",c.getType().getName());
         assertEquals("Georg-August-Universität Göttingen", c.getMainName());
-        assertEquals("Grad-verleihende Institution", c.getSubNames().get(0));
+        assertEquals("Grad-verleihende Institution", c.getSubNames().get(0).getValue());
         assertEquals("Göttingen; 2014", c.getPartName());
         assertEquals("2024315-7", c.getAuthorityValue());
 
@@ -96,7 +96,7 @@ public class PicaPlusTest {
 
         assertEquals("Corporation",c.getType().getName());
         assertEquals("Georg-August-Universität Göttingen", c.getMainName());
-        assertEquals("Grad-verleihende Institution", c.getSubNames().get(0));
+        assertEquals("Grad-verleihende Institution", c.getSubNames().get(0).getValue());
         assertEquals("Göttingen; 2014", c.getPartName());
         assertEquals("2024315-7", c.getAuthorityValue());
 

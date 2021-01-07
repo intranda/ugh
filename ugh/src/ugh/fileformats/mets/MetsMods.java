@@ -2391,7 +2391,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                     if (name.equals(GOOBI_CORPORATE_MAINNAME_STRING)) {
                         corporate.setMainName(value);
                     } else if (name.equals(GOOBI_CORPORATE_SUBNAME_STRING)) {
-                        corporate.addSubName(value);
+                        corporate.addSubName(new NamePart("subname", value));
                     } else if (name.equals(GOOBI_CORPORATE_PARTNAME_STRING)) {
                         corporate.setPartName(value);
                     } else if (name.equals(GOOBI_PERSON_AUTHORITYID_STRING)) {
@@ -4812,10 +4812,10 @@ public class MetsMods implements ugh.dl.Fileformat {
             createdNode.appendChild(node);
         }
         if (corp.getSubNames() != null) {
-            for (String subName : corp.getSubNames()) {
+            for (NamePart subName : corp.getSubNames()) {
                 theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_CORPORATE_SUBNAME_STRING;
                 Node node = createNode(theXQuery, createdNode, theDocument);
-                Node lastnamevalueNode = theDocument.createTextNode(subName);
+                Node lastnamevalueNode = theDocument.createTextNode(subName.getValue());
                 node.appendChild(lastnamevalueNode);
                 createdNode.appendChild(node);
             }
