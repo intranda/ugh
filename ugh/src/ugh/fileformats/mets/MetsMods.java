@@ -10,8 +10,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -3384,12 +3390,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                     // Get the filename and replace the filename suffix, if
                     // necessary.
                     if (theFilegroup.isIgnoreConfiguredMimetypeAndSuffix()) {
-                        Path path;
-                        try {                            
-                            path = Paths.get(lc);
-                        } catch(InvalidPathException e) {
-                            path = Paths.get(URI.create(lc));
-                        }
+                        Path path = getFilePath(lc);
 
                         String mimeType = DigitalDocument.detectMimeType(path);
                         if (StringUtils.isBlank(mimeType) && StringUtils.isNotBlank(cf.getMimetype())) {
@@ -3412,6 +3413,50 @@ public class MetsMods implements ugh.dl.Fileformat {
         }
 
         return result;
+    }
+
+    /**
+     * Try to get the actual Path from a String that may be a path, URI or mixture of both
+     * 
+     * @param lc
+     * @return
+     */
+    public static Path getFilePath(String lc) {
+        Path path;
+        try {                            
+            path = Paths.get(lc);
+        } catch(InvalidPathException e) {
+            try {
+                path = getPath(new URL(lc).toURI());
+            } catch (MalformedURLException | URISyntaxException e1) {
+                path = Paths.get(URI.create(lc));                            }
+        }
+        return path;
+    }
+    
+    /**
+     * returns the path part of an {@link URI} as {@link Path}. Any characters encoded for the URI are decoded in the Path
+     * 
+     * 
+     * @param uri
+     * @return The path of the uri
+     */
+    private static Path getPath(URI uri) {
+        
+        if(uri.isAbsolute()) {           
+            try {                
+                return  Paths.get(new File(uri).getAbsolutePath());
+            } catch(FileSystemNotFoundException | IllegalArgumentException e) {
+                return Paths.get(uri.getPath());
+            }
+        } else {
+            try {
+                return Paths.get(URLDecoder.decode(uri.toString(), "utf-8"));
+            } catch (UnsupportedEncodingException e) {
+                return Paths.get(uri.toString());
+
+            }
+        }
     }
 
     /**
