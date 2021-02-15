@@ -34,6 +34,7 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -438,7 +439,6 @@ public class MetsMods implements ugh.dl.Fileformat {
     protected static final String GOOBI_CORPORATE_SUBNAME_STRING = "subName";
     protected static final String GOOBI_CORPORATE_PARTNAME_STRING = "partName";
 
-
     // The Goobi internal metadata XPath.
     protected static final String GOOBI_INTERNAL_METADATA_XPATH = "/mods:mods/mods:extension/goobi:goobi/goobi:metadata";
 
@@ -604,6 +604,9 @@ public class MetsMods implements ugh.dl.Fileformat {
     // A hash to store some tag grouping things.
     // This is a really dirty hack, I will fix it tomorrow! (hihi)
     protected HashMap<String, String> replaceGroupTags = new HashMap<>();
+
+    // use UUID or incremental numbers as file identifier
+    protected boolean createUUIDs = false;
 
     /***************************************************************************
      * CONSTRUCTORS
@@ -2277,7 +2280,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                             // corporate in group
                             else if (metadata.getNodeType() == ELEMENT_NODE && metadata.getAttributes().getNamedItem("type") != null
                                     && metadata.getAttributes().getNamedItem("type").getTextContent().equals("corporate")) {
-                                Corporate corp= parseModsCorporate( metadata);
+                                Corporate corp = parseModsCorporate(metadata);
                                 if (corp != null) {
 
                                     List<Corporate> metadataList = new ArrayList<>(metadataGroup.getCorporateList());
@@ -2289,7 +2292,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                                                 corpOld.setSubNames(corp.getSubNames());
                                                 corpOld.setPartName(corp.getPartName());
                                                 corpOld.setAutorityFile(corp.getAuthorityID(), corp.getAuthorityURI(), corp.getAuthorityValue());
-                                            }else {
+                                            } else {
                                                 metadataList.add(corp);
                                             }
                                         }
@@ -2316,13 +2319,13 @@ public class MetsMods implements ugh.dl.Fileformat {
                 if (metabagu.getNodeType() == ELEMENT_NODE && metabagu.getAttributes().getNamedItem("anchorId") == null
                         && metabagu.getAttributes().getNamedItem("type") != null
                         && metabagu.getAttributes().getNamedItem("type").getTextContent().equals("corporate")) {
-                    Corporate corp= parseModsCorporate( metabagu);
+                    Corporate corp = parseModsCorporate(metabagu);
                     if (corp != null) {
                         try {
                             inStruct.addCorporate(corp);
                         } catch (MetadataTypeNotAllowedException e) {
-                            String message = "Corporate '" + corp.getType().getName() + "' " + corp.getMainName() + ") is not allowed as a child for '"
-                                    + inStruct.getType().getName() + "' during MODS import!";
+                            String message = "Corporate '" + corp.getType().getName() + "' " + corp.getMainName()
+                            + ") is not allowed as a child for '" + inStruct.getType().getName() + "' during MODS import!";
                             LOGGER.error(message, e);
                             throw new ImportException(message);
                         }
@@ -2333,7 +2336,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                 if (metabagu.getNodeType() == ELEMENT_NODE && metabagu.getAttributes().getNamedItem("anchorId") == null
                         && metabagu.getAttributes().getNamedItem("type") != null
                         && metabagu.getAttributes().getNamedItem("type").getTextContent().equals("person")) {
-                    Person ps = parseModsPerson( metabagu);
+                    Person ps = parseModsPerson(metabagu);
                     if (ps != null) {
                         try {
                             inStruct.addPerson(ps);
@@ -2418,7 +2421,6 @@ public class MetsMods implements ugh.dl.Fileformat {
         }
         return corporate;
     }
-
 
     private Person parseModsPerson(Node metabagu) throws ReadException {
 
@@ -3338,27 +3340,34 @@ public class MetsMods implements ugh.dl.Fileformat {
                 }
 
                 // Set content file's identifier (if not existing yet).
-                String id = cf.getIdentifier();
-                if (id == null || id.equals("")) {
-                    id = FILE_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(++fileidMax);
-                    cf.setIdentifier(id);
+                String id = null;
+                if (createUUIDs) {
+                    UUID uuid = UUID.randomUUID();
+                    id = uuid.toString();
+                    cf.addUUID(theFilegroup.getName(), id);
                 } else {
-                    if (id.contains(FILE_PREFIX)) {
-                        String numberPart = id.replace(FILE_PREFIX, "");
-                        try {
-                            int number = Integer.parseInt(numberPart);
-                            fileidMax = number;
-                        } catch (NumberFormatException e) {
-                            // do nothing
+
+                    id = cf.getIdentifier();
+                    if (id == null || id.equals("")) {
+                        id = FILE_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(++fileidMax);
+                        cf.setIdentifier(id);
+                    } else {
+                        if (id.contains(FILE_PREFIX)) {
+                            String numberPart = id.replace(FILE_PREFIX, "");
+                            try {
+                                int number = Integer.parseInt(numberPart);
+                                fileidMax = number;
+                            } catch (NumberFormatException e) {
+                                // do nothing
+                            }
+
                         }
-
                     }
-
                 }
 
                 // Use the content file's ID if local filegroup is written, append
                 // the filegroup's name if not.
-                if (!theFilegroup.getName().equals(METS_FILEGROUP_LOCAL_STRING)) {
+                if (!createUUIDs && !theFilegroup.getName().equals(METS_FILEGROUP_LOCAL_STRING)) {
                     id += "_" + theFilegroup.getName();
                 }
                 file.setAttribute(METS_ID_STRING, id);
@@ -3423,17 +3432,18 @@ public class MetsMods implements ugh.dl.Fileformat {
      */
     public static Path getFilePath(String lc) {
         Path path;
-        try {                            
+        try {
             path = Paths.get(lc);
-        } catch(InvalidPathException e) {
+        } catch (InvalidPathException e) {
             try {
                 path = getPath(new URL(lc).toURI());
             } catch (MalformedURLException | URISyntaxException e1) {
-                path = Paths.get(URI.create(lc));                            }
+                path = Paths.get(URI.create(lc));
+            }
         }
         return path;
     }
-    
+
     /**
      * returns the path part of an {@link URI} as {@link Path}. Any characters encoded for the URI are decoded in the Path
      * 
@@ -3442,11 +3452,11 @@ public class MetsMods implements ugh.dl.Fileformat {
      * @return The path of the uri
      */
     private static Path getPath(URI uri) {
-        
-        if(uri.isAbsolute()) {           
-            try {                
-                return  Paths.get(new File(uri).getAbsolutePath());
-            } catch(FileSystemNotFoundException | IllegalArgumentException e) {
+
+        if (uri.isAbsolute()) {
+            try {
+                return Paths.get(new File(uri).getAbsolutePath());
+            } catch (FileSystemNotFoundException | IllegalArgumentException e) {
                 return Paths.get(uri.getPath());
             }
         } else {
@@ -3722,10 +3732,17 @@ public class MetsMods implements ugh.dl.Fileformat {
                         continue;
                     }
                     Element fptr = createDomElementNS(theDocument, this.metsNamespacePrefix, METS_FPTR_STRING);
-                    String id = cf.getIdentifier();
-                    if (!vFileGroup.getName().equals(METS_FILEGROUP_LOCAL_STRING)) {
-                        id += "_" + vFileGroup.getName();
+                    String id = null;
+                    if (createUUIDs) {
+                        id = cf.getUUID(vFileGroup.getName());
+
+                    } else {
+                        id = cf.getIdentifier();
+                        if (!vFileGroup.getName().equals(METS_FILEGROUP_LOCAL_STRING)) {
+                            id += "_" + vFileGroup.getName();
+                        }
                     }
+
                     fptr.setAttribute(METS_FILEID_STRING, id);
                     theDiv.appendChild(fptr);
 
@@ -4848,8 +4865,6 @@ public class MetsMods implements ugh.dl.Fileformat {
             }
         }
     }
-
-
 
     protected void writeSingleModsCorporate(String theXQuery, Corporate corp, Node theStartingNode, Document theDocument)
             throws PreferencesException {

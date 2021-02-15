@@ -93,4 +93,8 @@ public interface ExportFileformat extends Fileformat {
 
     public void setMetsRightsLicense(String metsRightsLicense);
 
+    default void setCreateUUIDs(boolean createUUIDS) {
+        // default implementation: ignore value
+    }
+
 }

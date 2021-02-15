@@ -3037,4 +3037,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
     public String getDisplayName() {
         return "Mets";
     }
+
+    @Override
+    public void setCreateUUIDs(boolean createUUIDs) {
+        this.createUUIDs = createUUIDs;
+    }
 }

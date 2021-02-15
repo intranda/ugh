@@ -24,8 +24,10 @@ package ugh.dl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -80,6 +82,9 @@ public class ContentFile implements Serializable {
     // Type of offset (if it's byte offset, time code, etc.
     private String offsetType;
     private String identifier;
+
+    private Map<String, String> uuidMap = new HashMap<>();
+
     //the list of techMd sections referenced by this File
     private List<Md> techMdList;
 
@@ -239,8 +244,7 @@ public class ContentFile implements Serializable {
      */
     @Override
     public String toString() {
-        return "ContentFile (ID: " + this.getIdentifier() + "): '"
-                + this.getLocation() + "' (" + this.getMimetype() + ")" + "\n";
+        return "ContentFile (ID: " + this.getIdentifier() + "): '" + this.getLocation() + "' (" + this.getMimetype() + ")" + "\n";
     }
 
     /***************************************************************************
@@ -256,18 +260,16 @@ public class ContentFile implements Serializable {
 
         // Compare theses class variables. processing Strings in a try block.
         try {
-            if (!((this.getMimetype() == null && contentFile.getMimetype() == null) || this
-                    .getMimetype().equals(contentFile.getMimetype()))) {
+            if (!((this.getMimetype() == null && contentFile.getMimetype() == null) || this.getMimetype().equals(contentFile.getMimetype()))) {
                 return false;
             }
 
-            if (!((this.getLocation() == null && contentFile.getLocation() == null) || this
-                    .getLocation().equals(contentFile.getLocation()))) {
+            if (!((this.getLocation() == null && contentFile.getLocation() == null) || this.getLocation().equals(contentFile.getLocation()))) {
                 return false;
             }
 
-            if (!((this.getIdentifier() == null && contentFile.getIdentifier() == null) || this
-                    .getIdentifier().equals(contentFile.getIdentifier()))) {
+            if (!((this.getIdentifier() == null && contentFile.getIdentifier() == null)
+                    || this.getIdentifier().equals(contentFile.getIdentifier()))) {
                 return false;
             }
         }
@@ -277,13 +279,11 @@ public class ContentFile implements Serializable {
         }
 
         // Cchecking if same number of metadata exists.
-        if (this.getAllMetadata() == null
-                && contentFile.getAllMetadata() == null) {
+        if (this.getAllMetadata() == null && contentFile.getAllMetadata() == null) {
             return true;
         }
         if ((this.getAllMetadata() == null && contentFile.getAllMetadata() != null)
-                || (this.getAllMetadata() != null && contentFile
-                .getAllMetadata() == null)) {
+                || (this.getAllMetadata() != null && contentFile.getAllMetadata() == null)) {
             return false;
         }
 
@@ -335,6 +335,18 @@ public class ContentFile implements Serializable {
 
     public void setRepresentative(boolean isRepresentative) {
         this.isRepresentative = isRepresentative;
+    }
+
+    public Map<String, String> getUuidMap() {
+        return uuidMap;
+    }
+
+    public void addUUID(String type, String uuid) {
+        uuidMap.put(type, uuid);
+    }
+
+    public String getUUID(String type) {
+        return uuidMap.get(type);
     }
 
 }
