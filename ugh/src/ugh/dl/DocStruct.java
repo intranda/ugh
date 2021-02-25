@@ -631,6 +631,7 @@ public class DocStruct implements Serializable {
                         newC.setSubNames(c.getSubNames());
                         newC.setPartName(c.getPartName());
                         newC.setAutorityFile(c.getAuthorityID(), c.getAuthorityURI(),c.getAuthorityValue());
+                        newStruct.addCorporate(newC);
                     } catch (MetadataTypeNotAllowedException e) {
                         LOGGER.error(e);
                     }
