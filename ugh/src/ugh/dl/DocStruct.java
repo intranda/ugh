@@ -622,6 +622,20 @@ public class DocStruct implements Serializable {
                     }
                 }
             }
+            // copy corporations
+            if (corporates != null) {
+                for (Corporate c :corporates) {
+                    try {
+                        Corporate newC = new Corporate(c.getType());
+                        newC.setMainName(c.getMainName());
+                        newC.setSubNames(c.getSubNames());
+                        newC.setPartName(c.getPartName());
+                        newC.setAutorityFile(c.getAuthorityID(), c.getAuthorityURI(),c.getAuthorityValue());
+                    } catch (MetadataTypeNotAllowedException e) {
+                        LOGGER.error(e);
+                    }
+                }
+            }
         }
 
         // Iterate over all children, if recursive set to true.
@@ -919,7 +933,7 @@ public class DocStruct implements Serializable {
             }
         }
         // Check corporates
-        if (corporates!= null) {
+        if (corporates != null) {
             for (Corporate corp : corporates) {
                 if (inMDT.getName().equals(corp.getType().getName())) {
                     return true;
@@ -1492,7 +1506,7 @@ public class DocStruct implements Serializable {
 
         // Ask DocStructType instance to get MetadataType by Type. At this point
         // we are creating a local copy of the MetadataType object.
-        if (prefsMdType == null ) {
+        if (prefsMdType == null) {
             MetadataTypeNotAllowedException e = new MetadataTypeNotAllowedException(inMdType, this.getType());
             LOGGER.error(e.getMessage());
             throw e;
@@ -3140,7 +3154,7 @@ public class DocStruct implements Serializable {
                 }
             }
         }
-        if (getAllCorporates()!= null) {
+        if (getAllCorporates() != null) {
             List<Corporate> corporateList = getAllCorporates();
             for (Corporate corp : corporateList) {
                 if (StringUtils.isBlank(corp.getMainName()) && StringUtils.isBlank(corp.getPartName()) && corp.getSubNames().isEmpty()) {
@@ -3209,7 +3223,7 @@ public class DocStruct implements Serializable {
         }
 
         if (corporates != null) {
-            oldCorporates = new LinkedList<>(corporates) ;
+            oldCorporates = new LinkedList<>(corporates);
         }
         //TODO
         // Get all MetadataTypes defined in the prefs for this DocStruct.
@@ -3269,15 +3283,14 @@ public class DocStruct implements Serializable {
         if (oldMetadata != null && oldMetadata.size() > 0) {
             newMetadata.addAll(oldMetadata);
         }
-        if (oldCorporates!= null && oldCorporates.size()>0) {
+        if (oldCorporates != null && oldCorporates.size() > 0) {
             newCorporates.addAll(oldCorporates);
         }
-
 
         // Re-set the lists.
         this.allMetadata = newMetadata;
         this.persons = newPersons;
-        corporates=newCorporates;
+        corporates = newCorporates;
     }
 
     /***************************************************************************
