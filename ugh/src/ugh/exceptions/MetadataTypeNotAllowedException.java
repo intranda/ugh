@@ -23,6 +23,7 @@ package ugh.exceptions;
  ******************************************************************************/
 
 import ugh.dl.DocStructType;
+import ugh.dl.MetadataGroupType;
 import ugh.dl.MetadataType;
 
 /*******************************************************************************
@@ -33,107 +34,108 @@ import ugh.dl.MetadataType;
 
 public class MetadataTypeNotAllowedException extends UGHException {
 
-	private static final long	serialVersionUID	= -6826313212661918527L;
+    private static final long serialVersionUID = -6826313212661918527L;
 
-	private MetadataType		metadataType;
-	private DocStructType		docStructType;
+    private MetadataType metadataType;
+    private DocStructType docStructType;
+    private MetadataGroupType groupType;
 
-	/***************************************************************************
-	 * Default constructor.
-	 **************************************************************************/
-	public MetadataTypeNotAllowedException() {
-		super();
-	}
+    /***************************************************************************
+     * Default constructor.
+     **************************************************************************/
+    public MetadataTypeNotAllowedException() {
+        super();
+    }
 
-	/***************************************************************************
-	 * @param inReason
-	 **************************************************************************/
-	public MetadataTypeNotAllowedException(String inReason) {
-		super(inReason);
-	}
+    /***************************************************************************
+     * @param inReason
+     **************************************************************************/
+    public MetadataTypeNotAllowedException(String inReason) {
+        super(inReason);
+    }
 
-	/***************************************************************************
-	 * @param e
-	 **************************************************************************/
-	public MetadataTypeNotAllowedException(Exception e) {
-		super(e);
-	}
+    /***************************************************************************
+     * @param e
+     **************************************************************************/
+    public MetadataTypeNotAllowedException(Exception e) {
+        super(e);
+    }
 
-	/***************************************************************************
-	 * @param inReason
-	 * @param e
-	 **************************************************************************/
-	public MetadataTypeNotAllowedException(String inReason, Exception e) {
-		super(inReason, e);
-	}
+    /***************************************************************************
+     * @param inReason
+     * @param e
+     **************************************************************************/
+    public MetadataTypeNotAllowedException(String inReason, Exception e) {
+        super(inReason, e);
+    }
 
-	/***************************************************************************
-	 * @param in
-	 * @param inDSType
-	 **************************************************************************/
-	public MetadataTypeNotAllowedException(MetadataType in,
-			DocStructType inDSType) {
-		this.metadataType = in;
-		this.docStructType = inDSType;
-	}
+    /***************************************************************************
+     * @param in
+     * @param inDSType
+     **************************************************************************/
+    public MetadataTypeNotAllowedException(MetadataType in, DocStructType inDSType) {
+        this.metadataType = in;
+        this.docStructType = inDSType;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Throwable#getMessage()
-	 */
-	@Override
-	public String getMessage() {
+    public MetadataTypeNotAllowedException(MetadataType in, MetadataGroupType groupType) {
+        this.metadataType = in;
+        this.groupType = groupType;
+    }
 
-		String result;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Throwable#getMessage()
+     */
+    @Override
+    public String getMessage() {
 
-		if (this.metadataType == null && this.docStructType == null) {
-			return "Metadata not allowed! MetadataType and DocStructType unknown";
-		}
+        String result;
 
-		if (this.metadataType == null && this.docStructType != null) {
-			result = "Metadata not allowed for DocStruct '"
-					+ this.docStructType.getName() + "'";
-		} else if (this.metadataType != null && this.docStructType == null) {
-			result = "Metadata '" + this.metadataType.getName()
-					+ "' not allowed for current DocStruct";
-		} else {
-			result = "Metadata of "
-					+ (this.metadataType == null ? "unknown type" : "type '"
-							+ this.metadataType.getName() + "'")
-					+ " not allowed for DocStruct '"
-					+ this.docStructType.getName() + "'";
-		}
+        if (this.metadataType == null && this.docStructType == null) {
+            return "Metadata not allowed! MetadataType and DocStructType unknown";
+        }
+        if (groupType != null && metadataType != null) {
+            result = String.format("Metadata '%s' not allowed in group '%s'", metadataType.getName(), groupType.getName());
+        } else if (this.metadataType == null && this.docStructType != null) {
+            result = "Metadata not allowed for DocStruct '" + this.docStructType.getName() + "'";
+        } else if (this.metadataType != null && this.docStructType == null) {
+            result = "Metadata '" + this.metadataType.getName() + "' not allowed for current DocStruct";
+        } else {
+            result = "Metadata of " + (this.metadataType == null ? "unknown type" : "type '" + this.metadataType.getName() + "'")
+                    + " not allowed for DocStruct '" + this.docStructType.getName() + "'";
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	/***************************************************************************
-	 * @return the dst
-	 **************************************************************************/
-	public DocStructType getDocStructType() {
-		return this.docStructType;
-	}
+    /***************************************************************************
+     * @return the dst
+     **************************************************************************/
+    public DocStructType getDocStructType() {
+        return this.docStructType;
+    }
 
-	/**************************************************************************
-	 * @param docStructType
-	 **************************************************************************/
-	public void setDocStructType(DocStructType docStructType) {
-		this.docStructType = docStructType;
-	}
+    /**************************************************************************
+     * @param docStructType
+     **************************************************************************/
+    public void setDocStructType(DocStructType docStructType) {
+        this.docStructType = docStructType;
+    }
 
-	/***************************************************************************
-	 * @return the mdt
-	 **************************************************************************/
-	public MetadataType getMetadataType() {
-		return this.metadataType;
-	}
+    /***************************************************************************
+     * @return the mdt
+     **************************************************************************/
+    public MetadataType getMetadataType() {
+        return this.metadataType;
+    }
 
-	/**************************************************************************
-	 * @param metadataType
-	 **************************************************************************/
-	public void setMetadataType(MetadataType metadataType) {
-		this.metadataType = metadataType;
-	}
+    /**************************************************************************
+     * @param metadataType
+     **************************************************************************/
+    public void setMetadataType(MetadataType metadataType) {
+        this.metadataType = metadataType;
+    }
 
 }

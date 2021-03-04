@@ -1195,9 +1195,9 @@
     <language name="de">PublisherGroup</language>
     <language name="en">PublisherGroup</language>
     <metadata>PublisherPerson</metadata>
-    <metadata>PlaceOfPublication</metadata>
-    <metadata>PublicationYear</metadata>
-    <metadata>PublisherCorporate</metadata>
+    <metadata num="+">PlaceOfPublication</metadata>
+    <metadata num="1m">PublicationYear</metadata>
+    <metadata num="1o">PublisherCorporate</metadata>
   </Group>
 
 

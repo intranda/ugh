@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import lombok.Getter;
@@ -38,11 +39,14 @@ public class MetadataGroup implements Serializable {
     // Document structure to which this metadata type belongs to.
     protected DocStruct myDocStruct;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private List<Metadata> metadataList;
-    @Getter @Setter
+    @Getter
+    @Setter
     private List<Person> personList;
-    @Getter @Setter
+    @Getter
+    @Setter
     private List<Corporate> corporateList;
 
     /***************************************************************************
@@ -129,16 +133,103 @@ public class MetadataGroup implements Serializable {
         this.MDType = inType;
     }
 
-    public void addMetadata(Metadata metadata) {
-        this.metadataList.add(metadata);
+    public void addMetadata(Metadata metadata) throws MetadataTypeNotAllowedException {
+        MetadataType type = metadata.getType();
+        String inMdName = type.getName();
+        boolean insert = false;
+
+        String maxnumberallowed = type.getNum();
+        if (StringUtils.isBlank(maxnumberallowed) || maxnumberallowed.equals("*") || maxnumberallowed.equals("+")) {
+            insert = true;
+        } else if (maxnumberallowed.equalsIgnoreCase("1m") || maxnumberallowed.equalsIgnoreCase("1o")) {
+            // check if the metadatatype was used
+            for (Metadata other : metadataList) {
+                if (other.getType().getName().equals(inMdName)) {
+                    // metadata was used before, another insertion is not allowed
+                    insert = false;
+                    break;
+
+                }
+                // metadata type was not used before
+                insert = true;
+            }
+        }
+
+        if (insert) {
+            this.metadataList.add(metadata);
+        } else {
+            LOGGER.debug("Not allowed to add metadata '" + inMdName + "'");
+            MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException(type, MDType);
+            LOGGER.error(mtnae.getMessage());
+            throw mtnae;
+        }
     }
 
-    public void addPerson(Person person) {
-        this.personList.add(person);
+    public void addPerson(Person person) throws MetadataTypeNotAllowedException {
+
+        MetadataType type = person.getType();
+        String inMdName = type.getName();
+        boolean insert = false;
+
+        String maxnumberallowed = type.getNum();
+        if (StringUtils.isBlank(maxnumberallowed) || maxnumberallowed.equals("*") || maxnumberallowed.equals("+")) {
+            insert = true;
+        } else if (maxnumberallowed.equalsIgnoreCase("1m") || maxnumberallowed.equalsIgnoreCase("1o")) {
+            // check if the metadatatype was used
+            for (Person other : personList) {
+                if (other.getType().getName().equals(inMdName)) {
+                    // metadata was used before, another insertion is not allowed
+                    insert = false;
+                    break;
+
+                }
+                // metadata type was not used before
+                insert = true;
+            }
+        }
+
+        if (insert) {
+            personList.add(person);
+        } else {
+            LOGGER.debug("Not allowed to add metadata '" + inMdName + "'");
+            MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException(type, MDType);
+            LOGGER.error(mtnae.getMessage());
+            throw mtnae;
+        }
     }
-    
-    public void addCorporate(Corporate corporate) {
-        corporateList.add(corporate);
+
+    public void addCorporate(Corporate corporate)throws MetadataTypeNotAllowedException {
+
+
+        MetadataType type = corporate.getType();
+        String inMdName = type.getName();
+        boolean insert = false;
+
+        String maxnumberallowed = type.getNum();
+        if (StringUtils.isBlank(maxnumberallowed) || maxnumberallowed.equals("*") || maxnumberallowed.equals("+")) {
+            insert = true;
+        } else if (maxnumberallowed.equalsIgnoreCase("1m") || maxnumberallowed.equalsIgnoreCase("1o")) {
+            // check if the metadatatype was used
+            for (Corporate other : corporateList) {
+                if (other.getType().getName().equals(inMdName)) {
+                    // metadata was used before, another insertion is not allowed
+                    insert = false;
+                    break;
+
+                }
+                // metadata type was not used before
+                insert = true;
+            }
+        }
+
+        if (insert) {
+            corporateList.add(corporate);
+        } else {
+            LOGGER.debug("Not allowed to add metadata '" + inMdName + "'");
+            MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException(type, MDType);
+            LOGGER.error(mtnae.getMessage());
+            throw mtnae;
+        }
     }
 
     @Override
@@ -195,7 +286,6 @@ public class MetadataGroup implements Serializable {
         }
         return returnList;
     }
-
 
     @Override
     public int hashCode() {

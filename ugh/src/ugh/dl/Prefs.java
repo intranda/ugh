@@ -733,12 +733,23 @@ public class Prefs implements Serializable {
                     }
                 }
 
+                String mdtypeNum = "*";
                 if (currentNode.getNodeName().equals("metadata")) {
+                    attributeNodelist = currentNode.getAttributes();
+                    if (attributeNodelist != null) {
+                        Node attribNode = attributeNodelist.getNamedItem("num");
+                        if (attribNode != null) {
+                            mdtypeNum = attribNode.getNodeValue();
+                        }
+                    }
+
+
 
                     mdtypeName = "";
 
                     // Get value; value is always a text node.
                     NodeList textnodes = currentNode.getChildNodes();
+
                     if (textnodes != null) {
                         Node textnode = textnodes.item(0);
                         if (textnode.getNodeType() != Node.TEXT_NODE) {
@@ -762,6 +773,7 @@ public class Prefs implements Serializable {
                                 + "' is unknown");
                         return null;
                     }
+                    newMdType.setNum(mdtypeNum);
                     currenGroup.addMetadataType(newMdType);
                 }
 

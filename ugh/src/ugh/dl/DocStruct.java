@@ -1272,7 +1272,7 @@ public class DocStruct implements Serializable {
         }
 
         // Once or more.
-        if (maxnumberallowed.equals("+") || maxnumberallowed.equals("+")) {
+        if (maxnumberallowed.equals("+")) {
             insert = true;
         }
 
@@ -1531,6 +1531,7 @@ public class DocStruct implements Serializable {
         if (maxnumberallowed == null) {
             System.out.println(this.identifier);
             System.out.println(this.type.getName());
+            maxnumberallowed = "*";
         }
         if (maxnumberallowed.equals("*")) {
             insert = true;
