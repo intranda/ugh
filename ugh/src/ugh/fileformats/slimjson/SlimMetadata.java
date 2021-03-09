@@ -36,10 +36,10 @@ public class SlimMetadata {
         sm.digitalDocument = sdd;
         sdd.addMetadataType(meta.getType());
         sm.mdTypeId = meta.getType().getName();
-        if (meta.getDocStruct().getIdentifier() == null) {
-            meta.getDocStruct().setIdentifier(UUID.randomUUID().toString());
+        if (meta.getParent().getIdentifier() == null) {
+            meta.getParent().setIdentifier(UUID.randomUUID().toString());
         }
-        sm.myDocStructId = meta.getDocStruct().getIdentifier();
+        sm.myDocStructId = meta.getParent().getIdentifier();
 
         sm.metadataValue = meta.getValue();
         sm.MetadataVQ = meta.getValueQualifier();
@@ -61,7 +61,7 @@ public class SlimMetadata {
             if (ds == null) {
                 ds = digitalDocument.getDsMap().get(this.myDocStructId).toDocStruct(dd);
             }
-            sm.setDocStruct(ds);
+            sm.setParent(ds);
 
             sm.setValue(this.metadataValue);
             sm.setValueQualifier(this.MetadataVQ, this.MetadataVQType);

@@ -774,7 +774,7 @@ public class Prefs implements Serializable {
                         return null;
                     }
                     newMdType.setNum(mdtypeNum);
-                    currenGroup.addMetadataType(newMdType);
+                    currenGroup.addMetadataType(newMdType, mdtypeNum, true, false);
                 }
 
                 if (currentNode.getNodeName().equals("language")) {

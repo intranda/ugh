@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import lombok.Getter;
 import lombok.Setter;
+import ugh.exceptions.IncompletePersonObjectException;
 import ugh.exceptions.MetadataTypeNotAllowedException;
 
 /*******************************************************************************
@@ -29,7 +30,7 @@ import ugh.exceptions.MetadataTypeNotAllowedException;
  * 
  ******************************************************************************/
 
-public class MetadataGroup implements Serializable {
+public class MetadataGroup implements Serializable, HoldingElement {
 
     private static final long serialVersionUID = -6283388063178498292L;
 
@@ -37,7 +38,11 @@ public class MetadataGroup implements Serializable {
 
     protected MetadataGroupType MDType;
     // Document structure to which this metadata type belongs to.
-    protected DocStruct myDocStruct;
+    @Getter @Setter
+    protected DocStruct parent;
+    @Getter
+    @Setter
+    private String identifier;
 
     @Getter
     @Setter
@@ -73,41 +78,41 @@ public class MetadataGroup implements Serializable {
             if (mdt.getIsPerson()) {
                 Person p = new Person(mdt);
                 p.setRole(mdt.getName());
-                personList.add(p);
+                addPerson(p);
             } else if (mdt.isCorporate()) {
                 Corporate c = new Corporate(mdt);
                 c.setRole(mdt.getName());
-                corporateList.add(c);
+                addCorporate(c);
             } else {
                 Metadata md = new Metadata(mdt);
-                metadataList.add(md);
+                addMetadata(md);
             }
         }
 
     }
-
-    /***************************************************************************
-     * <p>
-     * Sets the Document structure entity to which this object belongs to.
-     * </p>
-     * 
-     * @param inDoc
-     **************************************************************************/
-    public void setDocStruct(DocStruct inDoc) {
-        this.myDocStruct = inDoc;
-    }
-
-    /***************************************************************************
-     * <p>
-     * Returns the DocStruct instance, to which this metadataGroup object belongs. This is extremly helpful, if only the metadata instance is stored
-     * in a list; the reference to the associated DocStrct instance is always kept.
-     * </p>
-     * 
-     * @return DocStruct instance.
-     **************************************************************************/
-    public DocStruct getDocStruct() {
-        return this.myDocStruct;
-    }
+    //
+    //    /***************************************************************************
+    //     * <p>
+    //     * Sets the Document structure entity to which this object belongs to.
+    //     * </p>
+    //     *
+    //     * @param inDoc
+    //     **************************************************************************/
+    //    public void setDocStruct(DocStruct inDoc) {
+    //        this.myDocStruct = inDoc;
+    //    }
+    //
+    //    /***************************************************************************
+    //     * <p>
+    //     * Returns the DocStruct instance, to which this metadataGroup object belongs. This is extremly helpful, if only the metadata instance is stored
+    //     * in a list; the reference to the associated DocStrct instance is always kept.
+    //     * </p>
+    //     *
+    //     * @return DocStruct instance.
+    //     **************************************************************************/
+    //    public DocStruct getDocStruct() {
+    //        return this.myDocStruct;
+    //    }
 
     /***************************************************************************
      * <p>
@@ -133,10 +138,11 @@ public class MetadataGroup implements Serializable {
         this.MDType = inType;
     }
 
+    @Override
     public void addMetadata(Metadata metadata) throws MetadataTypeNotAllowedException {
         MetadataType type = metadata.getType();
         String inMdName = type.getName();
-        boolean insert = false;
+        boolean insert = true;
 
         String maxnumberallowed = type.getNum();
         if (StringUtils.isBlank(maxnumberallowed) || maxnumberallowed.equals("*") || maxnumberallowed.equals("+")) {
@@ -156,6 +162,7 @@ public class MetadataGroup implements Serializable {
         }
 
         if (insert) {
+            metadata.setParent(this);
             this.metadataList.add(metadata);
         } else {
             LOGGER.debug("Not allowed to add metadata '" + inMdName + "'");
@@ -165,11 +172,12 @@ public class MetadataGroup implements Serializable {
         }
     }
 
+    @Override
     public void addPerson(Person person) throws MetadataTypeNotAllowedException {
 
         MetadataType type = person.getType();
         String inMdName = type.getName();
-        boolean insert = false;
+        boolean insert = true;
 
         String maxnumberallowed = type.getNum();
         if (StringUtils.isBlank(maxnumberallowed) || maxnumberallowed.equals("*") || maxnumberallowed.equals("+")) {
@@ -189,6 +197,7 @@ public class MetadataGroup implements Serializable {
         }
 
         if (insert) {
+            person.setParent(this);
             personList.add(person);
         } else {
             LOGGER.debug("Not allowed to add metadata '" + inMdName + "'");
@@ -198,12 +207,12 @@ public class MetadataGroup implements Serializable {
         }
     }
 
-    public void addCorporate(Corporate corporate)throws MetadataTypeNotAllowedException {
-
+    @Override
+    public void addCorporate(Corporate corporate) throws MetadataTypeNotAllowedException {
 
         MetadataType type = corporate.getType();
         String inMdName = type.getName();
-        boolean insert = false;
+        boolean insert = true;
 
         String maxnumberallowed = type.getNum();
         if (StringUtils.isBlank(maxnumberallowed) || maxnumberallowed.equals("*") || maxnumberallowed.equals("+")) {
@@ -223,6 +232,7 @@ public class MetadataGroup implements Serializable {
         }
 
         if (insert) {
+            corporate.setParent(this);
             corporateList.add(corporate);
         } else {
             LOGGER.debug("Not allowed to add metadata '" + inMdName + "'");
@@ -238,7 +248,7 @@ public class MetadataGroup implements Serializable {
         sb.append("MetadataGroup [MDType:");
         sb.append(MDType.getName());
         sb.append(", myDocStruct:");
-        sb.append(myDocStruct.getType().getName());
+        sb.append(parent.getType().getName());
         if (metadataList != null && !metadataList.isEmpty()) {
             sb.append(", metadataList:");
             for (Metadata md : metadataList) {
@@ -295,7 +305,7 @@ public class MetadataGroup implements Serializable {
         result = prime * result + ((metadataList == null) ? 0 : metadataList.hashCode());
         result = prime * result + ((personList == null) ? 0 : personList.hashCode());
         result = prime * result + ((corporateList == null) ? 0 : corporateList.hashCode());
-        result = prime * result + ((myDocStruct == null) ? 0 : myDocStruct.hashCode());
+        result = prime * result + ((parent == null) ? 0 : parent.hashCode());
         return result;
     }
 
@@ -332,14 +342,181 @@ public class MetadataGroup implements Serializable {
         } else if (!personList.equals(other.personList)) {
             return false;
         }
-        if (myDocStruct == null) {
-            if (other.myDocStruct != null) {
+        if (parent == null) {
+            if (other.parent != null) {
                 return false;
             }
-        } else if (!myDocStruct.equals(other.myDocStruct)) {
+        } else if (!parent.equals(other.parent)) {
             return false;
         }
         return true;
     }
+
+    @Override
+    public boolean isMetadataTypeBeRemoved(MetadataType inMDType) {
+        // How many metadata of this type do we have already.
+        int typesavailable = countMDofthisType(inMDType.getName());
+        // How many types must be at least available.
+        String maxnumbersallowed = MDType.getNumberOfMetadataType(inMDType);
+
+        if (typesavailable == 1 && maxnumbersallowed.equals("+")) {
+            // There must be at least one.
+            return false;
+        }
+
+        if (typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+            // There must be at least one.
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public void removeMetadata(Metadata theMd, boolean force) {
+        MetadataType inMdType;
+        String maxnumbersallowed;
+        int typesavailable;
+
+        // Get Type of inMD.
+        inMdType = theMd.getType();
+
+        // How many metadata of this type do we have already.
+        typesavailable = countMDofthisType(inMdType.getName());
+
+        // How many types must be at least available.
+        maxnumbersallowed = MDType.getNumberOfMetadataType(inMdType);
+
+        if (!force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
+            // There must be at least one.
+            return;
+        }
+        if (!force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+            // There must be at least one.
+            return;
+        }
+
+        theMd.parent = null;
+
+
+        this.metadataList.remove(theMd);
+
+    }
+
+
+    @Override
+    public void removeCorporate(Corporate in, boolean force) throws IncompletePersonObjectException {
+        if (corporateList == null) {
+            return;
+        }
+
+        MetadataType inMDType = in.getType();
+        // Incomplete person.
+        if (inMDType == null) {
+            IncompletePersonObjectException ipoe = new IncompletePersonObjectException();
+            LOGGER.error("Incomplete data for corporate metadata '" + in.getType().getName() + "'");
+            throw ipoe;
+        }
+
+        // How many metadata of this type do we have already.
+        int typesavailable = countMDofthisType(inMDType.getName());
+        // How many types must be at least available.
+        String maxnumbersallowed = MDType.getNumberOfMetadataType(inMDType);
+
+        if (force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
+            // There must be at least one.
+            return;
+        }
+        if (force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+            // There must be at least one.
+            return;
+        }
+
+        corporateList.remove(in);
+    }
+
+    @Override
+    public void removePerson(Person in, boolean force) throws IncompletePersonObjectException {
+        if (personList == null) {
+            return;
+        }
+
+        MetadataType inMDType = in.getType();
+        // Incomplete person.
+        if (inMDType == null) {
+            IncompletePersonObjectException ipoe = new IncompletePersonObjectException();
+            LOGGER.error("Incomplete data for person metadata '" + in.getType().getName() + "'");
+            throw ipoe;
+        }
+
+        // How many metadata of this type do we have already.
+        int typesavailable = countMDofthisType(inMDType.getName());
+        // How many types must be at least available.
+        String maxnumbersallowed = MDType.getNumberOfMetadataType(inMDType);
+
+        if (force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
+            // There must be at least one.
+            return;
+        }
+        if (force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+            // There must be at least one.
+            return;
+        }
+
+        personList.remove(in);
+    }
+
+
+    /***************************************************************************
+     * <p>
+     * Gives number of Metadata elements belonging to this DocStruct of a specific type. The type must be given by the unique (internal) name as it is
+     * retrievable from MetadataType's getName method.
+     * </p>
+     * <p>
+     * This method does not only get the number of Metadata elements, but also the number of person objects belonging to one <code>DocStruct</code>
+     * object.
+     * </p>
+     * 
+     * @param inTypeName Internal name of object as String
+     * @return Number of metadata as integer
+     **************************************************************************/
+    public int countMDofthisType(String inTypeName) {
+
+        MetadataType testtype;
+        int counter = 0;
+
+        if (metadataList != null) {
+            for (Metadata md : metadataList) {
+                testtype = md.getType();
+                if (testtype != null && testtype.getName().equals(inTypeName)) {
+                    // Another one is available.
+                    counter++;
+                }
+            }
+        }
+
+
+        if (personList != null) {
+            for (Person per : personList) {
+                testtype = per.getType();
+                if (testtype != null && testtype.getName().equals(inTypeName)) {
+                    // Another one is available.
+                    counter++;
+                }
+            }
+        }
+
+        if (corporateList != null) {
+            for (Corporate corp : corporateList) {
+                testtype = corp.getType();
+                if (testtype != null && testtype.getName().equals(inTypeName)) {
+                    // Another one is available.
+                    counter++;
+                }
+            }
+        }
+        return counter;
+    }
+
 
 }

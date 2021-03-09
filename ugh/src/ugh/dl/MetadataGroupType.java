@@ -27,6 +27,7 @@ package ugh.dl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class MetadataGroupType implements Serializable {
 
     private static final long serialVersionUID = -2935555025180170310L;
 
-    private List<MetadataType> metadataTypeList = new ArrayList<>();
+    private List<MetadataTypeForDocStructType> metadataTypeList = new ArrayList<>();
 
     // Unique name of MetadataType.
     private String name;
@@ -51,10 +52,24 @@ public class MetadataGroupType implements Serializable {
     private HashMap<String, String> allLanguages;
 
     public List<MetadataType> getMetadataTypeList() {
-        return metadataTypeList;
+        List<MetadataType> out = new LinkedList<>();
+
+        Iterator<MetadataTypeForDocStructType> it = metadataTypeList.iterator();
+        while (it.hasNext()) {
+            MetadataTypeForDocStructType mdtfdst = it.next();
+            out.add(mdtfdst.getMetadataType());
+        }
+        return out;
     }
 
     public void setMetadataTypeList(List<MetadataType> metadataTypeList) {
+        for (MetadataType mdt : metadataTypeList) {
+            MetadataTypeForDocStructType mdtfdst = new MetadataTypeForDocStructType(mdt);
+            this.metadataTypeList.add(mdtfdst);
+        }
+    }
+
+    public void setTypes(List<MetadataTypeForDocStructType> metadataTypeList) {
         this.metadataTypeList = metadataTypeList;
     }
 
@@ -66,15 +81,37 @@ public class MetadataGroupType implements Serializable {
         this.name = name;
     }
 
-    public void addMetadataType(MetadataType metadataToAdd) {
-        if (!metadataTypeList.contains(metadataToAdd)) {
-            metadataTypeList.add(metadataToAdd);
+    public void addMetadataType(MetadataType metadataToAdd, String inNumber, boolean isDefault, boolean isInvisible) {
+        // New MetadataType obejct which is added to this DocStructType.
+        MetadataType myType;
+
+        // Metadata is already available.
+        if (isMetadataTypeAlreadyAvailable(metadataToAdd)) {
+            return;
         }
+
+        // Make a copy of this object and add the copy - necessary, cause we
+        // have own instances for each document structure type.
+        myType = metadataToAdd.copy();
+
+        MetadataTypeForDocStructType mdtfdst = new MetadataTypeForDocStructType(myType);
+        mdtfdst.setNumber(inNumber);
+        mdtfdst.setDefaultdisplay(isDefault);
+        mdtfdst.setInvisible(isInvisible);
+        this.metadataTypeList.add(mdtfdst);
     }
 
     public void removeMetadataType(MetadataType metadataToRemove) {
-        if (metadataTypeList.contains(metadataToRemove)) {
-            metadataTypeList.remove(metadataToRemove);
+
+        List<MetadataTypeForDocStructType> ll = new LinkedList<>(metadataTypeList);
+
+        Iterator<MetadataTypeForDocStructType> it = ll.iterator();
+        while (it.hasNext()) {
+            MetadataTypeForDocStructType mdtfdst = it.next();
+            if (mdtfdst.getMetadataType().equals(metadataToRemove)) {
+                metadataTypeList.remove(mdtfdst);
+                return;
+            }
         }
     }
 
@@ -128,6 +165,29 @@ public class MetadataGroupType implements Serializable {
         return this.max_number;
     }
 
+    /***************************************************************************
+     * <p>
+     * Gets the number of metadata objects, which are possible for a special MetadataType for this special document structure type. MetadataTypes are
+     * compared using the internal name.
+     * </p>
+     * 
+     * @param inType MetadataType - can be a global type
+     * @return String containing the number (number can be: "1o", "1m", "*", "+")
+     **************************************************************************/
+    public String getNumberOfMetadataType(MetadataType inType) {
+
+
+        Iterator<MetadataTypeForDocStructType> it = metadataTypeList.iterator();
+        while (it.hasNext()) {
+            MetadataTypeForDocStructType mdtfdst = it.next();
+            if (mdtfdst.getMetadataType().getName().equals(inType.getName())) {
+                return mdtfdst.getNumber();
+            }
+        }
+
+        return "0";
+    }
+
     public MetadataGroupType copy() {
 
         MetadataGroupType newMDType = new MetadataGroupType();
@@ -137,12 +197,48 @@ public class MetadataGroupType implements Serializable {
         if (this.max_number != null) {
             newMDType.setNum(this.max_number);
         }
-        List<MetadataType> newList = new LinkedList<>();
-        for (MetadataType mdt : metadataTypeList) {
-            newList.add(mdt.copy());
+        List<MetadataTypeForDocStructType> newList = new LinkedList<>();
+        for (MetadataTypeForDocStructType mdt : metadataTypeList) {
+            MetadataTypeForDocStructType newType = new MetadataTypeForDocStructType(mdt.getMetadataType());
+            newType.setNumber(mdt.getNumber());
+            newType.setInvisible(mdt.isInvisible());
+            newType.setDefaultdisplay(mdt.isDefaultdisplay());
+
+            newList.add(newType);
         }
-        newMDType.setMetadataTypeList(newList);
+        newMDType.setTypes(newList);
 
         return newMDType;
+    }
+
+    /***************************************************************************
+     * <p>
+     * Checks, if the MetadataType has already been added and is already available in the list of all MetadataTypes.
+     * </p>
+     * 
+     * @param type
+     * @return true, if is is already available
+     **************************************************************************/
+    private boolean isMetadataTypeAlreadyAvailable(MetadataType type) {
+
+        MetadataTypeForDocStructType test;
+        String testname;
+        String typename;
+
+        // Check, if MetadataType is already available.
+        Iterator<MetadataTypeForDocStructType> it = this.metadataTypeList.iterator();
+        while (it.hasNext()) {
+            test = it.next();
+            MetadataType mdt = test.getMetadataType();
+            testname = mdt.getName();
+            typename = type.getName();
+
+            if (testname.equals(typename)) {
+                // It is already available.
+                return true;
+            }
+        }
+
+        return false;
     }
 }

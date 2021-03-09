@@ -39,7 +39,7 @@ public class MetadataGroupTest {
         assertNull(monograph.getAllMetadataGroups());
         monograph.addMetadataGroup(group);
         assertEquals(1, monograph.getAllMetadataGroups().size());
-        assertEquals("Monograph", group.getDocStruct().getType().getName());
+        assertEquals("Monograph", group.getParent().getType().getName());
     }
 
     @Test

@@ -824,9 +824,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         for (int i = 0; i < allImageSetMD.size(); i++) {
             tempMD = allImageSetMD.get(i);
             try {
-                if (!(topdocstruct.addMetadata(tempMD))) {
-                    LOGGER.debug("Can't add metadata for imageset");
-                }
+                topdocstruct.addMetadata(tempMD);
             } catch (MetadataTypeNotAllowedException mtnae) {
                 LOGGER.debug("Can't add metadata for imageset");
             }

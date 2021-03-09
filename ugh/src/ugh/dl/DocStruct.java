@@ -147,7 +147,7 @@ import ugh.exceptions.UGHException;
  * 
  ******************************************************************************/
 
-public class DocStruct implements Serializable {
+public class DocStruct implements Serializable, HoldingElement {
 
     private static final long serialVersionUID = -4531356062293054921L;
 
@@ -421,6 +421,7 @@ public class DocStruct implements Serializable {
      * 
      * @param in
      **************************************************************************/
+    @Override
     public void setIdentifier(String in) {
         this.identifier = in;
     }
@@ -428,6 +429,7 @@ public class DocStruct implements Serializable {
     /***************************************************************************
      * @return
      **************************************************************************/
+    @Override
     public String getIdentifier() {
         return this.identifier;
     }
@@ -523,7 +525,7 @@ public class DocStruct implements Serializable {
                 for (MetadataGroup md : this.getAllMetadataGroups()) {
                     try {
                         MetadataGroup mdnew = new MetadataGroup(md.getType());
-                        mdnew.setDocStruct(newStruct);
+                        mdnew.setParent(newStruct);
                         List<Metadata> newmdlist = new LinkedList<>();
                         List<Person> newPersonList = new LinkedList<>();
                         for (Metadata meta : md.getMetadataList()) {
@@ -624,13 +626,13 @@ public class DocStruct implements Serializable {
             }
             // copy corporations
             if (corporates != null) {
-                for (Corporate c :corporates) {
+                for (Corporate c : corporates) {
                     try {
                         Corporate newC = new Corporate(c.getType());
                         newC.setMainName(c.getMainName());
                         newC.setSubNames(c.getSubNames());
                         newC.setPartName(c.getPartName());
-                        newC.setAutorityFile(c.getAuthorityID(), c.getAuthorityURI(),c.getAuthorityValue());
+                        newC.setAutorityFile(c.getAuthorityID(), c.getAuthorityURI(), c.getAuthorityValue());
                         newStruct.addCorporate(newC);
                     } catch (MetadataTypeNotAllowedException e) {
                         LOGGER.error(e);
@@ -1290,7 +1292,7 @@ public class DocStruct implements Serializable {
             // Set type to MetadataType of the DocStructType.
             theMetadataGroup.setType(prefsMdType);
             // Set this document structure as myDocStruct.
-            theMetadataGroup.setDocStruct(this);
+            theMetadataGroup.setParent(this);
             if (this.allMetadataGroups == null) {
                 // Create list, if not already available.
                 this.allMetadataGroups = new LinkedList<>();
@@ -1345,7 +1347,7 @@ public class DocStruct implements Serializable {
             return false;
         }
 
-        theMd.myDocStruct = null;
+        theMd.parent = null;
 
         if (this.removedMetadataGroups == null) {
             this.removedMetadataGroups = new LinkedList<>();
@@ -1475,14 +1477,14 @@ public class DocStruct implements Serializable {
      * </p>
      * 
      * @param theMetadata Metadata object to be added.
-     * @return TRUE if metadata was added succesfully, FALSE otherwise.
      * @throws MetadataTypeNotAllowedException If the DocStructType of this DocStruct instance does not allow the MetadataType or if the maximum
      *             number of Metadata (of this type) is already available.
      * @throws DocStructHasNoTypeException If no DocStruct Type is set for the DocStruct object; for this reason the metadata can't be added, because
      *             we cannot check, wether if the metadata type is allowed or not.
      * @see Metadata
      **************************************************************************/
-    public boolean addMetadata(Metadata theMetadata) throws MetadataTypeNotAllowedException, DocStructHasNoTypeException {
+    @Override
+    public void addMetadata(Metadata theMetadata) throws MetadataTypeNotAllowedException, DocStructHasNoTypeException {
 
         MetadataType inMdType = theMetadata.getType();
         String inMdName = inMdType.getName();
@@ -1556,7 +1558,7 @@ public class DocStruct implements Serializable {
             // Set type to MetadataType of the DocStructType.
             theMetadata.setType(prefsMdType);
             // Set this document structure as myDocStruct.
-            theMetadata.setDocStruct(this);
+            theMetadata.setParent(this);
             if (this.allMetadata == null) {
                 // Create list, if not already available.
                 this.allMetadata = new LinkedList<>();
@@ -1568,8 +1570,6 @@ public class DocStruct implements Serializable {
             LOGGER.error(mtnae.getMessage());
             throw mtnae;
         }
-
-        return true;
     }
 
     /***************************************************************************
@@ -1587,7 +1587,8 @@ public class DocStruct implements Serializable {
      * @return true, if data can be removed; otherwise false
      * @see #canMetadataBeRemoved
      **************************************************************************/
-    public boolean removeMetadata(Metadata theMd, boolean force) {
+    @Override
+    public void removeMetadata(Metadata theMd, boolean force) {
 
         MetadataType inMdType;
         String maxnumbersallowed;
@@ -1604,14 +1605,14 @@ public class DocStruct implements Serializable {
 
         if (!force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
             // There must be at least one.
-            return false;
+            return;
         }
         if (!force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
             // There must be at least one.
-            return false;
+            return;
         }
 
-        theMd.myDocStruct = null;
+        theMd.parent = null;
 
         if (this.removedMetadata == null) {
             this.removedMetadata = new LinkedList<>();
@@ -1620,7 +1621,7 @@ public class DocStruct implements Serializable {
         this.removedMetadata.add(theMd);
         this.allMetadata.remove(theMd);
 
-        return true;
+        return;
     }
 
     /***************************************************************************
@@ -1636,9 +1637,9 @@ public class DocStruct implements Serializable {
      * @return true, if data can be removed; otherwise false
      * @see #canMetadataBeRemoved
      **************************************************************************/
-    public boolean removeMetadata(Metadata inMD) {
+    public void removeMetadata(Metadata inMD) {
         // Just calls removeMetadata with force set to false.
-        return removeMetadata(inMD, false);
+        removeMetadata(inMD, false);
     }
 
     /***************************************************************************
@@ -2598,19 +2599,7 @@ public class DocStruct implements Serializable {
         return false;
     }
 
-    /***************************************************************************
-     * <p>
-     * Checks, if Metadata of a special kind can be removed. There is ni special function, to check wether persons can be removed. As the
-     * <code>Person</code> object is just inheirited from the <code>Metadata</code> it has a <code>MetadataType</code>. Therefor this method can be
-     * used, to check if a person is removable or not.
-     * </p>
-     * 
-     * @see #removeMetadata
-     * @see #removePerson
-     * @param inMDType MetadataType object
-     * @return true, if it can be removed; otherwise false
-     **************************************************************************/
-    public boolean canMetadataGroupBeRemoved(MetadataGroupType inMDType) {
+    public boolean isMetadataGroupBeRemoved(MetadataGroupType inMDType) {
 
         // How many metadata of this type do we have already.
         int typesavailable = countMDofthisType(inMDType.getName());
@@ -2632,9 +2621,9 @@ public class DocStruct implements Serializable {
 
     /***************************************************************************
      * <p>
-     * Checks, if Metadata of a special kind can be removed. There is ni special function, to check wether persons can be removed. As the
-     * <code>Person</code> object is just inheirited from the <code>Metadata</code> it has a <code>MetadataType</code>. Therefor this method can be
-     * used, to check if a person is removable or not.
+     * Checks, if Metadata of a special kind can be removed. There is no special function, to check wether persons or corporations can be removed. As
+     * the <code>Person</code> and <code>Corporate</code> object are just inherited from the <code>Metadata</code> it has a <code>MetadataType</code>.
+     * Therefore this method can be used, to check if a person is removable or not.
      * </p>
      * 
      * @see #removeMetadata
@@ -2642,7 +2631,8 @@ public class DocStruct implements Serializable {
      * @param inMDType MetadataType object
      * @return true, if it can be removed; otherwise false
      **************************************************************************/
-    public boolean canMetadataBeRemoved(MetadataType inMDType) {
+    @Override
+    public boolean isMetadataTypeBeRemoved(MetadataType inMDType) {
 
         // How many metadata of this type do we have already.
         int typesavailable = countMDofthisType(inMDType.getName());
@@ -2662,7 +2652,8 @@ public class DocStruct implements Serializable {
         return true;
     }
 
-    public boolean addPerson(Person in) throws MetadataTypeNotAllowedException, IncompletePersonObjectException {
+    @Override
+    public void addPerson(Person in) throws MetadataTypeNotAllowedException, IncompletePersonObjectException {
 
         // Max number of persons (from configuration).
         String maxnumberallowed = null;
@@ -2719,7 +2710,7 @@ public class DocStruct implements Serializable {
             }
             this.persons.add(in);
 
-            return true;
+            return;
         }
 
         MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException();
@@ -2727,6 +2718,7 @@ public class DocStruct implements Serializable {
         throw mtnae;
     }
 
+    @Override
     public void addCorporate(Corporate corp) throws MetadataTypeNotAllowedException {
 
         // Max number of persons (from configuration).
@@ -2802,10 +2794,11 @@ public class DocStruct implements Serializable {
      * @return true, if removed; otherwise false
      * @throws IncompletePersonObjectException if the first parameter is not a complete person object
      **************************************************************************/
-    public boolean removePerson(Person in, boolean force) throws IncompletePersonObjectException {
+    @Override
+    public void removePerson(Person in, boolean force) throws IncompletePersonObjectException {
 
         if (this.persons == null) {
-            return false;
+            return;
         }
 
         MetadataType inMDType = in.getType();
@@ -2823,22 +2816,23 @@ public class DocStruct implements Serializable {
 
         if (force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
             // There must be at least one.
-            return false;
+            return;
         }
         if (force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
             // There must be at least one.
-            return false;
+            return;
         }
 
         this.persons.remove(in);
 
-        return true;
+        return;
     }
 
-    public boolean removeCorporate(Corporate in, boolean force) throws IncompletePersonObjectException {
+    @Override
+    public void removeCorporate(Corporate in, boolean force) throws IncompletePersonObjectException {
 
         if (this.corporates == null) {
-            return false;
+            return;
         }
 
         MetadataType inMDType = in.getType();
@@ -2856,16 +2850,16 @@ public class DocStruct implements Serializable {
 
         if (force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
             // There must be at least one.
-            return false;
+            return;
         }
         if (force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
             // There must be at least one.
-            return false;
+            return;
         }
 
         this.corporates.remove(in);
 
-        return true;
+        return;
     }
 
     /***************************************************************************
@@ -2873,12 +2867,12 @@ public class DocStruct implements Serializable {
      * @return true, if removed; otherwise false
      * @throws IncompletePersonObjectException
      **************************************************************************/
-    public boolean removePerson(Person in) throws IncompletePersonObjectException {
-        return removePerson(in, false);
+    public void removePerson(Person in) throws IncompletePersonObjectException {
+        removePerson(in, false);
     }
 
-    public boolean removeCorporate(Corporate in) throws IncompletePersonObjectException {
-        return removeCorporate(in, false);
+    public void removeCorporate(Corporate in) throws IncompletePersonObjectException {
+        removeCorporate(in, false);
     }
 
     /***************************************************************************

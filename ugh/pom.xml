@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.intranda.ugh</groupId>
     <artifactId>ugh-core</artifactId>
-    <version>4.1.9</version>
+    <version>4.1.10-SNAPSHOT</version>
     <repositories>
         <repository>
             <id>intranda-public</id>

@@ -33,10 +33,10 @@ public class SlimMetadataGroup {
         smg.digitalDocument = sdd;
         smg.mDGroupTypeId = mg.getType().getName();
         sdd.addMetadataGroupType(mg.getType());
-        if (mg.getDocStruct().getIdentifier() == null) {
-            mg.getDocStruct().setIdentifier(UUID.randomUUID().toString());
+        if (mg.getParent().getIdentifier() == null) {
+            mg.getParent().setIdentifier(UUID.randomUUID().toString());
         }
-        smg.myDocStructId = mg.getDocStruct().getIdentifier();
+        smg.myDocStructId = mg.getParent().getIdentifier();
         //add metadata
         for (Metadata meta : mg.getMetadataList()) {
             smg.metadataList.add(SlimMetadata.fromMetadata(meta, sdd));
@@ -53,7 +53,7 @@ public class SlimMetadataGroup {
             if (ds == null) {
                 ds = digitalDocument.getDsMap().get(this.myDocStructId).toDocStruct(dd);
             }
-            mg.setDocStruct(ds);
+            mg.setParent(ds);
             //add metadata
             for (SlimMetadata meta : this.getMetadataList()) {
                 mg.getMetadataList().add(meta.toMetadata(dd));

@@ -28,8 +28,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import lombok.Getter;
+import lombok.Setter;
 import ugh.exceptions.MetadataTypeNotAllowedException;
 
 /*******************************************************************************
@@ -72,8 +72,10 @@ public class Metadata implements Serializable {
     private static final Logger LOGGER = Logger.getLogger(ugh.dl.DigitalDocument.class);
 
     protected MetadataType MDType;
-    // Document structure to which this metadata type belongs to.
-    protected DocStruct myDocStruct;
+    // Document structure or group to which this metadata type belongs to.
+    @Getter
+    @Setter
+    protected HoldingElement parent;
 
     private String metadataValue;
     private String MetadataVQ;
@@ -118,29 +120,29 @@ public class Metadata implements Serializable {
         this.MDType = theType;
     }
 
-    /***************************************************************************
-     * <p>
-     * Sets the Document structure entity to which this object belongs to.
-     * </p>
-     * 
-     * @param inDoc
-     **************************************************************************/
-    public void setDocStruct(DocStruct inDoc) {
-        this.myDocStruct = inDoc;
-    }
-
-    /***************************************************************************
-     * <p>
-     * Returns the DocStruct instance, to which this metadata object belongs. This is extremly helpful, if only the metadata instance is stored in a
-     * list; the reference to the associated DocStrct instance is always kept.
-     * </p>
-     * 
-     * @return DocStruct instance.
-     **************************************************************************/
-    @JsonIgnore
-    public DocStruct getDocStruct() {
-        return this.myDocStruct;
-    }
+    //    /***************************************************************************
+    //     * <p>
+    //     * Sets the Document structure entity to which this object belongs to.
+    //     * </p>
+    //     *
+    //     * @param inDoc
+    //     **************************************************************************/
+    //    public void setDocStruct(DocStruct inDoc) {
+    //        this.myDocStruct = inDoc;
+    //    }
+    //
+    //    /***************************************************************************
+    //     * <p>
+    //     * Returns the DocStruct instance, to which this metadata object belongs. This is extremly helpful, if only the metadata instance is stored in a
+    //     * list; the reference to the associated DocStrct instance is always kept.
+    //     * </p>
+    //     *
+    //     * @return DocStruct instance.
+    //     **************************************************************************/
+    //    @JsonIgnore
+    //    public DocStruct getDocStruct() {
+    //        return this.myDocStruct;
+    //    }
 
     /***************************************************************************
      * <p>
