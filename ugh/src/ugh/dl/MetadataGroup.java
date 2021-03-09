@@ -518,5 +518,41 @@ public class MetadataGroup implements Serializable, HoldingElement {
         return counter;
     }
 
+    public void checkDefaultDisplayMetadata() {
+
+
+        List<MetadataType> allDefaultMdTypes = MDType.getAllDefaultDisplayMetadataTypes();
+        if (allDefaultMdTypes != null) {
+            // Iterate over all defaultDisplay metadata types and check, if
+            // metadata of this type is already available.
+            for (MetadataType mdt : allDefaultMdTypes) {
+                if (!mdt.getName().startsWith("_") && countMDofthisType(mdt.getName()) == 0 ) {
+                    // If none of these metadata is available, AND it is not a
+                    // hidden metadata type, create it.
+                    try {
+                        if (mdt.getIsPerson()) {
+                            Person p = new Person(mdt);
+                            p.setRole(mdt.getName());
+                            addPerson(p);
+                        } else if (mdt.isCorporate()) {
+                            Corporate c = new Corporate(mdt);
+                            c.setRole(mdt.getName());
+                            addCorporate(c);
+                        } else {
+                            Metadata md = new Metadata(mdt);
+                            addMetadata(md);
+                        }
+                    } catch (MetadataTypeNotAllowedException e) {
+                        LOGGER.error(e);
+                    }
+                }
+            }
+        }
+
+
+
+
+    }
+
 
 }

@@ -226,7 +226,7 @@ public class MetadataGroupType implements Serializable {
         String typename;
 
         // Check, if MetadataType is already available.
-        Iterator<MetadataTypeForDocStructType> it = this.metadataTypeList.iterator();
+        Iterator<MetadataTypeForDocStructType> it = metadataTypeList.iterator();
         while (it.hasNext()) {
             test = it.next();
             MetadataType mdt = test.getMetadataType();
@@ -240,5 +240,19 @@ public class MetadataGroupType implements Serializable {
         }
 
         return false;
+    }
+
+    public List<MetadataType> getAllDefaultDisplayMetadataTypes() {
+        List<MetadataType> out = new LinkedList<>();
+
+        Iterator<MetadataTypeForDocStructType> it = metadataTypeList.iterator();
+        while (it.hasNext()) {
+            MetadataTypeForDocStructType mdtfdst = it.next();
+            if (mdtfdst.isDefaultdisplay()) {
+                out.add(mdtfdst.getMetadataType());
+            }
+        }
+
+        return out;
     }
 }

@@ -795,9 +795,12 @@ public class DocStruct implements Serializable, HoldingElement {
      * @return List containing MetadataGroup instances; if no MetadataGroup is available, null is returned.
      **************************************************************************/
     public List<MetadataGroup> getAllMetadataGroups() {
-
         if (this.allMetadataGroups == null || this.allMetadataGroups.isEmpty()) {
             return null;
+        }
+
+        for (MetadataGroup mg : allMetadataGroups) {
+            mg.checkDefaultDisplayMetadata();
         }
 
         return this.allMetadataGroups;
