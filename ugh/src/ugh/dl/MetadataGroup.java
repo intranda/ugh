@@ -519,8 +519,6 @@ public class MetadataGroup implements Serializable, HoldingElement {
     }
 
     public void checkDefaultDisplayMetadata() {
-
-
         List<MetadataType> allDefaultMdTypes = MDType.getAllDefaultDisplayMetadataTypes();
         if (allDefaultMdTypes != null) {
             // Iterate over all defaultDisplay metadata types and check, if
@@ -548,10 +546,62 @@ public class MetadataGroup implements Serializable, HoldingElement {
                 }
             }
         }
+    }
 
 
 
+    /***************************************************************************
+     * <p>
+     * Get all metadatatypes, which can be added to a DocStruct. This method considers already added metadata (and persons!); e.g. metadata types
+     * which can only be available once cannot be added a second time. Therefore this metadata type will not be included in this list.<br/>
+     * 
+     * "Internal" metadata, which start with the HIDDEN_METADATA_CHAR, will also not be included.
+     * </p>
+     * 
+     * @return List containing MetadataType objects.
+     **************************************************************************/
+    @Override
+    public List<MetadataType> getAddableMetadataTypes() {
 
+        // If e.g. the topstruct has no Metadata, or something...
+        if (MDType == null) {
+            return null;
+        }
+
+        // Get all Metadatatypes for my DocStructType.
+        List<MetadataType> addableMetadata = new LinkedList<>();
+        List<MetadataType> allTypes = MDType.getMetadataTypeList();
+
+        // Get all metadata types which are known, iterate over them and check,
+        // if they are still addable.
+        for (MetadataType mdt : allTypes) {
+
+            // Metadata beginning with the HIDDEN_METADATA_CHAR are internal
+            // metadata are not user addable.
+            if (!mdt.getName().startsWith("_")) {
+                String maxnumber = MDType.getNumberOfMetadataType(mdt);
+
+                // Metadata can only be available once; so we have to check if
+                // it is already available.
+                if (maxnumber.equals("1m") || maxnumber.equals("1o")) {
+                    // Check metadata here only.
+                    int availableMD =countMDofthisType(mdt.getName());
+                    if (availableMD < 1) {
+                        // Metadata is NOT available; we are allowed to add it.
+                        addableMetadata.add(mdt);
+                    }
+                } else {
+                    // We can add as many metadata as we want (+ or *).
+                    addableMetadata.add(mdt);
+                }
+            }
+        }
+
+        if (addableMetadata == null || addableMetadata.isEmpty()) {
+            return null;
+        }
+
+        return addableMetadata;
     }
 
 

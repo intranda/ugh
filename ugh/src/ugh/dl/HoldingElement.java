@@ -1,5 +1,7 @@
 package ugh.dl;
 
+import java.util.List;
+
 import ugh.exceptions.DocStructHasNoTypeException;
 import ugh.exceptions.IncompletePersonObjectException;
 import ugh.exceptions.MetadataTypeNotAllowedException;
@@ -88,5 +90,17 @@ public interface HoldingElement {
     public void addCorporate(Corporate corporate) throws MetadataTypeNotAllowedException;
 
     public void removeCorporate(Corporate in, boolean force) throws IncompletePersonObjectException;
+
+    /***************************************************************************
+     * <p>
+     * Get all metadatatypes, which can be added to an element. This method considers already added metadata (and persons!); e.g. metadata types
+     * which can only be available once cannot be added a second time. Therefore this metadata type will not be included in this list.<br/>
+     * 
+     * "Internal" metadata, which start with the HIDDEN_METADATA_CHAR, will also not be included.
+     * </p>
+     * 
+     * @return List containing MetadataType objects.
+     **************************************************************************/
+    public List<MetadataType> getAddableMetadataTypes();
 
 }

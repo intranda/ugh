@@ -157,8 +157,6 @@ public class MetadataGroupType implements Serializable {
      * DocStructType.
      * </p>
      * 
-     * TODO Was set to deprecated, who knows why?
-     * 
      * @return number of MetadataType
      **************************************************************************/
     public String getNum() {
