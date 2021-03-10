@@ -112,6 +112,10 @@ public class MetadataType implements Serializable {
 
     private String validationExpression = "";
 
+    @Getter
+    @Setter
+    private Map<String, String> validationErrorMessages;
+
     /***************************************************************************
      * Constructor.
      **************************************************************************/
@@ -164,6 +168,7 @@ public class MetadataType implements Serializable {
         newMDType.setAllowNameParts(this.allowNameParts);
         newMDType.setAllowNormdata(this.allowNormdata);
         newMDType.setValidationExpression(validationExpression);
+        newMDType.setValidationErrorMessages(validationErrorMessages);
         return newMDType;
     }
 

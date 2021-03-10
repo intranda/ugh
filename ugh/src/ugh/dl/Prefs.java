@@ -578,7 +578,7 @@ public class Prefs implements Serializable {
         String languageValue;
         String validationExpression = "";
         HashMap<String, String> allLanguages = new HashMap<>();
-
+        Map<String, String> validationErrorMessages = new HashMap<>();
         MetadataType currenMdType = new MetadataType();
 
         NamedNodeMap nnm = theMetadataTypeNode.getAttributes();
@@ -676,6 +676,29 @@ public class Prefs implements Serializable {
                         Node textnode = textnodes.item(0);
                         validationExpression = textnode.getNodeValue();
                     }
+                } else if (currentNode.getNodeName().equals("validationErrorMessage")) {
+                    attributeNodelist = currentNode.getAttributes();
+                    attributeNode = attributeNodelist.getNamedItem("name");
+                    String  lang = attributeNode.getNodeValue();
+
+
+                    NodeList textnodes = currentNode.getChildNodes();
+                    if (textnodes != null) {
+                        Node textnode = textnodes.item(0);
+                        if (textnode == null) {
+                            LOGGER.error("Syntax Error reading config for MetadataType " + currenMdType.getName()
+                            + "; Error Code: p001b! Expected a text node under <language> attribute at '" + theMetadataTypeNode.getNodeName()
+                            + "'. <language> must not be empty!");
+                            return null;
+                        } else if (textnode.getNodeType() != Node.TEXT_NODE) {
+                            LOGGER.error("Syntax Error reading config for MetadataType " + currenMdType.getName()
+                            + "; Error Code: p001! Wrong node type under <language> attribute - a text node was expected at "
+                            + theMetadataTypeNode.getNodeName());
+                            return null;
+                        }
+                        String value = textnode.getNodeValue();
+                        validationErrorMessages.put(lang, value);
+                    }
                 }
             }
         }
@@ -683,6 +706,7 @@ public class Prefs implements Serializable {
         // Add allLanguages and all Metadata to DocStrctType.
         currenMdType.setAllLanguages(allLanguages);
         currenMdType.setValidationExpression(validationExpression);
+        currenMdType.setValidationErrorMessages(validationErrorMessages);
         return currenMdType;
     }
 

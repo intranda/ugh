@@ -689,6 +689,8 @@
     <language name="en">Language</language>
     <language name="es">Idioma</language>
     <validationExpression>[a-z]{3}</validationExpression>
+    <validationErrorMessage name="de">Der Wert '{}' entspricht keinem Dreibuchstabigen iso Code</validationErrorMessage>
+    <validationErrorMessage name="en">The value '{}' does not correspond to a three-letter iso code.</validationErrorMessage>
   </MetadataType>
   <MetadataType>
     <Name>OrigLanguage</Name>
