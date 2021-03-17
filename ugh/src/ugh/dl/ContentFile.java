@@ -74,13 +74,7 @@ public class ContentFile implements Serializable {
     private String Location;
     // Is the MimeType of an Image stored as string.
     private String MimeType;
-    // Can store subtype information; e.g. specify what kind of xml file it is;
-    // what kind of compression is used in an imagefile etc.
-    private String SubType;
-    // Can store an offset value in the file specified by location.
-    private String offset;
-    // Type of offset (if it's byte offset, time code, etc.
-    private String offsetType;
+
     private String identifier;
 
     private Map<String, String> uuidMap = new HashMap<>();
@@ -127,10 +121,9 @@ public class ContentFile implements Serializable {
 
     /***************************************************************************
      * <p>
-     * Sets the filename of the ContentFile; file must at least be readable from this posision.
+     * Sets the filename of the ContentFile; file must at least be readable from this position.
      * </p>
      * 
-     * TODO Check, if file is really available!
      * 
      * @param in
      **************************************************************************/
@@ -273,7 +266,6 @@ public class ContentFile implements Serializable {
                 return false;
             }
         }
-        // TODO Teldemokles says: "Do never catch a NullPointerException"!
         catch (NullPointerException npe) {
             return false;
         }

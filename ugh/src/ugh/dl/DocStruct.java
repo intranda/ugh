@@ -81,9 +81,6 @@ import ugh.exceptions.UGHException;
  *      TODO Maybe use the equals() method for comparing the things from the ruleset and the things from the DigitalDocument?? This may only be
  *      interesting for XStream serialisation!!
  * 
- *      TODO Shall the metadata given by getMetadata() and similar methods already be sorted? Do we need public sorting methods here? Do we need
- *      different getMetadata methods like getMetadataAlphabetically and getMetadataInRulesetOrder?
- * 
  *      CHANGELOG
  * 
  *      05.05.2010 --- Funk --- Minor changes.
@@ -189,7 +186,6 @@ public class DocStruct implements Serializable, HoldingElement {
     private long databaseid = 0;
     private Object origObject = null;
     // Information, if database instance is the same than this one.
-    private boolean updated = false;
     private boolean logical = false;
     private boolean physical = false;
     // String containing an identifier or a URL to the anchor.
@@ -1108,7 +1104,6 @@ public class DocStruct implements Serializable, HoldingElement {
         ref.setType(theType);
         this.docStructRefsTo.add(ref);
         inDocStruct.docStructRefsFrom.add(ref);
-        this.updated = true;
 
         return ref;
     }
@@ -1139,7 +1134,6 @@ public class DocStruct implements Serializable, HoldingElement {
         ref.setType(theType);
         this.docStructRefsFrom.add(ref);
         inDocStruct.docStructRefsTo.add(ref);
-        this.updated = true;
 
         return ref;
     }
@@ -1171,7 +1165,7 @@ public class DocStruct implements Serializable, HoldingElement {
             }
         }
 
-        return (this.updated = true);
+        return true;
     }
 
     /**************************************************************************
@@ -1201,7 +1195,7 @@ public class DocStruct implements Serializable, HoldingElement {
             }
         }
 
-        return (this.updated = true);
+        return true;
     }
 
     /***************************************************************************
@@ -2179,6 +2173,7 @@ public class DocStruct implements Serializable, HoldingElement {
      * 
      * @return List containing MetadataType objects.
      **************************************************************************/
+    @Override
     public List<MetadataType> getAddableMetadataTypes() {
 
         // If e.g. the topstruct has no Metadata, or something...
@@ -2209,7 +2204,6 @@ public class DocStruct implements Serializable, HoldingElement {
                         // Metadata is NOT available; we are allowed to add it.
                         addableMetadata.add(mdt);
                     }
-                    //TODO
                     // Then check persons here.
                     boolean used = false;
                     if (mdt.getIsPerson() && this.getAllPersons() != null) {
@@ -3211,8 +3205,8 @@ public class DocStruct implements Serializable, HoldingElement {
         List<Metadata> oldMetadata = new LinkedList<>();
         List<Person> oldPersons = new LinkedList<>();
 
-        List<Corporate> oldCorporates = new LinkedList();
-        List<Corporate> newCorporates = new LinkedList();
+        List<Corporate> oldCorporates = new LinkedList<>();
+        List<Corporate> newCorporates = new LinkedList<>();
 
         if (this.allMetadata != null) {
             oldMetadata = new LinkedList<>(this.allMetadata);
@@ -3224,7 +3218,6 @@ public class DocStruct implements Serializable, HoldingElement {
         if (corporates != null) {
             oldCorporates = new LinkedList<>(corporates);
         }
-        //TODO
         // Get all MetadataTypes defined in the prefs for this DocStruct.
         DocStructType docStructType = thePrefs.getDocStrctTypeByName(this.getType().getName());
 

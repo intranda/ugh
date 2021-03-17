@@ -1669,6 +1669,7 @@ public class RDFFile implements ugh.dl.Fileformat {
             listElement.appendChild(seqElement);
             parentElement.appendChild(listElement);
 
+            @SuppressWarnings("unchecked")
             Iterator<Metadata> it3 = (Iterator<Metadata>) mds.iterator();
             // Iterate over the lists metadata.
             while (it3.hasNext()) {

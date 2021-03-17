@@ -205,8 +205,6 @@ public class MetadataType implements Serializable {
      * DocStructType.
      * </p>
      * 
-     * TODO Was set to deprecated, who knows why?
-     * 
      * @return number of MetadataType
      **************************************************************************/
     public String getNum() {
@@ -293,7 +291,7 @@ public class MetadataType implements Serializable {
         // Check, if language already is available, if so, remove it.
         for (Map.Entry<String, String> lang : this.allLanguages.entrySet()) {
             if (lang.getKey().equals(theLanguage)) {
-                this.allLanguages.remove(lang);
+                this.allLanguages.remove(lang.getKey());
                 return true;
             }
         }
@@ -348,7 +346,6 @@ public class MetadataType implements Serializable {
                 return false;
             }
         }
-        // TODO Teldemokles says: "Do never catch a NullPointerException"!
         catch (NullPointerException npe) {
             return false;
         }

@@ -67,8 +67,6 @@ public class DocStructType implements Serializable {
 
     private static final long serialVersionUID = -3819246407494198735L;
 
-    private static final String LINE = "--------------------" + "--------------------" + "--------------------" + "--------------------";
-
     private String name;
     // Set to true if DocStructType can be anchor.
     private boolean isanchor = false;
@@ -89,7 +87,7 @@ public class DocStructType implements Serializable {
     // be children of this one here.
     protected List<String> allChildrenTypes;
 
-    private List allMetadataGroups;
+    private  List<MetadataGroupForDocStructType> allMetadataGroups;
 
     /***************************************************************************
      * <p>
@@ -99,7 +97,7 @@ public class DocStructType implements Serializable {
     public DocStructType() {
         this.allChildrenTypes = new LinkedList<>();
         this.allMetadataTypes = new LinkedList<>();
-        this.allMetadataGroups = new LinkedList<String>();
+        this.allMetadataGroups = new LinkedList<>();
         this.allLanguages = new HashMap<>();
     }
 
@@ -555,7 +553,7 @@ public class DocStructType implements Serializable {
      **************************************************************************/
     public boolean removeMetadataType(MetadataType type) {
 
-        List<MetadataTypeForDocStructType> ll = new LinkedList(this.allMetadataTypes);
+        List<MetadataTypeForDocStructType> ll = new LinkedList<>(this.allMetadataTypes);
 
         Iterator<MetadataTypeForDocStructType> it = ll.iterator();
         while (it.hasNext()) {
@@ -766,7 +764,6 @@ public class DocStructType implements Serializable {
      * 
      * @param in
      **************************************************************************/
-    @SuppressWarnings("unchecked")
     public void setAllMetadataGroups(List<MetadataGroupType> in) {
 
         for (MetadataGroupType mdt : in) {
@@ -862,10 +859,9 @@ public class DocStructType implements Serializable {
      * @return true, if it is allowed; otherwise false
      **************************************************************************/
     public boolean isMDTGroupAllowed(MetadataGroupType inMDType) {
-
-        Iterator<MetadataGroupType> it = this.allMetadataGroups.iterator();
+        Iterator<MetadataGroupForDocStructType> it = allMetadataGroups.iterator();
         while (it.hasNext()) {
-            MetadataGroupType mdt = it.next();
+            MetadataGroupType mdt = it.next().getMetadataGroup();
             if (mdt.getName().equals(inMDType.getName())) {
                 return true; // it is already available
             }
@@ -884,7 +880,7 @@ public class DocStructType implements Serializable {
      **************************************************************************/
     public boolean removeMetadataGroup(MetadataGroupType type) {
 
-        List<MetadataGroupForDocStructType> ll = new LinkedList(this.allMetadataGroups);
+        List<MetadataGroupForDocStructType> ll = new LinkedList<>(this.allMetadataGroups);
 
         Iterator<MetadataGroupForDocStructType> it = ll.iterator();
         while (it.hasNext()) {

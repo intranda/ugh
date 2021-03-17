@@ -61,10 +61,7 @@ public class Reference implements Serializable {
     private long sourceid;
     private DocStruct target;
     private long targetid;
-    private boolean updated;
-    // Database ID.
-    // TODO What database ID?? I do not know!! Remove it!
-    private long dbid;
+
 
     /***************************************************************************
      * Constructor.
@@ -108,7 +105,6 @@ public class Reference implements Serializable {
     public void setSource(DocStruct in) {
         this.source = in;
         this.sourceid = 0;
-        this.updated = true;
     }
 
     /***************************************************************************
@@ -117,7 +113,6 @@ public class Reference implements Serializable {
     public void setSourceID(long in) {
         this.sourceid = in;
         this.source = null;
-        this.updated = true;
     }
 
     /***************************************************************************
@@ -126,7 +121,6 @@ public class Reference implements Serializable {
     public void setTarget(DocStruct in) {
         this.target = in;
         this.targetid = 0;
-        this.updated = true;
     }
 
     /***************************************************************************
@@ -135,7 +129,6 @@ public class Reference implements Serializable {
     public void setTargetID(long in) {
         this.targetid = in;
         this.target = null;
-        this.updated = true;
     }
 
     /***************************************************************************
@@ -149,7 +142,6 @@ public class Reference implements Serializable {
      * @param intype
      **************************************************************************/
     public void setType(String intype) {
-        // TODO Check, if it's a valid type!
         this.type = intype;
     }
 

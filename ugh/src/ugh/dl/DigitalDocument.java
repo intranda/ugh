@@ -99,17 +99,6 @@ import ugh.exceptions.WriteException;
  * @version 2010-02-23
  * @see DocStruct, Metadata, Prefs
  * 
- *      TODOLOG
- * 
- *      TODO Refactor all methods that do return always TRUE!!
- * 
- *      TODO Refactor ALL these silly content file things!!
- * 
- *      TODO Use private finals here for Metadata and DocStruct names!!
- * 
- *      TODO Remove all XStream things from here and put it into the XStream class!!
- * 
- *      TODO Maybe provide a possibility to change content file pathes in addContentFileFromPhysicalPage()!!
  * 
  *      CHANGELOG
  * 
@@ -186,9 +175,6 @@ public class DigitalDocument implements Serializable {
     // Contains all files, which are referenced from this digital document (e.g.
     // imagefiles, textfiles etc...).
     private FileSet allImages;
-    // This is the unique identifier for the whole document; usually Metadata
-    // object from the logical DocStruct.
-    private Metadata uniqueIdentifer;
 
     // This contains the list of techMds. Currently only one amdSec is allowed, to comply with DFG-Viewer
     private AmdSec amdSec;
@@ -299,11 +285,6 @@ public class DigitalDocument implements Serializable {
         inStruct.setPhysical(true);
     }
 
-    /***************************************************************************
-     * TODO Why is this method is returning always TRUE???
-     * 
-     * @return
-     **************************************************************************/
     public DocStruct getPhysicalDocStruct() {
         return this.topPhysicalStruct;
     }
@@ -539,7 +520,7 @@ public class DigitalDocument implements Serializable {
             protected MapperWrapper wrapMapper(MapperWrapper next) {
                 return new MapperWrapper(next) {
                     @Override
-                    public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+                    public boolean shouldSerializeMember(@SuppressWarnings("rawtypes") Class definedIn, String fieldName) {
                         if (definedIn == Object.class) {
                             return false;
                         }

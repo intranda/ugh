@@ -1,13 +1,9 @@
 package ugh.fileformats.mets;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
@@ -1271,6 +1267,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             }
 
             // get the corresponding amdSec
+            @SuppressWarnings("rawtypes")
             List admList = dt.getADMID();
             if (admList != null) {
                 for (Object object : admList) {
@@ -1423,6 +1420,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                 newDocStruct.setOrigObject(topmostdiv);
 
                 // get the corresponding amdSec
+                @SuppressWarnings("rawtypes")
                 List admList = topmostdiv.getADMID();
                 if (admList != null) {
                     for (Object object : admList) {
@@ -2621,15 +2619,15 @@ public class MetsMods implements ugh.dl.Fileformat {
                                                     coordinates.setValue(coords);
                                                     areaDocStruct.addMetadata(coordinates);
 
-                                                    String ID = area.getID(); // ID: xsd:ID   optional
+                                                    // String ID = area.getID(); // ID: xsd:ID   optional
                                                     areaDocStruct.setOrigObject(area);
-                                                    String fileId = area.getFILEID(); // FILEID: xsd:IDREF   required
+                                                    // String fileId = area.getFILEID(); // FILEID: xsd:IDREF   required
 
                                                     AreaType.SHAPE.Enum currentShape = area.getSHAPE(); //  SHAPE:   optional   | RECT | CIRCLE | POLY
                                                     Metadata shape = new Metadata(myPreferences.getMetadataTypeByName("_SHAPE"));
                                                     shape.setValue(currentShape == null ? AreaType.SHAPE.RECT.toString() : currentShape.toString());
                                                     areaDocStruct.addMetadata(shape);
-                                                    List<String> admid = area.getADMID(); // ADMID: xsd:IDREFS   optional
+                                                    // List<String> admid = area.getADMID(); // ADMID: xsd:IDREFS   optional
                                                     child.addChild(areaDocStruct);
                                                 } catch (TypeNotAllowedForParentException | MetadataTypeNotAllowedException e) {
                                                     LOGGER.error("area is unsupported in the given ruleset. ");
@@ -2912,53 +2910,6 @@ public class MetsMods implements ugh.dl.Fileformat {
 
     /***************************************************************************
      * <p>
-     * Creates a deep copy of the DigitalDocument.
-     * </p>
-     * 
-     * @return the new DigitalDocument instance
-     **************************************************************************/
-    private DigitalDocument copyDigitalDocument() throws WriteException {
-
-        DigitalDocument newDigDoc = null;
-
-        try {
-
-            // remove techMd list for serialization
-            ArrayList<Md> tempList = new ArrayList<>(this.digdoc.getTechMds());
-            this.digdoc.getTechMds().clear();
-
-            // Write the object out to a byte array.
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream out = new ObjectOutputStream(bos);
-            out.writeObject(this.digdoc);
-            out.flush();
-            out.close();
-
-            // Make an input stream from the byte array and read
-            // a copy of the object back in.
-            ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
-            newDigDoc = (DigitalDocument) in.readObject();
-
-            // reattach techMd list
-            for (Md md : tempList) {
-                newDigDoc.addTechMd(md);
-            }
-
-        } catch (IOException e) {
-            String message = "Couldn't obtain OutputStream!";
-            LOGGER.error(message, e);
-            throw new WriteException(message, e);
-        } catch (ClassNotFoundException e) {
-            String message = "Could not find some class!";
-            LOGGER.error(message, e);
-            throw new WriteException(message, e);
-        }
-
-        return newDigDoc;
-    }
-
-    /***************************************************************************
-     * <p>
      * Write the METS/MODS object.
      * </p>
      * 
@@ -3133,8 +3084,6 @@ public class MetsMods implements ugh.dl.Fileformat {
                     }
                     if (structMapPhys != null) {
                         this.metsNode.appendChild(structMapPhys);
-                    } else {
-                        LOGGER.warn("Please create a structMap physical first (pagination)");
                     }
                     this.metsNode.appendChild(structLinkElement);
                 }

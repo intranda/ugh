@@ -303,7 +303,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
 
         // Prepare lists of all metadata and all persons, that will monitor if
         // some metadata are NOT mapped to MODS.
-        List notMappedMetadataAndPersons = new LinkedList();
+        List<Object> notMappedMetadataAndPersons = new LinkedList<>();
         if (inStruct.getAllMetadata() != null) {
             notMappedMetadataAndPersons.addAll(inStruct.getAllMetadata());
         }
@@ -532,9 +532,10 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
 
         // Prepare lists of all metadata and all persons, that will monitor if
         // some metadata are NOT mapped to MODS.
-        List notMappedMetadataAndPersons = inStruct.getAllMetadata();
-        if (notMappedMetadataAndPersons == null) {
-            notMappedMetadataAndPersons = new LinkedList();
+        List<Object> notMappedMetadataAndPersons = new LinkedList<>();
+        inStruct.getAllMetadata();
+        if (inStruct.getAllMetadata() != null) {
+            notMappedMetadataAndPersons.addAll(inStruct.getAllMetadata());
         }
         // Add persons to list.
         if (inStruct.getAllPersons() != null) {
@@ -869,8 +870,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                         String[] authorityfileidvalue = null;
                         String[] authorityuri = null;
                         String[] authorityvalue = null;
-                        String[] identifiervalue = null;
-                        String[] identifiertypevalue = null;
                         String[] displaynamevalue = null;
                         String[] persontypevalue = null;
 
@@ -891,12 +890,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                         }
                         if (mmo.getAuthorityValueXquery() != null) {
                             authorityvalue = getValueForUnambigiousXQuery(node, mmo.getAuthorityValueXquery());
-                        }
-                        if (mmo.getIdentifierXQuery() != null) {
-                            identifiervalue = getValueForUnambigiousXQuery(node, mmo.getIdentifierXQuery());
-                        }
-                        if (mmo.getIdentifierTypeXQuery() != null) {
-                            identifiertypevalue = getValueForUnambigiousXQuery(node, mmo.getIdentifierTypeXQuery());
                         }
                         if (mmo.getDisplayNameXQuery() != null) {
                             displaynamevalue = getValueForUnambigiousXQuery(node, mmo.getDisplayNameXQuery());
@@ -2210,7 +2203,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
      * @param theList
      * @return
      **************************************************************************/
-    private String getMappingWarning(DocStructType theStruct, List theList) {
+    private String getMappingWarning(DocStructType theStruct, List<Object> theList) {
 
         String result = "";
 

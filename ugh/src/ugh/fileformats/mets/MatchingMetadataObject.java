@@ -91,7 +91,6 @@ public class MatchingMetadataObject {
     private Map<String, Map<String, String>> metadataGroupXQueries = new LinkedHashMap<>();
 
     private String database = null;
-    private String identifier = null;
 
     @Getter @Setter
     private String mainNameXQuery = null;
