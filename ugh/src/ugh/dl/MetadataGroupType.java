@@ -25,7 +25,6 @@ package ugh.dl;
  ***************************************************************/
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -35,11 +34,15 @@ import java.util.Map;
 /**
  * @author Robert Sehr
  */
-public class MetadataGroupType implements Serializable {
+public class MetadataGroupType implements Serializable, PrefsType {
 
     private static final long serialVersionUID = -2935555025180170310L;
 
-    private List<MetadataTypeForDocStructType> metadataTypeList = new ArrayList<>();
+    private List<MetadataTypeForDocStructType> metadataTypeList = new LinkedList<>();
+
+
+    private List<MetadataGroupForDocStructType> allMetadataGroups = new LinkedList<>();
+
 
     // Unique name of MetadataType.
     private String name;
@@ -73,6 +76,7 @@ public class MetadataGroupType implements Serializable {
         this.metadataTypeList = metadataTypeList;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -120,6 +124,7 @@ public class MetadataGroupType implements Serializable {
         return this.name.equals(((MetadataGroupType) obj).getName());
     }
 
+    @Override
     public HashMap<String, String> getAllLanguages() {
         return allLanguages;
     }
@@ -172,7 +177,7 @@ public class MetadataGroupType implements Serializable {
      * @param inType MetadataType - can be a global type
      * @return String containing the number (number can be: "1o", "1m", "*", "+")
      **************************************************************************/
-    public String getNumberOfMetadataType(MetadataType inType) {
+    public String getNumberOfMetadataType(PrefsType inType) {
 
 
         Iterator<MetadataTypeForDocStructType> it = metadataTypeList.iterator();
@@ -217,7 +222,7 @@ public class MetadataGroupType implements Serializable {
      * @param type
      * @return true, if is is already available
      **************************************************************************/
-    private boolean isMetadataTypeAlreadyAvailable(MetadataType type) {
+    private boolean isMetadataTypeAlreadyAvailable(PrefsType type) {
 
         MetadataTypeForDocStructType test;
         String testname;
@@ -227,7 +232,7 @@ public class MetadataGroupType implements Serializable {
         Iterator<MetadataTypeForDocStructType> it = metadataTypeList.iterator();
         while (it.hasNext()) {
             test = it.next();
-            MetadataType mdt = test.getMetadataType();
+            PrefsType mdt = test.getMetadataType();
             testname = mdt.getName();
             typename = type.getName();
 
@@ -253,4 +258,285 @@ public class MetadataGroupType implements Serializable {
 
         return out;
     }
+
+    /***************************************************************************
+     * <p>
+     * Add and remove MetadataGroups.
+     * </p>
+     * 
+     * @param in
+     **************************************************************************/
+    public void setAllMetadataGroups(List<MetadataGroupType> in) {
+
+        for (MetadataGroupType mdt : in) {
+            MetadataGroupForDocStructType mdtfdst = new MetadataGroupForDocStructType(mdt);
+            this.allMetadataGroups.add(mdtfdst);
+        }
+    }
+
+    /***************************************************************************
+     * <p>
+     * Retrieves all MetadataGroup objects for this DocStructType instance.
+     * </p>
+     * 
+     * @return List containing MetadataGroup objects; These MetadataGroup-objects are just local objects
+     **************************************************************************/
+    public List<MetadataGroupType> getAllMetadataGroupTypes() {
+
+        List<MetadataGroupType> out = new LinkedList<>();
+
+        Iterator<MetadataGroupForDocStructType> it = this.allMetadataGroups.iterator();
+        while (it.hasNext()) {
+            MetadataGroupForDocStructType mdtfdst = it.next();
+            out.add(mdtfdst.getMetadataGroup());
+        }
+
+        return out;
+    }
+    /***************************************************************************
+     * <p>
+     * Retrieves all MetadataGroup objects for this DocStructType instance, that have the "DefaultDisplay" attribute in the configuration set to
+     * "true".
+     * </p>
+     * 
+     * @return List containing MetadataGroup objects; These MetadataGroup objects are just local objects.
+     **************************************************************************/
+    public List<MetadataGroupType> getAllDefaultDisplayMetadataGroups() {
+
+        List<MetadataGroupType> out = new LinkedList<>();
+
+        Iterator<MetadataGroupForDocStructType> it = this.allMetadataGroups.iterator();
+        while (it.hasNext()) {
+            MetadataGroupForDocStructType mdtfdst = it.next();
+            if (mdtfdst.isDefaultdisplay()) {
+                out.add(mdtfdst.getMetadataGroup());
+            }
+        }
+
+        return out;
+    }
+
+
+    /***************************************************************************
+     * <p>
+     * Gets the number of metadata objects, which are possible for a special MetadataGroup for this special document structure type. MetadataGroup are
+     * compared using the internal name.
+     * </p>
+     * 
+     * @param inType MetadataGroup - can be a global type
+     * @return String containing the number (number can be: "1o", "1m", "*", "+")
+     **************************************************************************/
+    public String getNumberOfMetadataGroups(MetadataGroupType inType) {
+
+        Iterator<MetadataGroupForDocStructType> it = this.allMetadataGroups.iterator();
+        while (it.hasNext()) {
+            MetadataGroupForDocStructType mdtfdst = it.next();
+            if (mdtfdst.getMetadataGroup().getName().equals(inType.getName())) {
+                return mdtfdst.getNumber();
+            }
+        }
+
+        return "0";
+    }
+
+    /***************************************************************************
+     * <p>
+     * Gives very general information if a given MDType is allowed in a documentstructure of the type represented by this instance, or not.
+     * </p>
+     * 
+     * @param inMDType MetadataType - can be a global type (with same internal name)
+     * @return true, if it is allowed; otherwise false
+     **************************************************************************/
+    public boolean isMDTGroupAllowed(MetadataGroupType inMDType) {
+        Iterator<MetadataGroupForDocStructType> it = allMetadataGroups.iterator();
+        while (it.hasNext()) {
+            MetadataGroupType mdt = it.next().getMetadataGroup();
+            if (mdt.getName().equals(inMDType.getName())) {
+                return true; // it is already available
+            }
+        }
+
+        return false; // sorry, not available
+    }
+
+    /***************************************************************************
+     * <p>
+     * Removes a MetadataGroup object.
+     * </p>
+     * 
+     * @param type MetadataGroup
+     * @return true if successful, otherwise false
+     **************************************************************************/
+    public boolean removeMetadataGroup(MetadataGroupType type) {
+
+        List<MetadataGroupForDocStructType> ll = new LinkedList<>(this.allMetadataGroups);
+
+        Iterator<MetadataGroupForDocStructType> it = ll.iterator();
+        while (it.hasNext()) {
+            MetadataGroupForDocStructType mdtfdst = it.next();
+            if (mdtfdst.getMetadataGroup().equals(type)) {
+                this.allMetadataGroups.remove(mdtfdst);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /***************************************************************************
+     * <p>
+     * Retrieves the local MetadataGroup object (created when adding a global MetadataGroup object). This is necessary, if you just like to have the
+     * global MetadataGroup (from Preferences).
+     * </p>
+     * 
+     * @param inMDType global MetadataGroup object (from Preferences)
+     * @return MetadataGroup or null, if not available for this DocStructType
+     **************************************************************************/
+    public MetadataGroupType getMetadataGroupByGroup(MetadataGroupType inMDType) {
+
+        // Check, if MetadataType is already available.
+        Iterator<MetadataGroupForDocStructType> it = this.allMetadataGroups.iterator();
+        while (it.hasNext()) {
+            MetadataGroupForDocStructType mdtfdst = it.next();
+            MetadataGroupType mdt = mdtfdst.getMetadataGroup();
+
+            if (mdt.getName().equals(inMDType.getName())) {
+                return mdt;
+            }
+        }
+
+        return null;
+    }
+
+
+    /***************************************************************************
+     * <p>
+     * Adds a MetadataGroup object to this DocStructType instance; this means, that all document structures of this type can have at least one
+     * metadata object of this type because for each DocStructType object we have separate MetadataGroup objects, the MetadataGroup instance given as
+     * the only parameter is duplicated; the copy of the given instance is added. If successful, the copy is returned - otherwise null is returned.
+     * </p>
+     * 
+     * @param type MetadataType object which should be added
+     * @param inNumber number, how often Metadata of type can be added to a DocStruct object of this kind
+     * @return newly created copy of the MetadataGroup object; if not successful null is returned
+     **************************************************************************/
+    public MetadataGroupType addMetadataGroup(MetadataGroupType type, String inNumber) {
+
+        // New MetadataType obejct which is added to this DocStructType.
+        MetadataGroupType myType;
+
+        // Metadata is already available.
+        if (isMetadataGroupAlreadyAvailable(type)) {
+            return null;
+        }
+
+        // Make a copy of this object and add the copy - necessary, cause we
+        // have own instances for each document structure type.
+        myType = type.copy();
+
+        MetadataGroupForDocStructType mdtfdst = new MetadataGroupForDocStructType(myType);
+        mdtfdst.setNumber(inNumber);
+        this.allMetadataGroups.add(mdtfdst);
+
+        return myType;
+    }
+
+    /***************************************************************************
+     * <p>
+     * Adds a MetadataGroup object to this DocStructType instance; this means, that all document structures of this type can have at least one
+     * metadata object of this type because for each DocStructType object we have separate MetadataGroup objects, the MetadataGroup instance given as
+     * the only parameter is duplicated; the copy of the given instance is added. If successful, the copy is returned - otherwise null is returned.
+     * </p>
+     * 
+     * @param type MetadataGroup object which should be added
+     * @param inNumber number, how often Metadata of type can be added to a DocStruct object of this kind
+     * @param isDefault if set to true, this metadatatype will be displayed (even if it's empty)
+     * @return newly created copy of the MetadataType object; if not successful null is returned
+     **************************************************************************/
+    public MetadataGroupType addMetadataGroup(MetadataGroupType type, String inNumber, boolean isDefault, boolean isInvisible) {
+
+        // New MetadataType obejct which is added to this DocStructType.
+        MetadataGroupType myType;
+
+        // Metadata is already available.
+        if (isMetadataGroupAlreadyAvailable(type)) {
+            return null;
+        }
+
+        // Make a copy of this object and add the copy - necessary, cause we
+        // have own instances for each document structure type.
+        myType = type.copy();
+
+        MetadataGroupForDocStructType mdtfdst = new MetadataGroupForDocStructType(myType);
+        mdtfdst.setNumber(inNumber);
+        mdtfdst.setDefaultdisplay(isDefault);
+        mdtfdst.setInvisible(isInvisible);
+        this.allMetadataGroups.add(mdtfdst);
+
+        return myType;
+    }
+
+    /***************************************************************************
+     * <p>
+     * Checks, if the MetadataGroup has already been added and is already available in the list of all MetadataGroup.
+     * </p>
+     * 
+     * @param type
+     * @return true, if is is already available
+     **************************************************************************/
+    private boolean isMetadataGroupAlreadyAvailable(MetadataGroupType type) {
+
+        MetadataGroupForDocStructType test;
+        String testname;
+        String typename;
+
+        // Check, if MetadataType is already available.
+        Iterator<MetadataGroupForDocStructType> it = this.allMetadataGroups.iterator();
+        while (it.hasNext()) {
+            test = it.next();
+            MetadataGroupType mdt = test.getMetadataGroup();
+            testname = mdt.getName();
+            typename = type.getName();
+
+            if (testname.equals(typename)) {
+                // It is already available.
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public void addLanguage(String lang, String value) {
+
+        Map.Entry<String, String> test;
+        String key;
+
+        // Check, if language already available.
+        Iterator<Map.Entry<String, String>> it = this.allLanguages.entrySet().iterator();
+        while (it.hasNext()) {
+            test = it.next();
+            key = test.getKey();
+            if (key.equals(lang)) {
+                // Language is already available.
+                return;
+            }
+        }
+
+        this.allLanguages.put(lang, value);
+    }
+
+    @Override
+    public String getNameByLanguage(String lang) {
+
+        String languageName = this.allLanguages.get(lang);
+        if (languageName == null) {
+            return null;
+        }
+
+        return languageName;
+    }
+
+
 }

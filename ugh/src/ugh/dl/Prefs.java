@@ -416,7 +416,7 @@ public class Prefs implements Serializable {
                     }
                     // Set max. number.
                     newMdType.setNum(mdtypeNum);
-                    MetadataType result = null;
+                    PrefsType result = null;
 
                     // Handle Invisible attribute.
                     boolean invisible = false;
@@ -975,7 +975,7 @@ public class Prefs implements Serializable {
      **************************************************************************/
     public boolean addMetadataType(MetadataType inType) {
 
-        MetadataType tempType;
+        PrefsType tempType;
 
         if (inType == null) {
             return false;
@@ -1079,10 +1079,10 @@ public class Prefs implements Serializable {
      * @param inLanguage
      * @return
      **************************************************************************/
-    public MetadataType getMetadataTypeByName(String name, String inLanguage) {
+    public PrefsType getMetadataTypeByName(String name, String inLanguage) {
 
-        MetadataType currentMdType;
-        HashMap<String, String> allLanguages;
+        PrefsType currentMdType;
+        Map<String, String> allLanguages;
         String checklanguage;
         String checklanguagevalue = "";
 

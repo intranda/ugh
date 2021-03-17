@@ -61,6 +61,7 @@ import ugh.dl.Person;
 import ugh.dl.Prefs;
 import ugh.dl.Reference;
 import ugh.dl.RomanNumeral;
+import ugh.dl.PrefsType;
 import ugh.exceptions.MetadataTypeNotAllowedException;
 import ugh.exceptions.PreferencesException;
 import ugh.exceptions.ReadException;
@@ -933,7 +934,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         allmetadata = inDocStruct.getAllMetadata();
         if (allmetadata != null) {
             for (Metadata mymetadata : allmetadata) {
-                MetadataType mymetadatatype = mymetadata.getType();
+                PrefsType mymetadatatype = mymetadata.getType();
 
                 // Check, if metadata is an RDF-sequence or RDF-bag, get
                 // MetadataMatchingObject and check, if this metadata is member
@@ -1021,7 +1022,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         Element tempElement = domdoc.createElement("AGORA:ImageSetDocSource");
 
         // Get content of CatalogIDDigital.
-        MetadataType idType = this.myPreferences.getMetadataTypeByName(
+        PrefsType idType = this.myPreferences.getMetadataTypeByName(
                 "AGORA:CatalogIDDigital", "rdf");
         if (idType != null) {
             List<? extends Metadata> allIDs = this.mydoc.getLogicalDocStruct()
@@ -1375,7 +1376,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         Document domdoc = parentElement.getOwnerDocument();
         Node value;
 
-        MetadataType inMDT = inMetadata.getType();
+        PrefsType inMDT = inMetadata.getType();
         if (inMDT != null) {
             if (inMDT.getName().substring(0, 1).equals(HIDDEN_METADATA_CHAR)) {
                 // Get ot of method; it's an internal metadata type, we don't
@@ -1386,7 +1387,7 @@ public class RDFFile implements ugh.dl.Fileformat {
             return false;
         }
 
-        MetadataType metadataType = inMetadata.getType();
+        PrefsType metadataType = inMetadata.getType();
         if (metadataType == null) {
             LOGGER.debug("Invalid metadata type");
             return false;
@@ -1459,7 +1460,7 @@ public class RDFFile implements ugh.dl.Fileformat {
 
         while (it.hasNext()) {
             Metadata md = it.next();
-            MetadataType mdt = md.getType();
+            PrefsType mdt = md.getType();
 
             // Check, if metadata type of this name belongs to a RDF:Li group.
             MatchingMetadataObject mmo = getMMOByName(mdt.getName());
@@ -1738,7 +1739,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         DocStruct singlepage;
         Reference singleref;
         // Metadata type for a page.
-        MetadataType mdtype;
+        PrefsType mdtype;
         Metadata singlemd;
         String pagenumber;
         int pagenumberint;
@@ -2165,7 +2166,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         // Get all pages.
         List<DocStruct> allChildren = this.mydoc.getPhysicalDocStruct()
                 .getAllChildrenByTypeAndMetadataType("page", "physPageNumber");
-        MetadataType myMDType = this.myPreferences
+        PrefsType myMDType = this.myPreferences
                 .getMetadataTypeByName("physPageNumber");
         for (int i = physstartpage; i < physendpage + 1; i++) {
             for (int x = 0; x < allChildren.size(); x++) {
@@ -2446,7 +2447,7 @@ public class RDFFile implements ugh.dl.Fileformat {
             String filename = "";
 
             // Get physical page number.
-            ugh.dl.MetadataType metadataType2 = this.myPreferences
+            PrefsType metadataType2 = this.myPreferences
                     .getMetadataTypeByName("physPageNumber");
             List<? extends Metadata> physpagelist = currentPage
                     .getAllMetadataByType(metadataType2);
@@ -2794,7 +2795,7 @@ public class RDFFile implements ugh.dl.Fileformat {
      * @param inType
      * @return
      **************************************************************************/
-    private String getRDFName(MetadataType inType) {
+    private String getRDFName(PrefsType inType) {
 
         // Get internamName of MetadataType.
         String mdName = inType.getName();

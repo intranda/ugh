@@ -122,6 +122,7 @@ import ugh.dl.NamePart;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
 import ugh.dl.Reference;
+import ugh.dl.PrefsType;
 import ugh.dl.VirtualFileGroup;
 import ugh.exceptions.DocStructHasNoTypeException;
 import ugh.exceptions.ImportException;
@@ -1013,7 +1014,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
                 // Check some values, e.g. if metadata types are available etc.
                 if (this.anchorIdentifierMetadataType != null) {
-                    MetadataType identifierType = this.myPreferences.getMetadataTypeByName(this.anchorIdentifierMetadataType);
+                    PrefsType identifierType = this.myPreferences.getMetadataTypeByName(this.anchorIdentifierMetadataType);
                     if (identifierType == null) {
                         String message = "MetadataType for anchor (identifier) not found: " + this.anchorIdentifierMetadataType;
                         LOGGER.error(message);
@@ -4570,7 +4571,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                         && m.getType().getName().equalsIgnoreCase(this.anchorIdentifierMetadataType)) {
 
                     // Check if anchor identifier type is existing in the prefs.
-                    MetadataType identifierType = this.myPreferences.getMetadataTypeByName(this.anchorIdentifierMetadataType);
+                    PrefsType identifierType = this.myPreferences.getMetadataTypeByName(this.anchorIdentifierMetadataType);
                     if (identifierType == null) {
                         PreferencesException pe = new PreferencesException("Unable to write MODS section! No metadata of type '"
                                 + this.anchorIdentifierMetadataType + "' found in prefs to create anchor MODS record");

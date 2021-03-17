@@ -63,7 +63,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  ******************************************************************************/
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DocStructType implements Serializable {
+public class DocStructType implements Serializable, PrefsType {
 
     private static final long serialVersionUID = -3819246407494198735L;
 
@@ -87,7 +87,7 @@ public class DocStructType implements Serializable {
     // be children of this one here.
     protected List<String> allChildrenTypes;
 
-    private  List<MetadataGroupForDocStructType> allMetadataGroups;
+    private List<MetadataGroupForDocStructType> allMetadataGroups;
 
     /***************************************************************************
      * <p>
@@ -111,6 +111,7 @@ public class DocStructType implements Serializable {
     /***************************************************************************
      * @return
      **************************************************************************/
+    @Override
     public String getName() {
         return this.name;
     }
@@ -237,6 +238,7 @@ public class DocStructType implements Serializable {
      * 
      * @return HashMap with key/value pairs; key= language code; value= translation in this language
      **************************************************************************/
+    @Override
     public HashMap<String, String> getAllLanguages() {
         return this.allLanguages;
     }
@@ -250,25 +252,9 @@ public class DocStructType implements Serializable {
      * @param value translation of this StructType
      * @return true; if translation is already available false is returned
      **************************************************************************/
-    public boolean addLanguage(String lang, String value) {
-
-        Map.Entry<String, String> test;
-        String key;
-
-        // Check, if language already available.
-        Iterator<Map.Entry<String, String>> it = this.allLanguages.entrySet().iterator();
-        while (it.hasNext()) {
-            test = it.next();
-            key = test.getKey();
-            if (key.equals(lang)) {
-                // Language is already available.
-                return false;
-            }
-        }
-
+    @Override
+    public void addLanguage(String lang, String value) {
         this.allLanguages.put(lang, value);
-
-        return true;
     }
 
     /***************************************************************************
@@ -279,6 +265,7 @@ public class DocStructType implements Serializable {
      * @param lang language code
      * @return name of this DocStructType in the specified language; or null if no translation is available
      **************************************************************************/
+    @Override
     public String getNameByLanguage(String lang) {
 
         String languageName = this.allLanguages.get(lang);
@@ -411,7 +398,7 @@ public class DocStructType implements Serializable {
      * @param inType MetadataType - can be a global type
      * @return String containing the number (number can be: "1o", "1m", "*", "+")
      **************************************************************************/
-    public String getNumberOfMetadataType(MetadataType inType) {
+    public String getNumberOfMetadataType(PrefsType inType) {
 
         Iterator<MetadataTypeForDocStructType> it = this.allMetadataTypes.iterator();
         while (it.hasNext()) {
@@ -456,7 +443,7 @@ public class DocStructType implements Serializable {
      * @param inNumber number, how often Metadata of type can be added to a DocStruct object of this kind
      * @return newly created copy of the MetadataType object; if not successful null is returned
      **************************************************************************/
-    public MetadataType addMetadataType(MetadataType type, String inNumber) {
+    public PrefsType addMetadataType(MetadataType type, String inNumber) {
 
         // New MetadataType obejct which is added to this DocStructType.
         MetadataType myType;
@@ -489,7 +476,7 @@ public class DocStructType implements Serializable {
      * @param isDefault if set to true, this metadatatype will be displayed (even if it's empty)
      * @return newly created copy of the MetadataType object; if not successful null is returned
      **************************************************************************/
-    public MetadataType addMetadataType(MetadataType type, String inNumber, boolean isDefault, boolean isInvisible) {
+    public PrefsType addMetadataType(MetadataType type, String inNumber, boolean isDefault, boolean isInvisible) {
 
         // New MetadataType obejct which is added to this DocStructType.
         MetadataType myType;
@@ -520,7 +507,7 @@ public class DocStructType implements Serializable {
      * @param type
      * @return true, if is is already available
      **************************************************************************/
-    private boolean isMetadataTypeAlreadyAvailable(MetadataType type) {
+    private boolean isMetadataTypeAlreadyAvailable(PrefsType type) {
 
         MetadataTypeForDocStructType test;
         String testname;
@@ -530,7 +517,7 @@ public class DocStructType implements Serializable {
         Iterator<MetadataTypeForDocStructType> it = this.allMetadataTypes.iterator();
         while (it.hasNext()) {
             test = it.next();
-            MetadataType mdt = test.getMetadataType();
+            PrefsType mdt = test.getMetadataType();
             testname = mdt.getName();
             typename = type.getName();
 
@@ -584,7 +571,7 @@ public class DocStructType implements Serializable {
      * @param inMDType global MetadataType object (from Preferences)
      * @return MetadataType or null, if not available for this DocStructType
      **************************************************************************/
-    public MetadataType getMetadataTypeByType(MetadataType inMDType) {
+    public MetadataType getMetadataTypeByType(PrefsType inMDType) {
 
         // Check, if MetadataType is already available.
         Iterator<MetadataTypeForDocStructType> it = this.allMetadataTypes.iterator();
@@ -1016,77 +1003,4 @@ public class DocStructType implements Serializable {
 
         return false;
     }
-
-    public class MetadataGroupForDocStructType implements Serializable {
-
-        private static final long serialVersionUID = -4571877810721395422L;
-
-        private MetadataGroupType mdg = null;
-        // Number of metadatatypes for this docStruct.
-        private String num = null;
-        // Just a filter to display only default metadata types.
-        private boolean defaultdisplay = false;
-        // Just a filter to avoid displaying invisible fields.
-        private boolean invisible = false;
-
-        /***********************************************************************
-         * @param inType
-         **********************************************************************/
-        public MetadataGroupForDocStructType(MetadataGroupType group) {
-            this.mdg = group;
-        }
-
-        /***********************************************************************
-         * @param in
-         **********************************************************************/
-        public void setNumber(String in) {
-            this.num = in;
-        }
-
-        /***********************************************************************
-         * @return
-         **********************************************************************/
-        public String getNumber() {
-            return this.num;
-        }
-
-        /***********************************************************************
-         * @return
-         **********************************************************************/
-        public MetadataGroupType getMetadataGroup() {
-            return this.mdg;
-        }
-
-        /***********************************************************************
-         * @return the defaultdisplay
-         **********************************************************************/
-        public boolean isDefaultdisplay() {
-            return this.defaultdisplay;
-        }
-
-        /***********************************************************************
-         * Sets the DefaultDisplay variable for this DocStructType. Dosn't make any sense at all!
-         * 
-         * @param inDefaultdisplay the defaultdisplay to set
-         **********************************************************************/
-        public void setDefaultdisplay(boolean inDefaultdisplay) {
-            this.defaultdisplay = inDefaultdisplay;
-        }
-
-        /***********************************************************************
-         * @return the invisible
-         **********************************************************************/
-        public boolean isInvisible() {
-            return this.invisible;
-        }
-
-        /***********************************************************************
-         * @param invisible the invisible to set
-         **********************************************************************/
-        public void setInvisible(boolean invisible) {
-            this.invisible = invisible;
-        }
-
-    }
-
 }

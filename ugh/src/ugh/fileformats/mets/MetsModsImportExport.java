@@ -76,6 +76,7 @@ import ugh.dl.MetadataType;
 import ugh.dl.NamePart;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
+import ugh.dl.PrefsType;
 import ugh.dl.VirtualFileGroup;
 import ugh.exceptions.DocStructHasNoTypeException;
 import ugh.exceptions.ImportException;
@@ -347,7 +348,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                     if (parentDst.isAnchor() && this.xPathAnchorReference != null) {
 
                         // Get identifier(s) of parent.
-                        MetadataType identifierType = this.myPreferences.getMetadataTypeByName(this.anchorIdentifierMetadataType);
+                        PrefsType identifierType = this.myPreferences.getMetadataTypeByName(this.anchorIdentifierMetadataType);
                         if (identifierType == null) {
                             String message =
                                     "No Metadata of type '" + this.anchorIdentifierMetadataType + "' found to create the anchor in MODS record";
@@ -398,7 +399,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 if (inStruct.getAllMetadata() != null) {
                     // Only if the metadata type does exist in the current
                     // DocStruct...
-                    MetadataType mdt = this.myPreferences.getMetadataTypeByName(mmo.getInternalName());
+                    PrefsType mdt = this.myPreferences.getMetadataTypeByName(mmo.getInternalName());
 
                     // ... go throught all the available metadata of that type.
                     if (inStruct.hasMetadataType(mdt)) {
@@ -473,7 +474,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 if (inStruct.getAllPersons() != null) {
                     // Only if the person type does exist in the current
                     // DocStruct...
-                    MetadataType mdt = this.myPreferences.getMetadataTypeByName(mmo.getInternalName());
+                    PrefsType mdt = this.myPreferences.getMetadataTypeByName(mmo.getInternalName());
 
                     // ... go throught all the available metadata of that type.
                     if (inStruct.hasMetadataType(mdt) && inStruct.getAllPersonsByType(mdt) != null) {
@@ -501,7 +502,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
 
                 // export corporates
                 if (inStruct.getAllCorporates() != null) {
-                    MetadataType mdt = this.myPreferences.getMetadataTypeByName(mmo.getInternalName());
+                    PrefsType mdt = this.myPreferences.getMetadataTypeByName(mmo.getInternalName());
                     if (inStruct.hasMetadataType(mdt) && inStruct.getAllCorporatesByType(mdt) != null) {
                         for (Corporate corp : inStruct.getAllCorporatesByType(mdt)) {
                             if (StringUtils.isNotBlank(corp.getMainName()) && mmo.getWriteXPath() != null) {

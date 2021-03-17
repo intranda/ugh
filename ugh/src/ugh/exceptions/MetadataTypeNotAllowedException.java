@@ -24,7 +24,7 @@ package ugh.exceptions;
 
 import ugh.dl.DocStructType;
 import ugh.dl.MetadataGroupType;
-import ugh.dl.MetadataType;
+import ugh.dl.PrefsType;
 
 /*******************************************************************************
  * @author Markus Enders
@@ -36,7 +36,7 @@ public class MetadataTypeNotAllowedException extends UGHException {
 
     private static final long serialVersionUID = -6826313212661918527L;
 
-    private MetadataType metadataType;
+    private PrefsType metadataType;
     private DocStructType docStructType;
     private MetadataGroupType groupType;
 
@@ -73,12 +73,12 @@ public class MetadataTypeNotAllowedException extends UGHException {
      * @param in
      * @param inDSType
      **************************************************************************/
-    public MetadataTypeNotAllowedException(MetadataType in, DocStructType inDSType) {
+    public MetadataTypeNotAllowedException(PrefsType in, DocStructType inDSType) {
         this.metadataType = in;
         this.docStructType = inDSType;
     }
 
-    public MetadataTypeNotAllowedException(MetadataType in, MetadataGroupType groupType) {
+    public MetadataTypeNotAllowedException(PrefsType in, MetadataGroupType groupType) {
         this.metadataType = in;
         this.groupType = groupType;
     }
@@ -127,14 +127,14 @@ public class MetadataTypeNotAllowedException extends UGHException {
     /***************************************************************************
      * @return the mdt
      **************************************************************************/
-    public MetadataType getMetadataType() {
+    public PrefsType getMetadataType() {
         return this.metadataType;
     }
 
     /**************************************************************************
      * @param metadataType
      **************************************************************************/
-    public void setMetadataType(MetadataType metadataType) {
+    public void setMetadataType(PrefsType metadataType) {
         this.metadataType = metadataType;
     }
 

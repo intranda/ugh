@@ -388,7 +388,7 @@ public class DocStruct implements Serializable, HoldingElement {
                     if (theMDTypeName.equals("*")) {
                         mdTypeTestPassed = true;
                     } else {
-                        MetadataType mdtype = md.getType();
+                        PrefsType mdtype = md.getType();
                         String mdtypename = mdtype.getName();
 
                         if (mdtypename != null && mdtypename.equals(theMDTypeName)) {
@@ -790,6 +790,7 @@ public class DocStruct implements Serializable, HoldingElement {
      * 
      * @return List containing MetadataGroup instances; if no MetadataGroup is available, null is returned.
      **************************************************************************/
+    @Override
     public List<MetadataGroup> getAllMetadataGroups() {
         if (this.allMetadataGroups == null || this.allMetadataGroups.isEmpty()) {
             return null;
@@ -810,6 +811,7 @@ public class DocStruct implements Serializable, HoldingElement {
      * 
      * @param inList List containing MetadataGroup objects.
      **************************************************************************/
+    @Override
     public void setAllMetadataGroups(List<MetadataGroup> inList) {
         this.allMetadataGroups = inList;
     }
@@ -909,7 +911,7 @@ public class DocStruct implements Serializable, HoldingElement {
      * @param inMDT
      * @return true, if available; otherwise false
      **************************************************************************/
-    public boolean hasMetadataType(MetadataType inMDT) {
+    public boolean hasMetadataType(PrefsType inMDT) {
         if (inMDT == null) {
             return false;
         }
@@ -917,7 +919,7 @@ public class DocStruct implements Serializable, HoldingElement {
         List<Metadata> allMDs = this.getAllMetadata();
         if (allMDs != null) {
             for (Metadata md : allMDs) {
-                MetadataType mdt = md.getType();
+                PrefsType mdt = md.getType();
                 if (inMDT.getName().equals(mdt.getName())) {
                     return true;
                 }
@@ -928,7 +930,7 @@ public class DocStruct implements Serializable, HoldingElement {
         List<Person> allPersons = this.getAllPersons();
         if (allPersons != null) {
             for (Person per : allPersons) {
-                MetadataType mdt = per.getType();
+                PrefsType mdt = per.getType();
                 if (inMDT.getName().equals(mdt.getName())) {
                     return true;
                 }
@@ -1220,6 +1222,7 @@ public class DocStruct implements Serializable, HoldingElement {
      *             we cannot check, wether if the metadata type is allowed or not.
      * @see Metadata
      **************************************************************************/
+    @Override
     public boolean addMetadataGroup(MetadataGroup theMetadataGroup) throws MetadataTypeNotAllowedException, DocStructHasNoTypeException {
 
         MetadataGroupType inMdType = theMetadataGroup.getType();
@@ -1320,6 +1323,7 @@ public class DocStruct implements Serializable, HoldingElement {
      * @return true, if data can be removed; otherwise false
      * @see #canMetadataBeRemoved
      **************************************************************************/
+    @Override
     public boolean removeMetadataGroup(MetadataGroup theMd, boolean force) {
 
         MetadataGroupType inMdType;
@@ -1390,7 +1394,8 @@ public class DocStruct implements Serializable, HoldingElement {
      * @param theNewMd New Metadata object.
      * @return True, if Metadata object could be exchanged; otherwise false.
      **************************************************************************/
-    public boolean changeMetadataGroup(MetadataGroup theOldMd, MetadataGroup theNewMd) {
+    @Override
+    public void changeMetadataGroup(MetadataGroup theOldMd, MetadataGroup theNewMd) {
 
         MetadataGroupType oldMdt;
         MetadataGroupType newMdt;
@@ -1408,7 +1413,7 @@ public class DocStruct implements Serializable, HoldingElement {
 
         if (oldName.equals(newName)) {
             // Different metadata types.
-            return false;
+            return;
         }
 
         // Remove old object; get place of old object in list.
@@ -1429,7 +1434,6 @@ public class DocStruct implements Serializable, HoldingElement {
         this.allMetadataGroups.remove(theOldMd);
         this.allMetadataGroups.add(counter, theNewMd);
 
-        return true;
     }
 
     /***************************************************************************
@@ -1443,6 +1447,7 @@ public class DocStruct implements Serializable, HoldingElement {
      * @param inType MetadataType we are looking for.
      * @return List containing Metadata objects; if no metadata ojects are available, an empty list is returned.
      **************************************************************************/
+    @Override
     public List<MetadataGroup> getAllMetadataGroupsByType(MetadataGroupType inType) {
 
         List<MetadataGroup> resultList = new LinkedList<>();
@@ -1483,7 +1488,7 @@ public class DocStruct implements Serializable, HoldingElement {
     @Override
     public void addMetadata(Metadata theMetadata) throws MetadataTypeNotAllowedException, DocStructHasNoTypeException {
 
-        MetadataType inMdType = theMetadata.getType();
+        PrefsType inMdType = theMetadata.getType();
         String inMdName = inMdType.getName();
         // Integer, number of metadata allowed for this metadatatype.
         String maxnumberallowed;
@@ -1587,7 +1592,7 @@ public class DocStruct implements Serializable, HoldingElement {
     @Override
     public void removeMetadata(Metadata theMd, boolean force) {
 
-        MetadataType inMdType;
+        PrefsType inMdType;
         String maxnumbersallowed;
         int typesavailable;
 
@@ -1657,8 +1662,8 @@ public class DocStruct implements Serializable, HoldingElement {
      **************************************************************************/
     public boolean changeMetadata(Metadata theOldMd, Metadata theNewMd) {
 
-        MetadataType oldMdt;
-        MetadataType newMdt;
+        PrefsType oldMdt;
+        PrefsType newMdt;
         String oldName;
         String newName;
         int counter = 0;
@@ -1708,7 +1713,7 @@ public class DocStruct implements Serializable, HoldingElement {
      * @param inType MetadataType we are looking for.
      * @return List containing Metadata objects; if no metadata ojects are available, an empty list is returned.
      **************************************************************************/
-    public List<? extends Metadata> getAllMetadataByType(MetadataType inType) {
+    public List<? extends Metadata> getAllMetadataByType(PrefsType inType) {
 
         List<Metadata> resultList = new LinkedList<>();
 
@@ -1747,7 +1752,7 @@ public class DocStruct implements Serializable, HoldingElement {
      * @param inType MetadataType we are looking for.
      * @return List containing Metadata objects; if no metadata ojects are available, null is returned.
      **************************************************************************/
-    public List<Person> getAllPersonsByType(MetadataType inType) {
+    public List<Person> getAllPersonsByType(PrefsType inType) {
 
         List<Person> resultList = new LinkedList<>();
 
@@ -1772,7 +1777,7 @@ public class DocStruct implements Serializable, HoldingElement {
         return resultList;
     }
 
-    public List<Corporate> getAllCorporatesByType(MetadataType inType) {
+    public List<Corporate> getAllCorporatesByType(PrefsType inType) {
 
         List<Corporate> resultList = new LinkedList<>();
 
@@ -1966,7 +1971,7 @@ public class DocStruct implements Serializable, HoldingElement {
 
         if (this.allMetadata != null) {
             for (Metadata md : this.allMetadata) {
-                MetadataType mdt = md.getType();
+                PrefsType mdt = md.getType();
                 if (mdt == null) {
                     continue;
                 }
@@ -1979,7 +1984,7 @@ public class DocStruct implements Serializable, HoldingElement {
 
         if (this.persons != null) {
             for (Person per : this.persons) {
-                MetadataType mdt = per.getType();
+                PrefsType mdt = per.getType();
                 if (mdt == null) {
                     continue;
                 }
@@ -1992,7 +1997,7 @@ public class DocStruct implements Serializable, HoldingElement {
 
         if (corporates != null) {
             for (Corporate corp : corporates) {
-                MetadataType mdt = corp.getType();
+                PrefsType mdt = corp.getType();
                 if (mdt == null) {
                     continue;
                 }
@@ -2020,7 +2025,7 @@ public class DocStruct implements Serializable, HoldingElement {
      **************************************************************************/
     public int countMDofthisType(String inTypeName) {
 
-        MetadataType testtype;
+        PrefsType testtype;
         int counter = 0;
 
         if (this.allMetadata != null) {
@@ -2629,7 +2634,7 @@ public class DocStruct implements Serializable, HoldingElement {
      * @return true, if it can be removed; otherwise false
      **************************************************************************/
     @Override
-    public boolean isMetadataTypeBeRemoved(MetadataType inMDType) {
+    public boolean isMetadataTypeBeRemoved(PrefsType inMDType) {
 
         // How many metadata of this type do we have already.
         int typesavailable = countMDofthisType(inMDType.getName());
@@ -2668,7 +2673,7 @@ public class DocStruct implements Serializable, HoldingElement {
 
         // Get MetadataType of this person get MetadataType from docstructType
         // object with the same name.
-        MetadataType mdtype = this.type.getMetadataTypeByType(in.getType());
+        PrefsType mdtype = this.type.getMetadataTypeByType(in.getType());
         if (mdtype == null) {
             MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException();
             LOGGER.error("MetadataType " + in.getType().getName() + " is not available for DocStruct '" + this.getType().getName() + "'");
@@ -2734,7 +2739,7 @@ public class DocStruct implements Serializable, HoldingElement {
 
         // Get MetadataType of this person get MetadataType from docstructType
         // object with the same name.
-        MetadataType mdtype = this.type.getMetadataTypeByType(corp.getType());
+        PrefsType mdtype = this.type.getMetadataTypeByType(corp.getType());
         if (mdtype == null) {
             MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException();
             LOGGER.error("MetadataType " + corp.getType().getName() + " is not available for DocStruct '" + this.getType().getName() + "'");
@@ -2798,7 +2803,7 @@ public class DocStruct implements Serializable, HoldingElement {
             return;
         }
 
-        MetadataType inMDType = in.getType();
+        PrefsType inMDType = in.getType();
         // Incomplete person.
         if (inMDType == null) {
             IncompletePersonObjectException ipoe = new IncompletePersonObjectException();
@@ -2832,7 +2837,7 @@ public class DocStruct implements Serializable, HoldingElement {
             return;
         }
 
-        MetadataType inMDType = in.getType();
+        PrefsType inMDType = in.getType();
         // Incomplete person.
         if (inMDType == null) {
             IncompletePersonObjectException ipoe = new IncompletePersonObjectException();
@@ -3008,7 +3013,7 @@ public class DocStruct implements Serializable, HoldingElement {
             boolean notIncluded = true;
             for (int i = 0; i < allMDs.size(); i++) {
                 Metadata md = allMDs.get(i);
-                MetadataType mdt2 = md.getType();
+                PrefsType mdt2 = md.getType();
 
                 // Compare the display MetadataType and the type of current
                 // Metadata.
@@ -3230,7 +3235,7 @@ public class DocStruct implements Serializable, HoldingElement {
         List<MetadataType> prefsMetadataTypeList = docStructType.getAllMetadataTypes();
 
         // Iterate over all that metadata types.
-        for (MetadataType mType : prefsMetadataTypeList) {
+        for (PrefsType mType : prefsMetadataTypeList) {
 
             // Go through all persons of the current DocStruct.
             List<Person> op = this.getAllPersons();
