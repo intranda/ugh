@@ -129,6 +129,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
      * 
      * @return MetadataGroupType instance
      **************************************************************************/
+    @Override
     public MetadataGroupType getType() {
         return this.MDType;
     }
@@ -568,7 +569,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
      * @return List containing MetadataType objects.
      **************************************************************************/
     @Override
-    public List<MetadataType> getAddableMetadataTypes() {
+    public List<MetadataType> getAddableMetadataTypes(boolean includeHiddenMetadata) {
 
         // If e.g. the topstruct has no Metadata, or something...
         if (MDType == null) {
@@ -585,7 +586,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
 
             // Metadata beginning with the HIDDEN_METADATA_CHAR are internal
             // metadata are not user addable.
-            if (!mdt.getName().startsWith("_")) {
+            if (includeHiddenMetadata || !mdt.getName().startsWith("_")) {
                 String maxnumber = MDType.getNumberOfMetadataType(mdt);
 
                 // Metadata can only be available once; so we have to check if
@@ -854,5 +855,4 @@ public class MetadataGroup implements Serializable, HoldingElement {
 
         return resultList;
     }
-
 }
