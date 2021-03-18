@@ -37,7 +37,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
 
     private static final Logger LOGGER = Logger.getLogger(ugh.dl.DigitalDocument.class);
 
-    protected MetadataGroupType MDType;
+    protected MetadataGroupType metadataGroupType;
     // Document structure to which this metadata type belongs to.
     @Getter @Setter
     protected HoldingElement parent;
@@ -55,8 +55,6 @@ public class MetadataGroup implements Serializable, HoldingElement {
     @Setter
     private List<Corporate> corporateList;
 
-    @Getter
-    @Setter
     private List<MetadataGroup> allMetadataGroups;
 
     private List<MetadataGroup> removedMetadataGroups;
@@ -76,12 +74,12 @@ public class MetadataGroup implements Serializable, HoldingElement {
             throw new MetadataTypeNotAllowedException(message);
         }
 
-        this.MDType = theType;
+        this.metadataGroupType = theType;
 
         metadataList = new LinkedList<>();
         personList = new LinkedList<>();
         corporateList = new LinkedList<>();
-        for (MetadataType mdt : MDType.getMetadataTypeList()) {
+        for (MetadataType mdt : metadataGroupType.getMetadataTypeList()) {
             if (mdt.getIsPerson()) {
                 Person p = new Person(mdt);
                 p.setRole(mdt.getName());
@@ -131,7 +129,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
      **************************************************************************/
     @Override
     public MetadataGroupType getType() {
-        return this.MDType;
+        return this.metadataGroupType;
     }
 
     /***************************************************************************
@@ -143,7 +141,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
      * @param inType
      **************************************************************************/
     public void setType(MetadataGroupType inType) {
-        this.MDType = inType;
+        this.metadataGroupType = inType;
     }
 
     @Override
@@ -174,7 +172,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
             this.metadataList.add(metadata);
         } else {
             LOGGER.debug("Not allowed to add metadata '" + inMdName + "'");
-            MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException(type, MDType);
+            MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException(type, metadataGroupType);
             LOGGER.error(mtnae.getMessage());
             throw mtnae;
         }
@@ -209,7 +207,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
             personList.add(person);
         } else {
             LOGGER.debug("Not allowed to add metadata '" + inMdName + "'");
-            MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException(type, MDType);
+            MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException(type, metadataGroupType);
             LOGGER.error(mtnae.getMessage());
             throw mtnae;
         }
@@ -244,7 +242,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
             corporateList.add(corporate);
         } else {
             LOGGER.debug("Not allowed to add metadata '" + inMdName + "'");
-            MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException(type, MDType);
+            MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException(type, metadataGroupType);
             LOGGER.error(mtnae.getMessage());
             throw mtnae;
         }
@@ -254,7 +252,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("MetadataGroup [MDType:");
-        sb.append(MDType.getName());
+        sb.append(metadataGroupType.getName());
         sb.append(", myDocStruct:");
         sb.append(parent.getType().getName());
         if (metadataList != null && !metadataList.isEmpty()) {
@@ -309,7 +307,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((MDType == null) ? 0 : MDType.hashCode());
+        result = prime * result + ((metadataGroupType == null) ? 0 : metadataGroupType.hashCode());
         result = prime * result + ((metadataList == null) ? 0 : metadataList.hashCode());
         result = prime * result + ((personList == null) ? 0 : personList.hashCode());
         result = prime * result + ((corporateList == null) ? 0 : corporateList.hashCode());
@@ -329,11 +327,11 @@ public class MetadataGroup implements Serializable, HoldingElement {
             return false;
         }
         MetadataGroup other = (MetadataGroup) obj;
-        if (MDType == null) {
-            if (other.MDType != null) {
+        if (metadataGroupType == null) {
+            if (other.metadataGroupType != null) {
                 return false;
             }
-        } else if (!MDType.equals(other.MDType)) {
+        } else if (!metadataGroupType.equals(other.metadataGroupType)) {
             return false;
         }
         if (metadataList == null) {
@@ -365,7 +363,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
         // How many metadata of this type do we have already.
         int typesavailable = countMDofthisType(inMDType.getName());
         // How many types must be at least available.
-        String maxnumbersallowed = MDType.getNumberOfMetadataType(inMDType);
+        String maxnumbersallowed = metadataGroupType.getNumberOfMetadataType(inMDType);
 
         if (typesavailable == 1 && maxnumbersallowed.equals("+")) {
             // There must be at least one.
@@ -393,7 +391,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
         typesavailable = countMDofthisType(inMdType.getName());
 
         // How many types must be at least available.
-        maxnumbersallowed = MDType.getNumberOfMetadataType(inMdType);
+        maxnumbersallowed = metadataGroupType.getNumberOfMetadataType(inMdType);
 
         if (!force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
             // There must be at least one.
@@ -429,7 +427,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
         // How many metadata of this type do we have already.
         int typesavailable = countMDofthisType(inMDType.getName());
         // How many types must be at least available.
-        String maxnumbersallowed = MDType.getNumberOfMetadataType(inMDType);
+        String maxnumbersallowed = metadataGroupType.getNumberOfMetadataType(inMDType);
 
         if (force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
             // There must be at least one.
@@ -460,7 +458,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
         // How many metadata of this type do we have already.
         int typesavailable = countMDofthisType(inMDType.getName());
         // How many types must be at least available.
-        String maxnumbersallowed = MDType.getNumberOfMetadataType(inMDType);
+        String maxnumbersallowed = metadataGroupType.getNumberOfMetadataType(inMDType);
 
         if (force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
             // There must be at least one.
@@ -523,11 +521,20 @@ public class MetadataGroup implements Serializable, HoldingElement {
                 }
             }
         }
+
+        if (allMetadataGroups != null) {
+            for (MetadataGroup mg : allMetadataGroups) {
+                if (mg.getType().getName().equals(inTypeName)) {
+                    counter++;
+                }
+            }
+
+        }
         return counter;
     }
 
     public void checkDefaultDisplayMetadata() {
-        List<MetadataType> allDefaultMdTypes = MDType.getAllDefaultDisplayMetadataTypes();
+        List<MetadataType> allDefaultMdTypes = metadataGroupType.getAllDefaultDisplayMetadataTypes();
         if (allDefaultMdTypes != null) {
             // Iterate over all defaultDisplay metadata types and check, if
             // metadata of this type is already available.
@@ -572,13 +579,13 @@ public class MetadataGroup implements Serializable, HoldingElement {
     public List<MetadataType> getAddableMetadataTypes(boolean includeHiddenMetadata) {
 
         // If e.g. the topstruct has no Metadata, or something...
-        if (MDType == null) {
+        if (metadataGroupType == null) {
             return null;
         }
 
         // Get all Metadatatypes for my DocStructType.
         List<MetadataType> addableMetadata = new LinkedList<>();
-        List<MetadataType> allTypes = MDType.getMetadataTypeList();
+        List<MetadataType> allTypes = metadataGroupType.getMetadataTypeList();
 
         // Get all metadata types which are known, iterate over them and check,
         // if they are still addable.
@@ -587,7 +594,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
             // Metadata beginning with the HIDDEN_METADATA_CHAR are internal
             // metadata are not user addable.
             if (includeHiddenMetadata || !mdt.getName().startsWith("_")) {
-                String maxnumber = MDType.getNumberOfMetadataType(mdt);
+                String maxnumber = metadataGroupType.getNumberOfMetadataType(mdt);
 
                 // Metadata can only be available once; so we have to check if
                 // it is already available.
@@ -662,17 +669,17 @@ public class MetadataGroup implements Serializable, HoldingElement {
 
         // First get MetadataType object for the DocStructType to which this
         // document structure belongs to get global MDType.
-        if (MDType == null) {
+        if (metadataGroupType == null) {
             String message = "Error occured while adding metadata of type '" + inMdName + "' to DocStruct '" + this.getType().getName() + "'";
             LOGGER.error(message);
             throw new DocStructHasNoTypeException(message);
         }
 
-        prefsMdType = MDType.getMetadataGroupByGroup(inMdType);
+        prefsMdType = theMetadataGroup.getType();
 
         // Ask DocStructType instance to get MetadataType by Type. At this point
         // we are creating a local copy of the MetadataType object.
-        if (prefsMdType == null && !(inMdName.startsWith("_"))) {
+        if (prefsMdType == null) {
             MetadataTypeNotAllowedException e = new MetadataTypeNotAllowedException(null, this.getType());
             LOGGER.error(e.getMessage());
             throw e;
@@ -684,7 +691,13 @@ public class MetadataGroup implements Serializable, HoldingElement {
             maxnumberallowed = "*";
             prefsMdType = inMdType;
         } else {
-            maxnumberallowed = MDType.getNumberOfMetadataGroups(prefsMdType);
+            maxnumberallowed = metadataGroupType.getAllAllowedGroupTypeTypes().get(inMdType.getName());
+            if (maxnumberallowed== null) {
+                // group type is not allowed
+                MetadataTypeNotAllowedException e = new MetadataTypeNotAllowedException(inMdType, getType());
+                LOGGER.error(e.getMessage());
+                throw e;
+            }
         }
 
         // Check, if another Metadata instance is allowed.
@@ -762,7 +775,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
         typesavailable = countMDofthisType(inMdType.getName());
 
         // How many types must be at least available.
-        maxnumbersallowed = MDType.getNumberOfMetadataGroups(inMdType);
+        maxnumbersallowed = metadataGroupType.getAllAllowedGroupTypeTypes().get(inMdType.getName());
 
         if (!force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
             // There must be at least one.
@@ -777,6 +790,11 @@ public class MetadataGroup implements Serializable, HoldingElement {
 
         if (this.removedMetadataGroups == null) {
             this.removedMetadataGroups = new LinkedList<>();
+        }
+
+        if (allMetadataGroups == null) {
+            // no groups to remove available, abort
+            return false;
         }
 
         this.removedMetadataGroups.add(theMd);
@@ -820,7 +838,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
 
         // Ask DocStructType instance to get a new MetadataType object of the
         // same kind.
-        MetadataGroupType mdType = MDType.getMetadataGroupByGroup(theOldMd.getType());
+        MetadataGroupType mdType =theOldMd.getType();
         theNewMd.setType(mdType);
 
         this.allMetadataGroups.remove(theOldMd);

@@ -1200,8 +1200,25 @@
     <metadata num="+">PlaceOfPublication</metadata>
     <metadata num="1m">PublicationYear</metadata>
     <metadata num="1o">PublisherCorporate</metadata>
+    <group num="1o">LocationGroup</group>
   </Group>
 
+  <Group>
+    <Name>LocationGroup</Name>
+    <language name="de">LocationGroup</language>
+    <language name="en">LocationGroup</language>
+    <metadata num="1o">Province</metadata>
+    <metadata num="1o">State</metadata>
+    <metadata num="1o">Country</metadata>
+    <metadata num="1o">City</metadata>
+  </Group>
+
+  <Group>
+    <Name>UnusedGroup</Name>
+    <language name="de">UnusedGroup</language>
+    <language name="en">UnusedGroup</language>
+    <metadata num="*">StatementOfResponsibility</metadata>
+  </Group>
 
 
   <!-- Subjects start -->

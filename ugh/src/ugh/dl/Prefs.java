@@ -766,9 +766,6 @@ public class Prefs implements Serializable {
                             mdtypeNum = attribNode.getNodeValue();
                         }
                     }
-
-
-
                     mdtypeName = "";
 
                     // Get value; value is always a text node.
@@ -799,9 +796,33 @@ public class Prefs implements Serializable {
                     }
                     newMdType.setNum(mdtypeNum);
                     currenGroup.addMetadataType(newMdType, mdtypeNum, true, false);
-                }
+                } else if (currentNode.getNodeName().equals("group")) {
+                    attributeNodelist = currentNode.getAttributes();
+                    Node    attribNode = attributeNodelist.getNamedItem("num");
+                    if (attribNode == null) {
+                        mdtypeNum = "1";
+                        LOGGER.warn("Num attribute not set for <group> element!");
+                    } else {
+                        // Get max. number: 1,+,*
+                        mdtypeNum = attribNode.getNodeValue();
+                    }
+                    String groupName =null;
+                    NodeList textnodes = currentNode.getChildNodes();
+                    if (textnodes != null) {
+                        Node textnode = textnodes.item(0);
+                        if (textnode.getNodeType() != Node.TEXT_NODE) {
+                            LOGGER.error("Syntax Error reading config for group '" + currenGroup.getName()
+                            + "'! Expected a text node element containing the group's name");
+                            // No text node available; maybe it's another
+                            // element etc. anyhow: an error.
+                            return null;
+                        }
+                        groupName = textnode.getNodeValue();
+                    }
+                    currenGroup.addGroupTypeAsChild(groupName, mdtypeNum);
 
-                if (currentNode.getNodeName().equals("language")) {
+
+                } else if (currentNode.getNodeName().equals("language")) {
                     attributeNodelist = currentNode.getAttributes();
                     attributeNode = attributeNodelist.getNamedItem("name");
                     languageName = attributeNode.getNodeValue();
