@@ -79,6 +79,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
         metadataList = new LinkedList<>();
         personList = new LinkedList<>();
         corporateList = new LinkedList<>();
+        allMetadataGroups = new LinkedList<>();
         //        for (MetadataType mdt : metadataGroupType.getAllDefaultDisplayMetadataTypes()) {
         //            if (mdt.getIsPerson() ) {
         //                Person p = new Person(mdt);
@@ -628,14 +629,6 @@ public class MetadataGroup implements Serializable, HoldingElement {
      **************************************************************************/
     @Override
     public List<MetadataGroup> getAllMetadataGroups() {
-        if (this.allMetadataGroups == null || this.allMetadataGroups.isEmpty()) {
-            return null;
-        }
-
-        for (MetadataGroup mg : allMetadataGroups) {
-            mg.checkDefaultDisplayMetadata();
-        }
-
         return this.allMetadataGroups;
     }
 
