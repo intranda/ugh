@@ -758,12 +758,16 @@ public class Prefs implements Serializable {
                 }
 
                 String mdtypeNum = "*";
+                boolean defaultDisplay = false;
                 if (currentNode.getNodeName().equals("metadata")) {
                     attributeNodelist = currentNode.getAttributes();
                     if (attributeNodelist != null) {
                         Node attribNode = attributeNodelist.getNamedItem("num");
                         if (attribNode != null) {
                             mdtypeNum = attribNode.getNodeValue();
+                        }  Node defaultNode = attributeNodelist.getNamedItem("DefaultDisplay");
+                        if (defaultNode != null &&  defaultNode.getNodeValue().equals("true")) {
+                            defaultDisplay=true;
                         }
                     }
                     mdtypeName = "";
@@ -795,7 +799,7 @@ public class Prefs implements Serializable {
                         return null;
                     }
                     newMdType.setNum(mdtypeNum);
-                    currenGroup.addMetadataType(newMdType, mdtypeNum, true, false);
+                    currenGroup.addMetadataType(newMdType, mdtypeNum,defaultDisplay , false);
                 } else if (currentNode.getNodeName().equals("group")) {
                     attributeNodelist = currentNode.getAttributes();
                     Node    attribNode = attributeNodelist.getNamedItem("num");

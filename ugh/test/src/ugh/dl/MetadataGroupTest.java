@@ -60,9 +60,9 @@ public class MetadataGroupTest {
         Person p = new Person(prefs.getMetadataTypeByName("PublisherPerson"));
         p.setFirstname("firstname");
         p.setLastname("lastname");
-        assertEquals(1, fixture.getPersonList().size());
+        assertEquals(0, fixture.getPersonList().size());
         fixture.addPerson(p);
-        assertEquals(2, fixture.getPersonList().size());
+        assertEquals(1, fixture.getPersonList().size());
     }
 
     @Test
@@ -71,18 +71,21 @@ public class MetadataGroupTest {
         MetadataGroup fixture = new MetadataGroup(groupType);
         Metadata place = new Metadata(prefs.getMetadataTypeByName("PlaceOfPublication"));
         place.setValue("fixture");
-        assertEquals(1, fixture.getMetadataByType("PlaceOfPublication").size());
+        assertEquals(0, fixture.getMetadataByType("PlaceOfPublication").size());
         fixture.addMetadata(place);
-        assertEquals(2, fixture.getMetadataByType("PlaceOfPublication").size());
+        assertEquals(1, fixture.getMetadataByType("PlaceOfPublication").size());
     }
 
     @Test(expected = MetadataTypeNotAllowedException.class)
     public void testAddMetadata3() throws Exception {
         MetadataGroup fixture = new MetadataGroup(groupType);
-        // Third case, exact one field is allowed, adding a new one throws exception
+        // Third case, exact one field is allowed, adding a second one throws exception
         Metadata year = new Metadata(prefs.getMetadataTypeByName("PublicationYear"));
         year.setValue("fixture");
+        fixture.addMetadata(year);
         assertEquals(1, fixture.getMetadataByType("PublicationYear").size());
+        year = new Metadata(prefs.getMetadataTypeByName("PublicationYear"));
+        year.setValue("fixture");
         fixture.addMetadata(year);
     }
 
@@ -92,19 +95,17 @@ public class MetadataGroupTest {
         // fourth case, not more then one field is allowed, adding a new one throws exception
         Corporate c = new Corporate(prefs.getMetadataTypeByName("PublisherCorporate"));
         c.setMainName("fixture");
-        assertEquals(1, fixture.getCorporateByType("PublisherCorporate").size());
         fixture.addCorporate(c);
+        assertEquals(1, fixture.getCorporateByType("PublisherCorporate").size());
+
+        Corporate c2 = new Corporate(prefs.getMetadataTypeByName("PublisherCorporate"));
+        c2.setMainName("fixture");
+        fixture.addCorporate(c2);
     }
 
     @Test
     public void testAddMetadataGroupAllowed() throws Exception {
         MetadataGroup fixture = new MetadataGroup(groupType);
-        Metadata place = new Metadata(prefs.getMetadataTypeByName("PlaceOfPublication"));
-        place.setValue("fixture");
-        assertEquals(1, fixture.getMetadataByType("PlaceOfPublication").size());
-        fixture.addMetadata(place);
-        assertEquals(2, fixture.getMetadataByType("PlaceOfPublication").size());
-
         assertNull(fixture.getAllMetadataGroups());
         MetadataGroup other = new MetadataGroup(prefs.getMetadataGroupTypeByName("LocationGroup"));
         fixture.addMetadataGroup(other);
@@ -114,11 +115,6 @@ public class MetadataGroupTest {
     @Test(expected = MetadataTypeNotAllowedException.class)
     public void testAddMoreMetadataGroupsThenAllowed() throws Exception {
         MetadataGroup fixture = new MetadataGroup(groupType);
-        Metadata place = new Metadata(prefs.getMetadataTypeByName("PlaceOfPublication"));
-        place.setValue("fixture");
-        assertEquals(1, fixture.getMetadataByType("PlaceOfPublication").size());
-        fixture.addMetadata(place);
-        assertEquals(2, fixture.getMetadataByType("PlaceOfPublication").size());
 
         assertNull(fixture.getAllMetadataGroups());
         MetadataGroup other = new MetadataGroup(prefs.getMetadataGroupTypeByName("LocationGroup"));
@@ -132,12 +128,6 @@ public class MetadataGroupTest {
     @Test(expected = MetadataTypeNotAllowedException.class)
     public void testAddMetadataGroupNotAllowed() throws Exception {
         MetadataGroup fixture = new MetadataGroup(groupType);
-        Metadata place = new Metadata(prefs.getMetadataTypeByName("PlaceOfPublication"));
-        place.setValue("fixture");
-        assertEquals(1, fixture.getMetadataByType("PlaceOfPublication").size());
-        fixture.addMetadata(place);
-        assertEquals(2, fixture.getMetadataByType("PlaceOfPublication").size());
-
         assertNull(fixture.getAllMetadataGroups());
         MetadataGroup other = new MetadataGroup(prefs.getMetadataGroupTypeByName("UnusedGroup"));
         fixture.addMetadataGroup(other);
@@ -146,11 +136,6 @@ public class MetadataGroupTest {
     @Test
     public void testRemoveMetadataGroup() throws Exception {
         MetadataGroup fixture = new MetadataGroup(groupType);
-        Metadata place = new Metadata(prefs.getMetadataTypeByName("PlaceOfPublication"));
-        place.setValue("fixture");
-        assertEquals(1, fixture.getMetadataByType("PlaceOfPublication").size());
-        fixture.addMetadata(place);
-        assertEquals(2, fixture.getMetadataByType("PlaceOfPublication").size());
 
         assertNull(fixture.getAllMetadataGroups());
         MetadataGroup other = new MetadataGroup(prefs.getMetadataGroupTypeByName("LocationGroup"));
@@ -164,11 +149,6 @@ public class MetadataGroupTest {
     @Test
     public void testRemoveNonExistingMetadataGroup() throws Exception {
         MetadataGroup fixture = new MetadataGroup(groupType);
-        Metadata place = new Metadata(prefs.getMetadataTypeByName("PlaceOfPublication"));
-        place.setValue("fixture");
-        assertEquals(1, fixture.getMetadataByType("PlaceOfPublication").size());
-        fixture.addMetadata(place);
-        assertEquals(2, fixture.getMetadataByType("PlaceOfPublication").size());
 
         assertNull(fixture.getAllMetadataGroups());
         MetadataGroup other = new MetadataGroup(prefs.getMetadataGroupTypeByName("UnusedGroup"));

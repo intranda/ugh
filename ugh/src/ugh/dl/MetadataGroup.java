@@ -79,20 +79,20 @@ public class MetadataGroup implements Serializable, HoldingElement {
         metadataList = new LinkedList<>();
         personList = new LinkedList<>();
         corporateList = new LinkedList<>();
-        for (MetadataType mdt : metadataGroupType.getMetadataTypeList()) {
-            if (mdt.getIsPerson()) {
-                Person p = new Person(mdt);
-                p.setRole(mdt.getName());
-                addPerson(p);
-            } else if (mdt.isCorporate()) {
-                Corporate c = new Corporate(mdt);
-                c.setRole(mdt.getName());
-                addCorporate(c);
-            } else {
-                Metadata md = new Metadata(mdt);
-                addMetadata(md);
-            }
-        }
+        //        for (MetadataType mdt : metadataGroupType.getAllDefaultDisplayMetadataTypes()) {
+        //            if (mdt.getIsPerson() ) {
+        //                Person p = new Person(mdt);
+        //                p.setRole(mdt.getName());
+        //                addPerson(p);
+        //            } else if (mdt.isCorporate()) {
+        //                Corporate c = new Corporate(mdt);
+        //                c.setRole(mdt.getName());
+        //                addCorporate(c);
+        //            } else {
+        //                Metadata md = new Metadata(mdt);
+        //                addMetadata(md);
+        //            }
+        //        }
 
     }
     //

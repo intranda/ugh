@@ -19,7 +19,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -121,8 +120,8 @@ import ugh.dl.MetadataType;
 import ugh.dl.NamePart;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
-import ugh.dl.Reference;
 import ugh.dl.PrefsType;
+import ugh.dl.Reference;
 import ugh.dl.VirtualFileGroup;
 import ugh.exceptions.DocStructHasNoTypeException;
 import ugh.exceptions.ImportException;
@@ -2175,25 +2174,11 @@ public class MetsMods implements ugh.dl.Fileformat {
                                     valueURI = metadata.getAttributes().getNamedItem("valueURI").getNodeValue();
                                 }
 
-                                List<Metadata> metadataList = metadataGroup.getMetadataByType(metadataName);
-                                boolean isMatched = false;
-                                for (Metadata currentMetadata : metadataList) {
-                                    if (currentMetadata.getValue() == null || currentMetadata.getValue().isEmpty()) {
-                                        currentMetadata.setValue(value);
-                                        if (valueURI != null) {
-                                            currentMetadata.setAutorityFile(authority, authorityURI, valueURI);
-                                        }
-                                        isMatched = true;
-                                        break;
-                                    }
-                                }
-                                if (!isMatched) {
-                                    Metadata md = new Metadata(myPreferences.getMetadataTypeByName(metadataName));
-                                    md.setValue(value);
-                                    metadataGroup.addMetadata(md);
-                                    if (valueURI != null) {
-                                        md.setAutorityFile(authority, authorityURI, valueURI);
-                                    }
+                                Metadata md = new Metadata(myPreferences.getMetadataTypeByName(metadataName));
+                                md.setValue(value);
+                                metadataGroup.addMetadata(md);
+                                if (valueURI != null) {
+                                    md.setAutorityFile(authority, authorityURI, valueURI);
                                 }
                             }
 
@@ -2212,90 +2197,65 @@ public class MetsMods implements ugh.dl.Fileformat {
 
                                 // Create and add person.
                                 if (mdt.getIsPerson()) {
-                                    List<Person> metadataList = new ArrayList<>(metadataGroup.getPersonList());
-                                    for (Person ps : metadataList) {
 
-                                        if (ps.getType().getName().equals(mdt.getName())) {
-                                            if ((ps.getLastname() == null || ps.getLastname().isEmpty())
-                                                    && (ps.getFirstname() == null || ps.getFirstname().isEmpty())) {
+                                    Person ps = new Person(mdt);
+                                    ps.setRole(mdt.getName());
+                                    metadataGroup.addPerson(ps);
 
-                                                ps.setRole(mdt.getName());
+                                    // Iterate over every person's data.
+                                    NodeList personNodelist = metadata.getChildNodes();
+                                    String authorityID = null;
+                                    String authorityURI = null;
+                                    String authortityValue = null;
+                                    for (int k = 0; k < personNodelist.getLength(); k++) {
 
-                                            } else {
-                                                ps = new Person(mdt);
-                                                ps.setRole(mdt.getName());
-                                                metadataGroup.addPerson(ps);
+                                        Node personbagu = personNodelist.item(k);
+                                        if (personbagu.getNodeType() == ELEMENT_NODE) {
+                                            String name = personbagu.getLocalName();
+                                            String value = personbagu.getTextContent();
+
+                                            // Get and set values.
+                                            if (name.equals(GOOBI_PERSON_FIRSTNAME_STRING)) {
+                                                ps.setFirstname(value);
+                                            } else if (name.equals(GOOBI_PERSON_LASTNAME_STRING)) {
+                                                ps.setLastname(value);
+                                            } else if (name.equals(GOOBI_PERSON_AFFILIATION_STRING)) {
+                                                ps.setAffiliation(value);
+                                            } else if (name.equals(GOOBI_PERSON_AUTHORITYID_STRING)) {
+                                                authorityID = value;
+                                            } else if (name.equals(GOOBI_PERSON_AUTHORITYURI_STRING)) {
+                                                authorityURI = value;
+                                            } else if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
+                                                authortityValue = value;
                                             }
-                                            // Iterate over every person's data.
-                                            NodeList personNodelist = metadata.getChildNodes();
-                                            String authorityID = null;
-                                            String authorityURI = null;
-                                            String authortityValue = null;
-                                            for (int k = 0; k < personNodelist.getLength(); k++) {
 
-                                                Node personbagu = personNodelist.item(k);
-                                                if (personbagu.getNodeType() == ELEMENT_NODE) {
-                                                    String name = personbagu.getLocalName();
-                                                    String value = personbagu.getTextContent();
-
-                                                    // Get and set values.
-                                                    if (name.equals(GOOBI_PERSON_FIRSTNAME_STRING)) {
-                                                        ps.setFirstname(value);
-                                                    } else if (name.equals(GOOBI_PERSON_LASTNAME_STRING)) {
-                                                        ps.setLastname(value);
-                                                    } else if (name.equals(GOOBI_PERSON_AFFILIATION_STRING)) {
-                                                        ps.setAffiliation(value);
-                                                    } else if (name.equals(GOOBI_PERSON_AUTHORITYID_STRING)) {
-                                                        authorityID = value;
-                                                    } else if (name.equals(GOOBI_PERSON_AUTHORITYURI_STRING)) {
-                                                        authorityURI = value;
-                                                    } else if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
-                                                        authortityValue = value;
-                                                    }
-
-                                                    else if (name.equals(GOOBI_PERSON_PERSONTYPE_STRING)) {
-                                                        ps.setPersontype(value);
-                                                    } else if (name.equals(GOOBI_PERSON_DISPLAYNAME_STRING)) {
-                                                        ps.setDisplayname(value);
-                                                    } else if (name.equals(GOOBI_PERSON_DATEVALUE_STRING) && StringUtils.isNotBlank(value)) {
-                                                        ps.addNamePart(new NamePart(GOOBI_PERSON_DATEVALUE_STRING, value));
-                                                    } else if (name.equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING)
-                                                            && StringUtils.isNotBlank(value)) {
-                                                        ps.addNamePart(new NamePart(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING, value));
-                                                    } else if (name.equals(GOOBI_PERSON_NAMEIDENTIFIER_STRING)) {
-                                                        ps.addAuthorityUriToMap(personbagu.getAttributes().item(0).getTextContent(), value);
-                                                    }
-
-                                                }
-
+                                            else if (name.equals(GOOBI_PERSON_PERSONTYPE_STRING)) {
+                                                ps.setPersontype(value);
+                                            } else if (name.equals(GOOBI_PERSON_DISPLAYNAME_STRING)) {
+                                                ps.setDisplayname(value);
+                                            } else if (name.equals(GOOBI_PERSON_DATEVALUE_STRING) && StringUtils.isNotBlank(value)) {
+                                                ps.addNamePart(new NamePart(GOOBI_PERSON_DATEVALUE_STRING, value));
+                                            } else if (name.equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING) && StringUtils.isNotBlank(value)) {
+                                                ps.addNamePart(new NamePart(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING, value));
+                                            } else if (name.equals(GOOBI_PERSON_NAMEIDENTIFIER_STRING)) {
+                                                ps.addAuthorityUriToMap(personbagu.getAttributes().item(0).getTextContent(), value);
                                             }
-                                            if (authorityID != null && authorityURI != null && authortityValue != null) {
-                                                ps.setAutorityFile(authorityID, authorityURI, authortityValue);
-                                            }
+
                                         }
+
+                                    }
+                                    if (authorityID != null && authorityURI != null && authortityValue != null) {
+                                        ps.setAutorityFile(authorityID, authorityURI, authortityValue);
                                     }
                                 }
                             }
+
                             // corporate in group
                             else if (metadata.getNodeType() == ELEMENT_NODE && metadata.getAttributes().getNamedItem("type") != null
                                     && metadata.getAttributes().getNamedItem("type").getTextContent().equals("corporate")) {
                                 Corporate corp = parseModsCorporate(metadata);
                                 if (corp != null) {
-
-                                    List<Corporate> metadataList = new ArrayList<>(metadataGroup.getCorporateList());
-                                    for (Corporate corpOld : metadataList) {
-
-                                        if (corpOld.getType().getName().equals(corp.getType().getName())) {
-                                            if (StringUtils.isBlank(corpOld.getMainName())) {
-                                                corpOld.setMainName(corp.getMainName());
-                                                corpOld.setSubNames(corp.getSubNames());
-                                                corpOld.setPartName(corp.getPartName());
-                                                corpOld.setAutorityFile(corp.getAuthorityID(), corp.getAuthorityURI(), corp.getAuthorityValue());
-                                            } else {
-                                                metadataList.add(corp);
-                                            }
-                                        }
-                                    }
+                                    metadataGroup.addCorporate(corp);
                                 }
                             }
                         }
