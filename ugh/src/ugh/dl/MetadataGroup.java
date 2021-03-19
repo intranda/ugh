@@ -691,12 +691,14 @@ public class MetadataGroup implements Serializable, HoldingElement {
             maxnumberallowed = "*";
             prefsMdType = inMdType;
         } else {
-            maxnumberallowed = metadataGroupType.getAllAllowedGroupTypeTypes().get(inMdType.getName());
-            if (maxnumberallowed== null) {
+            AllowedMetadataGroupType otherType = metadataGroupType.getAllowedMetadataGroupTypeByName(inMdType.getName());
+            if (otherType == null) {
                 // group type is not allowed
                 MetadataTypeNotAllowedException e = new MetadataTypeNotAllowedException(inMdType, getType());
                 LOGGER.error(e.getMessage());
                 throw e;
+            } else {
+                maxnumberallowed = otherType.getNumAllowed();
             }
         }
 
@@ -775,7 +777,14 @@ public class MetadataGroup implements Serializable, HoldingElement {
         typesavailable = countMDofthisType(inMdType.getName());
 
         // How many types must be at least available.
-        maxnumbersallowed = metadataGroupType.getAllAllowedGroupTypeTypes().get(inMdType.getName());
+        AllowedMetadataGroupType type = metadataGroupType.getAllowedMetadataGroupTypeByName(inMdType.getName());
+        if (type == null) {
+            // type is not allowed
+            // TODO throw exception?
+            return false;
+
+        }
+        maxnumbersallowed = type.getNumAllowed();
 
         if (!force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
             // There must be at least one.
@@ -872,5 +881,65 @@ public class MetadataGroup implements Serializable, HoldingElement {
         }
 
         return resultList;
+    }
+
+    public List<MetadataGroup> getAllMetadataGroupsByName(String inType) {
+
+        List<MetadataGroup> resultList = new LinkedList<>();
+
+        // Check all metadata.
+        if (inType != null && this.allMetadataGroups != null) {
+            for (MetadataGroup md : this.allMetadataGroups) {
+                if (md.getType() != null && md.getType().getName().equals(inType)) {
+                    resultList.add(md);
+                }
+            }
+        }
+
+        return resultList;
+    }
+
+    public List<String> getAddableMetadataGroupTypes() {
+
+        // If e.g. the topstruct has no Metadata, or something...
+        if (metadataGroupType == null) {
+            return null;
+        }
+
+        // Get all Metadatatypes for my DocStructType.
+        List<String> addableMetadata = new LinkedList<>();
+        List<AllowedMetadataGroupType> allTypes = metadataGroupType.getAllAllowedGroupTypeTypes();
+
+        // Get all metadata types which are known, iterate over them and check,
+        // if they are still addable.
+        for (AllowedMetadataGroupType mdt : allTypes) {
+
+            // Metadata beginning with the HIDDEN_METADATA_CHAR are internal
+            // metadata are not user addable.
+            if (!mdt.isHidden()) {
+                String maxnumber = mdt.getNumAllowed();
+
+                // Metadata can only be available once; so we have to check if
+                // it is already available.
+                if (maxnumber.equals("1m") || maxnumber.equals("1o")) {
+                    // Check metadata here only.
+                    List<? extends MetadataGroup> availableMD = this.getAllMetadataGroupsByName(mdt.getGroupName());
+
+                    if (availableMD.size() < 1) {
+                        // Metadata is NOT available; we are allowed to add it.
+                        addableMetadata.add(mdt.getGroupName());
+                    }
+                } else {
+                    // We can add as many metadata as we want (+ or *).
+                    addableMetadata.add(mdt.getGroupName());
+                }
+            }
+        }
+
+        if (addableMetadata == null || addableMetadata.isEmpty()) {
+            return null;
+        }
+
+        return addableMetadata;
     }
 }

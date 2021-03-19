@@ -5,6 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -173,6 +175,22 @@ public class MetadataGroupTest {
 
         assertFalse(fixture.removeMetadataGroup(other, false));
         assertNull(fixture.getAllMetadataGroups());
+    }
+
+    @Test
+    public void testGetAddableMetadataGroupTypes() throws Exception {
+        MetadataGroup fixture = new MetadataGroup(groupType);
+        List<String> availableGroups = fixture.getAddableMetadataGroupTypes();
+        assertEquals("LocationGroup", availableGroups.get(0));
+
+        assertNull(fixture.getAllMetadataGroups());
+        MetadataGroup other = new MetadataGroup(prefs.getMetadataGroupTypeByName("LocationGroup"));
+        fixture.addMetadataGroup(other);
+        assertEquals(1, fixture.getAllMetadataGroups().size());
+
+        availableGroups = fixture.getAddableMetadataGroupTypes();
+        assertNull(availableGroups);
+
     }
 
 }

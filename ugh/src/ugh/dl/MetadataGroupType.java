@@ -52,7 +52,7 @@ public class MetadataGroupType implements Serializable, PrefsType {
     // Hash containing all languages.
     private HashMap<String, String> allLanguages;
 
-    protected Map<String, String> allGroups = new HashMap<>();
+    protected List<AllowedMetadataGroupType> allGroups = new LinkedList<>();
 
     public List<MetadataType> getMetadataTypeList() {
         List<MetadataType> out = new LinkedList<>();
@@ -536,20 +536,43 @@ public class MetadataGroupType implements Serializable, PrefsType {
         return languageName;
     }
 
-    public void addGroupTypeAsChild(String groupName, String occurrence) {
-        // Check if the DocStruct is not existing yet, and add it then.
-        allGroups.put(groupName, occurrence);
+    public void addGroupTypeAsChild(String groupName, String occurrence, boolean defaultDisplay, boolean hidden) {
+        for (AllowedMetadataGroupType other : allGroups) {
+            if (other.getGroupName().equals(groupName)) {
+                // new element is already in list
+                return;
+            }
+        }
+        AllowedMetadataGroupType amgt = new AllowedMetadataGroupType(groupName, occurrence, defaultDisplay, hidden);
+
+        allGroups.add(amgt);
 
     }
 
-
-    public void removeGroupTypeAsChild(String inString) {
-
-        allGroups.remove(inString);
-
+    public void removeGroupTypeAsChild(String groupName) {
+        AllowedMetadataGroupType toDelete = null;
+        for (AllowedMetadataGroupType other : allGroups) {
+            if (other.getGroupName().equals(groupName)) {
+                toDelete = other;
+                break;
+            }
+        }
+        if (toDelete != null) {
+            allGroups.remove(toDelete);
+        }
     }
 
-    public Map<String, String> getAllAllowedGroupTypeTypes() {
+    public List<AllowedMetadataGroupType> getAllAllowedGroupTypeTypes() {
         return allGroups;
     }
+
+    public AllowedMetadataGroupType getAllowedMetadataGroupTypeByName(String groupName) {
+        for (AllowedMetadataGroupType grp : allGroups) {
+            if (grp.getGroupName().equals(groupName)) {
+                return grp;
+            }
+        }
+        return null;
+    }
+
 }

@@ -799,6 +799,8 @@ public class Prefs implements Serializable {
                 } else if (currentNode.getNodeName().equals("group")) {
                     attributeNodelist = currentNode.getAttributes();
                     Node    attribNode = attributeNodelist.getNamedItem("num");
+                    Node defaultNode = attributeNodelist.getNamedItem("DefaultDisplay");
+
                     if (attribNode == null) {
                         mdtypeNum = "1";
                         LOGGER.warn("Num attribute not set for <group> element!");
@@ -806,6 +808,11 @@ public class Prefs implements Serializable {
                         // Get max. number: 1,+,*
                         mdtypeNum = attribNode.getNodeValue();
                     }
+                    boolean defaultValue= false;
+                    if (defaultNode != null &&  defaultNode.getNodeValue().equals("true")) {
+                        defaultValue=true;
+                    }
+
                     String groupName =null;
                     NodeList textnodes = currentNode.getChildNodes();
                     if (textnodes != null) {
@@ -819,7 +826,8 @@ public class Prefs implements Serializable {
                         }
                         groupName = textnode.getNodeValue();
                     }
-                    currenGroup.addGroupTypeAsChild(groupName, mdtypeNum);
+                    boolean invisibleValue = groupName.startsWith("_");
+                    currenGroup.addGroupTypeAsChild(groupName, mdtypeNum, defaultValue, invisibleValue);
 
 
                 } else if (currentNode.getNodeName().equals("language")) {
