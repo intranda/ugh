@@ -106,7 +106,7 @@ public class MetadataGroupTest {
     @Test
     public void testAddMetadataGroupAllowed() throws Exception {
         MetadataGroup fixture = new MetadataGroup(groupType);
-        assertNull(fixture.getAllMetadataGroups());
+        assertEquals(0, fixture.getAllMetadataGroups().size());
         MetadataGroup other = new MetadataGroup(prefs.getMetadataGroupTypeByName("LocationGroup"));
         fixture.addMetadataGroup(other);
         assertEquals(1, fixture.getAllMetadataGroups().size());
@@ -116,7 +116,7 @@ public class MetadataGroupTest {
     public void testAddMoreMetadataGroupsThenAllowed() throws Exception {
         MetadataGroup fixture = new MetadataGroup(groupType);
 
-        assertNull(fixture.getAllMetadataGroups());
+        assertEquals(0, fixture.getAllMetadataGroups().size());
         MetadataGroup other = new MetadataGroup(prefs.getMetadataGroupTypeByName("LocationGroup"));
         fixture.addMetadataGroup(other);
         assertEquals(1, fixture.getAllMetadataGroups().size());
@@ -128,7 +128,7 @@ public class MetadataGroupTest {
     @Test(expected = MetadataTypeNotAllowedException.class)
     public void testAddMetadataGroupNotAllowed() throws Exception {
         MetadataGroup fixture = new MetadataGroup(groupType);
-        assertNull(fixture.getAllMetadataGroups());
+        assertEquals(0, fixture.getAllMetadataGroups().size());
         MetadataGroup other = new MetadataGroup(prefs.getMetadataGroupTypeByName("UnusedGroup"));
         fixture.addMetadataGroup(other);
     }
@@ -137,24 +137,24 @@ public class MetadataGroupTest {
     public void testRemoveMetadataGroup() throws Exception {
         MetadataGroup fixture = new MetadataGroup(groupType);
 
-        assertNull(fixture.getAllMetadataGroups());
+        assertEquals(0, fixture.getAllMetadataGroups().size());
         MetadataGroup other = new MetadataGroup(prefs.getMetadataGroupTypeByName("LocationGroup"));
         fixture.addMetadataGroup(other);
         assertEquals(1, fixture.getAllMetadataGroups().size());
 
         fixture.removeMetadataGroup(other, false);
-        assertNull(fixture.getAllMetadataGroups());
+        assertEquals(0, fixture.getAllMetadataGroups().size());
     }
 
     @Test
     public void testRemoveNonExistingMetadataGroup() throws Exception {
         MetadataGroup fixture = new MetadataGroup(groupType);
 
-        assertNull(fixture.getAllMetadataGroups());
+        assertEquals(0, fixture.getAllMetadataGroups().size());
         MetadataGroup other = new MetadataGroup(prefs.getMetadataGroupTypeByName("UnusedGroup"));
 
         assertFalse(fixture.removeMetadataGroup(other, false));
-        assertNull(fixture.getAllMetadataGroups());
+        assertEquals(0, fixture.getAllMetadataGroups().size());
     }
 
     @Test
@@ -163,7 +163,7 @@ public class MetadataGroupTest {
         List<String> availableGroups = fixture.getAddableMetadataGroupTypes();
         assertEquals("LocationGroup", availableGroups.get(0));
 
-        assertNull(fixture.getAllMetadataGroups());
+        assertEquals(0, fixture.getAllMetadataGroups().size());
         MetadataGroup other = new MetadataGroup(prefs.getMetadataGroupTypeByName("LocationGroup"));
         fixture.addMetadataGroup(other);
         assertEquals(1, fixture.getAllMetadataGroups().size());
