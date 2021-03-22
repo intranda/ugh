@@ -68,7 +68,6 @@ public class GroupMetsExportTest {
         metadata2.setValue("666");
         publisherGroup.addMetadata(metadata2);
 
-
         Person person = new Person(prefs.getMetadataTypeByName("PublisherPerson"));
         person.setFirstname("Firstname");
         person.setLastname("Lastname");
@@ -77,7 +76,7 @@ public class GroupMetsExportTest {
 
         Corporate corp = new Corporate(prefs.getMetadataTypeByName("PublisherCorporate"));
         corp.setMainName("Main name");
-        corp.addSubName(new NamePart("subname","Sub name"));
+        corp.addSubName(new NamePart("subname", "Sub name"));
         corp.setPartName("Part name");
         corp.setAutorityFile("1234", "url", "http://example.com/1234");
         publisherGroup.addCorporate(corp);
@@ -98,7 +97,7 @@ public class GroupMetsExportTest {
         // group is still here
         MetadataGroup mdg = mono.getAllMetadataGroups().get(0);
 
-        for (Metadata md :mdg.getMetadataList()) {
+        for (Metadata md : mdg.getMetadataList()) {
             if (md.getType().getName().equals("PlaceOfPublication")) {
                 assertEquals("Place", md.getValue());
             } else {
@@ -144,7 +143,7 @@ public class GroupMetsExportTest {
         Element publisherCorporate = publisher.get(1).getChild("name", modsNamespace);
 
         assertEquals("Place", placeTerm.getText());
-        assertEquals("http://example.com/111",placeTerm.getAttributeValue("valueURI"));
+        assertEquals("http://example.com/111", placeTerm.getAttributeValue("valueURI"));
         assertEquals("666", dateIssued.getValue());
 
         assertEquals("personal", publisherPerson.getAttributeValue("type"));
@@ -165,7 +164,6 @@ public class GroupMetsExportTest {
 
     }
 
-
     @Test
     public void testGroupInGroup() throws Exception {
 
@@ -180,15 +178,12 @@ public class GroupMetsExportTest {
         metadata2.setValue("666");
         publisherGroup.addMetadata(metadata2);
         MetadataGroup other = new MetadataGroup(prefs.getMetadataGroupTypeByName("LocationGroup"));
-        Metadata city = new Metadata (prefs.getMetadataTypeByName("City"));
-        city.setValue("place");
+        Metadata city = new Metadata(prefs.getMetadataTypeByName("City"));
+        city.setValue("city");
         other.addMetadata(city);
         publisherGroup.addMetadataGroup(other);
 
-
         fileformat.getDigitalDocument().getLogicalDocStruct().addMetadataGroup(publisherGroup);
-
-
 
         Path metadataFile = Paths.get(exportFolder.toString(), "meta.xml");
         fileformat.write(metadataFile.toString());
@@ -207,9 +202,7 @@ public class GroupMetsExportTest {
 
         assertEquals("LocationGroup", mdg2.getType().getName());
         assertEquals("City", mdg2.getMetadataList().get(0).getType().getName());
-        assertEquals("place", mdg2.getMetadataList().get(0).getValue());
-
-
+        assertEquals("city", mdg2.getMetadataList().get(0).getValue());
 
         // export as external format
         MetsModsImportExport metsModsExport = new MetsModsImportExport(prefs);
@@ -232,17 +225,16 @@ public class GroupMetsExportTest {
         // group elements are still here
         Element originInfo = originInfoList.get(1);
 
-        Element placeTerm = originInfo.getChild("place", modsNamespace).getChild("placeTerm", modsNamespace);
+        Element placeTerm = originInfo.getChildren("place", modsNamespace).get(0).getChild("placeTerm", modsNamespace);
         Element dateIssued = originInfo.getChild("dateIssued", modsNamespace);
 
         assertEquals("Place", placeTerm.getText());
-        assertEquals("http://example.com/111",placeTerm.getAttributeValue("valueURI"));
+        assertEquals("http://example.com/111", placeTerm.getAttributeValue("valueURI"));
         assertEquals("666", dateIssued.getValue());
 
-        // TODO exportmapping
-
+        Element subGroupPlaceTerm = originInfo.getChildren("place", modsNamespace).get(1).getChild("placeTerm", modsNamespace);
+        assertEquals("city", subGroupPlaceTerm.getValue());
 
     }
-
 
 }

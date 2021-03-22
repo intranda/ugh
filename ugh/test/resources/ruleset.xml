@@ -7261,6 +7261,15 @@
           <PartNameXPath>./mods:namePart</PartNameXPath>
         </Corporate>
       </Group>
+            <Group>
+        <InternalName>LocationGroup</InternalName>
+        <!--  absolute path based on mets:xmlData starts with /, relative path based on the parent group element starts with "."  -->
+        <WriteXPath>./mods:place</WriteXPath>
+        <Metadata>
+          <InternalName>City</InternalName>
+          <WriteXPath>#mods:placeTerm[@type='text']</WriteXPath>
+        </Metadata>
+      </Group>
       <!-- test metadata end -->
 
       <!-- Subjects start -->

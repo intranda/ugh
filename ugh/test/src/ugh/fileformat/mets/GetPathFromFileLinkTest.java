@@ -2,7 +2,6 @@ package ugh.fileformat.mets;
 
 import static org.junit.Assert.assertEquals;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.After;
@@ -25,7 +24,7 @@ public class GetPathFromFileLinkTest {
             "file:///C:/Users/steffen/Desktop/g2g/goobi/../viewer/media/212/00000001.jpg",
             "C:/Users/steffen/Desktop/g2g/goobi/../viewer/media/212/00000001.jpg"
     };
-    
+
     @Before
     public void setUp() throws Exception {
     }

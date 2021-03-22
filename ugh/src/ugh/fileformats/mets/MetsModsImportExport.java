@@ -1730,6 +1730,11 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
     protected void writeSingleModsGroup(MatchingMetadataObject mmo, MetadataGroup theGroup, Node theStartingNode, Document theDocument)
             throws PreferencesException {
         Node createdNode = null;
+        // TODO
+        //        "nothing"
+        //        "."
+        //        "/"
+        // "./@attribute"
         if (mmo.getWriteXPath().equals("./mods:mods")) {
             createdNode = theStartingNode;
         } else {
@@ -1755,6 +1760,24 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 if (c.getType().getName().equals(metadataName)) {
                     Map<String, String> xqueryMap = xpathMap.get(metadataName);
                     writeSingleGroupCorporate(c, xqueryMap, createdNode, theDocument);
+                }
+            }
+        }
+        for (MetadataGroup mg : theGroup.getAllMetadataGroups()) {
+            // find correct mmo
+            for (MatchingMetadataObject mm : this.modsNamesMD) {
+                if (mm.getInternalName().equals(mg.getType().getName())) {
+                    String groupPath = mm.getWriteXPath();
+
+                    if (groupPath.isEmpty()) {
+                        writeSingleModsGroup(mm, mg, createdNode, theDocument);
+                    } else if (groupPath.startsWith(".")) {
+                        writeSingleModsGroup(mm, mg, createdNode, theDocument);
+                    } else if (groupPath.startsWith("/")) {
+                        writeSingleModsGroup(mm, mg, theStartingNode, theDocument);
+                    }
+
+
                 }
             }
 
