@@ -3977,7 +3977,9 @@ public class MetsMods implements ugh.dl.Fileformat {
                 if (element.contains(":")) {
                     // It has, so we don't have to add the namespace.
                     currentPath += "/" + element;
-                } else {
+                } else if (element.startsWith("@")) {
+                    currentPath +=   "/" + element;
+                }else {
                     // Add the mods namespace.
                     currentPath += "/" + this.modsNamespacePrefix + element;
                 }

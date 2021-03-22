@@ -1730,13 +1730,11 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
     protected void writeSingleModsGroup(MatchingMetadataObject mmo, MetadataGroup theGroup, Node theStartingNode, Document theDocument)
             throws PreferencesException {
         Node createdNode = null;
-        // TODO
-        //        "nothing"
-        //        "."
-        //        "/"
-        // "./@attribute"
-        if (mmo.getWriteXPath().equals("./mods:mods")) {
+        String xpath = mmo.getWriteXPath();
+        if (xpath.equals("./mods:mods") || xpath.equals("./") || xpath.equals(".") || xpath.equals("/")) {
             createdNode = theStartingNode;
+        } else if (xpath.startsWith("./@") || xpath.startsWith("@")) {
+            createdNode = createNode(mmo.getWriteXPath(), theStartingNode, theDocument, false);
         } else {
             createdNode = createNode(mmo.getWriteXPath(), theStartingNode, theDocument, true);
         }
@@ -1777,7 +1775,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                         writeSingleModsGroup(mm, mg, theStartingNode, theDocument);
                     }
 
-
                 }
             }
 
@@ -1787,9 +1784,15 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
     @Override
     public void writeSingleModsMetadata(String theXQuery, Metadata theMetadata, Node theStartingNode, Document theDocument)
             throws PreferencesException {
+        Node createdNode = null;
+        if (theXQuery.equals(".")) {
+            createdNode = theStartingNode;
+        } else if (theXQuery.startsWith("@") || theXQuery.startsWith("./@")) {
+            createdNode = createNode(theXQuery, theStartingNode, theDocument, false);
+        } else {
 
-        Node createdNode = createNode(theXQuery, theStartingNode, theDocument, true);
-
+            createdNode = createNode(theXQuery, theStartingNode, theDocument, true);
+        }
         if (createdNode == null) {
             String message = "DOM Node could not be created for metadata '" + theMetadata.getType().getName() + "'! XQuery was '" + theXQuery + "'";
             LOGGER.error(message);
