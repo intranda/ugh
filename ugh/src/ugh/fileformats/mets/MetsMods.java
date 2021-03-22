@@ -2137,141 +2137,26 @@ public class MetsMods implements ugh.dl.Fileformat {
                 if (metabagu.getNodeType() == ELEMENT_NODE && metabagu.getAttributes().getNamedItem("anchorId") == null
                         && metabagu.getAttributes().getNamedItem("type") != null
                         && metabagu.getAttributes().getNamedItem("type").getTextContent().equals("group")) {
-                    String groupName = metabagu.getAttributes().item(0).getTextContent();
-                    // Check if group exists in prefs.
-                    MetadataGroupType mgt = this.myPreferences.getMetadataGroupTypeByName(groupName);
+                    MetadataGroup metadataGroup = readMetadataGroup(metabagu);
+                    if (metadataGroup != null) {
+                        try {
 
-                    if (mgt == null) {
-                        // No valid metadata type found.
-                        String message = "Can't find internal Metadata with name '" + groupName + "' for DocStruct '" + inStruct.getType().getName()
-                                + "' in prefs";
-                        LOGGER.error(message);
-                        throw new ImportException(message);
-                    }
-                    // Create and add group.
-                    try {
-                        MetadataGroup metadataGroup = new MetadataGroup(mgt);
+                            LOGGER.debug("Added metadataGroup '" + metadataGroup.getType().getName() + "' to DocStruct '"
+                                    + inStruct.getType().getName() + "'");
 
-                        inStruct.addMetadataGroup(metadataGroup);
+                            inStruct.addMetadataGroup(metadataGroup);
 
-                        NodeList metadataNodelist = metabagu.getChildNodes();
-                        for (int j = 0; j < metadataNodelist.getLength(); j++) {
-                            Node metadata = metadataNodelist.item(j);
+                        } catch (DocStructHasNoTypeException e) {
+                            String message = "DocumentStructure for which metadata should be added, has no type!";
+                            LOGGER.error(message, e);
+                            throw new ImportException(message, e);
 
-                            // metadata
-                            if (metadata.getNodeType() == ELEMENT_NODE && metadata.getAttributes().getNamedItem("type") == null) {
-
-                                String metadataName = metadata.getAttributes().getNamedItem("name").getTextContent();
-                                String value = metadata.getTextContent();
-                                String authority = null;
-                                String authorityURI = null;
-                                String valueURI = null;
-                                if (metadata.getAttributes().getNamedItem("authority") != null
-                                        && metadata.getAttributes().getNamedItem("authorityURI") != null
-                                        && metadata.getAttributes().getNamedItem("valueURI") != null) {
-                                    authority = metadata.getAttributes().getNamedItem("authority").getNodeValue();
-                                    authorityURI = metadata.getAttributes().getNamedItem("authorityURI").getNodeValue();
-                                    valueURI = metadata.getAttributes().getNamedItem("valueURI").getNodeValue();
-                                }
-
-                                Metadata md = new Metadata(myPreferences.getMetadataTypeByName(metadataName));
-                                md.setValue(value);
-                                metadataGroup.addMetadata(md);
-                                if (valueURI != null) {
-                                    md.setAutorityFile(authority, authorityURI, valueURI);
-                                }
-                            }
-
-                            // person
-                            else if (metadata.getNodeType() == ELEMENT_NODE && metadata.getAttributes().getNamedItem("type") != null
-                                    && metadata.getAttributes().getNamedItem("type").getTextContent().equals("person")) {
-
-                                String role = metadata.getAttributes().item(0).getTextContent();
-                                MetadataType mdt = this.myPreferences.getMetadataTypeByName(role);
-                                if (mdt == null) {
-                                    // No valid metadata type found.
-                                    String message = "Can't find person with name '" + role + "' in prefs";
-                                    LOGGER.error(message);
-                                    throw new ImportException(message);
-                                }
-
-                                // Create and add person.
-                                if (mdt.getIsPerson()) {
-
-                                    Person ps = new Person(mdt);
-                                    ps.setRole(mdt.getName());
-                                    metadataGroup.addPerson(ps);
-
-                                    // Iterate over every person's data.
-                                    NodeList personNodelist = metadata.getChildNodes();
-                                    String authorityID = null;
-                                    String authorityURI = null;
-                                    String authortityValue = null;
-                                    for (int k = 0; k < personNodelist.getLength(); k++) {
-
-                                        Node personbagu = personNodelist.item(k);
-                                        if (personbagu.getNodeType() == ELEMENT_NODE) {
-                                            String name = personbagu.getLocalName();
-                                            String value = personbagu.getTextContent();
-
-                                            // Get and set values.
-                                            if (name.equals(GOOBI_PERSON_FIRSTNAME_STRING)) {
-                                                ps.setFirstname(value);
-                                            } else if (name.equals(GOOBI_PERSON_LASTNAME_STRING)) {
-                                                ps.setLastname(value);
-                                            } else if (name.equals(GOOBI_PERSON_AFFILIATION_STRING)) {
-                                                ps.setAffiliation(value);
-                                            } else if (name.equals(GOOBI_PERSON_AUTHORITYID_STRING)) {
-                                                authorityID = value;
-                                            } else if (name.equals(GOOBI_PERSON_AUTHORITYURI_STRING)) {
-                                                authorityURI = value;
-                                            } else if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
-                                                authortityValue = value;
-                                            }
-
-                                            else if (name.equals(GOOBI_PERSON_PERSONTYPE_STRING)) {
-                                                ps.setPersontype(value);
-                                            } else if (name.equals(GOOBI_PERSON_DISPLAYNAME_STRING)) {
-                                                ps.setDisplayname(value);
-                                            } else if (name.equals(GOOBI_PERSON_DATEVALUE_STRING) && StringUtils.isNotBlank(value)) {
-                                                ps.addNamePart(new NamePart(GOOBI_PERSON_DATEVALUE_STRING, value));
-                                            } else if (name.equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING) && StringUtils.isNotBlank(value)) {
-                                                ps.addNamePart(new NamePart(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING, value));
-                                            } else if (name.equals(GOOBI_PERSON_NAMEIDENTIFIER_STRING)) {
-                                                ps.addAuthorityUriToMap(personbagu.getAttributes().item(0).getTextContent(), value);
-                                            }
-
-                                        }
-
-                                    }
-                                    if (authorityID != null && authorityURI != null && authortityValue != null) {
-                                        ps.setAutorityFile(authorityID, authorityURI, authortityValue);
-                                    }
-                                }
-                            }
-
-                            // corporate in group
-                            else if (metadata.getNodeType() == ELEMENT_NODE && metadata.getAttributes().getNamedItem("type") != null
-                                    && metadata.getAttributes().getNamedItem("type").getTextContent().equals("corporate")) {
-                                Corporate corp = parseModsCorporate(metadata);
-                                if (corp != null) {
-                                    metadataGroup.addCorporate(corp);
-                                }
-                            }
+                        } catch (MetadataTypeNotAllowedException e) {
+                            String message = "MetadataGroup '" + metadataGroup.getType().getName() + "' is not allowed as a child for '"
+                                    + inStruct.getType().getName() + "' during MODS import!";
+                            LOGGER.error(message, e);
+                            throw new ImportException(message, e);
                         }
-
-                        LOGGER.debug("Added metadataGroup '" + mgt.getName() + "' to DocStruct '" + inStruct.getType().getName() + "'");
-
-                    } catch (DocStructHasNoTypeException e) {
-                        String message = "DocumentStructure for which metadata should be added, has no type!";
-                        LOGGER.error(message, e);
-                        throw new ImportException(message, e);
-
-                    } catch (MetadataTypeNotAllowedException e) {
-                        String message = "MetadataGroup '" + mgt.getName() + "' is not allowed as a child for '" + inStruct.getType().getName()
-                                + "' during MODS import!";
-                        LOGGER.error(message, e);
-                        throw new ImportException(message, e);
                     }
                 }
 
@@ -2314,6 +2199,140 @@ public class MetsMods implements ugh.dl.Fileformat {
                 }
             }
         }
+    }
+
+    private MetadataGroup readMetadataGroup(Node metabagu) throws ReadException {
+        String groupName = metabagu.getAttributes().item(0).getTextContent();
+        // Check if group exists in prefs.
+        MetadataGroupType mgt = this.myPreferences.getMetadataGroupTypeByName(groupName);
+
+        if (mgt == null) {
+            // No valid metadata type found.
+            String message = "Can't find internal Metadata with name '" + groupName + " in prefs";
+            LOGGER.error(message);
+            throw new ImportException(message);
+        }
+        // Create and add group.
+        try {
+            MetadataGroup metadataGroup = new MetadataGroup(mgt);
+
+            NodeList metadataNodelist = metabagu.getChildNodes();
+            for (int j = 0; j < metadataNodelist.getLength(); j++) {
+                Node metadata = metadataNodelist.item(j);
+
+                // metadata
+                if (metadata.getNodeType() == ELEMENT_NODE && metadata.getAttributes().getNamedItem("type") == null) {
+
+                    String metadataName = metadata.getAttributes().getNamedItem("name").getTextContent();
+                    String value = metadata.getTextContent();
+                    String authority = null;
+                    String authorityURI = null;
+                    String valueURI = null;
+                    if (metadata.getAttributes().getNamedItem("authority") != null && metadata.getAttributes().getNamedItem("authorityURI") != null
+                            && metadata.getAttributes().getNamedItem("valueURI") != null) {
+                        authority = metadata.getAttributes().getNamedItem("authority").getNodeValue();
+                        authorityURI = metadata.getAttributes().getNamedItem("authorityURI").getNodeValue();
+                        valueURI = metadata.getAttributes().getNamedItem("valueURI").getNodeValue();
+                    }
+
+                    Metadata md = new Metadata(myPreferences.getMetadataTypeByName(metadataName));
+                    md.setValue(value);
+                    metadataGroup.addMetadata(md);
+                    if (valueURI != null) {
+                        md.setAutorityFile(authority, authorityURI, valueURI);
+                    }
+                }
+
+                // person
+                else if (metadata.getNodeType() == ELEMENT_NODE && metadata.getAttributes().getNamedItem("type") != null
+                        && metadata.getAttributes().getNamedItem("type").getTextContent().equals("person")) {
+
+                    String role = metadata.getAttributes().item(0).getTextContent();
+                    MetadataType mdt = this.myPreferences.getMetadataTypeByName(role);
+                    if (mdt == null) {
+                        // No valid metadata type found.
+                        String message = "Can't find person with name '" + role + "' in prefs";
+                        LOGGER.error(message);
+                        throw new ImportException(message);
+                    }
+
+                    // Create and add person.
+                    if (mdt.getIsPerson()) {
+
+                        Person ps = new Person(mdt);
+                        ps.setRole(mdt.getName());
+                        metadataGroup.addPerson(ps);
+
+                        // Iterate over every person's data.
+                        NodeList personNodelist = metadata.getChildNodes();
+                        String authorityID = null;
+                        String authorityURI = null;
+                        String authortityValue = null;
+                        for (int k = 0; k < personNodelist.getLength(); k++) {
+
+                            Node personbagu = personNodelist.item(k);
+                            if (personbagu.getNodeType() == ELEMENT_NODE) {
+                                String name = personbagu.getLocalName();
+                                String value = personbagu.getTextContent();
+
+                                // Get and set values.
+                                if (name.equals(GOOBI_PERSON_FIRSTNAME_STRING)) {
+                                    ps.setFirstname(value);
+                                } else if (name.equals(GOOBI_PERSON_LASTNAME_STRING)) {
+                                    ps.setLastname(value);
+                                } else if (name.equals(GOOBI_PERSON_AFFILIATION_STRING)) {
+                                    ps.setAffiliation(value);
+                                } else if (name.equals(GOOBI_PERSON_AUTHORITYID_STRING)) {
+                                    authorityID = value;
+                                } else if (name.equals(GOOBI_PERSON_AUTHORITYURI_STRING)) {
+                                    authorityURI = value;
+                                } else if (name.equals(GOOBI_PERSON_AUTHORITYVALUE_STRING)) {
+                                    authortityValue = value;
+                                }
+
+                                else if (name.equals(GOOBI_PERSON_PERSONTYPE_STRING)) {
+                                    ps.setPersontype(value);
+                                } else if (name.equals(GOOBI_PERSON_DISPLAYNAME_STRING)) {
+                                    ps.setDisplayname(value);
+                                } else if (name.equals(GOOBI_PERSON_DATEVALUE_STRING) && StringUtils.isNotBlank(value)) {
+                                    ps.addNamePart(new NamePart(GOOBI_PERSON_DATEVALUE_STRING, value));
+                                } else if (name.equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING) && StringUtils.isNotBlank(value)) {
+                                    ps.addNamePart(new NamePart(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING, value));
+                                } else if (name.equals(GOOBI_PERSON_NAMEIDENTIFIER_STRING)) {
+                                    ps.addAuthorityUriToMap(personbagu.getAttributes().item(0).getTextContent(), value);
+                                }
+
+                            }
+
+                        }
+                        if (authorityID != null && authorityURI != null && authortityValue != null) {
+                            ps.setAutorityFile(authorityID, authorityURI, authortityValue);
+                        }
+                    }
+                }
+
+                // corporate in group
+                else if (metadata.getNodeType() == ELEMENT_NODE && metadata.getAttributes().getNamedItem("type") != null
+                        && metadata.getAttributes().getNamedItem("type").getTextContent().equals("corporate")) {
+                    Corporate corp = parseModsCorporate(metadata);
+                    if (corp != null) {
+                        metadataGroup.addCorporate(corp);
+                    }
+                } else if (metadata.getNodeType() == ELEMENT_NODE && metadata.getAttributes().getNamedItem("type") != null
+                        && metadata.getAttributes().getNamedItem("type").getTextContent().equals("group")) {
+                    // sub group
+                    MetadataGroup subGrp = readMetadataGroup(metadata);
+                    if (subGrp != null) {
+                        metadataGroup.addMetadataGroup(subGrp);
+                    }
+                }
+
+            }
+            return metadataGroup;
+        } catch (MetadataTypeNotAllowedException e) {
+            LOGGER.error(e);
+        }
+        return null;
     }
 
     private Corporate parseModsCorporate(Node metabagu) throws ReadException {
@@ -3850,7 +3869,7 @@ public class MetsMods implements ugh.dl.Fileformat {
      * @throws PreferencesException
      * @return
      **************************************************************************/
-    protected Node createNode(String query, Node startingNode, Document modsDocument) throws PreferencesException {
+    protected Node createNode(String query, Node startingNode, Document modsDocument, boolean checkParent) throws PreferencesException {
 
         Node newNode = null;
         Node parentNode = startingNode;
@@ -3989,10 +4008,18 @@ public class MetsMods implements ugh.dl.Fileformat {
                 // Carry out the query.
                 Object result = null;
                 if (requestingElement) {
-                    result = expr.evaluate(startingNode.getParentNode(), XPathConstants.NODESET);
+                    if (checkParent) {
+                        result = expr.evaluate(startingNode.getParentNode(), XPathConstants.NODESET);
+                    } else {
+                        result = expr.evaluate(startingNode, XPathConstants.NODESET);
+                    }
                 } else {
                     // We are requesting an attribute.
-                    result = expr.evaluate(startingNode.getParentNode(), XPathConstants.BOOLEAN);
+                    if (checkParent) {
+                        result = expr.evaluate(startingNode.getParentNode(), XPathConstants.BOOLEAN);
+                    } else {
+                        result = expr.evaluate(startingNode, XPathConstants.BOOLEAN);
+                    }
                 }
 
                 // We were requesting an element, now we should have a
@@ -4155,7 +4182,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                     if (!content.startsWith("not")) {
                         // Only check (and create) the bracket contents, if it
                         // does not start with a "not".
-                        createNode("./" + content, newNode, modsDocument);
+                        createNode("./" + content, newNode, modsDocument, checkParent);
                     }
                 }
             }
@@ -4556,7 +4583,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                     String xquery = "./" + this.modsNamespacePrefix + ":mods/" + this.modsNamespacePrefix + ":extension/" + this.goobiNamespacePrefix
                             + ":goobi/" + this.goobiNamespacePrefix + ":metadata[@name='" + this.anchorIdentifierMetadataType
                             + "'][@anchorId='true']";
-                    Node createdNode = createNode(xquery, dommodsnode, domDoc);
+                    Node createdNode = createNode(xquery, dommodsnode, domDoc, true);
 
                     if (createdNode != null) {
                         // Node was created successfully, now add
@@ -4595,12 +4622,13 @@ public class MetsMods implements ugh.dl.Fileformat {
                         break;
                     }
                 }
+                // TODO sub groups
                 // only write groups with values
 
                 if (!isEmpty) {
                     String xquery = "./" + this.modsNamespacePrefix + ":mods/" + this.modsNamespacePrefix + ":extension/" + this.goobiNamespacePrefix
                             + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@type='group'][@name='" + m.getType().getName() + "']";
-                    writeSingleModsGroup(xquery, m, dommodsnode, domDoc);
+                    writeSingleModsGroup(xquery, m, dommodsnode, domDoc, true);
                 }
 
             }
@@ -4626,7 +4654,7 @@ public class MetsMods implements ugh.dl.Fileformat {
     protected void writeSingleModsMetadata(String theXQuery, Metadata theMetadata, Node theStartingNode, Document theDocument)
             throws PreferencesException {
 
-        Node createdNode = createNode(theXQuery, theStartingNode, theDocument);
+        Node createdNode = createNode(theXQuery, theStartingNode, theDocument, true);
 
         if (createdNode == null) {
             String message = "DOM Node could not be created for metadata '" + theMetadata.getType().getName() + "'! XQuery was '" + theXQuery + "'";
@@ -4669,7 +4697,7 @@ public class MetsMods implements ugh.dl.Fileformat {
      **************************************************************************/
     protected void writeSingleModsPerson(String theXQuery, Person thePerson, Node theStartingNode, Document theDocument) throws PreferencesException {
 
-        Node createdNode = createNode(theXQuery, theStartingNode, theDocument);
+        Node createdNode = createNode(theXQuery, theStartingNode, theDocument, true);
 
         // Set the displayname of the current person, use
         // "lastname, name" as we were told in the MODS
@@ -4689,21 +4717,21 @@ public class MetsMods implements ugh.dl.Fileformat {
         // Create the subnodes.
         if (thePerson.getLastname() != null && !thePerson.getLastname().equals("")) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_LASTNAME_STRING;
-            Node lastnameNode = createNode(theXQuery, createdNode, theDocument);
+            Node lastnameNode = createNode(theXQuery, createdNode, theDocument, true);
             Node lastnamevalueNode = theDocument.createTextNode(thePerson.getLastname());
             lastnameNode.appendChild(lastnamevalueNode);
             createdNode.appendChild(lastnameNode);
         }
         if (thePerson.getFirstname() != null && !thePerson.getFirstname().equals("")) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_FIRSTNAME_STRING;
-            Node firstnameNode = createNode(theXQuery, createdNode, theDocument);
+            Node firstnameNode = createNode(theXQuery, createdNode, theDocument, true);
             Node firstnamevalueNode = theDocument.createTextNode(thePerson.getFirstname());
             firstnameNode.appendChild(firstnamevalueNode);
             createdNode.appendChild(firstnameNode);
         }
         if (thePerson.getAffiliation() != null && !thePerson.getAffiliation().equals("")) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AFFILIATION_STRING;
-            Node affiliationNode = createNode(theXQuery, createdNode, theDocument);
+            Node affiliationNode = createNode(theXQuery, createdNode, theDocument, true);
             Node affiliationvalueNode = theDocument.createTextNode(thePerson.getAffiliation());
             affiliationNode.appendChild(affiliationvalueNode);
             createdNode.appendChild(affiliationNode);
@@ -4711,21 +4739,21 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         if (thePerson.getAuthorityID() != null && !thePerson.getAuthorityID().equals("")) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYID_STRING;
-            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument);
+            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument, true);
             Node authorityfileidvalueNode = theDocument.createTextNode(thePerson.getAuthorityID());
             authorityfileidNode.appendChild(authorityfileidvalueNode);
             createdNode.appendChild(authorityfileidNode);
         }
         if (thePerson.getAuthorityURI() != null && !thePerson.getAuthorityURI().equals("")) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYURI_STRING;
-            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument);
+            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument, true);
             Node authorityfileidvalueNode = theDocument.createTextNode(thePerson.getAuthorityURI());
             authorityfileidNode.appendChild(authorityfileidvalueNode);
             createdNode.appendChild(authorityfileidNode);
         }
         if (thePerson.getAuthorityValue() != null && !thePerson.getAuthorityValue().equals("")) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYVALUE_STRING;
-            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument);
+            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument, true);
             Node authorityfileidvalueNode = theDocument.createTextNode(thePerson.getAuthorityValue());
             authorityfileidNode.appendChild(authorityfileidvalueNode);
             createdNode.appendChild(authorityfileidNode);
@@ -4733,14 +4761,14 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         if (thePerson.getDisplayname() != null && !thePerson.getDisplayname().equals("")) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_DISPLAYNAME_STRING;
-            Node displaynameNode = createNode(theXQuery, createdNode, theDocument);
+            Node displaynameNode = createNode(theXQuery, createdNode, theDocument, true);
             Node displaynamevalueNode = theDocument.createTextNode(thePerson.getDisplayname());
             displaynameNode.appendChild(displaynamevalueNode);
             createdNode.appendChild(displaynameNode);
         }
         if (thePerson.getPersontype() != null && !thePerson.getPersontype().equals("")) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_PERSONTYPE_STRING;
-            Node persontypeNode = createNode(theXQuery, createdNode, theDocument);
+            Node persontypeNode = createNode(theXQuery, createdNode, theDocument, true);
             Node persontypevalueNode = theDocument.createTextNode(thePerson.getPersontype());
             persontypeNode.appendChild(persontypevalueNode);
             createdNode.appendChild(persontypeNode);
@@ -4751,13 +4779,13 @@ public class MetsMods implements ugh.dl.Fileformat {
             for (NamePart part : thePerson.getAdditionalNameParts()) {
                 if (part.getType().equals(GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING) && StringUtils.isNotBlank(part.getValue())) {
                     theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_TERMSOFADDRESSVALUE_STRING;
-                    Node persontypeNode = createNode(theXQuery, createdNode, theDocument);
+                    Node persontypeNode = createNode(theXQuery, createdNode, theDocument, true);
                     Node persontypevalueNode = theDocument.createTextNode(part.getValue());
                     persontypeNode.appendChild(persontypevalueNode);
                     createdNode.appendChild(persontypeNode);
                 } else if (part.getType().equals(GOOBI_PERSON_DATEVALUE_STRING) && StringUtils.isNotBlank(part.getValue())) {
                     theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_DATEVALUE_STRING;
-                    Node persontypeNode = createNode(theXQuery, createdNode, theDocument);
+                    Node persontypeNode = createNode(theXQuery, createdNode, theDocument, true);
                     Node persontypevalueNode = theDocument.createTextNode(part.getValue());
                     persontypeNode.appendChild(persontypevalueNode);
                     createdNode.appendChild(persontypeNode);
@@ -4768,7 +4796,7 @@ public class MetsMods implements ugh.dl.Fileformat {
         if (!thePerson.getAuthorityUriMap().isEmpty()) {
             for (Entry<String, String> entry : thePerson.getAuthorityUriMap().entrySet()) {
                 theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_NAMEIDENTIFIER_STRING + "[@name=" + entry.getKey() + "]";
-                Node identifierNode = createNode(theXQuery, createdNode, theDocument);
+                Node identifierNode = createNode(theXQuery, createdNode, theDocument, true);
                 Node persontypevalueNode = theDocument.createTextNode(entry.getValue());
                 identifierNode.appendChild(persontypevalueNode);
                 createdNode.appendChild(identifierNode);
@@ -4779,11 +4807,11 @@ public class MetsMods implements ugh.dl.Fileformat {
     protected void writeSingleModsCorporate(String theXQuery, Corporate corp, Node theStartingNode, Document theDocument)
             throws PreferencesException {
 
-        Node createdNode = createNode(theXQuery, theStartingNode, theDocument);
+        Node createdNode = createNode(theXQuery, theStartingNode, theDocument, true);
 
         if (StringUtils.isNotBlank(corp.getMainName())) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_CORPORATE_MAINNAME_STRING;
-            Node node = createNode(theXQuery, createdNode, theDocument);
+            Node node = createNode(theXQuery, createdNode, theDocument, true);
             Node lastnamevalueNode = theDocument.createTextNode(corp.getMainName());
             node.appendChild(lastnamevalueNode);
             createdNode.appendChild(node);
@@ -4791,7 +4819,7 @@ public class MetsMods implements ugh.dl.Fileformat {
         if (corp.getSubNames() != null) {
             for (NamePart subName : corp.getSubNames()) {
                 theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_CORPORATE_SUBNAME_STRING;
-                Node node = createNode(theXQuery, createdNode, theDocument);
+                Node node = createNode(theXQuery, createdNode, theDocument, true);
                 Node lastnamevalueNode = theDocument.createTextNode(subName.getValue());
                 node.appendChild(lastnamevalueNode);
                 createdNode.appendChild(node);
@@ -4800,7 +4828,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         if (StringUtils.isNotBlank(corp.getPartName())) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_CORPORATE_PARTNAME_STRING;
-            Node node = createNode(theXQuery, createdNode, theDocument);
+            Node node = createNode(theXQuery, createdNode, theDocument, true);
             Node lastnamevalueNode = theDocument.createTextNode(corp.getPartName());
             node.appendChild(lastnamevalueNode);
             createdNode.appendChild(node);
@@ -4808,21 +4836,21 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         if (StringUtils.isNotBlank(corp.getAuthorityID())) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYID_STRING;
-            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument);
+            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument, true);
             Node authorityfileidvalueNode = theDocument.createTextNode(corp.getAuthorityID());
             authorityfileidNode.appendChild(authorityfileidvalueNode);
             createdNode.appendChild(authorityfileidNode);
         }
         if (StringUtils.isNotBlank(corp.getAuthorityURI())) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYURI_STRING;
-            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument);
+            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument, true);
             Node authorityfileidvalueNode = theDocument.createTextNode(corp.getAuthorityURI());
             authorityfileidNode.appendChild(authorityfileidvalueNode);
             createdNode.appendChild(authorityfileidNode);
         }
         if (StringUtils.isNotBlank(corp.getAuthorityValue())) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYVALUE_STRING;
-            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument);
+            Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument, true);
             Node authorityfileidvalueNode = theDocument.createTextNode(corp.getAuthorityValue());
             authorityfileidNode.appendChild(authorityfileidvalueNode);
             createdNode.appendChild(authorityfileidNode);
@@ -4830,10 +4858,10 @@ public class MetsMods implements ugh.dl.Fileformat {
 
     }
 
-    protected void writeSingleModsGroup(String theXQuery, MetadataGroup theGroup, Node theStartingNode, Document theDocument)
+    protected void writeSingleModsGroup(String theXQuery, MetadataGroup theGroup, Node theStartingNode, Document theDocument, boolean checkParent)
             throws PreferencesException {
 
-        Node createdNode = createNode(theXQuery, theStartingNode, theDocument);
+        Node createdNode = createNode(theXQuery, theStartingNode, theDocument, checkParent);
 
         for (Metadata md : theGroup.getMetadataList()) {
             if (!md.getType().getIsPerson()) {
@@ -4855,6 +4883,10 @@ public class MetsMods implements ugh.dl.Fileformat {
                 String xquery = "./#" + this.goobiNamespacePrefix + ":metadata[@type='corporate'][@name='" + corp.getRole() + "']";
                 writeSingleModsCorporate(xquery, corp, createdNode, theDocument);
             }
+        }
+        for (MetadataGroup m : theGroup.getAllMetadataGroups()) {
+            String xquery = "./#" + this.goobiNamespacePrefix + ":metadata[@type='group'][@name='" + m.getType().getName() + "']";
+            writeSingleModsGroup(xquery, m, createdNode, theDocument, false);
         }
     }
 
@@ -5069,7 +5101,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                 if (!isEmpty) {
                     String xquery = "./" + this.modsNamespacePrefix + ":mods/" + this.modsNamespacePrefix + ":extension/" + this.goobiNamespacePrefix
                             + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@type='group'][@name='" + m.getType().getName() + "']";
-                    writeSingleModsGroup(xquery, m, dommodsnode, domDoc);
+                    writeSingleModsGroup(xquery, m, dommodsnode, domDoc, true);
                 }
 
             }
