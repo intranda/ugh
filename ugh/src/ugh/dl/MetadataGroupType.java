@@ -210,6 +210,10 @@ public class MetadataGroupType implements Serializable, PrefsType {
         }
         newMDType.setTypes(newList);
 
+
+        for (AllowedMetadataGroupType amgt : allGroups) {
+            newMDType.addGroupTypeAsChild(amgt.getGroupName(), amgt.getNumAllowed(), amgt.isDefaultDisplay(), amgt.isHidden());
+        }
         return newMDType;
     }
 
