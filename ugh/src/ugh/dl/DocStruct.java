@@ -37,6 +37,8 @@ import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import ugh.dl.DigitalDocument.ListPairCheck;
 import ugh.exceptions.ContentFileNotLinkedException;
 import ugh.exceptions.DocStructHasNoTypeException;
@@ -78,8 +80,6 @@ import ugh.exceptions.UGHException;
  *      TODOLOG
  * 
  * 
- *      TODO Maybe use the equals() method for comparing the things from the ruleset and the things from the DigitalDocument?? This may only be
- *      interesting for XStream serialisation!!
  * 
  *      CHANGELOG
  * 
@@ -198,6 +198,10 @@ public class DocStruct implements Serializable, HoldingElement {
     private String docstructType = "div";
 
     private String admId;
+
+    @Getter
+    @Setter
+    private String internalName;
 
     /***************************************************************************
      * <p>
