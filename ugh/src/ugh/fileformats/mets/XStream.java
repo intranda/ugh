@@ -25,8 +25,7 @@ package ugh.fileformats.mets;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 
-import org.apache.log4j.Logger;
-
+import lombok.extern.log4j.Log4j2;
 import ugh.dl.DigitalDocument;
 import ugh.dl.Prefs;
 import ugh.exceptions.PreferencesException;
@@ -54,7 +53,7 @@ import ugh.exceptions.WriteException;
  *        09.10.2009 --- Funk --- Changed the deprecated annotations.
  * 
  ******************************************************************************/
-
+@Log4j2
 public class XStream implements ugh.dl.Fileformat {
 
     /***************************************************************************
@@ -67,8 +66,7 @@ public class XStream implements ugh.dl.Fileformat {
      * STATIC FINALS
      **************************************************************************/
 
-    private static final Logger	LOGGER	= Logger
-            .getLogger(ugh.dl.DigitalDocument.class);
+
 
     private DigitalDocument		digdoc	= null;
     private Prefs				myPreferences;
@@ -86,7 +84,7 @@ public class XStream implements ugh.dl.Fileformat {
     public XStream(Prefs thePrefs) throws PreferencesException {
         this.myPreferences = thePrefs;
 
-        LOGGER.info(this.getClass().getName() + " " + getVersion());
+        log.info(this.getClass().getName() + " " + getVersion());
     }
 
     /*
@@ -99,28 +97,28 @@ public class XStream implements ugh.dl.Fileformat {
     @Override
     public boolean read(String filename) throws ugh.exceptions.ReadException {
 
-        LOGGER.info("Reading XStream");
+        log.info("Reading XStream");
 
         try {
             this.digdoc = new DigitalDocument().readXStreamXml(filename,
                     this.myPreferences);
         } catch (FileNotFoundException e) {
             String message = "Can't find file '" + filename + "'!";
-            LOGGER.error(message, e);
+            log.error(message, e);
             throw new ReadException(message, e);
         } catch (UnsupportedEncodingException e) {
             String message = "Can't read file '" + filename
                     + "' because of wrong encoding!";
-            LOGGER.error(message, e);
+            log.error(message, e);
             throw new ReadException(message, e);
         }
 
-        LOGGER
+        log
         .info("Sorting metadata according to occurance in the Preferences");
 
         this.digdoc.sortMetadataRecursively(this.myPreferences);
 
-        LOGGER.info("Reading XStream complete");
+        log.info("Reading XStream complete");
 
         return true;
     }
@@ -136,22 +134,22 @@ public class XStream implements ugh.dl.Fileformat {
     @Deprecated
     public boolean write(String filename) throws WriteException {
 
-        LOGGER.info("Writing XStream");
+        log.info("Writing XStream");
 
         try {
             this.digdoc.writeXStreamXml(filename);
         } catch (FileNotFoundException e) {
             String message = "Can't find file '" + filename + "'!";
-            LOGGER.error(message, e);
+            log.error(message, e);
             throw new WriteException(message, e);
         } catch (UnsupportedEncodingException e) {
             String message = "Can't write file '" + filename
                     + "' because of wrong encoding!";
-            LOGGER.error(message, e);
+            log.error(message, e);
             throw new WriteException(message, e);
         }
 
-        LOGGER.info("Writing XStream complete");
+        log.info("Writing XStream complete");
 
         return true;
     }

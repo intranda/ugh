@@ -5,10 +5,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import ugh.exceptions.DocStructHasNoTypeException;
 import ugh.exceptions.IncompletePersonObjectException;
 import ugh.exceptions.MetadataTypeNotAllowedException;
@@ -30,11 +29,11 @@ import ugh.exceptions.MetadataTypeNotAllowedException;
  * 
  ******************************************************************************/
 
+@Log4j2
 public class MetadataGroup implements Serializable, HoldingElement {
 
     private static final long serialVersionUID = -6283388063178498292L;
 
-    private static final Logger LOGGER = Logger.getLogger(ugh.dl.DigitalDocument.class);
 
     protected MetadataGroupType metadataGroupType;
     // Document structure to which this metadata type belongs to.
@@ -165,9 +164,9 @@ public class MetadataGroup implements Serializable, HoldingElement {
             metadata.setParent(this);
             this.metadataList.add(metadata);
         } else {
-            LOGGER.debug("Not allowed to add metadata '" + inMdName + "'");
+            log.debug("Not allowed to add metadata '" + inMdName + "' ");
             MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException(type, metadataGroupType);
-            LOGGER.error(mtnae.getMessage());
+            log.error(mtnae.getMessage());
             throw mtnae;
         }
     }
@@ -193,9 +192,9 @@ public class MetadataGroup implements Serializable, HoldingElement {
             person.setParent(this);
             personList.add(person);
         } else {
-            LOGGER.debug("Not allowed to add metadata '" + inMdName + "'");
+            log.debug("Not allowed to add metadata '" + inMdName + "'");
             MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException(type, metadataGroupType);
-            LOGGER.error(mtnae.getMessage());
+            log.error(mtnae.getMessage());
             throw mtnae;
         }
     }
@@ -221,9 +220,9 @@ public class MetadataGroup implements Serializable, HoldingElement {
             corporate.setParent(this);
             corporateList.add(corporate);
         } else {
-            LOGGER.debug("Not allowed to add metadata '" + inMdName + "'");
+            log.debug("Not allowed to add metadata '" + inMdName + "'");
             MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException(type, metadataGroupType);
-            LOGGER.error(mtnae.getMessage());
+            log.error(mtnae.getMessage());
             throw mtnae;
         }
     }
@@ -398,7 +397,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
         // Incomplete person.
         if (inMDType == null) {
             IncompletePersonObjectException ipoe = new IncompletePersonObjectException();
-            LOGGER.error("Incomplete data for corporate metadata '" + in.getType().getName() + "'");
+            log.error("Incomplete data for corporate metadata '" + in.getType().getName() + "'");
             throw ipoe;
         }
 
@@ -429,7 +428,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
         // Incomplete person.
         if (inMDType == null) {
             IncompletePersonObjectException ipoe = new IncompletePersonObjectException();
-            LOGGER.error("Incomplete data for person metadata '" + in.getType().getName() + "'");
+            log.error("Incomplete data for person metadata '" + in.getType().getName() + "'");
             throw ipoe;
         }
 
@@ -532,7 +531,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
                             addMetadata(md);
                         }
                     } catch (MetadataTypeNotAllowedException e) {
-                        LOGGER.error(e);
+                        log.error(e);
                     }
                 }
             }
@@ -636,7 +635,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
         // document structure belongs to get global MDType.
         if (metadataGroupType == null) {
             String message = "Error occured while adding metadata of type '" + inMdName + "' to DocStruct '" + this.getType().getName() + "'";
-            LOGGER.error(message);
+            log.error(message);
             throw new DocStructHasNoTypeException(message);
         }
 
@@ -646,7 +645,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
         // we are creating a local copy of the MetadataType object.
         if (prefsMdType == null) {
             MetadataTypeNotAllowedException e = new MetadataTypeNotAllowedException(null, this.getType());
-            LOGGER.error(e.getMessage());
+            log.error(e.getMessage());
             throw e;
         }
 
@@ -660,7 +659,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
             if (otherType == null) {
                 // group type is not allowed
                 MetadataTypeNotAllowedException e = new MetadataTypeNotAllowedException(inMdType, getType());
-                LOGGER.error(e.getMessage());
+                log.error(e.getMessage());
                 throw e;
             } else {
                 maxnumberallowed = otherType.getNumAllowed();
@@ -703,9 +702,9 @@ public class MetadataGroup implements Serializable, HoldingElement {
             }
             this.allMetadataGroups.add(theMetadataGroup);
         } else {
-            LOGGER.debug("Not allowed to add metadata '" + inMdName + "'");
+            log.debug("Not allowed to add metadata '" + inMdName + "'");
             MetadataTypeNotAllowedException mtnae = new MetadataTypeNotAllowedException(null, this.getType());
-            LOGGER.error(mtnae.getMessage());
+            log.error(mtnae.getMessage());
             throw mtnae;
         }
 
