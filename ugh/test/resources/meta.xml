@@ -358,7 +358,7 @@
                 </mets:seq>
             </mets:fptr>
          </mets:div>
-         <mets:div DMDID="DMDPHYS_0002" ID="PHYS_0002" ORDER="1" ORDERLABEL="uncounted" TYPE="page">
+         <mets:div DMDID="DMDPHYS_0002" ID="PHYS_0002" ORDER="1" ORDERLABEL="uncounted" TYPE="page" xlink:label="label">
             <mets:fptr FILEID="FILE_0002"/>
          </mets:div>
          <mets:div DMDID="DMDPHYS_0003" ID="PHYS_0003" ORDER="2" ORDERLABEL="uncounted" TYPE="page">

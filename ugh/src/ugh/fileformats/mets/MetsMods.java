@@ -1263,7 +1263,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                 log.error(message, e);
                 throw new ReadException(message, e);
             }
-
+            newDocStruct.setAdditionalValue(dt.getLabel());
             // get the corresponding amdSec
             @SuppressWarnings("rawtypes")
             List admList = dt.getADMID();
@@ -3544,6 +3544,9 @@ public class MetsMods implements ugh.dl.Fileformat {
 
             if (StringUtils.isNotBlank(inStruct.getAdmId())) {
                 div.setAttribute(METS_ADMID_STRING, inStruct.getAdmId());
+            }
+            if (StringUtils.isNotBlank(inStruct.getAdditionalValue())) {
+                createDomAttributeNS(div, "xlink", "label", inStruct.getAdditionalValue());
             }
 
             // Add div element as child to parentNode.

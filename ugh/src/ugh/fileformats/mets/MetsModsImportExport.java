@@ -1177,7 +1177,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 type = inStruct.getType().getName();
             }
             div.setAttribute(METS_DIVTYPE_STRING, type);
-
+            if (StringUtils.isNotBlank(inStruct.getAdditionalValue())) {
+                createDomAttributeNS(div, "xlink", "label", inStruct.getAdditionalValue());
+            }
             // Add physical CONTENTIDS attribute, if existing.
             if (!this.contentIDs.equals("")) {
                 div.setAttribute(METS_CONTENTIDS_STRING, this.contentIDs);
