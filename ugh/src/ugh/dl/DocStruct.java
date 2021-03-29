@@ -199,9 +199,10 @@ public class DocStruct implements Serializable, HoldingElement {
 
     private String admId;
 
+    // can be used to add additional data to the DocStruct. i.e. the written docstruct name in lido or the double page information for mets/mods
     @Getter
     @Setter
-    private String internalName;
+    private String additionalValue;
 
     /***************************************************************************
      * <p>
