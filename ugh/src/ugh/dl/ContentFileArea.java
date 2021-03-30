@@ -24,10 +24,9 @@ package ugh.dl;
 
 import java.io.Serializable;
 
-import org.apache.log4j.Logger;
-
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import ugh.exceptions.ContentFileAreaTypeUnknownException;
 
 /*******************************************************************************
@@ -56,11 +55,10 @@ import ugh.exceptions.ContentFileAreaTypeUnknownException;
  * 
  ******************************************************************************/
 
+@Log4j2
 public class ContentFileArea implements Serializable {
 
     private static final long serialVersionUID = 3957147069912977429L;
-
-    private static final Logger LOGGER = Logger.getLogger(ugh.dl.DigitalDocument.class);
 
     // Type of area (coordinates, xml id, byteoffset, ...).
     @Getter
@@ -94,7 +92,7 @@ public class ContentFileArea implements Serializable {
             this.type = type;
         } else {
             String message = "'" + type + "' is unknown for ContentFileArea type";
-            LOGGER.error(message);
+            log.error(message);
             throw new ContentFileAreaTypeUnknownException(message);
         }
     }

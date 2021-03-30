@@ -147,25 +147,27 @@ public class CorporateMetsExportTest {
         // create group with metadata, person, corporate
         MetadataGroup publisherGroup = new MetadataGroup(prefs.getMetadataGroupTypeByName("PublisherGroup"));
 
-        for (Metadata md :publisherGroup.getMetadataList()) {
-            if (md.getType().getName().equals("PlaceOfPublication")) {
-                md.setValue("Place");
-                md.setAutorityFile("111", "url", "http://example.com/111");
-            } else {
-                md.setValue("666");
-            }
-        }
-        for (Person p : publisherGroup.getPersonList()) {
-            p.setFirstname("Firstname");
-            p.setLastname("Lastname");
-            p.setAutorityFile("ABC", "url", "http://example.com/ABC");
-        }
-        for (Corporate c : publisherGroup.getCorporateList()) {
-            c.setMainName("Main name");
-            c.addSubName(new NamePart("subname","Sub name"));
-            c.setPartName("Part name");
-            c.setAutorityFile("1234", "url", "http://example.com/1234");
-        }
+        Metadata metadata = new Metadata(prefs.getMetadataTypeByName("PlaceOfPublication"));
+        metadata.setValue("Place");
+        metadata.setAutorityFile("111", "url", "http://example.com/111");
+        publisherGroup.addMetadata(metadata);
+        Metadata metadata2 = new Metadata(prefs.getMetadataTypeByName("PublicationYear"));
+        metadata2.setValue("666");
+        publisherGroup.addMetadata(metadata2);
+
+
+        Person person = new Person(prefs.getMetadataTypeByName("PublisherPerson"));
+        person.setFirstname("Firstname");
+        person.setLastname("Lastname");
+        person.setAutorityFile("ABC", "url", "http://example.com/ABC");
+        publisherGroup.addPerson(person);
+
+        Corporate corp = new Corporate(prefs.getMetadataTypeByName("PublisherCorporate"));
+        corp.setMainName("Main name");
+        corp.addSubName(new NamePart("subname","Sub name"));
+        corp.setPartName("Part name");
+        corp.setAutorityFile("1234", "url", "http://example.com/1234");
+        publisherGroup.addCorporate(corp);
         fileformat.getDigitalDocument().getLogicalDocStruct().addMetadataGroup(publisherGroup);
 
         // save it as internal format

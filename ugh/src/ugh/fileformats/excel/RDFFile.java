@@ -38,7 +38,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Comment;
@@ -51,6 +50,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import lombok.extern.log4j.Log4j2;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
 import ugh.dl.DocStructType;
@@ -59,6 +59,7 @@ import ugh.dl.Metadata;
 import ugh.dl.MetadataType;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
+import ugh.dl.PrefsType;
 import ugh.dl.Reference;
 import ugh.dl.RomanNumeral;
 import ugh.exceptions.MetadataTypeNotAllowedException;
@@ -163,7 +164,7 @@ import ugh.exceptions.WriteException;
  *        with a single space in getMDValueOfNode().
  * 
  ******************************************************************************/
-
+@Log4j2
 @Deprecated
 public class RDFFile implements ugh.dl.Fileformat {
 
@@ -178,8 +179,6 @@ public class RDFFile implements ugh.dl.Fileformat {
      **************************************************************************/
 
     private static final String							RDF_PREFS_NODE_NAME_STRING	= "RDF";
-    private static final Logger							LOGGER						= Logger
-            .getLogger(ugh.dl.DigitalDocument.class);
     public static final short							ELEMENT_NODE				= 1;
 
     // UGH document.
@@ -227,7 +226,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                     + RDF_PREFS_NODE_NAME_STRING
                     + "' in preferences file not found!";
             PreferencesException pe = new PreferencesException(message);
-            LOGGER.error(message, pe);
+            log.error(message, pe);
             throw pe;
         }
 
@@ -271,19 +270,19 @@ public class RDFFile implements ugh.dl.Fileformat {
         } catch (SAXParseException e) {
             String message = "Parse error at line " + e.getLineNumber()
             + ", URI: " + e.getSystemId();
-            LOGGER.error(message, e);
+            log.error(message, e);
             throw new ReadException(message, e);
         } catch (SAXException e) {
             String message = "Can not create DOM tree!";
-            LOGGER.error(message, e);
+            log.error(message, e);
             throw new ReadException(message, e);
         } catch (ParserConfigurationException e) {
             String message = "XML parser not configured correctly!";
-            LOGGER.error(message, e);
+            log.error(message, e);
             throw new ReadException(message, e);
         } catch (IOException e) {
             String message = "Can not create DOM tree!";
-            LOGGER.error(message, e);
+            log.error(message, e);
             throw new ReadException(message, e);
         }
 
@@ -292,7 +291,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         if (upperChildlist == null) {
             String message = "Wrong file type! No <RDF:RDF> element found!";
             ReadException re = new ReadException(message);
-            LOGGER.error(message, re);
+            log.error(message, re);
             throw re;
         }
 
@@ -319,24 +318,24 @@ public class RDFFile implements ugh.dl.Fileformat {
                         String message = "Wrong file type! No <AGORA:ImageSet> element found!";
                         ugh.exceptions.ReadException re = new ugh.exceptions.ReadException(
                                 message);
-                        LOGGER.error(message, re);
+                        log.error(message, re);
                         throw re;
                     }
                     // Get out of loop.
                     continue;
                 } catch (TypeNotAllowedForParentException e) {
                     String message = "DocStruct type is not allowed for parent DocStruct";
-                    LOGGER.error(message, e);
+                    log.error(message, e);
                     throw new ReadException(message, e);
                 } catch (MetadataTypeNotAllowedException e) {
                     String message = "Metadata type is not allowed for current DocStruct";
-                    LOGGER.error(message, e);
+                    log.error(message, e);
                     throw new ReadException(message, e);
                 }
             }
         }
 
-        LOGGER.debug("Loading logical structure entities");
+        log.debug("Loading logical structure entities");
 
         // Try to find DocStructs.
         childlist = upperchild.getChildNodes();
@@ -352,22 +351,22 @@ public class RDFFile implements ugh.dl.Fileformat {
                 try {
                     if (!parseAllDocStructs(currentNode)) {
                         String message = "Can not read <AGORA:DocStruct>";
-                        LOGGER.error(message);
+                        log.error(message);
                         throw new ReadException(message);
                     }
                     // Get out of loop.
                     continue;
                 } catch (TypeNotAllowedForParentException e) {
                     String message = "DocStruct type is not allowed for parent DocStruct";
-                    LOGGER.error(message, e);
+                    log.error(message, e);
                     throw new ReadException(message, e);
                 } catch (TypeNotAllowedAsChildException e) {
                     String message = "DocStruct type is not allowed as a child";
-                    LOGGER.error(message, e);
+                    log.error(message, e);
                     throw new ReadException(message, e);
                 } catch (MetadataTypeNotAllowedException e) {
                     String message = "Metadata type is not allowed for current DocStruct";
-                    LOGGER.error(message, e);
+                    log.error(message, e);
                     throw new ReadException(message, e);
                 }
             }
@@ -428,7 +427,7 @@ public class RDFFile implements ugh.dl.Fileformat {
 
         // Read top structure entitiy.
         if (readDocStruct(inNode, null)) {
-            LOGGER.debug("Parsing all docstructs complete");
+            log.debug("Parsing all docstructs complete");
         }
 
         return true;
@@ -449,7 +448,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         try {
             xmlFile = new FileOutputStream(filename);
         } catch (Exception e) {
-            LOGGER.error("Can't write file '" + filename
+            log.error("Can't write file '" + filename
                     + "'! System message: " + e.getMessage());
             return false;
         }
@@ -477,13 +476,13 @@ public class RDFFile implements ugh.dl.Fileformat {
             domdoc.appendChild(rdf);
 
             if (this.mydoc == null) {
-                LOGGER.error("No DigitalDocument");
+                log.error("No DigitalDocument");
                 xmlFile.close();
                 return false;
             }
 
             if (this.mydoc.getLogicalDocStruct() == null) {
-                LOGGER.error("No logical DocStruct");
+                log.error("No logical DocStruct");
                 xmlFile.close();
                 return false;
             }
@@ -491,7 +490,7 @@ public class RDFFile implements ugh.dl.Fileformat {
             // Build all logical structures (fill the DOM tree).
             if (!writeDocStruct(rdf, this.mydoc.getLogicalDocStruct())) {
                 // Error occured while writing the RDF/XML file.
-                LOGGER.error("Error occured while writing logical docstruct");
+                log.error("Error occured while writing logical docstruct");
                 xmlFile.close();
                 return false;
             }
@@ -499,7 +498,7 @@ public class RDFFile implements ugh.dl.Fileformat {
             // Build all physical structures.
             if (!writePhysical(rdf)) {
                 // Error occured while writing the RDF/XML file.
-                LOGGER.error("Error occured while writing physical docstruct");
+                log.error("Error occured while writing physical docstruct");
                 xmlFile.close();
                 return false;
             }
@@ -521,19 +520,19 @@ public class RDFFile implements ugh.dl.Fileformat {
             xmlFile.close();
         } catch (FactoryConfigurationError e) {
             String message = "Could not locate a JAXP factory class";
-            LOGGER.error(message, e);
+            log.error(message, e);
             return false;
         } catch (ParserConfigurationException e) {
             String message = "Could not locate a JAXP DocumentBuilder class";
-            LOGGER.error(message, e);
+            log.error(message, e);
             return false;
         } catch (DOMException e) {
             String message = "Error writing DOM tree";
-            LOGGER.error(message, e);
+            log.error(message, e);
             return false;
         } catch (IOException e) {
             String message = "Could not write file due to an IOException";
-            LOGGER.error(message, e);
+            log.error(message, e);
             return false;
         } finally {
             try {
@@ -541,7 +540,7 @@ public class RDFFile implements ugh.dl.Fileformat {
             } catch (IOException e) {
                 String message = "RDF file '" + filename
                         + "' could not be closed";
-                LOGGER.error(message, e);
+                log.error(message, e);
                 throw new WriteException(message, e);
             }
         }
@@ -826,7 +825,7 @@ public class RDFFile implements ugh.dl.Fileformat {
             try {
                 topdocstruct.addMetadata(tempMD);
             } catch (MetadataTypeNotAllowedException mtnae) {
-                LOGGER.debug("Can't add metadata for imageset");
+                log.debug("Can't add metadata for imageset");
             }
         }
 
@@ -906,12 +905,12 @@ public class RDFFile implements ugh.dl.Fileformat {
         // Create DocStruct element.
         docStructElement = domdoc.createElement("AGORA:DocStrct");
         if (inDocStruct == null) {
-            LOGGER.debug("inDocStruct is null");
+            log.debug("inDocStruct is null");
             return false;
         }
         typename = getRDFName(inDocStruct.getType());
         if (typename == null) {
-            LOGGER.debug("RDF name for document structure '"
+            log.debug("RDF name for document structure '"
                     + inDocStruct.getType().getName() + "' unknown");
             return false;
         }
@@ -919,13 +918,13 @@ public class RDFFile implements ugh.dl.Fileformat {
 
         // Add all rdf:seq persons to this element.
         if (!writeRDFLIPerson(docStructElement, inDocStruct)) {
-            LOGGER.debug("Error while writing RDF:Li for persons");
+            log.debug("Error while writing RDF:Li for persons");
             return false;
         }
 
         // Add all rdf:seq metadata to this element.
         if (!writeRDFLIMetadata(docStructElement, inDocStruct)) {
-            LOGGER.debug("Error while writing RDF:Li for metadata");
+            log.debug("Error while writing RDF:Li for metadata");
             return false;
         }
 
@@ -933,7 +932,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         allmetadata = inDocStruct.getAllMetadata();
         if (allmetadata != null) {
             for (Metadata mymetadata : allmetadata) {
-                MetadataType mymetadatatype = mymetadata.getType();
+                PrefsType mymetadatatype = mymetadata.getType();
 
                 // Check, if metadata is an RDF-sequence or RDF-bag, get
                 // MetadataMatchingObject and check, if this metadata is member
@@ -943,7 +942,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                         .getName());
                 if (mmo == null) {
                     // Not available; next one in loop.
-                    LOGGER.debug("Can't find RDF element for metadata '"
+                    log.debug("Can't find RDF element for metadata '"
                             + mymetadatatype.getName() + "'");
                     continue;
                 }
@@ -960,7 +959,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         // Write pagenumbers / references to start and endpage only if the
         // current DocStruct is NOT an anchor.
         if (inDocStruct.getType().isAnchor() && inDocStruct.getParent() == null) {
-            LOGGER.debug("Is anchor, do not write RefIMageSetRange "
+            log.debug("Is anchor, do not write RefIMageSetRange "
                     + inDocStruct.getType().isAnchor());
         } else {
             writeRefImageSetRange(inDocStruct, docStructElement);
@@ -1021,7 +1020,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         Element tempElement = domdoc.createElement("AGORA:ImageSetDocSource");
 
         // Get content of CatalogIDDigital.
-        MetadataType idType = this.myPreferences.getMetadataTypeByName(
+        PrefsType idType = this.myPreferences.getMetadataTypeByName(
                 "AGORA:CatalogIDDigital", "rdf");
         if (idType != null) {
             List<? extends Metadata> allIDs = this.mydoc.getLogicalDocStruct()
@@ -1139,7 +1138,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                             roman = new RomanNumeral(lastLogicalPage);
                         } catch (Exception e) {
                             String message = "Problem converting value for roman numeral (lastlogpage) - (1)";
-                            LOGGER.error(message, e);
+                            log.error(message, e);
                             throw new WriteException(message, e);
                         }
                         int introman = (roman.intValue()) + 1;
@@ -1178,7 +1177,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                                 roman = new RomanNumeral(lastLogicalPage);
                             } catch (Exception e) {
                                 String message = "Problem converting value for roman numeral (lastlogpage) - (1)";
-                                LOGGER.error(message, e);
+                                log.error(message, e);
                                 throw new WriteException(message, e);
                             }
 
@@ -1221,7 +1220,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                             roman = new RomanNumeral(currentLogicalPage);
                         } catch (Exception e) {
                             String message = "Problem converting value for roman numeral (currentlogpage) - (3)";
-                            LOGGER.error(message, e);
+                            log.error(message, e);
                             throw new WriteException(message, e);
                         }
                         int introman = roman.intValue();
@@ -1264,7 +1263,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                     roman = new RomanNumeral(lastLogicalPage);
                 } catch (Exception e) {
                     String message = "Problem converting value for roman numeral (currentlogpage) - (3)";
-                    LOGGER.error(message, e);
+                    log.error(message, e);
                     throw new WriteException(message, e);
                 }
                 int introman = roman.intValue();
@@ -1375,7 +1374,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         Document domdoc = parentElement.getOwnerDocument();
         Node value;
 
-        MetadataType inMDT = inMetadata.getType();
+        PrefsType inMDT = inMetadata.getType();
         if (inMDT != null) {
             if (inMDT.getName().substring(0, 1).equals(HIDDEN_METADATA_CHAR)) {
                 // Get ot of method; it's an internal metadata type, we don't
@@ -1386,9 +1385,9 @@ public class RDFFile implements ugh.dl.Fileformat {
             return false;
         }
 
-        MetadataType metadataType = inMetadata.getType();
+        PrefsType metadataType = inMetadata.getType();
         if (metadataType == null) {
-            LOGGER.debug("Invalid metadata type");
+            log.debug("Invalid metadata type");
             return false;
         }
 
@@ -1405,7 +1404,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         // Get name of XML-element.
         elementName = getRDFName(metadataType);
         if (elementName == null) {
-            LOGGER.debug("Unknown XML-element name for metadata '"
+            log.debug("Unknown XML-element name for metadata '"
                     + metadataType.getName() + "'");
             return false;
         }
@@ -1459,12 +1458,12 @@ public class RDFFile implements ugh.dl.Fileformat {
 
         while (it.hasNext()) {
             Metadata md = it.next();
-            MetadataType mdt = md.getType();
+            PrefsType mdt = md.getType();
 
             // Check, if metadata type of this name belongs to a RDF:Li group.
             MatchingMetadataObject mmo = getMMOByName(mdt.getName());
             if (mmo == null) {
-                LOGGER.warn("No RDF-element found for metadata '"
+                log.warn("No RDF-element found for metadata '"
                         + mdt.getName() + "'");
                 continue;
             }
@@ -1544,7 +1543,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                 String mdtname = md.getType().getName();
                 MatchingMetadataObject mmo = getMMOByName(mdtname);
                 if (mmo == null) {
-                    LOGGER.error("No RDF name available for metadata '"
+                    log.error("No RDF name available for metadata '"
                             + mdtname + "'");
                     // Get out of loop.
                     continue;
@@ -1605,13 +1604,13 @@ public class RDFFile implements ugh.dl.Fileformat {
                 // a new type based on the role.
                 String role = ps.getRole();
                 if (role == null) {
-                    LOGGER
+                    log
                     .error("Neither type nor role set; can't write person");
                     continue;
                 }
                 pst = this.myPreferences.getMetadataTypeByName(ps.getRole());
                 if (pst == null) {
-                    LOGGER
+                    log
                     .error("Role cannot be found in MetadataType; can't write person");
                     continue;
                 }
@@ -1620,7 +1619,7 @@ public class RDFFile implements ugh.dl.Fileformat {
             String pstname = pst.getName();
             MatchingMetadataObject mmo = getMMOByName(pstname);
             if (mmo == null) {
-                LOGGER.error("No mapping found found for person type '"
+                log.error("No mapping found found for person type '"
                         + pstname + "'");
                 continue;
             }
@@ -1669,6 +1668,7 @@ public class RDFFile implements ugh.dl.Fileformat {
             listElement.appendChild(seqElement);
             parentElement.appendChild(listElement);
 
+            @SuppressWarnings("unchecked")
             Iterator<Metadata> it3 = (Iterator<Metadata>) mds.iterator();
             // Iterate over the lists metadata.
             while (it3.hasNext()) {
@@ -1681,7 +1681,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                 String mdtname = ps.getType().getName();
                 MatchingMetadataObject mmo = getMMOByName(mdtname);
                 if (mmo == null) {
-                    LOGGER.error("No RDF name available for metadata '"
+                    log.error("No RDF name available for metadata '"
                             + mdtname + "'");
                     // Get out of loop.
                     continue;
@@ -1737,7 +1737,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         DocStruct singlepage;
         Reference singleref;
         // Metadata type for a page.
-        MetadataType mdtype;
+        PrefsType mdtype;
         Metadata singlemd;
         String pagenumber;
         int pagenumberint;
@@ -1863,7 +1863,7 @@ public class RDFFile implements ugh.dl.Fileformat {
             if (currentAttribute.getNodeName().equals("AGORA:Type")) {
                 attributeValue = currentAttribute.getNodeValue();
 
-                LOGGER.debug("Found AGORA DocStruct '" + attributeValue + "'");
+                log.debug("Found AGORA DocStruct '" + attributeValue + "'");
 
                 docStructType = getDSTypeByName(attributeValue);
                 if (docStructType == null) {
@@ -1880,7 +1880,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                         // be added.
                         String message = "Can't add child to '"
                                 + inStruct.getType().getName() + "'";
-                        LOGGER.error(message);
+                        log.error(message);
                         throw new TypeNotAllowedAsChildException(inStruct
                                 .getType());
                     }
@@ -1929,7 +1929,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                 // Get all MetadataMatchingObjects for this list.
                 List<MatchingMetadataObject> members = getRDFListMembers(nodename);
                 if (members == null || members.size() == 0) {
-                    LOGGER.error("RDFList has no member types!");
+                    log.error("RDFList has no member types!");
                 }
                 // This list contain the RDF-XML names.
                 subTypeList = new LinkedList<>();
@@ -1944,7 +1944,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                     // Get metadata type.
                     metadataType = getMDTypeByName(rdfname);
                     if (metadataType == null) {
-                        LOGGER.error("Unknown Metadatatype '" + nodename
+                        log.error("Unknown Metadatatype '" + nodename
                                 + "' for RDFList '" + nodename + "'!");
 
                         // Read next xml-node.
@@ -1971,7 +1971,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                         try {
                             // Add Metadata to the document structure.
                             docStruct.addMetadata(singleMD);
-                            LOGGER.debug("Added metadata '"
+                            log.debug("Added metadata '"
                                     + singleMD.getType().getName()
                                     + "' with value '" + singleMD.getValue()
                                     + "' to DocStruct '"
@@ -1981,7 +1981,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                                     + singleMD.getType().getName()
                                     + "' can not be added to DocStruct '"
                                     + docStruct.getType().getName() + "'";
-                            LOGGER.error(message, e);
+                            log.error(message, e);
                             throw new MetadataTypeNotAllowedException(singleMD
                                     .getType(), docStruct.getType());
                         }
@@ -1998,7 +1998,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                                     + singlePer.getType().getName()
                                     + "' can not be added to DocStruct '"
                                     + docStruct.getType().getName() + "'";
-                            LOGGER.error(message, e);
+                            log.error(message, e);
                             throw new MetadataTypeNotAllowedException(message,
                                     e);
                         }
@@ -2013,7 +2013,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                 // Check, if metadata type is known.
                 String metadataValue = getMDValueOfNode(currentNode);
                 if (metadataType == null) {
-                    LOGGER.warn("Unknown metadata or person type '" + nodename
+                    log.warn("Unknown metadata or person type '" + nodename
                             + "'");
                     // Read next xml-node.
                     continue;
@@ -2041,7 +2041,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                     //
                     // try {
                     // docStruct.addPerson(newPerson);
-                    // LOGGER.debug("Added person '"
+                    // log.debug("Added person '"
                     // + newPerson.getType().getName()
                     // + "' with displayName '"
                     // + newPerson.getDisplayname()
@@ -2052,7 +2052,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                     // + newPerson.getType().getName()
                     // + "' can not be added to DocStruct '"
                     // + docStruct.getType().getName() + "'";
-                    // LOGGER.error(message, e);
+                    // log.error(message, e);
                     // throw new MetadataTypeNotAllowedException(message,
                     // e);
                     // }
@@ -2061,7 +2061,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                     newMetadata.setValue(metadataValue);
                     try {
                         docStruct.addMetadata(newMetadata);
-                        LOGGER.debug("Added metadata '"
+                        log.debug("Added metadata '"
                                 + newMetadata.getType().getName()
                                 + "' with value '" + newMetadata.getValue()
                                 + "' to DocStruct '"
@@ -2071,7 +2071,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                                 + newMetadata.getType().getName()
                                 + "' can not be added to DocStruct '"
                                 + docStruct.getType().getName() + "'";
-                        LOGGER.error(message, e);
+                        log.error(message, e);
                         throw new MetadataTypeNotAllowedException(message, e);
                     }
                     // }
@@ -2093,7 +2093,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                 // If the value of the metadata is NULL or empty, do log a
                 // warning.
                 else {
-                    LOGGER.warn("Metadata or person of type '"
+                    log.warn("Metadata or person of type '"
                             + metadataType.getName()
                             + "' has no value! It was not added to DocStruct '"
                             + docStruct.getType().getName() + "'!");
@@ -2164,7 +2164,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         // Get all pages.
         List<DocStruct> allChildren = this.mydoc.getPhysicalDocStruct()
                 .getAllChildrenByTypeAndMetadataType("page", "physPageNumber");
-        MetadataType myMDType = this.myPreferences
+        PrefsType myMDType = this.myPreferences
                 .getMetadataTypeByName("physPageNumber");
         for (int i = physstartpage; i < physendpage + 1; i++) {
             for (int x = 0; x < allChildren.size(); x++) {
@@ -2282,7 +2282,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                     logcountedstart = Integer
                             .parseInt(getMDValueOfNode(currentNode));
                     if (logcountedstart == -1) {
-                        LOGGER
+                        log
                         .debug("Case of PageAccountedStart == -1 found and corrected (set to 0)");
                         logcountedstart = 0;
                     }
@@ -2296,7 +2296,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                     logcountedend = Integer
                             .parseInt(getMDValueOfNode(currentNode));
                     if (logcountedend == -1) {
-                        LOGGER
+                        log
                         .debug("Case of PageAccountedEnd == -1 found and corrected (set to 0)");
                         logcountedend = 0;
                     }
@@ -2310,7 +2310,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                     lognotcountedstart = Integer
                             .parseInt(getMDValueOfNode(currentNode));
                     if (lognotcountedstart == -1) {
-                        LOGGER
+                        log
                         .debug("Case of PageNotAccountedStart == -1 found and corrected (set to 0)");
                         lognotcountedstart = 0;
                     }
@@ -2324,7 +2324,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                     lognotcountedend = Integer
                             .parseInt(getMDValueOfNode(currentNode));
                     if (lognotcountedend >= -1) {
-                        LOGGER
+                        log
                         .debug("Case of PageNotAccountedEnd == -1 found and corrected (set to 0)");
                         lognotcountedend = 0;
                     }
@@ -2378,7 +2378,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                 boundbook = this.mydoc.createDocStruct(imagesettype);
             } catch (TypeNotAllowedForParentException e) {
                 String message = "Can't create BoundBook!";
-                LOGGER.error(message, e);
+                log.error(message, e);
                 throw new ReadException(message, e);
             }
         }
@@ -2406,7 +2406,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         }
         if (path == null) {
             // No path to images available.
-            LOGGER.debug("Can't find path to images");
+            log.debug("Can't find path to images");
             return false;
         }
         // Contains the path as string.
@@ -2436,7 +2436,7 @@ public class RDFFile implements ugh.dl.Fileformat {
             try {
                 boundbook.addChild(currentPage);
             } catch (TypeNotAllowedAsChildException tnaace) {
-                LOGGER.error("Can't add pages to BoundBook");
+                log.error("Can't add pages to BoundBook");
                 return false;
             }
 
@@ -2445,7 +2445,7 @@ public class RDFFile implements ugh.dl.Fileformat {
             String filename = "";
 
             // Get physical page number.
-            ugh.dl.MetadataType metadataType2 = this.myPreferences
+            PrefsType metadataType2 = this.myPreferences
                     .getMetadataTypeByName("physPageNumber");
             List<? extends Metadata> physpagelist = currentPage
                     .getAllMetadataByType(metadataType2);
@@ -2456,7 +2456,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                 try {
                     physpage = Integer.parseInt(md.getValue());
                 } catch (Exception e) {
-                    LOGGER
+                    log
                     .error("Physical page number seems to be a non integer value!");
                     return false;
                 }
@@ -2613,7 +2613,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                                                 displayname = getMDValueOfNode(currentNode4);
                                                 resultPerson
                                                 .setDisplayname(displayname);
-                                                LOGGER
+                                                log
                                                 .warn("LastName and FirstName tags are missing within the person node '"
                                                         + nodeName3
                                                         + "', taking entry '"
@@ -2663,7 +2663,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                                                 || resultPerson
                                                 .getDisplayname() != null) {
                                             resultList.add(resultPerson);
-                                            LOGGER
+                                            log
                                             .trace("Added person '"
                                                     + resultPerson
                                                     .getRole()
@@ -2687,7 +2687,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                                             .setDisplayname(currentNode4
                                                     .getNodeValue());
                                             resultList.add(resultPerson);
-                                            LOGGER.info("Added person '"
+                                            log.info("Added person '"
                                                     + resultPerson.getRole()
                                                     + "' with displayname '"
                                                     + resultPerson
@@ -2793,7 +2793,7 @@ public class RDFFile implements ugh.dl.Fileformat {
      * @param inType
      * @return
      **************************************************************************/
-    private String getRDFName(MetadataType inType) {
+    private String getRDFName(PrefsType inType) {
 
         // Get internamName of MetadataType.
         String mdName = inType.getName();
@@ -2851,7 +2851,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         mmo = this.rdfNamesDS.get(dsName);
         if (mmo == null) {
             // mmo is null, which means, no type with this name is available.
-            LOGGER.warn("Can't find internal Docstruct type with RDF name '"
+            log.warn("Can't find internal Docstruct type with RDF name '"
                     + dsName + "'");
             return null;
         }
@@ -2886,7 +2886,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                 String message = "Can't read for node '"
                         + currentNode.getNodeName() + "."
                         + currentNode.getNodeValue() + "'";
-                LOGGER.error(message);
+                log.error(message);
                 throw new PreferencesException(message);
             }
             if (currentNode.getNodeType() == ELEMENT_NODE
@@ -2894,7 +2894,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                     && !readDocStructPrefs(currentNode)) {
                 // Read information about a single docstruct matching.
                 String message = "Error occured while reading DocStructs";
-                LOGGER.error(message);
+                log.error(message);
                 return false;
             }
         }
@@ -2989,19 +2989,19 @@ public class RDFFile implements ugh.dl.Fileformat {
         // Check, if internal Name is really available.
         if (this.myPreferences.getMetadataTypeByName(internalName) == null) {
             // No metadatatype with internalName is available.
-            LOGGER
+            log
             .error("Error while reading format preferences for RDF: No MetadataType with internal name '"
                     + internalName + "' known");
             return false;
         }
         if (rdfList != null && rdfListType == null) {
-            LOGGER.error("RDF list defined, but no list type for metadata '"
+            log.error("RDF list defined, but no list type for metadata '"
                     + internalName + "'");
             rdfListType = "seq";
         }
         if (rdfListType != null && !rdfListType.equalsIgnoreCase("seq")
                 && !rdfListType.equalsIgnoreCase("bag")) {
-            LOGGER.error("RDF list type for metadata '" + internalName
+            log.error("RDF list type for metadata '" + internalName
                     + "' is of unknown type (only 'seq' or 'bag' allowed)");
         }
         if (rdfName != null) {
@@ -3015,7 +3015,7 @@ public class RDFFile implements ugh.dl.Fileformat {
             }
             this.rdfNamesMD.put(rdfName, mmo);
         } else {
-            LOGGER
+            log
             .error("Error while reading format preferences for RDF: RDF name must not be null!");
         }
 
@@ -3049,7 +3049,7 @@ public class RDFFile implements ugh.dl.Fileformat {
         // Check, if internal Name is really available.
         if (this.myPreferences.getDocStrctTypeByName(internalName) == null) {
             // No metadatatype with internalName is available.
-            LOGGER
+            log
             .error("Error while reading format preferences for RDF: No DocStructType with internal name '"
                     + internalName + "' known");
             return false;
@@ -3061,7 +3061,7 @@ public class RDFFile implements ugh.dl.Fileformat {
             mmo.setInternalName(internalName);
             this.rdfNamesDS.put(rdfName, mmo);
         } else {
-            LOGGER
+            log
             .error("Error while reading format preferences for RDF: RDF name must not be null!");
         }
 
@@ -3268,7 +3268,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                     + RDF_PREFS_NODE_NAME_STRING
                     + "' in preferences file not found!";
             PreferencesException pe = new PreferencesException(message);
-            LOGGER.error(message, pe);
+            log.error(message, pe);
             throw pe;
         }
 

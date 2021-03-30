@@ -81,7 +81,7 @@ import lombok.Setter;
  * 
  ******************************************************************************/
 
-public class MetadataType implements Serializable {
+public class MetadataType implements Serializable, PrefsType {
 
     private static final long serialVersionUID = 1285824825128157626L;
 
@@ -175,6 +175,7 @@ public class MetadataType implements Serializable {
     /***************************************************************************
      * @return
      **************************************************************************/
+    @Override
     public String getName() {
         return this.name;
     }
@@ -205,8 +206,6 @@ public class MetadataType implements Serializable {
      * DocStructType.
      * </p>
      * 
-     * TODO Was set to deprecated, who knows why?
-     * 
      * @return number of MetadataType
      **************************************************************************/
     public String getNum() {
@@ -223,6 +222,7 @@ public class MetadataType implements Serializable {
     /***************************************************************************
      * @return
      **************************************************************************/
+    @Override
     public HashMap<String, String> getAllLanguages() {
         return this.allLanguages;
     }
@@ -236,18 +236,9 @@ public class MetadataType implements Serializable {
      * @param value name of the metadata type in the given language
      * @return true, if successful
      **************************************************************************/
-    public boolean addLanguage(String theLanguage, String theValue) {
-
-        // Check, if language already is available, if not, put it in.
-        for (Map.Entry<String, String> lang : this.allLanguages.entrySet()) {
-            if (lang.getKey().equals(theLanguage)) {
-                return false;
-            }
-        }
-
+    @Override
+    public void addLanguage(String theLanguage, String theValue) {
         this.allLanguages.put(theLanguage, theValue);
-
-        return true;
     }
 
     /***************************************************************************
@@ -258,6 +249,7 @@ public class MetadataType implements Serializable {
      * @param lang language code
      * @return the translation of this MetadataType; or null, if it has no translation for this language.
      **************************************************************************/
+    @Override
     public String getNameByLanguage(String lang) {
 
         if (this.allLanguages.get(lang) == null) {
@@ -293,7 +285,7 @@ public class MetadataType implements Serializable {
         // Check, if language already is available, if so, remove it.
         for (Map.Entry<String, String> lang : this.allLanguages.entrySet()) {
             if (lang.getKey().equals(theLanguage)) {
-                this.allLanguages.remove(lang);
+                this.allLanguages.remove(lang.getKey());
                 return true;
             }
         }
@@ -348,7 +340,6 @@ public class MetadataType implements Serializable {
                 return false;
             }
         }
-        // TODO Teldemokles says: "Do never catch a NullPointerException"!
         catch (NullPointerException npe) {
             return false;
         }

@@ -36,7 +36,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.oro.text.perl.MalformedPerl5PatternException;
 import org.apache.oro.text.perl.Perl5Util;
 import org.w3c.dom.Document;
@@ -48,6 +47,7 @@ import org.xml.sax.SAXParseException;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import ugh.dl.Corporate;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
@@ -104,6 +104,7 @@ import ugh.exceptions.WriteException;
  * 
  ******************************************************************************/
 
+@Log4j2
 public class PicaPlus implements ugh.dl.Fileformat {
 
     /***************************************************************************
@@ -116,7 +117,6 @@ public class PicaPlus implements ugh.dl.Fileformat {
      * STATIC FINALS
      **************************************************************************/
 
-    private static final Logger LOGGER = Logger.getLogger(ugh.dl.DigitalDocument.class);
 
     protected static final String PICAPLUS_PREFS_NODE_NAME_STRING = "PicaPlus";
 
@@ -178,7 +178,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
         // Read preferences.
         Node picaplusNode = inPrefs.getPreferenceNode(PICAPLUS_PREFS_NODE_NAME_STRING);
         if (picaplusNode == null) {
-            LOGGER.error("Can't read preferences for picaplus fileformat! Node 'PicaPlus' in XML-file not found!");
+            log.error("Can't read preferences for picaplus fileformat! Node 'PicaPlus' in XML-file not found!");
         } else {
             this.readPrefs(picaplusNode);
         }
@@ -199,7 +199,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
         // Children should be "metadata" or "docstruct" nodes.
         NodeList children = picaplusnode.getChildNodes();
 
-        LOGGER.info("Reading " + PICAPLUS_PREFS_NODE_NAME_STRING + " prefs");
+        log.info("Reading " + PICAPLUS_PREFS_NODE_NAME_STRING + " prefs");
 
         for (int i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
@@ -230,7 +230,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
             }
         }
 
-        LOGGER.info("Reading picaplus prefs complete");
+        log.info("Reading picaplus prefs complete");
     }
 
     /**
@@ -577,7 +577,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
         DocStruct dsOld = null;
         DocStruct dsTop = null;
 
-        LOGGER.info("Parsing picaplus record");
+        log.info("Parsing picaplus record");
 
         // DOM tree is created already - parse the the tree and find
         // picaplusresults and picaplusrecord elements.
@@ -619,21 +619,21 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 throw new ReadException("No DocStruct created");
             }
 
-            LOGGER.info("DocumentStructure created:" + dsTop.getType().getName());
+            log.info("DocumentStructure created:" + dsTop.getType().getName());
 
             this.mydoc.setLogicalDocStruct(dsTop);
         } catch (TypeNotAllowedAsChildException e) {
             // Child DocStruct could not be added to father, because of ruleset.
             String message = "Can't add child to parent DocStruct! Child type '" + ds.getType().getName() + "' not allowed for parent type";
-            LOGGER.error(message, e);
+            log.error(message, e);
             throw new ReadException(message, e);
         } catch (MetadataTypeNotAllowedException e) {
             String message = "Can't add child to parent DocStruct! Child type must not be null";
-            LOGGER.error(message, e);
+            log.error(message, e);
             throw new ReadException(message, e);
         }
 
-        LOGGER.info("Parsing picaplus record complete");
+        log.info("Parsing picaplus record complete");
 
         return true;
     }
@@ -713,14 +713,14 @@ public class PicaPlus implements ugh.dl.Fileformat {
             // No DocumentStructure never read!!!
             if (dsTop == null) {
                 String message = "No DocStruct created!";
-                LOGGER.error(message);
+                log.error(message);
                 throw new ReadException(message);
             }
 
             this.mydoc.setLogicalDocStruct(dsTop);
         } catch (SAXParseException e) {
             String message = "Not a valid XML file!";
-            LOGGER.error(message, e);
+            log.error(message, e);
             throw new ReadException(message, e);
         } catch (SAXException sxe) {
             Exception e = sxe;
@@ -728,24 +728,24 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 e = sxe.getException();
             }
             String message = "Not a valid XML file!";
-            LOGGER.error(message, e);
+            log.error(message, e);
             throw new ReadException(message, e);
         } catch (ParserConfigurationException e) {
             String message = "Parser configuration exception!";
-            LOGGER.error(message, e);
+            log.error(message, e);
             throw new ReadException(message, e);
         } catch (IOException e) {
             String message = "IOException while reading file!";
-            LOGGER.error(message, e);
+            log.error(message, e);
             throw new ReadException(message, e);
         } catch (TypeNotAllowedAsChildException e) {
             // Child DocStruct could not be added to parent, because of ruleset.
             String message = "Can't add child to parent DocStruct; Child type not allowed for parent type!";
-            LOGGER.error(message, e);
+            log.error(message, e);
             throw new ReadException(message, e);
         } catch (MetadataTypeNotAllowedException e) {
             String message = "Can't add child to parent DocStruct; Child type must not be null!";
-            LOGGER.error(message, e);
+            log.error(message, e);
             throw new ReadException(message, e);
         }
 
@@ -786,22 +786,22 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     for (Serializable pprObject : hs) {
                         if (pprObject != null && pprObject.getClass() == ugh.dl.DocStruct.class) {
                             if (ds != null) {
-                                LOGGER.warn("Additional DocStruct found, replacing the old one!");
+                                log.warn("Additional DocStruct found, replacing the old one!");
                             }
                             ds = (DocStruct) pprObject;
-                            LOGGER.info("DocStruct '" + ds.getType().getName() + "' found");
+                            log.info("DocStruct '" + ds.getType().getName() + "' found");
                         } else if (pprObject != null && pprObject.getClass() == ugh.dl.Metadata.class) {
                             md = (Metadata) pprObject;
                             allMDs.add(md);
-                            LOGGER.debug("Metadata (" + md.getType().getName() + "): '" + md.getValue() + "'");
+                            log.debug("Metadata (" + md.getType().getName() + "): '" + md.getValue() + "'");
                         } else if (pprObject != null && pprObject.getClass() == ugh.dl.Person.class) {
                             per = (Person) pprObject;
                             allPer.add(per);
-                            LOGGER.debug("Person '" + per.getType().getName() + "' found");
+                            log.debug("Person '" + per.getType().getName() + "' found");
                         } else if (pprObject != null && pprObject.getClass() == ugh.dl.MetadataGroup.class) {
                             MetadataGroup group = (MetadataGroup) pprObject;
                             allGroups.add(group);
-                            LOGGER.debug("MetadataGroup '" + group.getType().getName() + "' found");
+                            log.debug("MetadataGroup '" + group.getType().getName() + "' found");
                         } else if (pprObject != null && pprObject.getClass() == ugh.dl.Corporate.class) {
                             allCorp.add((Corporate) pprObject);
                         }
@@ -813,7 +813,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
         if (ds == null) {
             // No DocStruct found, this is a serious problem; as I do not know
             // to where I should attach the metadata.
-            LOGGER.error("Picaplus record read, but no DocStruct found!");
+            log.error("Picaplus record read, but no DocStruct found!");
             return null;
         }
 
@@ -824,11 +824,11 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     ds.addMetadata(md2);
                 } catch (MetadataTypeNotAllowedException e) {
                     String message = "Ignoring MetadataTypeNotAllowedException at OPAC import!";
-                    LOGGER.warn(message, e);
+                    log.warn(message, e);
                     continue;
                 } catch (DocStructHasNoTypeException e) {
                     String message = "Ignoring DocStructHasNoTypeException at OPAC import!";
-                    LOGGER.warn(message, e);
+                    log.warn(message, e);
                     continue;
                 }
             }
@@ -849,7 +849,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 if (mdt == null) {
                     // Unknown metadata type.
                     String message = "No appropriate MetadataType with name '" + mmg.getMetadatatypename() + "' for group found!";
-                    LOGGER.error(message);
+                    log.error(message);
                     break;
                 }
                 Metadata md3 = new Metadata(mdt);
@@ -857,14 +857,14 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 try {
                     // Add metadata to docstruct.
                     ds.addMetadata(md3);
-                    LOGGER.info("Added metadata '" + md3.getType().getName() + "' to DocStruct '" + ds.getType().getName() + "'");
+                    log.info("Added metadata '" + md3.getType().getName() + "' to DocStruct '" + ds.getType().getName() + "'");
                 } catch (DocStructHasNoTypeException e) {
                     String message = "Ignoring DocStructHasNoTypeException at OPAC import!";
-                    LOGGER.warn(message, e);
+                    log.warn(message, e);
                     break;
                 } catch (MetadataTypeNotAllowedException e) {
                     String message = "Ignoring MetadataTypeNotAllowedException at OPAC import!";
-                    LOGGER.warn(message, e);
+                    log.warn(message, e);
                     break;
                 }
             }
@@ -877,10 +877,10 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     ds.addPerson(per2);
                 } catch (MetadataTypeNotAllowedException e) {
                     String message = "Ignoring MetadataTypeNotAllowedException at OPAC import!";
-                    LOGGER.warn(message, e);
+                    log.warn(message, e);
                 } catch (IncompletePersonObjectException e) {
                     String message = "Ignoring IncompletePersonObjectException at OPAC import!";
-                    LOGGER.warn(message, e);
+                    log.warn(message, e);
                 }
             }
         }
@@ -891,7 +891,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     ds.addCorporate(corp);
                 } catch (MetadataTypeNotAllowedException e) {
                     String message = "Ignoring MetadataTypeNotAllowedException at OPAC import!";
-                    LOGGER.warn(message, e);
+                    log.warn(message, e);
                 }
             }
         }
@@ -902,7 +902,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 ds.addMetadataGroup(group);
             } catch (MetadataTypeNotAllowedException e) {
                 String message = "Ignoring MetadataTypeNotAllowedException at OPAC import!";
-                LOGGER.warn(message, e);
+                log.warn(message, e);
             }
         }
 
@@ -1000,7 +1000,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                             && !perlUtil.match(mmo.getValueCondition(), content)) {
                         //  Check what happens to "\"s in the String from
                         // the Prefs' XML value.
-                        LOGGER.info("Condition '" + mmo.getValueCondition() + "' for " + mmo.getType() + " '" + mmo.getInternalName() + " (" + content
+                        log.info("Condition '" + mmo.getValueCondition() + "' for " + mmo.getType() + " '" + mmo.getInternalName() + " (" + content
                                 + ")" + "' does not match, skipping...");
                         continue;
                     }
@@ -1008,7 +1008,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     String message =
                             "The regular expression '" + mmo.getValueCondition() + "' delivered with " + mmo.getType() + " '" + mmo.getInternalName()
                             + "' in the " + PICAPLUS_PREFS_NODE_NAME_STRING + " section of the preferences file is not valid!";
-                    LOGGER.error(message, e);
+                    log.error(message, e);
                     throw new ReadException(message, e);
                 }
 
@@ -1020,14 +1020,14 @@ public class PicaPlus implements ugh.dl.Fileformat {
                         // Check what happens to "\"s in the String from
                         // the Prefs' XML value.
                         content = new String(perlUtil.substitute(mmo.getValueRegExp(), content));
-                        LOGGER.info("Regular expression '" + mmo.getValueRegExp() + "' changed value of " + mmo.getType() + " '"
+                        log.info("Regular expression '" + mmo.getValueRegExp() + "' changed value of " + mmo.getType() + " '"
                                 + mmo.getInternalName() + "' from '" + oldContent + "' to '" + content + "'");
                     }
                 } catch (MalformedPerl5PatternException e) {
                     String message =
                             "The regular expression '" + mmo.getValueRegExp() + "' delivered with " + mmo.getType() + " '" + mmo.getInternalName()
                             + "' in the " + PICAPLUS_PREFS_NODE_NAME_STRING + " section of the preferences file is not valid!";
-                    LOGGER.error(message, e);
+                    log.error(message, e);
                     throw new ReadException(message, e);
                 }
 
@@ -1046,13 +1046,13 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     dst = this.myPreferences.getDocStrctTypeByName(mmo.getInternalName());
 
                     if (dst == null) {
-                        LOGGER.warn("Can't create unknown DocStruct '" + mmo.getInternalName() + "'");
+                        log.warn("Can't create unknown DocStruct '" + mmo.getInternalName() + "'");
                     }
 
                     try {
                         ds = this.mydoc.createDocStruct(dst);
                     } catch (TypeNotAllowedForParentException e) {
-                        LOGGER.warn("DocStructType '" + dst.getName() + "' is not allowed for parent DocStruct", e);
+                        log.warn("DocStructType '" + dst.getName() + "' is not allowed for parent DocStruct", e);
                         return null;
                     }
                     this.mydoc.setLogicalDocStruct(ds);
@@ -1060,7 +1060,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
 
                 } else if (mmo != null && mmo.getType().equals("Metadata")) {
                     // It's a metadata type if it belongs to a group, add it.
-                    LOGGER.debug("Picafield (" + mmo.getPicaplusField() + "): " + content);
+                    log.debug("Picafield (" + mmo.getPicaplusField() + "): " + content);
 
                     if (mmo.getPicaplusGroupname() != null) {
                         // Get list with appropriate name.
@@ -1086,7 +1086,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                                 String internalName = mmo.getInternalName();
                                 MetadataType mdt = this.myPreferences.getMetadataTypeByName(internalName);
                                 if (mdt == null) {
-                                    LOGGER.warn("Can't create unknown Metadata object '" + internalName + "'");
+                                    log.warn("Can't create unknown Metadata object '" + internalName + "'");
                                 } else {
                                     md = new Metadata(mdt);
                                     value = content;
@@ -1103,7 +1103,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                             String internalname = mmo.getInternalName();
                             MetadataType mdt = this.myPreferences.getMetadataTypeByName(internalname);
                             if (mdt == null) {
-                                LOGGER.warn("Can't create unknown Metadata object '" + internalname + "'");
+                                log.warn("Can't create unknown Metadata object '" + internalname + "'");
                             } else {
                                 md = new Metadata(mdt);
                                 md.setValue(content);
@@ -1119,7 +1119,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
 
                         MetadataType mdt = this.myPreferences.getMetadataTypeByName(internalname);
                         if (mdt == null) {
-                            LOGGER.warn("Can't find MetadataType with internal name '" + internalname + "'");
+                            log.warn("Can't find MetadataType with internal name '" + internalname + "'");
                             return null;
                         }
                         corp = new Corporate(mdt);
@@ -1171,7 +1171,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                         // Person is not yet instantiated.
                         MetadataType mdt = this.myPreferences.getMetadataTypeByName(internalname);
                         if (mdt == null) {
-                            LOGGER.warn("Can't find MetadataType with internal name '" + internalname + "'");
+                            log.warn("Can't find MetadataType with internal name '" + internalname + "'");
                             return null;
                         }
                         per = new Person(mdt);
@@ -1305,7 +1305,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 } else if (content instanceof Metadata) {
                     createdGroup.addMetadata((Metadata) content);
                 } else {
-                    LOGGER.warn("Can't add a " + content.getClass().getSimpleName() + " to a MetadataGroup.");
+                    log.warn("Can't add a " + content.getClass().getSimpleName() + " to a MetadataGroup.");
                 }
             }
             result = new HashSet<>();

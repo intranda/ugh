@@ -143,8 +143,8 @@ public class SlimDocStruct {
                 sds.docStructRefsTo.add(SlimReference.fromReference(ref, sdd));
             }
         }
-        if (ds.getAddableMetadataTypes() != null) {
-            for (MetadataType mdt : ds.getAddableMetadataTypes()) {
+        if (ds.getAddableMetadataTypes(false) != null) {
+            for (MetadataType mdt : ds.getAddableMetadataTypes(false)) {
                 sds.digitalDocument.addMetadataType(mdt);
             }
         }
