@@ -1769,8 +1769,14 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             for (MatchingMetadataObject mm : this.modsNamesMD) {
                 if (mm.getInternalName().equals(mg.getType().getName())) {
                     String groupPath = mm.getWriteXPath();
+                    if (groupPath.startsWith("./mods:mods") || groupPath.startsWith("/mods:mods") || groupPath.startsWith("mods:mods")) {
+                        Node n = createdNode;
+                        while (!n.getNodeName().equals("mods:mods")) {
+                            n = n.getParentNode();
+                        }
+                        writeSingleModsGroup(mm, mg, n, theDocument);
 
-                    if (groupPath.isEmpty()) {
+                    } else if (groupPath.isEmpty()) {
                         writeSingleModsGroup(mm, mg, createdNode, theDocument);
                     } else if (groupPath.startsWith(".")) {
                         writeSingleModsGroup(mm, mg, createdNode, theDocument);
