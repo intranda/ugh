@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -456,7 +457,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                             // only write groups with values
 
                             if (!isEmpty) {
-                                writeSingleModsGroup(mmo, group, dommodsnode, domDoc);
+                                writeSingleModsGroup(mmo, group, dommodsnode, domDoc, null);
 
                                 // The node was sucessfully written! Remove the
                                 // metadata object from the checklist.
@@ -632,7 +633,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                         // only write groups with values
 
                         if (!isEmpty) {
-                            writeSingleModsGroup(mmo, group, dommodsnode, domDoc);
+                            writeSingleModsGroup(mmo, group, dommodsnode, domDoc, null);
 
                             // The node was sucessfully written! Remove the
                             // metadata object from the checklist.
@@ -1730,7 +1731,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         }
     }
 
-    protected void writeSingleModsGroup(MatchingMetadataObject mmo, MetadataGroup theGroup, Node theStartingNode, Document theDocument)
+    protected void writeSingleModsGroup(MatchingMetadataObject mmo, MetadataGroup theGroup, Node theStartingNode, Document theDocument, String parentId)
             throws PreferencesException {
         Node createdNode = null;
         String xpath = mmo.getWriteXPath();
@@ -1741,26 +1742,52 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         } else {
             createdNode = createNode(mmo.getWriteXPath(), theStartingNode, theDocument, true);
         }
+        String groupId = null;
         Map<String, Map<String, String>> xpathMap = mmo.getMetadataGroupXQueries();
-
         for (String metadataName : xpathMap.keySet()) {
-            for (Metadata md : theGroup.getMetadataList()) {
-                if (md.getType().getName().equals(metadataName) && md.getValue() != null && !md.getValue().isEmpty()) {
-                    Map<String, String> xqueryMap = xpathMap.get(metadataName);
-                    String xquery = xqueryMap.get(metadataName);
-                    writeSingleModsMetadata(xquery, md, createdNode, theDocument);
+            if ("GENERATED_ID".equals(metadataName)) {
+                Map<String, String> xqueryMap = xpathMap.get(metadataName);
+                String xquery = xqueryMap.get(metadataName);
+                Node node;
+                if (xquery.startsWith("./@") || xquery.startsWith("@")) {
+                    node = createNode(xquery, createdNode, theDocument, false);
+                } else {
+                    node = createNode(xquery, createdNode, theDocument, true);
                 }
-            }
-            for (Person p : theGroup.getPersonList()) {
-                if (p.getType().getName().equals(metadataName)) {
-                    Map<String, String> xqueryMap = xpathMap.get(metadataName);
-                    writeSingleGroupPerson(p, xqueryMap, createdNode, theDocument);
+                groupId = "id"+ UUID.randomUUID().toString();
+                Node valueNode = theDocument.createTextNode(groupId);
+                node.appendChild(valueNode);
+            } else if  ("PARENT_ID".equals(metadataName) && StringUtils.isNotBlank(parentId)) {
+                Map<String, String> xqueryMap = xpathMap.get(metadataName);
+                String xquery = xqueryMap.get(metadataName);
+                Node node;
+                if (xquery.startsWith("./@") || xquery.startsWith("@")) {
+                    node = createNode(xquery, createdNode, theDocument, false);
+                } else {
+                    node = createNode(xquery, createdNode, theDocument, true);
                 }
-            }
-            for (Corporate c : theGroup.getCorporateList()) {
-                if (c.getType().getName().equals(metadataName)) {
-                    Map<String, String> xqueryMap = xpathMap.get(metadataName);
-                    writeSingleGroupCorporate(c, xqueryMap, createdNode, theDocument);
+                Node valueNode = theDocument.createTextNode(parentId);
+                node.appendChild(valueNode);
+            }else {
+
+                for (Metadata md : theGroup.getMetadataList()) {
+                    if (md.getType().getName().equals(metadataName) && md.getValue() != null && !md.getValue().isEmpty()) {
+                        Map<String, String> xqueryMap = xpathMap.get(metadataName);
+                        String xquery = xqueryMap.get(metadataName);
+                        writeSingleModsMetadata(xquery, md, createdNode, theDocument);
+                    }
+                }
+                for (Person p : theGroup.getPersonList()) {
+                    if (p.getType().getName().equals(metadataName)) {
+                        Map<String, String> xqueryMap = xpathMap.get(metadataName);
+                        writeSingleGroupPerson(p, xqueryMap, createdNode, theDocument);
+                    }
+                }
+                for (Corporate c : theGroup.getCorporateList()) {
+                    if (c.getType().getName().equals(metadataName)) {
+                        Map<String, String> xqueryMap = xpathMap.get(metadataName);
+                        writeSingleGroupCorporate(c, xqueryMap, createdNode, theDocument);
+                    }
                 }
             }
         }
@@ -1774,14 +1801,14 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                         while (!n.getNodeName().equals("mods:mods")) {
                             n = n.getParentNode();
                         }
-                        writeSingleModsGroup(mm, mg, n, theDocument);
+                        writeSingleModsGroup(mm, mg, n, theDocument, groupId);
 
                     } else if (groupPath.isEmpty()) {
-                        writeSingleModsGroup(mm, mg, createdNode, theDocument);
+                        writeSingleModsGroup(mm, mg, createdNode, theDocument, groupId);
                     } else if (groupPath.startsWith(".")) {
-                        writeSingleModsGroup(mm, mg, createdNode, theDocument);
+                        writeSingleModsGroup(mm, mg, createdNode, theDocument, groupId);
                     } else if (groupPath.startsWith("/")) {
-                        writeSingleModsGroup(mm, mg, theStartingNode, theDocument);
+                        writeSingleModsGroup(mm, mg, theStartingNode, theDocument, groupId);
                     }
 
                 }

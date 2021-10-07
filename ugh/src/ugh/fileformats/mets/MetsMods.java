@@ -590,6 +590,7 @@ public class MetsMods implements ugh.dl.Fileformat {
     protected String dvNamespacePrefix;
     protected String xsiNamespacePrefix;
     protected String xlinkNamespacePrefix;
+    protected String xmlNamespacePrefix;
 
     // Stores the xpath expression to extract the identifier of the anchor.
     protected String xpathForLinkToAnchor = null;
@@ -5401,6 +5402,13 @@ public class MetsMods implements ugh.dl.Fileformat {
         }
         this.namespaces.put(xlink.getPrefix(), xlink);
         this.xlinkNamespacePrefix = xlink.getPrefix();
+
+        Namespace xml = new Namespace();
+        xml.setPrefix("xml");
+        xml.setUri("http://www.w3.org/XML/1998/namespace");
+
+        this.namespaces.put(xml.getPrefix(), xml);
+        this.xmlNamespacePrefix = xml.getPrefix();
 
         // XSI namespace.
         Namespace xsi = new Namespace();
