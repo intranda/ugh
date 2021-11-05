@@ -2201,7 +2201,7 @@ public class MetsMods implements ugh.dl.Fileformat {
     }
 
     private MetadataGroup readMetadataGroup(Node metabagu) throws ReadException {
-        String groupName = metabagu.getAttributes().item(0).getTextContent();
+        String groupName = metabagu.getAttributes().getNamedItem("name").getTextContent();
         // Check if group exists in prefs.
         MetadataGroupType mgt = this.myPreferences.getMetadataGroupTypeByName(groupName);
 

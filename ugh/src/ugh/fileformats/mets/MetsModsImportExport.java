@@ -1731,8 +1731,8 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         }
     }
 
-    protected void writeSingleModsGroup(MatchingMetadataObject mmo, MetadataGroup theGroup, Node theStartingNode, Document theDocument, String parentId)
-            throws PreferencesException {
+    protected void writeSingleModsGroup(MatchingMetadataObject mmo, MetadataGroup theGroup, Node theStartingNode, Document theDocument,
+            String parentId) throws PreferencesException {
         Node createdNode = null;
         String xpath = mmo.getWriteXPath();
         if (xpath.equals("./mods:mods") || xpath.equals("./") || xpath.equals(".") || xpath.equals("/")) {
@@ -1754,10 +1754,10 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 } else {
                     node = createNode(xquery, createdNode, theDocument, true);
                 }
-                groupId = "id"+ UUID.randomUUID().toString();
+                groupId = "id" + UUID.randomUUID().toString();
                 Node valueNode = theDocument.createTextNode(groupId);
                 node.appendChild(valueNode);
-            } else if  ("PARENT_ID".equals(metadataName) && StringUtils.isNotBlank(parentId)) {
+            } else if ("PARENT_ID".equals(metadataName) && StringUtils.isNotBlank(parentId)) {
                 Map<String, String> xqueryMap = xpathMap.get(metadataName);
                 String xquery = xqueryMap.get(metadataName);
                 Node node;
@@ -1768,7 +1768,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 }
                 Node valueNode = theDocument.createTextNode(parentId);
                 node.appendChild(valueNode);
-            }else {
+            } else {
 
                 for (Metadata md : theGroup.getMetadataList()) {
                     if (md.getType().getName().equals(metadataName) && md.getValue() != null && !md.getValue().isEmpty()) {
@@ -1838,15 +1838,16 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         // Add value to node.
         Node valueNode = theDocument.createTextNode(theMetadata.getValue());
         createdNode.appendChild(valueNode);
-
         if (StringUtils.isNotBlank(theMetadata.getAuthorityID()) && StringUtils.isNotBlank(theMetadata.getAuthorityURI())
                 && StringUtils.isNotBlank(theMetadata.getAuthorityValue())) {
-            if (theMetadata.getAuthorityValue().startsWith("http")) {
-                ((Element) createdNode).setAttribute("valueURI", theMetadata.getAuthorityValue());
-            } else {
-                ((Element) createdNode).setAttribute("authority", theMetadata.getAuthorityID());
-                ((Element) createdNode).setAttribute("authorityURI", theMetadata.getAuthorityURI());
-                ((Element) createdNode).setAttribute("valueURI", theMetadata.getAuthorityURI() + theMetadata.getAuthorityValue());
+            if (createdNode instanceof Element) {
+                if (theMetadata.getAuthorityValue().startsWith("http")) {
+                    ((Element) createdNode).setAttribute("valueURI", theMetadata.getAuthorityValue());
+                } else {
+                    ((Element) createdNode).setAttribute("authority", theMetadata.getAuthorityID());
+                    ((Element) createdNode).setAttribute("authorityURI", theMetadata.getAuthorityURI());
+                    ((Element) createdNode).setAttribute("valueURI", theMetadata.getAuthorityURI() + theMetadata.getAuthorityValue());
+                }
             }
         }
 
