@@ -113,10 +113,6 @@ public class GroupMetsExportTest {
         metadataFile = Paths.get(exportFolder.toString(), "meta_export.xml");
         metsModsExport.write(metadataFile.toString());
 
-        // TODO remove
-        metsModsExport.write("/tmp/test.xml");
-
-
         assertTrue(Files.exists(metadataFile));
 
         // read exported file
