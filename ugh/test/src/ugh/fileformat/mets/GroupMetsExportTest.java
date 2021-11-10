@@ -72,6 +72,19 @@ public class GroupMetsExportTest {
         other.addMetadata(city);
         publisherGroup.addMetadataGroup(other);
 
+        Metadata state = new Metadata(prefs.getMetadataTypeByName("State"));
+        state.setValue("state");
+        other.addMetadata(state);
+
+        Metadata country = new Metadata(prefs.getMetadataTypeByName("Country"));
+        country.setValue("country");
+        other.addMetadata(country);
+        Metadata Province = new Metadata(prefs.getMetadataTypeByName("Province"));
+        Province.setValue("Province");
+        other.addMetadata(Province);
+
+
+
         fileformat.getDigitalDocument().getLogicalDocStruct().addMetadataGroup(publisherGroup);
 
         Path metadataFile = Paths.get(exportFolder.toString(), "meta.xml");
@@ -99,6 +112,10 @@ public class GroupMetsExportTest {
 
         metadataFile = Paths.get(exportFolder.toString(), "meta_export.xml");
         metsModsExport.write(metadataFile.toString());
+
+        // TODO remove
+        metsModsExport.write("/tmp/test.xml");
+
 
         assertTrue(Files.exists(metadataFile));
 

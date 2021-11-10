@@ -7269,6 +7269,18 @@
           <InternalName>City</InternalName>
           <WriteXPath>#mods:placeTerm[@type='text']</WriteXPath>
         </Metadata>
+        <Metadata>
+          <InternalName>Province</InternalName>
+          <WriteXPath>mods:extension/#mods:prov</WriteXPath>
+        </Metadata>
+        <Metadata>
+          <InternalName>State</InternalName>
+          <WriteXPath>mods:extension/#mods:state</WriteXPath>
+        </Metadata>
+        <Metadata>
+          <InternalName>Country</InternalName>
+          <WriteXPath>mods:extension/#mods:country</WriteXPath>
+        </Metadata>
       </Group>
       <!-- test metadata end -->
 

@@ -3965,7 +3965,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             // check, if something is available with a certain value.
             if (element.contains("=")) {
                 requestingElement = false;
-                if (currentPath == null) {
+                if (StringUtils.isBlank(currentPath)) {
                     // It is the first attribute, so add a "./".
                     currentPath = "./" + element;
                 } else {

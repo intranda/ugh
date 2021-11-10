@@ -1769,7 +1769,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 Node valueNode = theDocument.createTextNode(parentId);
                 node.appendChild(valueNode);
             } else {
-
                 for (Metadata md : theGroup.getMetadataList()) {
                     if (md.getType().getName().equals(metadataName) && md.getValue() != null && !md.getValue().isEmpty()) {
                         Map<String, String> xqueryMap = xpathMap.get(metadataName);
@@ -1802,7 +1801,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                             n = n.getParentNode();
                         }
                         writeSingleModsGroup(mm, mg, n, theDocument, groupId);
-
                     } else if (groupPath.isEmpty()) {
                         writeSingleModsGroup(mm, mg, createdNode, theDocument, groupId);
                     } else if (groupPath.startsWith(".")) {
@@ -1825,9 +1823,15 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             createdNode = theStartingNode;
         } else if (theXQuery.startsWith("@") || theXQuery.startsWith("./@")) {
             createdNode = createNode(theXQuery, theStartingNode, theDocument, false);
-        } else {
-
+        } else if (theXQuery.startsWith("./")){
             createdNode = createNode(theXQuery, theStartingNode, theDocument, true);
+        } else {
+            if (theXQuery.startsWith("/")) {
+                theXQuery = "." + theXQuery;
+            } else {
+                theXQuery = "./" + theXQuery;
+            }
+            createdNode = createNode(theXQuery, theStartingNode, theDocument, false);
         }
         if (createdNode == null) {
             String message = "DOM Node could not be created for metadata '" + theMetadata.getType().getName() + "'! XQuery was '" + theXQuery + "'";
