@@ -49,7 +49,7 @@
         <oro.version>2.0.8</oro.version>
         <xerces.version>2.9.1</xerces.version>
         <xmlbeans.version>5.0.0</xmlbeans.version>
-        <xstream.version>1.4.6</xstream.version>
+        <xstream.version>1.4.18</xstream.version>
         <saxon.version>10.6</saxon.version>
         <mets.version>1.12.1</mets.version>
         <mods.version>3.7.1</mods.version>
