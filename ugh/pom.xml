@@ -54,7 +54,7 @@
         <mets.version>1.12.1</mets.version>
         <mods.version>3.7.1</mods.version>
         <jcabi.version>1.1</jcabi.version>
-        <junit.version>4.13.1</junit.version>
+        <junit.version>4.13.2</junit.version>
     </properties>
 
 
