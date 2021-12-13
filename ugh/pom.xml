@@ -41,7 +41,6 @@
         <commons-lang.version>2.6</commons-lang.version>
         <commons-logging.version>1.2</commons-logging.version>
         <dom4j.version>1.6.1</dom4j.version>
-        <itext.version>2.1.4</itext.version>
         <jdom2.version>2.0.6.1</jdom2.version>
         <jackson.version>2.13.0</jackson.version>
         <log4j.version>2.15.0</log4j.version>
@@ -189,11 +188,6 @@
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>${dom4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.lowagie</groupId>
-            <artifactId>itext</artifactId>
-            <version>${itext.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jdom</groupId>
