@@ -20,10 +20,10 @@ public class MetsModsAreaTest {
     public void testReadPhysicalSectionInMetsFile() throws Exception {
         Prefs prefs = new Prefs();
 
-        prefs.loadPrefs("test/resources/ruleset.xml");
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
 
         MetsMods mm = new MetsMods(prefs);
-        mm.read("test/resources/meta.xml");
+        mm.read("src/test/resources/meta.xml");
 
         assertNotNull(mm);
         DocStruct boundBook = mm.getDigitalDocument().getPhysicalDocStruct();
@@ -47,10 +47,10 @@ public class MetsModsAreaTest {
     @Test
     public void testWritePhysicalDocstruct() throws Exception {
         Prefs prefs = new Prefs();
-        prefs.loadPrefs("test/resources/ruleset.xml");
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
 
         MetsMods mm = new MetsMods(prefs);
-        mm.read("test/resources/meta.xml");
+        mm.read("src/test/resources/meta.xml");
 
         DocStruct boundBook = mm.getDigitalDocument().getPhysicalDocStruct();
 
@@ -67,10 +67,10 @@ public class MetsModsAreaTest {
         area.addMetadata(md1);
         area.addMetadata(md2);
         // save, load, compare
-        mm.write("test/resources/tmp.xml");
+        mm.write("src/test/resources/tmp.xml");
 
         MetsMods mm2 = new MetsMods(prefs);
-        mm2.read("test/resources/tmp.xml");
+        mm2.read("src/test/resources/tmp.xml");
         DocStruct boundBook2 = mm2.getDigitalDocument().getPhysicalDocStruct();
         DocStruct pageFromMets = boundBook2.getAllChildren().get(1);
         DocStruct areaFromMets = pageFromMets.getAllChildren().get(0);
@@ -84,10 +84,10 @@ public class MetsModsAreaTest {
     @Test
     public void testMapLogicalToArea() throws Exception {
         Prefs prefs = new Prefs();
-        prefs.loadPrefs("test/resources/ruleset.xml");
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
         MetsMods mm = null;
         mm = new MetsMods(prefs);
-        mm.read("test/resources/meta.xml");
+        mm.read("src/test/resources/meta.xml");
 
         DocStruct boundBook = mm.getDigitalDocument().getPhysicalDocStruct();
 
@@ -111,10 +111,10 @@ public class MetsModsAreaTest {
         area.addMetadata(md1);
         area.addMetadata(md2);
         // save, load, compare
-        mm.write("test/resources/tmp2.xml");
+        mm.write("src/test/resources/tmp2.xml");
 
         MetsMods mm2 = new MetsMods(prefs);
-        mm2.read("test/resources/tmp2.xml");
+        mm2.read("src/test/resources/tmp2.xml");
         DocStruct chapterFromMets = mm2.getDigitalDocument().getLogicalDocStruct().getAllChildren().get(1);
         assertEquals("main title", chapterFromMets.getAllMetadata().get(0).getValue());
         DocStruct linkedArea = chapterFromMets.getAllToReferences().get(0).getTarget();
@@ -125,10 +125,10 @@ public class MetsModsAreaTest {
     @Test
     public void testGetPhysicalStructureAsFlatList() throws Exception {
         Prefs prefs = new Prefs();
-        prefs.loadPrefs("test/resources/ruleset.xml");
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
         MetsMods mm = null;
         mm = new MetsMods(prefs);
-        mm.read("test/resources/meta.xml");
+        mm.read("src/test/resources/meta.xml");
 
         DocStruct boundBook = mm.getDigitalDocument().getPhysicalDocStruct();
         List<DocStruct> phys = boundBook.getAllChildrenAsFlatList();
@@ -143,10 +143,10 @@ public class MetsModsAreaTest {
     @Test
     public void testWriteSeveralFileGroups() throws Exception {
         Prefs prefs = new Prefs();
-        prefs.loadPrefs("test/resources/ruleset.xml");
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
 
         MetsMods mm = new MetsMods(prefs);
-        mm.read("test/resources/meta.xml");
+        mm.read("src/test/resources/meta.xml");
 
         DocStruct boundBook = mm.getDigitalDocument().getPhysicalDocStruct();
 
@@ -184,10 +184,10 @@ public class MetsModsAreaTest {
         mm.setWriteLocal(false);
 
         // save, load, compare
-        mm.write("test/resources/tmp3.xml");
+        mm.write("src/test/resources/tmp3.xml");
 
         MetsMods mm2 = new MetsMods(prefs);
-        mm2.read("test/resources/tmp3.xml");
+        mm2.read("src/test/resources/tmp3.xml");
         DocStruct boundBook2 = mm2.getDigitalDocument().getPhysicalDocStruct();
         DocStruct pageFromMets = boundBook2.getAllChildren().get(1);
         DocStruct areaFromMets = pageFromMets.getAllChildren().get(0);

@@ -42,10 +42,10 @@ public class GroupMetsExportTest {
     @Before
     public void setUp() throws Exception {
         prefs = new Prefs();
-        prefs.loadPrefs("test/resources/ruleset.xml");
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
 
         fileformat = new MetsMods(prefs);
-        fileformat.read("test/resources/meta.xml");
+        fileformat.read("src/test/resources/meta.xml");
 
         exportFolder = folder.newFolder("fixture");
         exportFolder.mkdirs();
