@@ -27,7 +27,7 @@ public class PicaPlusTest {
     public void testReadPrefs() throws Exception {
         Prefs prefs = new Prefs();
 
-        prefs.loadPrefs("test/resources/ruleset.xml");
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
 
         PicaPlus fixture = new PicaPlus(prefs);
         assertNotNull (fixture);
@@ -37,11 +37,11 @@ public class PicaPlusTest {
     public void testReadPicaFromNode() throws Exception {
         Prefs prefs = new Prefs();
 
-        prefs.loadPrefs("test/resources/ruleset.xml");
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
 
         PicaPlus fixture = new PicaPlus(prefs);
         assertNotNull (fixture);
-        File fXmlFile = new File("test/resources/pica.xml");
+        File fXmlFile = new File("src/test/resources/pica.xml");
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);
@@ -76,11 +76,11 @@ public class PicaPlusTest {
     public void testReadPicaFromFile() throws Exception {
         Prefs prefs = new Prefs();
 
-        prefs.loadPrefs("test/resources/ruleset.xml");
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
 
         PicaPlus fixture = new PicaPlus(prefs);
         assertNotNull (fixture);
-        fixture.read("test/resources/pica.xml");
+        fixture.read("src/test/resources/pica.xml");
 
         DigitalDocument digDoc = fixture.getDigitalDocument();
         assertNotNull(digDoc);

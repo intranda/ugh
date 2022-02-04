@@ -3128,19 +3128,38 @@ public class DocStruct implements Serializable, HoldingElement {
             List<MetadataGroup> iteratorList = new LinkedList<>(metadatalist);
             for (MetadataGroup md : iteratorList) {
                 boolean isEmpty = true;
-                for (Metadata meta : md.getMetadataList()) {
-                    if (meta.getValue() != null) {
-                        isEmpty = false;
-                        break;
+                if (md.getMetadataList() != null) {
+                    for (Metadata meta : md.getMetadataList()) {
+                        if (meta.getValue() != null) {
+                            isEmpty = false;
+                            break;
+                        }
                     }
                 }
-                if (isEmpty) {
-                    this.getAllMetadataGroups().remove(md);
+
+                if (md.getCorporateList() != null) {
+                    for (Corporate corp : md.getCorporateList()) {
+                        if (StringUtils.isNotBlank(corp.getMainName()) || StringUtils.isNotBlank(corp.getPartName()) || !corp.getSubNames().isEmpty()) {
+                            isEmpty = false;
+                            break;
+                        }
+                    }
+                    if (md.getPersonList() != null) {
+                        for (Person per : md.getPersonList()) {
+                            if (StringUtils.isNotBlank(per.getLastname()) || StringUtils.isNotBlank(per.getFirstname())  ){
+                                isEmpty = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (isEmpty) {
+                        this.getAllMetadataGroups().remove(md);
+                    }
                 }
             }
         }
     }
-
     /***************************************************************************
      * <p>
      * Sorts the metadata and persons in the current DocStruct according to their occurance in the preferences file.

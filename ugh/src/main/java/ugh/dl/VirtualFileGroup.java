@@ -134,7 +134,11 @@ public class VirtualFileGroup implements Serializable {
      * @param mimetype
      **************************************************************************/
     public void setMimetype(String mimetype) {
-        this.mimetype = mimetype;
+    	if(mimetype != null) {	
+    		this.mimetype = mimetype;
+        }else {
+        	this.mimetype = "";
+        }
     }
 
     /***************************************************************************
@@ -149,12 +153,16 @@ public class VirtualFileGroup implements Serializable {
      **************************************************************************/
     public void setFileSuffix(String fileSuffix) {
 
-        // If the given file suffix starts with a ".", remove the ".".
-        if (fileSuffix.startsWith(".")) {
-            this.fileSuffix = fileSuffix.replaceFirst("\\.", "");
-        } else {
-            this.fileSuffix = fileSuffix;
-        }
+    	if(fileSuffix != null) {
+    		// If the given file suffix starts with a ".", remove the ".".
+	        if (fileSuffix.startsWith(".")) {
+	            this.fileSuffix = fileSuffix.replaceFirst("\\.", "");
+	        } else {
+	            this.fileSuffix = fileSuffix;
+	        }
+    	}else {
+    		this.fileSuffix = "";
+    	}
     }
 
     /***************************************************************************

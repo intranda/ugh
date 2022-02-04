@@ -16,7 +16,7 @@ public class DocStructTest {
     @Before
     public void setUp() throws Exception {
         prefs = new Prefs();
-        prefs.loadPrefs("test/resources/ruleset.xml");
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
     }
 
     @Test
