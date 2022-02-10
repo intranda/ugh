@@ -1390,6 +1390,10 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             }
         }
 
+        if (StringUtils.isNotBlank(inStruct.getOrderLabel())) {
+            div.setAttribute(METS_ORDERLABEL_STRING, inStruct.getOrderLabel());
+        }
+
         // Write the MPTR element if a non-anchor file is written AND element is
         // defined as an anchor in the prefs --> METS pointer in e.g.
         // "periodical volume".

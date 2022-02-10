@@ -204,6 +204,12 @@ public class DocStruct implements Serializable, HoldingElement {
     @Setter
     private String additionalValue;
 
+
+    // can be used to add additional data to the DocStruct, it can be exported to the div orderlabel attribute for logical docstructs
+    @Getter
+    @Setter
+    private String orderLabel;
+
     /***************************************************************************
      * <p>
      * This is needed so we can exclude the possibility to run eternal loops with non hierarchial references, will be filled with super()toString
