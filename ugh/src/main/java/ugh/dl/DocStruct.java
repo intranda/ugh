@@ -210,6 +210,11 @@ public class DocStruct implements Serializable, HoldingElement {
     @Setter
     private String orderLabel;
 
+    // can be used to generate a link to another element
+    @Getter
+    @Setter
+    private String link;
+
     /***************************************************************************
      * <p>
      * This is needed so we can exclude the possibility to run eternal loops with non hierarchial references, will be filled with super()toString

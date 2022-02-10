@@ -1408,7 +1408,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
 
         // Write the MPTR element if an anchor file is written AND parent
         // element is an anchor --> METS pointer in e.g. "periodical".
-        if (isAnchorFile && !inStruct.getType().isAnchor()) {
+        else if (isAnchorFile && !inStruct.getType().isAnchor()) {
             if (this.mptrUrlAnchor.equals("")) {
                 log.warn("No METS pointer URL (mptr) to the child DocStructs is defined! Referencing will NOT work!");
             }
@@ -1417,6 +1417,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 div.setAttribute(METS_ORDER_STRING, ordernumber);
             }
             // Write mptr element.
+            div.appendChild(mptr);
+        } else if (StringUtils.isNotBlank(inStruct.getLink())) {
+            createDomAttributeNS(mptr, this.xlinkNamespacePrefix, METS_HREF_STRING, inStruct.getLink());
             div.appendChild(mptr);
         }
 
