@@ -43,7 +43,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.oro.text.perl.Perl5Util;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
