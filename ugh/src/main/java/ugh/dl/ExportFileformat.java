@@ -97,4 +97,11 @@ public interface ExportFileformat extends Fileformat {
         // default implementation: ignore value
     }
 
+    default void setIIIFUrl(String iifApiUrl) {
+        // default implementation: ignore value, its only relevant in mets
+    }
+
+    default void setSruUrl(String sruUrl) {
+        // default implementation: ignore value, its only relevant in mets
+    }
 }

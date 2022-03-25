@@ -241,6 +241,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
     private String metsRightsSponsorSiteURL = "";
     private String metsRightsLicense = "";
 
+    private String iiifUrl ="";
+    private String sruUrl ="";
+
     /***************************************************************************
      * CONSTRUCTORS
      **************************************************************************/
@@ -1557,6 +1560,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 dvSponsor.setTextContent(metsRightsLicense);
                 dv.appendChild(dvSponsor);
             }
+
         }
 
         if (!digiprovMDExists) {
@@ -1591,8 +1595,21 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 dvPresentation.setTextContent(this.digiprovPresentation);
             }
 
+
             dvDigiprov.appendChild(dvReference);
             dvDigiprov.appendChild(dvPresentation);
+
+            if (StringUtils.isNotBlank(iiifUrl)) {
+                Element dvIiif =  createDomElementNS(domDoc, dvNamespacePrefix, "iiif");
+                dvIiif.setTextContent(iiifUrl);
+                dvDigiprov.appendChild(dvIiif);
+            }
+
+            if (StringUtils.isNotBlank(sruUrl)) {
+                Element dvIiif =  createDomElementNS(domDoc, dvNamespacePrefix, "sru");
+                dvIiif.setTextContent(sruUrl);
+                dvDigiprov.appendChild(dvIiif);
+            }
         }
 
         // Append to our metsNode, before the fileSec (or before the structMap
@@ -3067,6 +3084,16 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
     public void setMetsRightsLicense(String metsRightsLicense) {
         this.metsRightsLicense = metsRightsLicense;
 
+    }
+
+    @Override
+    public void setIIIFUrl(String iifApiUrl) {
+        iiifUrl = iifApiUrl;
+    }
+
+    @Override
+    public void setSruUrl(String sruUrl) {
+        this.sruUrl = sruUrl;
     }
 
     @Override
