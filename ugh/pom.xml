@@ -47,7 +47,7 @@
         <log4j.version>2.17.0</log4j.version>
         <lombok.version>1.18.22</lombok.version>
         <oro.version>2.0.8</oro.version>
-        <xerces.version>2.12.1</xerces.version>
+        <xerces.version>2.12.2</xerces.version>
         <xmlbeans.version>5.0.3</xmlbeans.version>
         <xstream.version>1.4.19</xstream.version>
         <saxon.version>11.2</saxon.version>
