@@ -69,7 +69,6 @@ public class Metadata implements Serializable {
 
     private static final long serialVersionUID = -2535548431060378914L;
 
-
     protected MetadataType MDType;
     // Document structure or group to which this metadata type belongs to.
     @Getter
@@ -93,6 +92,13 @@ public class Metadata implements Serializable {
     private boolean updated = false;
 
     private Map<String, String> authorityUriMap = new HashMap<>();
+
+    @Getter
+    @Setter
+    private boolean validationErrorPresent;
+    @Getter
+    @Setter
+    private String validationMessage;
 
     @Deprecated
     public Metadata() {
@@ -335,7 +341,7 @@ public class Metadata implements Serializable {
     public void setValueQualifier(String inVQ, String inVQType) {
 
         if (inVQ == null || inVQType == null) {
-            return ;
+            return;
         }
 
         this.MetadataVQ = inVQ;
@@ -435,14 +441,16 @@ public class Metadata implements Serializable {
                 return false;
             }
 
-            if (!((this.getValueQualifier() == null && metadata.getValueQualifier() == null) || this.getValueQualifier().equals(
-                    metadata.getValueQualifier()))) {
+            if (!((this.getValueQualifier() == null && metadata.getValueQualifier() == null) || this.getValueQualifier()
+                    .equals(
+                            metadata.getValueQualifier()))) {
                 log.debug("false returned");
                 return false;
             }
 
-            if (!((this.getValueQualifierType() == null && metadata.getValueQualifierType() == null) || this.getValueQualifierType().equals(
-                    metadata.getValueQualifierType()))) {
+            if (!((this.getValueQualifierType() == null && metadata.getValueQualifierType() == null) || this.getValueQualifierType()
+                    .equals(
+                            metadata.getValueQualifierType()))) {
                 log.debug("false returned");
                 return false;
             }

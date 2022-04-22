@@ -199,11 +199,17 @@ public class DocStruct implements Serializable, HoldingElement {
 
     private String admId;
 
+    @Getter
+    @Setter
+    private boolean validationErrorPresent;
+    @Getter
+    @Setter
+    private String validationMessage;
+
     // can be used to add additional data to the DocStruct. i.e. the written docstruct name in lido or the double page information for mets/mods
     @Getter
     @Setter
     private String additionalValue;
-
 
     // can be used to add additional data to the DocStruct, it can be exported to the div orderlabel attribute for logical docstructs
     @Getter
@@ -3150,14 +3156,15 @@ public class DocStruct implements Serializable, HoldingElement {
 
                 if (md.getCorporateList() != null) {
                     for (Corporate corp : md.getCorporateList()) {
-                        if (StringUtils.isNotBlank(corp.getMainName()) || StringUtils.isNotBlank(corp.getPartName()) || !corp.getSubNames().isEmpty()) {
+                        if (StringUtils.isNotBlank(corp.getMainName()) || StringUtils.isNotBlank(corp.getPartName())
+                                || !corp.getSubNames().isEmpty()) {
                             isEmpty = false;
                             break;
                         }
                     }
                     if (md.getPersonList() != null) {
                         for (Person per : md.getPersonList()) {
-                            if (StringUtils.isNotBlank(per.getLastname()) || StringUtils.isNotBlank(per.getFirstname())  ){
+                            if (StringUtils.isNotBlank(per.getLastname()) || StringUtils.isNotBlank(per.getFirstname())) {
                                 isEmpty = false;
                                 break;
                             }
@@ -3171,6 +3178,7 @@ public class DocStruct implements Serializable, HoldingElement {
             }
         }
     }
+
     /***************************************************************************
      * <p>
      * Sorts the metadata and persons in the current DocStruct according to their occurance in the preferences file.
