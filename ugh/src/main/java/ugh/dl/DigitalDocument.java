@@ -181,7 +181,6 @@ public class DigitalDocument implements Serializable {
 
     // private List<Node> techMd = new ArrayList<Node>();
 
-
     public enum PhysicalElement {
         PAGE("page"),
         AUDIO("audio"),
@@ -207,7 +206,7 @@ public class DigitalDocument implements Serializable {
             return PAGE;
         }
 
-        public static boolean checkPhysicalType (String type) {
+        public static boolean checkPhysicalType(String type) {
             for (PhysicalElement ss : values()) {
                 if (ss.getName().equals(type)) {
                     return true;
@@ -529,6 +528,8 @@ public class DigitalDocument implements Serializable {
                 };
             }
         };
+        xStream.allowTypes(new Class[] { DigitalDocument.class, Metadata.class, Person.class, MetadataGroup.class, Corporate.class, DocStruct.class,
+                MetadataTypeForDocStructType.class });
 
         DigitalDocument digDoc = (DigitalDocument) xStream.fromXML(infile);
 
@@ -1233,7 +1234,6 @@ public class DigitalDocument implements Serializable {
         return newDigDoc;
     }
 
-
     public static String detectMimeType(Path path) {
 
         String mimeType = "";
@@ -1255,7 +1255,7 @@ public class DigitalDocument implements Serializable {
             if (!fileExtension.contains(".")) {
                 return mimeType;
             }
-            fileExtension = fileExtension.substring(fileExtension.lastIndexOf(".")+1).toLowerCase(); // .tar.gz will not work
+            fileExtension = fileExtension.substring(fileExtension.lastIndexOf(".") + 1).toLowerCase(); // .tar.gz will not work
             switch (fileExtension) {
                 case "jpg":
                 case "jpeg":
@@ -1298,19 +1298,19 @@ public class DigitalDocument implements Serializable {
                     mimeType = "video/ogg";
                     break;
                 case "webm":
-                    mimeType = "video/webm" ;
+                    mimeType = "video/webm";
                     break;
                 case "mov":
-                    mimeType = "video/quicktime" ;
+                    mimeType = "video/quicktime";
                     break;
                 case "avi":
                     mimeType = "video/x-msvideo";
                     break;
                 case "xml":
-                    mimeType = "application/xml" ;
+                    mimeType = "application/xml";
                     break;
                 case "txt":
-                    mimeType = "text/plain" ;
+                    mimeType = "text/plain";
                     break;
                 case "x3d":
                 case "x3dv":
