@@ -3106,7 +3106,7 @@ public class DocStruct implements Serializable, HoldingElement {
             // from the persons list.
             List<Person> iteratorList = new LinkedList<>(personlist);
             for (Person per : iteratorList) {
-                if (per.getLastname() == null && per.getFirstname() == null && per.getInstitution() == null) {
+                if (StringUtils.isBlank(per.getLastname()) && StringUtils.isBlank(per.getFirstname())) {
                     // Delete this person from list of all Persons.
                     if (this.getAllPersons() != null) {
                         this.getAllPersons().remove(per);
@@ -3130,7 +3130,7 @@ public class DocStruct implements Serializable, HoldingElement {
             // from the metadata list.
             List<Metadata> iteratorList = new LinkedList<>(metadatalist);
             for (Metadata md : iteratorList) {
-                if (md.getValue() == null) {
+                if (StringUtils.isBlank(md.getValue())) {
                     if (this.getAllMetadata() != null) {
                         // Delete the metadata element.
                         this.getAllMetadata().remove(md);
@@ -3147,7 +3147,7 @@ public class DocStruct implements Serializable, HoldingElement {
                 boolean isEmpty = true;
                 if (md.getMetadataList() != null) {
                     for (Metadata meta : md.getMetadataList()) {
-                        if (meta.getValue() != null) {
+                        if (StringUtils.isNotBlank(meta.getValue())) {
                             isEmpty = false;
                             break;
                         }

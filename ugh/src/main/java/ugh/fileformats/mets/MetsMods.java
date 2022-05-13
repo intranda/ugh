@@ -368,7 +368,6 @@ public class MetsMods implements ugh.dl.Fileformat {
      * STATIC FINALS
      **************************************************************************/
 
-
     // The line.
     protected static final String LINE = "--------------------" + "--------------------" + "--------------------" + "--------------------";
 
@@ -905,8 +904,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             this.digdoc = anchorDocument;
             String anchorfilename = buildAnchorFilename(filename);
 
-            log.info(
-                    "Writing anchor file '" + anchorfilename + "' from DocStruct '" + this.digdoc.getLogicalDocStruct().getType().getName() + "'");
+            log.info("Writing anchor file '" + anchorfilename + "' from DocStruct '" + this.digdoc.getLogicalDocStruct().getType().getName() + "'");
 
             success = writeMetsMods(anchorfilename, DO_NOT_VALIDATE, IS_ANCHOR);
 
@@ -2140,8 +2138,8 @@ public class MetsMods implements ugh.dl.Fileformat {
                     if (metadataGroup != null) {
                         try {
 
-                            log.debug("Added metadataGroup '" + metadataGroup.getType().getName() + "' to DocStruct '"
-                                    + inStruct.getType().getName() + "'");
+                            log.debug("Added metadataGroup '" + metadataGroup.getType().getName() + "' to DocStruct '" + inStruct.getType().getName()
+                                    + "'");
 
                             inStruct.addMetadataGroup(metadataGroup);
 
@@ -2578,8 +2576,8 @@ public class MetsMods implements ugh.dl.Fileformat {
                                         child.addContentFile(cf);
                                         child.setTechMds(cf.getTechMds());
 
-                                        log.trace("Added content file with ID '" + cf.getIdentifier() + "' to DocStruct '"
-                                                + child.getType().getName() + "'");
+                                        log.trace("Added content file with ID '" + cf.getIdentifier() + "' to DocStruct '" + child.getType().getName()
+                                                + "'");
                                     } else {
                                         log.warn("No content file added to DocStruct '" + child.getType().getName() + "'");
                                     }
@@ -3507,8 +3505,8 @@ public class MetsMods implements ugh.dl.Fileformat {
                             // Add the file to the fileset.
                             fileset.addFile(cf);
 
-                            log.trace("Added file '" + cf.getLocation() + "' (" + cf.getIdentifier() + ") from FileGrp "
-                                    + METS_FILEGROUP_LOCAL_STRING + " to FileSet");
+                            log.trace("Added file '" + cf.getLocation() + "' (" + cf.getIdentifier() + ") from FileGrp " + METS_FILEGROUP_LOCAL_STRING
+                                    + " to FileSet");
 
                             // Add the file and the file ID to the content file hashmap
                             // to retrieve the file by using the ID lateron.
@@ -3980,8 +3978,8 @@ public class MetsMods implements ugh.dl.Fileformat {
                     // It has, so we don't have to add the namespace.
                     currentPath += "/" + element;
                 } else if (element.startsWith("@")) {
-                    currentPath +=   "/" + element;
-                }else {
+                    currentPath += "/" + element;
+                } else {
                     // Add the mods namespace.
                     currentPath += "/" + this.modsNamespacePrefix + element;
                 }
@@ -4549,7 +4547,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             for (Metadata m : inStruct.getAllMetadata()) {
 
                 // Always write non-anchorIdentifier metadata!
-                if (m.getValue() != null && !m.getValue().equals("")) {
+                if (StringUtils.isNotBlank(m.getValue())) {
                     String xquery = "./" + this.modsNamespacePrefix + ":mods/" + this.modsNamespacePrefix + ":extension/" + this.goobiNamespacePrefix
                             + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@name='" + m.getType().getName() + "']";
                     writeSingleModsMetadata(xquery, m, dommodsnode, domDoc);
@@ -4701,39 +4699,40 @@ public class MetsMods implements ugh.dl.Fileformat {
      **************************************************************************/
     protected void writeSingleModsPerson(String theXQuery, Person thePerson, Node theStartingNode, Document theDocument) throws PreferencesException {
 
+        if (StringUtils.isBlank(thePerson.getLastname()) && StringUtils.isBlank(thePerson.getFirstname())) {
+            // person is empty, abort
+            return;
+        }
+
         Node createdNode = createNode(theXQuery, theStartingNode, theDocument, true);
 
         // Set the displayname of the current person, use
         // "lastname, name" as we were told in the MODS
         // profile, only if the displayName is not yet set.
-        if ((thePerson.getLastname() != null && !thePerson.getLastname().equals(""))
-                || (thePerson.getFirstname() != null && !thePerson.getFirstname().equals(""))) {
-            if (thePerson.getLastname() != null && !thePerson.getLastname().equals("") && thePerson.getFirstname() != null
-                    && !thePerson.getFirstname().equals("")) {
-                thePerson.setDisplayname(thePerson.getLastname() + ", " + thePerson.getFirstname());
-            } else if (thePerson.getFirstname() == null || thePerson.getFirstname().equals("")) {
-                thePerson.setDisplayname(thePerson.getLastname());
-            } else {
-                thePerson.setDisplayname(thePerson.getFirstname());
-            }
+        if (StringUtils.isNotBlank(thePerson.getLastname()) && StringUtils.isNotBlank(thePerson.getFirstname())) {
+            thePerson.setDisplayname(thePerson.getLastname() + ", " + thePerson.getFirstname());
+        } else if (StringUtils.isBlank(thePerson.getFirstname())) {
+            thePerson.setDisplayname(thePerson.getLastname());
+        } else {
+            thePerson.setDisplayname(thePerson.getFirstname());
         }
 
         // Create the subnodes.
-        if (thePerson.getLastname() != null && !thePerson.getLastname().equals("")) {
+        if (StringUtils.isNotBlank(thePerson.getLastname())) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_LASTNAME_STRING;
             Node lastnameNode = createNode(theXQuery, createdNode, theDocument, true);
             Node lastnamevalueNode = theDocument.createTextNode(thePerson.getLastname());
             lastnameNode.appendChild(lastnamevalueNode);
             createdNode.appendChild(lastnameNode);
         }
-        if (thePerson.getFirstname() != null && !thePerson.getFirstname().equals("")) {
+        if (StringUtils.isNotBlank(thePerson.getFirstname())) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_FIRSTNAME_STRING;
             Node firstnameNode = createNode(theXQuery, createdNode, theDocument, true);
             Node firstnamevalueNode = theDocument.createTextNode(thePerson.getFirstname());
             firstnameNode.appendChild(firstnamevalueNode);
             createdNode.appendChild(firstnameNode);
         }
-        if (thePerson.getAffiliation() != null && !thePerson.getAffiliation().equals("")) {
+        if (StringUtils.isNotBlank(thePerson.getAffiliation())) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AFFILIATION_STRING;
             Node affiliationNode = createNode(theXQuery, createdNode, theDocument, true);
             Node affiliationvalueNode = theDocument.createTextNode(thePerson.getAffiliation());
@@ -4741,21 +4740,21 @@ public class MetsMods implements ugh.dl.Fileformat {
             createdNode.appendChild(affiliationNode);
         }
 
-        if (thePerson.getAuthorityID() != null && !thePerson.getAuthorityID().equals("")) {
+        if (StringUtils.isNotBlank(thePerson.getAuthorityID())) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYID_STRING;
             Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument, true);
             Node authorityfileidvalueNode = theDocument.createTextNode(thePerson.getAuthorityID());
             authorityfileidNode.appendChild(authorityfileidvalueNode);
             createdNode.appendChild(authorityfileidNode);
         }
-        if (thePerson.getAuthorityURI() != null && !thePerson.getAuthorityURI().equals("")) {
+        if (StringUtils.isNotBlank(thePerson.getAuthorityURI())) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYURI_STRING;
             Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument, true);
             Node authorityfileidvalueNode = theDocument.createTextNode(thePerson.getAuthorityURI());
             authorityfileidNode.appendChild(authorityfileidvalueNode);
             createdNode.appendChild(authorityfileidNode);
         }
-        if (thePerson.getAuthorityValue() != null && !thePerson.getAuthorityValue().equals("")) {
+        if (StringUtils.isNotBlank(thePerson.getAuthorityValue())) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_AUTHORITYVALUE_STRING;
             Node authorityfileidNode = createNode(theXQuery, createdNode, theDocument, true);
             Node authorityfileidvalueNode = theDocument.createTextNode(thePerson.getAuthorityValue());
@@ -4763,14 +4762,14 @@ public class MetsMods implements ugh.dl.Fileformat {
             createdNode.appendChild(authorityfileidNode);
         }
 
-        if (thePerson.getDisplayname() != null && !thePerson.getDisplayname().equals("")) {
+        if (StringUtils.isNotBlank(thePerson.getDisplayname())) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_DISPLAYNAME_STRING;
             Node displaynameNode = createNode(theXQuery, createdNode, theDocument, true);
             Node displaynamevalueNode = theDocument.createTextNode(thePerson.getDisplayname());
             displaynameNode.appendChild(displaynamevalueNode);
             createdNode.appendChild(displaynameNode);
         }
-        if (thePerson.getPersontype() != null && !thePerson.getPersontype().equals("")) {
+        if (StringUtils.isNotBlank(thePerson.getPersontype())) {
             theXQuery = "./" + this.goobiNamespacePrefix + ":" + GOOBI_PERSON_PERSONTYPE_STRING;
             Node persontypeNode = createNode(theXQuery, createdNode, theDocument, true);
             Node persontypevalueNode = theDocument.createTextNode(thePerson.getPersontype());
@@ -5131,8 +5130,8 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         if (inStruct.getAllPersons() != null) {
             for (Person p : inStruct.getAllPersons()) {
-                if (p != null && p.getRole() != null && !p.getRole().equals("")
-                        && (p.getFirstname() != null || p.getLastname() != null || p.getDisplayname() != null)) {
+                if ( p != null && StringUtils.isNotBlank(p.getRole())
+                        && (StringUtils.isNotBlank (p.getFirstname()) || StringUtils.isNotBlank (p.getLastname()))) {
                     String xquery = "./" + this.modsNamespacePrefix + ":mods/" + this.modsNamespacePrefix + ":extension/" + this.goobiNamespacePrefix
                             + ":goobi/#" + this.goobiNamespacePrefix + ":metadata[@type='person'][@name='" + p.getRole() + "']";
                     writeSingleModsPerson(xquery, p, domModsNode, domDoc);
