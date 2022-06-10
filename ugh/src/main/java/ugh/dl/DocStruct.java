@@ -2669,6 +2669,7 @@ public class DocStruct implements Serializable, HoldingElement {
 
         // We can add this person.
         if (insert) {
+            in.setParent(this);
             if (this.persons == null) {
                 this.persons = new LinkedList<>();
             }
@@ -2735,6 +2736,7 @@ public class DocStruct implements Serializable, HoldingElement {
 
         // We can add this person.
         if (insert) {
+            corp.setParent(this);
             if (this.corporates == null) {
                 this.corporates = new LinkedList<>();
             }
