@@ -1,7 +1,11 @@
 package ugh.dl;
 
-public class NamePart {
+import java.io.Serializable;
 
+public class NamePart implements Serializable {
+
+    private static final long serialVersionUID = -697043732604718446L;
+    
     String type;
     String value;
 
