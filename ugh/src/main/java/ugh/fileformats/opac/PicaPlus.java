@@ -24,6 +24,7 @@ package ugh.fileformats.opac;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -34,6 +35,13 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.oro.text.perl.MalformedPerl5PatternException;
@@ -773,7 +781,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
         Metadata md = null;
         Person per = null;
         if (!inNode.getNodeName().equals(PREFS_PPPICAPLUSRECORD_STRING) && !inNode.getNodeName().equals(PREFS_PPRECORD_STRING)) {
-            return null;
+            throw new ReadException("Unable to parse record node, not a pica plus record. Node name is " + inNode.getNodeName());
         }
 
         // Get all subfields.
@@ -813,8 +821,16 @@ public class PicaPlus implements ugh.dl.Fileformat {
         if (ds == null) {
             // No DocStruct found, this is a serious problem; as I do not know
             // to where I should attach the metadata.
-            log.error("Picaplus record read, but no DocStruct found!");
-            return null;
+            try {
+                StringWriter writer = new StringWriter();
+                Transformer transformer;
+                transformer = TransformerFactory.newInstance().newTransformer();
+                transformer.transform(new DOMSource(inNode), new StreamResult(writer));
+                throw new ReadException("Picaplus record read, but no DocStruct found!\nRecord node content:\n" + writer.toString());
+            } catch (TransformerException | TransformerFactoryConfigurationError e) {
+                log.error("Error parsing xml node: " + e.toString());
+                throw new ReadException("Picaplus record read, but no DocStruct found!");
+            }
         }
 
         // Add metadata to DocStruct.

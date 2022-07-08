@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.intranda.ugh</groupId>
     <artifactId>ugh-core</artifactId>
-    <version>5.0.10</version>
+    <version>5.0.11</version>
 
 
     <repositories>
@@ -54,6 +54,7 @@
         <mods.version>3.7.1</mods.version>
         <jcabi.version>1.1</jcabi.version>
         <junit.version>4.13.2</junit.version>
+        <javax-annotation-api.version>1.2</javax-annotation-api.version>
     </properties>
 
 
@@ -281,6 +282,12 @@
             <artifactId>jcabi-manifests</artifactId>
             <version>${jcabi.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+		<dependency>
+		    <groupId>javax.annotation</groupId>
+		    <artifactId>javax.annotation-api</artifactId>
+		    <version>${javax-annotation-api.version}</version>
+		</dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
