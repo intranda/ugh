@@ -328,7 +328,7 @@ public class DocStructTest {
     }
 
     @Test
-    public void setAllMetadata() throws Exception {
+    public void testSetAllMetadata() throws Exception {
         DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
 
         List<Metadata> mdl = new ArrayList<>();
@@ -341,7 +341,7 @@ public class DocStructTest {
     }
 
     @Test
-    public void setAllPersons() throws Exception {
+    public void testSetAllPersons() throws Exception {
         DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
 
         List<Person> pdl = new ArrayList<>();
@@ -353,7 +353,7 @@ public class DocStructTest {
     }
 
     @Test
-    public void setAllCorporates() throws Exception {
+    public void testSetAllCorporates() throws Exception {
         DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
 
         List<Corporate> cdl = new ArrayList<>();
@@ -365,7 +365,7 @@ public class DocStructTest {
     }
 
     @Test
-    public void setAllGroups() throws Exception {
+    public void testSetAllGroups() throws Exception {
         DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
         List<MetadataGroup> mgl = new ArrayList<>();
         MetadataGroup mg = new MetadataGroup(prefs.getMetadataGroupTypeByName("PublisherGroup"));
@@ -377,6 +377,135 @@ public class DocStructTest {
         assertEquals(1, ds.getAllMetadataGroups().size());
     }
 
-    // TODO continue with line 848
+    @Test
+    public void testGetAllContentFiles() throws Exception {
+        DigitalDocument dd = new DigitalDocument();
+
+        DocStruct ds = dd.createDocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        dd.setLogicalDocStruct(ds);
+        assertNull(ds.getAllContentFiles());
+
+        ContentFile cf = new ContentFile();
+        ds.addContentFile(cf);
+        assertEquals(1, ds.getAllContentFiles().size());
+    }
+
+    @Test
+    public void testHasMetadataGroupType() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        assertFalse(ds.hasMetadataGroupType(null));
+        MetadataGroupType mgt = prefs.getMetadataGroupTypeByName("PublisherGroup");
+        assertFalse(ds.hasMetadataGroupType(mgt));
+        MetadataGroup mg = new MetadataGroup(prefs.getMetadataGroupTypeByName("PublisherGroup"));
+        ds.addMetadataGroup(mg);
+        assertTrue(ds.hasMetadataGroupType(mgt));
+    }
+
+
+    @Test
+    public void testHasMetadataype() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        assertFalse(ds.hasMetadataType(null));
+
+        MetadataType idType = prefs.getMetadataTypeByName("CatalogIDDigital");
+        assertFalse(ds.hasMetadataType(idType));
+        Metadata md = new Metadata(idType);
+        md.setValue("fixture");
+        ds.addMetadata(md);
+        assertTrue(ds.hasMetadataType(idType));
+
+        MetadataType personType = prefs.getMetadataTypeByName("Author");
+        assertFalse(ds.hasMetadataType(personType));
+        Person p = new Person(personType);
+        p.setFirstname("fixture");
+        ds.addPerson(p);
+        assertTrue(ds.hasMetadataType(personType));
+
+        MetadataType corpType = prefs.getMetadataTypeByName("Corporation");
+        assertFalse(ds.hasMetadataType(corpType));
+        Corporate c = new Corporate(corpType);
+        c.setMainName("fixture");
+        ds.addCorporate(c);
+        assertTrue(ds.hasMetadataType(corpType));
+    }
+
+    @Test
+    public void testGetAllContentFileReferences() throws Exception {
+        DigitalDocument dd = new DigitalDocument();
+        DocStruct ds = dd.createDocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        dd.setLogicalDocStruct(ds);
+        assertNull(ds.getAllContentFiles());
+        assertTrue(ds.getAllContentFileReferences().isEmpty());
+        ContentFile cf = new ContentFile();
+        ds.addContentFile(cf);
+        assertEquals(1, ds.getAllContentFiles().size());
+        assertEquals(1, ds.getAllContentFileReferences().size());
+    }
+
+    @Test
+    public void testAddContentFileArea() throws Exception {
+        DigitalDocument dd = new DigitalDocument();
+        FileSet fs = new FileSet();
+        dd.setFileSet(fs);
+
+        DocStruct ds = dd.createDocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        dd.setLogicalDocStruct(ds);
+        assertNull(ds.getAllContentFiles());
+
+        ContentFile cf = new ContentFile();
+        ContentFileArea cfa = new ContentFileArea();
+        ds.addContentFile(cf, cfa);
+        assertEquals(1, ds.getAllContentFiles().size());
+    }
+
+
+    @Test
+    public void testRemoveContentFile() throws Exception {
+        DigitalDocument dd = new DigitalDocument();
+        DocStruct ds = dd.createDocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        dd.setLogicalDocStruct(ds);
+
+        ContentFile cf = new ContentFile();
+        ds.addContentFile(cf);
+        assertEquals(1, ds.getAllContentFiles().size());
+        assertTrue(ds.removeContentFile(cf));
+    }
+
+
+
+    @Test
+    public void testAddReferenceFrom() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        assertTrue(ds.getAllToReferences().isEmpty());
+        DocStruct page = new DocStruct(prefs.getDocStrctTypeByName("page"));
+        assertTrue(page.getAllFromReferences().isEmpty());
+        page.addReferenceFrom(ds, "logical_physical");
+        assertEquals(1, ds.getAllToReferences().size());
+        assertEquals(1, page.getAllFromReferences().size());
+    }
+
+    @Test
+    public void testRemoveReferenceTo() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        assertTrue(ds.getAllToReferences().isEmpty());
+        DocStruct page = new DocStruct(prefs.getDocStrctTypeByName("page"));
+        ds.addReferenceTo(page, "logical_physical");
+        assertEquals(1, ds.getAllToReferences().size());
+        ds.removeReferenceTo(page);
+        assertTrue(ds.getAllToReferences().isEmpty());
+    }
+
+    @Test
+    public void testRemoveReferenceFrom() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        assertTrue(ds.getAllToReferences().isEmpty());
+        DocStruct page = new DocStruct(prefs.getDocStrctTypeByName("page"));
+        ds.addReferenceTo(page, "logical_physical");
+        assertEquals(1, ds.getAllToReferences().size());
+        page.removeReferenceFrom(ds);
+        assertTrue(ds.getAllToReferences().isEmpty());
+    }
+
+    // TODO continue with line 1312
 
 }
