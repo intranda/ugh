@@ -503,7 +503,7 @@ public class DocStructTest {
         ds.addReferenceTo(page, "logical_physical");
         assertEquals(1, ds.getAllToReferences().size());
         page.removeReferenceFrom(ds);
-        assertTrue(ds.getAllToReferences().isEmpty());
+        assertTrue(page.getAllFromReferences().isEmpty());
     }
 
     // TODO continue with line 1312

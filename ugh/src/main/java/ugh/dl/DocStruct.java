@@ -1169,7 +1169,7 @@ public class DocStruct implements Serializable, HoldingElement {
         List<Reference> ll = new ArrayList<>(this.docStructRefsFrom);
 
         for (Reference ref : ll) {
-            if (ref.getTarget().equals(inStruct)) {
+            if (ref.getSource().equals(inStruct)) {
                 // Remove reference from this instance.
                 this.docStructRefsFrom.remove(ref);
                 DocStruct targetStruct = ref.getTarget();
