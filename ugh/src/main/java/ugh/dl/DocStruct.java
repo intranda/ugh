@@ -184,7 +184,7 @@ public class DocStruct implements Serializable, HoldingElement {
     private DigitalDocument digdoc;
     // ID in database table (4 byte long).
     private long databaseid = 0;
-    private Object origObject = null;
+    private transient Object origObject = null;
     // Information, if database instance is the same than this one.
     private boolean logical = false;
     private boolean physical = false;
@@ -227,8 +227,8 @@ public class DocStruct implements Serializable, HoldingElement {
      * signature of the compared DocStruct.
      * </p>
      **************************************************************************/
-    private HashMap<String, Object> signaturesForEqualsMethodRefsFrom;
-    private HashMap<String, Object> signaturesForEqualsMethodRefsTo;
+    private transient HashMap<String, Object> signaturesForEqualsMethodRefsFrom;
+    private transient HashMap<String, Object> signaturesForEqualsMethodRefsTo;
 
     /***************************************************************************
      * <p>
@@ -237,7 +237,7 @@ public class DocStruct implements Serializable, HoldingElement {
      * 
      * @deprecated
      **************************************************************************/
-    @Deprecated
+    @Deprecated(since = "1.0")
     public DocStruct() {
         super();
     }
@@ -255,14 +255,6 @@ public class DocStruct implements Serializable, HoldingElement {
         // We have to check, if this type is allowed here, this depends on the
         // parent DocStruct.
         setType(inType);
-
-        //        // This conditional can never be reached, because the result ALWAYS
-        //        // is true! See setType()! Check again and take it out!
-        //        if (!result) {
-        //            TypeNotAllowedForParentException tnae = new TypeNotAllowedForParentException();
-        //            log.error("The type '" + inType.getName() + "' is not allowed as a child of '" + this.getType().getName() + "'");
-        //            throw tnae;
-        //        }
     }
 
     /***************************************************************************
@@ -309,7 +301,7 @@ public class DocStruct implements Serializable, HoldingElement {
     public List<DocStruct> getAllChildren() {
 
         if (this.children == null || this.children.isEmpty()) {
-            return null;
+            return null; // NOSONAR
         }
 
         return this.children;
@@ -332,15 +324,6 @@ public class DocStruct implements Serializable, HoldingElement {
      **************************************************************************/
     public String getReferenceToAnchor() {
         return this.referenceToAnchor;
-    }
-
-    /***************************************************************************
-     * @param in
-     * @deprecated
-     **************************************************************************/
-    @Deprecated
-    public void setreferenceToAnchor(String in) {
-        setReferenceToAnchor(in);
     }
 
     /**************************************************************************
@@ -374,11 +357,10 @@ public class DocStruct implements Serializable, HoldingElement {
         List<Metadata> allMD;
 
         if (this.children == null || this.children.isEmpty()) {
-            return null;
+            return null; // NOSONAR
         }
 
         for (DocStruct child : this.children) {
-            docTypeTestPassed = false;
 
             // Check doctype.
             if (theDocTypeName.equals("*")) {
@@ -427,7 +409,7 @@ public class DocStruct implements Serializable, HoldingElement {
         }
 
         if (resultList.isEmpty()) {
-            return null;
+            return null; //NOSONAR
         }
 
         return resultList;
@@ -465,7 +447,7 @@ public class DocStruct implements Serializable, HoldingElement {
         List<Metadata> result = new LinkedList<>();
 
         if (this.allMetadata == null) {
-            return null;
+            return null; //NOSONAR
         }
 
         for (Metadata md : this.allMetadata) {
@@ -475,7 +457,7 @@ public class DocStruct implements Serializable, HoldingElement {
         }
 
         if (result.isEmpty()) {
-            return null;
+            return null; //NOSONAR
         }
 
         return result;
@@ -500,8 +482,7 @@ public class DocStruct implements Serializable, HoldingElement {
         } catch (TypeNotAllowedForParentException e) {
             // This should never happen as we are creating the same
             // DocStructType.
-            String message = "This " + e.getClass().getName() + " should not have been occured!";
-            log.error(message, e);
+            log.error(e);
         }
 
         // Copy the link to the parent.
@@ -526,16 +507,10 @@ public class DocStruct implements Serializable, HoldingElement {
                             mdnew.setAutorityFile("", "", md.getAuthorityValue());
                         }
                         newStruct.addMetadata(mdnew);
-                    } catch (DocStructHasNoTypeException e) {
+                    } catch (DocStructHasNoTypeException | MetadataTypeNotAllowedException e) {
                         // This should never happen, as we are adding the same
                         // MetadataType.
-                        String message = "This " + e.getClass().getName() + " should not have been occured!";
-                        log.error(message, e);
-                    } catch (MetadataTypeNotAllowedException e) {
-                        // This should never happen, as we are adding the same
-                        // MetadataType.
-                        String message = "This " + e.getClass().getName() + " should not have been occured!";
-                        log.error(message, e);
+                        log.error(e);
                     }
                 }
             }
@@ -589,18 +564,11 @@ public class DocStruct implements Serializable, HoldingElement {
                         mdnew.setPersonList(newPersonList);
                         newStruct.addMetadataGroup(mdnew);
 
-                    } catch (DocStructHasNoTypeException e) {
+                    } catch (DocStructHasNoTypeException | MetadataTypeNotAllowedException e) {
                         // This should never happen, as we are adding the same
                         // MetadataType.
-                        String message = "This " + e.getClass().getName() + " should not have been occured!";
-                        log.error(message, e);
-                    } catch (MetadataTypeNotAllowedException e) {
-                        // This should never happen, as we are adding the same
-                        // MetadataType.
-                        String message = "This " + e.getClass().getName() + " should not have been occured!";
-                        log.error(message, e);
+                        log.error(e);
                     }
-
                 }
             }
 
@@ -630,16 +598,10 @@ public class DocStruct implements Serializable, HoldingElement {
                             newps.setRole(ps.getRole());
                         }
                         newStruct.addPerson(newps);
-                    } catch (IncompletePersonObjectException e) {
+                    } catch (IncompletePersonObjectException | MetadataTypeNotAllowedException e) {
                         // This should never happen as we are adding the same
                         // person type.
-                        String message = "This " + e.getClass().getName() + " should not have been occured!";
-                        log.error(message, e);
-                    } catch (MetadataTypeNotAllowedException e) {
-                        // This should never happen as we are adding the same
-                        // person type.
-                        String message = "This " + e.getClass().getName() + " should not have been occured!";
-                        log.error(message, e);
+                        log.error(e);
                     }
                 }
             }
@@ -688,7 +650,7 @@ public class DocStruct implements Serializable, HoldingElement {
     public List<Reference> getAllReferences(String in) {
 
         if (in == null) {
-            return null;
+            return null; //NOSONAR
         }
         if (in.equals("to")) {
             return this.docStructRefsTo;
@@ -697,7 +659,7 @@ public class DocStruct implements Serializable, HoldingElement {
             return this.docStructRefsFrom;
         }
 
-        return null;
+        return null; //NOSONAR
     }
 
     /***************************************************************************
@@ -731,8 +693,8 @@ public class DocStruct implements Serializable, HoldingElement {
             }
         }
 
-        if (refs == null || refs.isEmpty()) {
-            return null;
+        if (refs.isEmpty()) {
+            return null; //NOSONAR
         }
 
         return refs;
@@ -770,8 +732,8 @@ public class DocStruct implements Serializable, HoldingElement {
             }
         }
 
-        if (refs == null || refs.isEmpty()) {
-            return null;
+        if (refs.isEmpty()) {
+            return null; //NOSONAR
         }
 
         return refs;
@@ -816,7 +778,7 @@ public class DocStruct implements Serializable, HoldingElement {
     @Override
     public List<MetadataGroup> getAllMetadataGroups() {
         if (this.allMetadataGroups == null || this.allMetadataGroups.isEmpty()) {
-            return null;
+            return null; //NOSONAR
         }
 
         for (MetadataGroup mg : allMetadataGroups) {
@@ -849,7 +811,7 @@ public class DocStruct implements Serializable, HoldingElement {
     public List<Metadata> getAllMetadata() {
 
         if (this.allMetadata == null || this.allMetadata.isEmpty()) {
-            return null;
+            return null; //NOSONAR
         }
 
         return this.allMetadata;
@@ -888,7 +850,7 @@ public class DocStruct implements Serializable, HoldingElement {
         List<ContentFile> contentFiles = new ArrayList<>();
 
         if (this.contentFileReferences == null || this.contentFileReferences.isEmpty()) {
-            return null;
+            return null; //NOSONAR
         }
 
         for (ContentFileReference contentFileReference : this.contentFileReferences) {
@@ -1207,7 +1169,7 @@ public class DocStruct implements Serializable, HoldingElement {
         List<Reference> ll = new ArrayList<>(this.docStructRefsFrom);
 
         for (Reference ref : ll) {
-            if (ref.getTarget().equals(inStruct)) {
+            if (ref.getSource().equals(inStruct)) {
                 // Remove reference from this instance.
                 this.docStructRefsFrom.remove(ref);
                 DocStruct targetStruct = ref.getTarget();
@@ -1542,12 +1504,8 @@ public class DocStruct implements Serializable, HoldingElement {
 
         //        // Check, if it's an internal MetadataType - all internal types begin
         //        // with the HIDDEN_METADATA_CHAR, we can have as many as we want.
-        //        if (inMdName.startsWith(HIDDEN_METADATA_CHAR)) {
-        //            maxnumberallowed = "*";
-        //            prefsMdType = inMdType;
-        //        } else {
+
         maxnumberallowed = this.type.getNumberOfMetadataType(prefsMdType);
-        //        }
 
         // Check, if another Metadata instance is allowed.
         //
@@ -1556,8 +1514,6 @@ public class DocStruct implements Serializable, HoldingElement {
 
         // As many as we want (zero or more).
         if (maxnumberallowed == null) {
-            System.out.println(this.identifier);
-            System.out.println(this.type.getName());
             maxnumberallowed = "*";
         }
         if (maxnumberallowed.equals("*")) {
@@ -1565,7 +1521,7 @@ public class DocStruct implements Serializable, HoldingElement {
         }
 
         // Once or more.
-        if (maxnumberallowed.equals("+") || maxnumberallowed.equals("+")) {
+        if (maxnumberallowed.equals("+")) {
             insert = true;
         }
 
@@ -1645,8 +1601,6 @@ public class DocStruct implements Serializable, HoldingElement {
 
         this.removedMetadata.add(theMd);
         this.allMetadata.remove(theMd);
-
-        return;
     }
 
     /***************************************************************************
@@ -1736,7 +1690,7 @@ public class DocStruct implements Serializable, HoldingElement {
      * @param inType MetadataType we are looking for.
      * @return List containing Metadata objects; if no metadata ojects are available, an empty list is returned.
      **************************************************************************/
-    public List<? extends Metadata> getAllMetadataByType(PrefsType inType) {
+    public List<? extends Metadata> getAllMetadataByType(PrefsType inType) { //NOSONAR
 
         List<Metadata> resultList = new LinkedList<>();
 
@@ -1780,7 +1734,7 @@ public class DocStruct implements Serializable, HoldingElement {
         List<Person> resultList = new LinkedList<>();
 
         if (inType == null) {
-            return null;
+            return null; //NOSONAR
         }
 
         // Check all persons.
@@ -1793,8 +1747,8 @@ public class DocStruct implements Serializable, HoldingElement {
         }
 
         // List is empty.
-        if (resultList.size() == 0) {
-            return null;
+        if (resultList.isEmpty()) {
+            return null; //NOSONAR
         }
 
         return resultList;
@@ -1805,7 +1759,7 @@ public class DocStruct implements Serializable, HoldingElement {
         List<Corporate> resultList = new LinkedList<>();
 
         if (inType == null) {
-            return null;
+            return null; //NOSONAR
         }
 
         // Check all persons.
@@ -1818,8 +1772,8 @@ public class DocStruct implements Serializable, HoldingElement {
         }
 
         // List is empty.
-        if (resultList.size() == 0) {
-            return null;
+        if (resultList.isEmpty()) {
+            return null; //NOSONAR
         }
 
         return resultList;
@@ -1871,7 +1825,7 @@ public class DocStruct implements Serializable, HoldingElement {
         List<MetadataGroupType> result = new LinkedList<>();
 
         if (this.type == null) {
-            return null;
+            return null; //NOSONAR
         }
 
         // Start with the list of MetadataTypes, which are having the
@@ -1905,7 +1859,7 @@ public class DocStruct implements Serializable, HoldingElement {
      * @deprecated
      * @return List containing MetadataType objects
      **************************************************************************/
-    @Deprecated
+    @Deprecated(since = "1.0")
     public List<MetadataGroupType> getDisplayMetadataGroupTypes() {
         return getDefaultDisplayMetadataGroupTypes();
     }
@@ -1947,7 +1901,7 @@ public class DocStruct implements Serializable, HoldingElement {
         List<MetadataType> result = new LinkedList<>();
 
         if (this.type == null) {
-            return null;
+            return null; //NOSONAR
         }
 
         // Start with the list of MetadataTypes, which are having the
@@ -1981,7 +1935,7 @@ public class DocStruct implements Serializable, HoldingElement {
      * @deprecated
      * @return List containing MetadataType objects
      **************************************************************************/
-    @Deprecated
+    @Deprecated(since = "1.0")
     public List<MetadataType> getDisplayMetadataTypes() {
         return getDefaultDisplayMetadataTypes();
     }
@@ -2108,7 +2062,7 @@ public class DocStruct implements Serializable, HoldingElement {
 
         // If e.g. the topstruct has no Metadata, or something...
         if (this.type == null) {
-            return null;
+            return null; //NOSONAR
         }
 
         // Get all Metadatatypes for my DocStructType.
@@ -2130,7 +2084,7 @@ public class DocStruct implements Serializable, HoldingElement {
                     // Check metadata here only.
                     List<? extends MetadataGroup> availableMD = this.getAllMetadataGroupsByType(mdt);
 
-                    if (availableMD.size() < 1) {
+                    if (availableMD.isEmpty()) {
                         // Metadata is NOT available; we are allowed to add it.
                         addableMetadata.add(mdt);
                     }
@@ -2141,8 +2095,8 @@ public class DocStruct implements Serializable, HoldingElement {
             }
         }
 
-        if (addableMetadata == null || addableMetadata.isEmpty()) {
-            return null;
+        if (addableMetadata.isEmpty()) {
+            return null; //NOSONAR
         }
 
         return addableMetadata;
@@ -2151,7 +2105,7 @@ public class DocStruct implements Serializable, HoldingElement {
     public List<MetadataGroupType> getPossibleMetadataGroupTypes() {
         // If e.g. the topstruct has no Metadata, or something...
         if (this.type == null) {
-            return null;
+            return null; //NOSONAR
         }
 
         // Get all Metadatatypes for my DocStructType.
@@ -2164,7 +2118,6 @@ public class DocStruct implements Serializable, HoldingElement {
 
             // Metadata beginning with the HIDDEN_METADATA_CHAR are internal
             // metadata are not user addable.
-            // if (!mdt.getName().startsWith(HIDDEN_METADATA_CHAR)) {
             String maxnumber = this.type.getNumberOfMetadataGroups(mdt);
 
             // Metadata can only be available once; so we have to check if
@@ -2173,7 +2126,7 @@ public class DocStruct implements Serializable, HoldingElement {
                 // Check metadata here only.
                 List<? extends MetadataGroup> availableMD = this.getAllMetadataGroupsByType(mdt);
 
-                if (availableMD.size() < 1) {
+                if (availableMD.isEmpty()) {
                     // Metadata is NOT available; we are allowed to add it.
                     addableMetadata.add(mdt);
                 }
@@ -2184,8 +2137,8 @@ public class DocStruct implements Serializable, HoldingElement {
 
         }
 
-        if (addableMetadata == null || addableMetadata.isEmpty()) {
-            return null;
+        if (addableMetadata.isEmpty()) {
+            return null; //NOSONAR
         }
 
         return addableMetadata;
@@ -2205,7 +2158,7 @@ public class DocStruct implements Serializable, HoldingElement {
     public List<MetadataType> getAddableMetadataTypes(boolean includeHiddenMetadata) {
         // If e.g. the topstruct has no Metadata, or something...
         if (this.type == null) {
-            return null;
+            return null; //NOSONAR
         }
 
         // Get all Metadatatypes for my DocStructType.
@@ -2227,11 +2180,10 @@ public class DocStruct implements Serializable, HoldingElement {
                     // Check metadata here only.
                     List<? extends Metadata> availableMD = this.getAllMetadataByType(mdt);
 
-                    if (!mdt.isPerson && (availableMD.size() < 1)) {
+                    if (!mdt.isPerson && (availableMD.isEmpty())) {
                         // Metadata is NOT available; we are allowed to add it.
                         addableMetadata.add(mdt);
                     }
-                    //TODOs
                     // Then check persons here.
                     boolean used = false;
                     if (mdt.getIsPerson() && this.getAllPersons() != null) {
@@ -2257,7 +2209,7 @@ public class DocStruct implements Serializable, HoldingElement {
         }
 
         if (addableMetadata == null || addableMetadata.isEmpty()) {
-            return null;
+            return null; //NOSONAR
         }
 
         return addableMetadata;
@@ -2321,12 +2273,7 @@ public class DocStruct implements Serializable, HoldingElement {
 
         // Add child to end of List.
         inchild.setParent(this);
-        if (this.children.add(inchild)) {
-            return true;
-        }
-
-        // Child wasn't added.
-        return false;
+        return this.children.add(inchild);
     }
 
     /***************************************************************************
@@ -2383,11 +2330,7 @@ public class DocStruct implements Serializable, HoldingElement {
         // Add to the new position.
         try {
             this.children.add(position, inchild);
-        } catch (UnsupportedOperationException uoe) {
-            return false;
-        } catch (ClassCastException cce) {
-            return false;
-        } catch (IllegalArgumentException iae) {
+        } catch (UnsupportedOperationException | ClassCastException | IllegalArgumentException uoe) {
             return false;
         }
 
@@ -2412,10 +2355,7 @@ public class DocStruct implements Serializable, HoldingElement {
             test = this.children.get(i);
             // Child found.
             if (test.equals(afterchild)) {
-                if (moveChild(inchild, i + 1)) {
-                    return true;
-                }
-                return false;
+                return (moveChild(inchild, i + 1));
             }
         }
 
@@ -2440,10 +2380,7 @@ public class DocStruct implements Serializable, HoldingElement {
             test = this.children.get(i);
             // Child found.
             if (test.equals(beforechild)) {
-                if (moveChild(inchild, i)) {
-                    return true;
-                }
-                return false;
+                return (moveChild(inchild, i));
             }
         }
 
@@ -2655,7 +2592,7 @@ public class DocStruct implements Serializable, HoldingElement {
             insert = true;
         }
         // One or more.
-        if (maxnumberallowed.equals("+") || maxnumberallowed.equals("+")) {
+        if (maxnumberallowed.equals("+")) {
             insert = true;
         }
         // Only one, if we have already one, we cannot add it.
@@ -2722,7 +2659,7 @@ public class DocStruct implements Serializable, HoldingElement {
             insert = true;
         }
         // One or more.
-        if (maxnumberallowed.equals("+") || maxnumberallowed.equals("+")) {
+        if (maxnumberallowed.equals("+")) {
             insert = true;
         }
         // Only one, if we have already one, we cannot add it.
@@ -2790,8 +2727,6 @@ public class DocStruct implements Serializable, HoldingElement {
         }
 
         this.persons.remove(in);
-
-        return;
     }
 
     @Override
@@ -2824,8 +2759,6 @@ public class DocStruct implements Serializable, HoldingElement {
         }
 
         this.corporates.remove(in);
-
-        return;
     }
 
     /***************************************************************************
@@ -2851,7 +2784,7 @@ public class DocStruct implements Serializable, HoldingElement {
     public List<Person> getAllPersons() {
 
         if (this.persons == null || this.persons.isEmpty()) {
-            return null;
+            return null; //NOSONAR
         }
 
         return this.persons;
@@ -2859,7 +2792,7 @@ public class DocStruct implements Serializable, HoldingElement {
 
     public List<Corporate> getAllCorporates() {
         if (this.corporates == null || this.corporates.isEmpty()) {
-            return null;
+            return null; //NOSONAR
         }
         return this.corporates;
     }
@@ -2884,25 +2817,6 @@ public class DocStruct implements Serializable, HoldingElement {
                 ds.setLogical(logical);
             }
         }
-    }
-
-    /***************************************************************************
-     * @deprecated
-     * @return the orig_object
-     **************************************************************************/
-    @Deprecated
-    @JsonIgnore
-    public Object getOrig_object() {
-        return this.origObject;
-    }
-
-    /***************************************************************************
-     * @param orig_object the orig_object to set
-     * @deprecated
-     **************************************************************************/
-    @Deprecated
-    public void setOrig_object(Object theOrigObject) {
-        this.origObject = theOrigObject;
     }
 
     /***************************************************************************
@@ -2965,7 +2879,7 @@ public class DocStruct implements Serializable, HoldingElement {
         List<Metadata> allMDs = this.getAllMetadata();
         // No default metadata.
         if (dmt == null) {
-            return null;
+            return null; //NOSONAR
         }
 
         // Iterator over DMT.
@@ -2998,9 +2912,7 @@ public class DocStruct implements Serializable, HoldingElement {
                     try {
                         // Add this new metadata element.
                         this.addPerson(psFoo);
-                    } catch (DocStructHasNoTypeException e) {
-                        continue;
-                    } catch (MetadataTypeNotAllowedException e) {
+                    } catch (DocStructHasNoTypeException | MetadataTypeNotAllowedException e) {
                         continue;
                     }
                 } else if (mdt.isCorporate) {
@@ -3019,9 +2931,7 @@ public class DocStruct implements Serializable, HoldingElement {
                     try {
                         // Add this new metadata element.
                         this.addMetadata(metaFoo);
-                    } catch (DocStructHasNoTypeException e) {
-                        continue;
-                    } catch (MetadataTypeNotAllowedException e) {
+                    } catch (DocStructHasNoTypeException | MetadataTypeNotAllowedException e) {
                         continue;
                     }
                 }
@@ -3033,7 +2943,7 @@ public class DocStruct implements Serializable, HoldingElement {
 
         for (Metadata md : this.getAllMetadata()) {
             // If nothing is in the result list, just add it.
-            if (resultList.size() == 0) {
+            if (resultList.isEmpty()) {
                 resultList.add(md);
                 // Continue with next iteration.
                 continue;
@@ -3108,11 +3018,9 @@ public class DocStruct implements Serializable, HoldingElement {
             // from the persons list.
             List<Person> iteratorList = new LinkedList<>(personlist);
             for (Person per : iteratorList) {
-                if (StringUtils.isBlank(per.getLastname()) && StringUtils.isBlank(per.getFirstname())) {
+                if (StringUtils.isBlank(per.getLastname()) && StringUtils.isBlank(per.getFirstname()) && getAllPersons() != null) {
                     // Delete this person from list of all Persons.
-                    if (this.getAllPersons() != null) {
-                        this.getAllPersons().remove(per);
-                    }
+                    this.getAllPersons().remove(per);
                 }
             }
         }
@@ -3132,11 +3040,9 @@ public class DocStruct implements Serializable, HoldingElement {
             // from the metadata list.
             List<Metadata> iteratorList = new LinkedList<>(metadatalist);
             for (Metadata md : iteratorList) {
-                if (StringUtils.isBlank(md.getValue())) {
-                    if (this.getAllMetadata() != null) {
-                        // Delete the metadata element.
-                        this.getAllMetadata().remove(md);
-                    }
+                if (StringUtils.isBlank(md.getValue()) && this.getAllMetadata() != null) {
+                    // Delete the metadata element.
+                    this.getAllMetadata().remove(md);
                 }
             }
         }
@@ -3259,13 +3165,13 @@ public class DocStruct implements Serializable, HoldingElement {
         }
 
         // Add left-over types.
-        if (oldPersons != null && oldPersons.size() > 0) {
+        if (oldPersons != null && !oldPersons.isEmpty()) {
             newPersons.addAll(oldPersons);
         }
-        if (oldMetadata != null && oldMetadata.size() > 0) {
+        if (oldMetadata != null && !oldMetadata.isEmpty()) {
             newMetadata.addAll(oldMetadata);
         }
-        if (oldCorporates != null && oldCorporates.size() > 0) {
+        if (oldCorporates != null && !oldCorporates.isEmpty()) {
             newCorporates.addAll(oldCorporates);
         }
 
@@ -3589,17 +3495,11 @@ public class DocStruct implements Serializable, HoldingElement {
         if (DigitalDocument.quickPairCheck(this.getAllContentFileReferences(),
                 docStruct.getAllContentFileReferences()) != DigitalDocument.ListPairCheck.isEqual) {
 
-            // flagFound = true;
             for (ContentFileReference cfr1 : this.getAllContentFileReferences()) {
                 int i = this.getAllContentFileReferences().indexOf(cfr1);
                 if (!cfr1.equals(docStruct.getAllContentFileReferences().get(i))) {
                     return false;
                 }
-
-                /*
-                 * for (ContentFileReference cfr2 : docStruct .getAllContentFileReferences()) { if (cfr1.equals(cfr2)) { flagFound = true; break; } }
-                 * if (!flagFound) { log.debug("16 false returned"); return false; }
-                 */
             }
         }
 
