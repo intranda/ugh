@@ -3,6 +3,7 @@ package ugh.fileformats.slimjson;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -63,7 +64,7 @@ public class SlimDocStruct {
 
     private List<SlimMetadata> allMetadata = new ArrayList<>();
     private List<SlimMetadataGroup> allMetadataGroups = new ArrayList<>();
-    private List<Person> persons;
+    private List<SlimPerson> persons;
     private List<String> children = new ArrayList<>();
     private List<SlimContentFileReference> contentFileReferences = new ArrayList<>();
     private List<SlimReference> docStructRefsTo = new ArrayList<>();
@@ -114,7 +115,11 @@ public class SlimDocStruct {
             }
         }
         //add persons
-        sds.persons = ds.getAllPersons();
+        if(ds.getAllPersons() != null) {            
+            sds.persons = ds.getAllPersons().stream().map(p -> SlimPerson.fromPerson(p, sdd)).collect(Collectors.toList());
+        } else {
+            sds.persons = new ArrayList<SlimPerson>();
+        }
         // add children
         if (ds.getAllChildren() != null) {
             for (DocStruct cds : ds.getAllChildren()) {
@@ -183,8 +188,9 @@ public class SlimDocStruct {
             }
             //add persons
             if (this.persons != null) {
-                for (Person p : this.persons) {
-                    ds.addPerson(p);
+                for (SlimPerson p : this.persons) {
+                    Person person = p.toPerson(dd);
+                    ds.addPerson(person);
                 }
             }
             // add children

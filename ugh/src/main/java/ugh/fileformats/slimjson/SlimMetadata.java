@@ -33,6 +33,10 @@ public class SlimMetadata {
 
     public static SlimMetadata fromMetadata(Metadata meta, SlimDigitalDocument sdd) {
         SlimMetadata sm = new SlimMetadata();
+        return fromMetadata(sm, meta, sdd);
+    }
+    
+    protected static SlimMetadata fromMetadata(SlimMetadata sm, Metadata meta, SlimDigitalDocument sdd) {
         sm.digitalDocument = sdd;
         sdd.addMetadataType(meta.getType());
         sm.mdTypeId = meta.getType().getName();
@@ -54,9 +58,17 @@ public class SlimMetadata {
     }
 
     public Metadata toMetadata(DigitalDocument dd) {
-        Metadata sm;
-        try {
-            sm = new Metadata(digitalDocument.getMetadataTypeMap().get(this.mdTypeId));
+        try {            
+            Metadata sm = new Metadata(digitalDocument.getMetadataTypeMap().get(this.mdTypeId));
+            return toMetadata(sm, dd);
+        } catch (MetadataTypeNotAllowedException e) {
+            log.error(e);
+            return null;
+        }
+    }
+        
+        
+    protected Metadata toMetadata(Metadata sm, DigitalDocument dd) {
             DocStruct ds = digitalDocument.getOrigDsMap().get(this.myDocStructId);
             if (ds == null) {
                 ds = digitalDocument.getDsMap().get(this.myDocStructId).toDocStruct(dd);
@@ -72,10 +84,6 @@ public class SlimMetadata {
 
             sm.wasUpdated(this.updated);
             return sm;
-        } catch (MetadataTypeNotAllowedException e) {
-            // TODO Auto-generated catch block
-            log.error(e);
-        }
-        return null;
+        
     }
 }
