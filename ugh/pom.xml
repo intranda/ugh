@@ -43,7 +43,7 @@
         <jdom2.version>2.0.6.1</jdom2.version>
         <jackson.version>2.13.4</jackson.version>
         <log4j.version>2.19.0</log4j.version>
-        <lombok.version>1.18.22</lombok.version>
+        <lombok.version>1.18.24</lombok.version>
         <oro.version>2.0.8</oro.version>
         <xerces.version>2.12.2</xerces.version>
         <xmlbeans.version>5.0.3</xmlbeans.version>
