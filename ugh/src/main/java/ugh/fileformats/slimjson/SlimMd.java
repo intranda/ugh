@@ -21,11 +21,11 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import lombok.Data;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import ugh.dl.Md;
 
 @Data
-@Log4j
+@Log4j2
 public class SlimMd {
     private static Transformer transformer = createTransformer();
 

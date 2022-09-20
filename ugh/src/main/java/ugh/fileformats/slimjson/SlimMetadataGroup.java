@@ -7,7 +7,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
 import ugh.dl.Metadata;
@@ -16,7 +16,7 @@ import ugh.dl.Person;
 import ugh.exceptions.MetadataTypeNotAllowedException;
 
 @Data
-@Log4j
+@Log4j2
 public class SlimMetadataGroup {
     @JsonIgnore
     private transient SlimDigitalDocument digitalDocument;

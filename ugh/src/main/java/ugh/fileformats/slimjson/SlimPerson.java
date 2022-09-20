@@ -3,14 +3,14 @@ package ugh.fileformats.slimjson;
 import java.util.List;
 
 import lombok.Data;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import ugh.dl.DigitalDocument;
 import ugh.dl.NamePart;
 import ugh.dl.Person;
 import ugh.exceptions.MetadataTypeNotAllowedException;
 
 @Data
-@Log4j
+@Log4j2
 public class SlimPerson extends SlimMetadata {
 
     private String firstname = null;
