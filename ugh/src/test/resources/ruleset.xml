@@ -3478,6 +3478,8 @@
     <metadata num="1o">_urn</metadata>
     <metadata num="1o">_COORDS</metadata>
     <metadata num="1o">_SHAPE</metadata>
+    <metadata num="1m">physPageNumber</metadata>
+    <metadata num="1m">logicalPageNumber</metadata>
   </DocStrctType>
   <DocStrctType>
     <Name>BoundBook</Name>

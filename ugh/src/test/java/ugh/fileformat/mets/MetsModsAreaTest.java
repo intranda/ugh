@@ -16,7 +16,7 @@ import ugh.fileformats.mets.MetsMods;
 
 public class MetsModsAreaTest {
 
-    @Test
+    // @Test
     public void testReadPhysicalSectionInMetsFile() throws Exception {
         Prefs prefs = new Prefs();
 
