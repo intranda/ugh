@@ -207,9 +207,9 @@ public class SlimDocStruct {
             }
             //add to-references
             for (SlimReference ref : this.docStructRefsTo) {
-                if (ref.getSourceDsId().equals("LOG_0001")) {
-                    System.out.println("refTo");
-                }
+                // if (ref.getSourceDsId().equals("LOG_0001")) {
+                //     System.out.println("refTo");
+                // }
                 DocStruct otherDs = digitalDocument.getOrigDsMap().get(ref.getTargetDsId());
                 if (otherDs == null) {
                     otherDs = digitalDocument.getDsMap().get(ref.getTargetDsId()).toDocStruct(dd);
