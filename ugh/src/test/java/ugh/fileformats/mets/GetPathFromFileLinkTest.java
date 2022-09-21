@@ -1,4 +1,4 @@
-package ugh.fileformat.mets;
+package ugh.fileformats.mets;
 
 import static org.junit.Assert.assertEquals;
 
@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ugh.dl.DigitalDocument;
-import ugh.fileformats.mets.MetsMods;
 
 public class GetPathFromFileLinkTest {
 

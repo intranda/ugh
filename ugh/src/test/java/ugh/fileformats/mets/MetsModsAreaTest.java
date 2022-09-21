@@ -1,4 +1,4 @@
-package ugh.fileformat.mets;
+package ugh.fileformats.mets;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -12,7 +12,6 @@ import ugh.dl.DocStruct;
 import ugh.dl.Metadata;
 import ugh.dl.Prefs;
 import ugh.dl.VirtualFileGroup;
-import ugh.fileformats.mets.MetsMods;
 
 public class MetsModsAreaTest {
 
