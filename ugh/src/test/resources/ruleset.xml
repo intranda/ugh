@@ -2085,7 +2085,8 @@
     <metadata num="*">CurrentNoSorting</metadata>
     <metadata num="*">CurrentNo</metadata>
     <metadata num="*">CatalogIdentifier</metadata>
-    <group num="*">PublisherGroup</group>
+    <group DefaultDisplay="true" num="*">PublisherGroup</group>
+    <group num="1o">LocationGroup</group>
   </DocStrctType>
   <DocStrctType topStruct="true">
     <Name>Incunable</Name>
