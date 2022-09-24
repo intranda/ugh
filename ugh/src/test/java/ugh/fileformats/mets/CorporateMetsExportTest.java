@@ -1,4 +1,4 @@
-package ugh.fileformat.mets;
+package ugh.fileformats.mets;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -28,8 +28,6 @@ import ugh.dl.NamePart;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
 import ugh.exceptions.UGHException;
-import ugh.fileformats.mets.MetsMods;
-import ugh.fileformats.mets.MetsModsImportExport;
 
 public class CorporateMetsExportTest {
 

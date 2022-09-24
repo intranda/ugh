@@ -1,4 +1,4 @@
-package ugh.fileformat.opac;
+package ugh.fileformats.opac;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -18,7 +18,6 @@ import ugh.dl.DocStruct;
 import ugh.dl.Metadata;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
-import ugh.fileformats.opac.PicaPlus;
 
 public class PicaPlusTest {
 
