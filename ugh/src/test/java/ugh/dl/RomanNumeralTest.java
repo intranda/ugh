@@ -1,14 +1,14 @@
 package ugh.dl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.Ignore;
+import org.junit.Test;
 
-class RomanNumeralTest {
+public class RomanNumeralTest {
     private RomanNumeral numeral;
     private static final int[] integers = new int[] { 3, 4, 5, 8, 9,
             10, 13, 14, 16, 19,
@@ -32,7 +32,7 @@ class RomanNumeralTest {
             "MMMMDCCCCLXXXXVIIII" };
 
     @Test
-    void testConstructorDefault() {
+    public void testConstructorDefault() {
         numeral = new RomanNumeral();
         assertEquals(1, numeral.intValue());
         assertFalse(numeral.isArchaic());
@@ -41,7 +41,7 @@ class RomanNumeralTest {
     }
 
     @Test
-    void testConstructorForInt() {
+    public void testConstructorForInt() {
         for (int i = 0; i < integers.length; ++i) {
             numeral = new RomanNumeral(integers[i]);
             assertEquals(modernRom[i], numeral.getNumber());
@@ -49,7 +49,7 @@ class RomanNumeralTest {
     }
 
     @Test
-    void testConstructorForBigInt() {
+    public void testConstructorForBigInt() {
         for (int i = 0; i < bigIntegers.length; ++i) {
             numeral = new RomanNumeral(bigIntegers[i]);
             assertEquals(bigModernRom[i], numeral.getNumber());
@@ -57,16 +57,16 @@ class RomanNumeralTest {
     }
 
     @Test
-    void testConstructorForString() {
+    public void testConstructorForString() {
         for (int i = 0; i < modernRom.length; ++i) {
             numeral = new RomanNumeral(modernRom[i]);
             assertEquals(integers[i], numeral.intValue());
         }
     }
 
-    @Disabled("Using modern style the greatest presentable number is actually 3999.")
+    @Ignore("Using modern style the greatest presentable number is actually 3999.")
     @Test
-    void testConstructorForBigIntString() {
+    public void testConstructorForBigIntString() {
         for (int i = 0; i < bigModernRom.length; ++i) {
             System.out.println(bigModernRom[i]);
             numeral = new RomanNumeral(bigModernRom[i]);
@@ -75,7 +75,7 @@ class RomanNumeralTest {
     }
 
     @Test
-    void testIsArchaicIsModern() {
+    public void testIsArchaicIsModern() {
         numeral = new RomanNumeral();
         assertTrue(numeral.isArchaic() == !numeral.isModern());
         numeral.setStyleArchaic();
@@ -86,7 +86,7 @@ class RomanNumeralTest {
     }
 
     @Test
-    void testEquals() {
+    public void testEquals() {
         RomanNumeral numeral1;
         RomanNumeral numeral2;
         RomanNumeral numeral3;
@@ -100,25 +100,25 @@ class RomanNumeralTest {
     }
 
     @Test
-    void testSetValueGivenBigNumbers() {
+    public void testSetValueGivenBigNumbers() {
         numeral = new RomanNumeral();
         assertThrows(NumberFormatException.class, () -> numeral.setValue(5000));
     }
 
     @Test
-    void testSetValueGivenZero() {
+    public void testSetValueGivenZero() {
         numeral = new RomanNumeral();
         assertThrows(NumberFormatException.class, () -> numeral.setValue(0));
     }
 
     @Test
-    void testSetValueGivenNegativeNumbers() {
+    public void testSetValueGivenNegativeNumbers() {
         numeral = new RomanNumeral();
         assertThrows(NumberFormatException.class, () -> numeral.setValue(-1));
     }
 
     @Test
-    void testSetValueGivenStyleArchaic() {
+    public void testSetValueGivenStyleArchaic() {
         numeral = new RomanNumeral();
         numeral.setStyleArchaic();
         for (int i = 0; i < integers.length; ++i) {
@@ -131,9 +131,9 @@ class RomanNumeralTest {
         }
     }
 
-    @Disabled("Until ready to debug.")
+    @Ignore("Until ready to debug.")
     @Test
-    void testSetStyles() {
+    public void testSetStyles() {
         for (int i = 0; i < integers.length; ++i) {
             numeral = new RomanNumeral(integers[i]);
             numeral.setStyleArchaic();

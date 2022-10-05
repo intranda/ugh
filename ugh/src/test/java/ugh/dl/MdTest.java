@@ -10,7 +10,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -20,13 +20,13 @@ import org.xml.sax.SAXException;
 public class MdTest {
 
     private static final File xmlFile = new File("src/test/resources/nodeTest.xml");
-    private DocumentBuilderFactory factory;
-    private DocumentBuilder dBuilder;
-    private Document doc;
-    private NodeList nList;
+    private static DocumentBuilderFactory factory;
+    private static DocumentBuilder dBuilder;
+    private static Document doc;
+    private static NodeList nList;
 
-    @Before
-    public void setup() throws ParserConfigurationException, SAXException, IOException {
+    @BeforeClass
+    public static void setUp() throws ParserConfigurationException, SAXException, IOException {
         factory = DocumentBuilderFactory.newInstance();
         dBuilder = factory.newDocumentBuilder();
         doc = dBuilder.parse(xmlFile);
