@@ -2987,7 +2987,7 @@ public class DocStruct implements Serializable, HoldingElement {
             }
         }
         if (getAllCorporates() != null) {
-            List<Corporate> corporateList = getAllCorporates();
+            List<Corporate> corporateList = new LinkedList<>(getAllCorporates());
             for (Corporate corp : corporateList) {
                 if (StringUtils.isBlank(corp.getMainName()) && StringUtils.isBlank(corp.getPartName()) && corp.getSubNames().isEmpty()) {
                     getAllCorporates().remove(corp);
@@ -3040,12 +3040,12 @@ public class DocStruct implements Serializable, HoldingElement {
                             }
                         }
                     }
-
-                    if (isEmpty) {
-                        this.getAllMetadataGroups().remove(md);
-                    }
+                }
+                if (isEmpty) {
+                    this.getAllMetadataGroups().remove(md);
                 }
             }
+
         }
     }
 
