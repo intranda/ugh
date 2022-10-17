@@ -30,30 +30,23 @@
     <properties>
         <buildDate>${maven.build.timestamp}</buildDate>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>11</maven.compiler.release>
 
-        <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <commons-cli.version>1.5.0</commons-cli.version>
-        <commons-collections.version>4.4</commons-collections.version>
-        <commons-configuration.version>2.8.0</commons-configuration.version>
-        <commons-io.version>2.11.0</commons-io.version>
         <commons-jxpath.version>1.3</commons-jxpath.version>
         <commons-lang.version>3.12.0</commons-lang.version>
-        <commons-logging.version>1.2</commons-logging.version>
         <jdom2.version>2.0.6.1</jdom2.version>
         <jackson.version>2.13.4</jackson.version>
         <log4j.version>2.19.0</log4j.version>
         <lombok.version>1.18.24</lombok.version>
         <oro.version>2.0.8</oro.version>
         <xerces.version>2.12.2</xerces.version>
-        <xmlbeans.version>5.0.3</xmlbeans.version>
+        <xmlbeans.version>5.1.1</xmlbeans.version>
         <xstream.version>1.4.19</xstream.version>
         <saxon.version>11.4</saxon.version>
         <mets.version>1.12.1</mets.version>
         <mods.version>3.7.1</mods.version>
         <jcabi.version>1.2.1</jcabi.version>
         <junit.version>4.13.2</junit.version>
-        <javax-annotation-api.version>1.2</javax-annotation-api.version>
     </properties>
 
 
@@ -89,6 +82,10 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -140,16 +137,42 @@
                     <doCheck>false</doCheck>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.2</version>
+                <executions>
+                    <execution>
+                        <id>analyze</id>
+                        <goals>
+                            <goal>analyze-only</goal>
+                        </goals>
+                        <configuration>
+                            <failOnWarning>false</failOnWarning>
+                            <ignoredUnusedDeclaredDependencies>
+                                <!-- lombok is used in annotations -->
+                                <ignoredUnusedDeclaredDependency>org.projectlombok:lombok</ignoredUnusedDeclaredDependency>
+
+                                <!-- log4j is used from lombok for logging -->
+                                <ignoredUnusedDeclaredDependency>org.apache.logging.log4j:log4j-core</ignoredUnusedDeclaredDependency>
+
+                                <!-- Saxon is used for XML and XQuery during runtime -->
+                                <ignoredUnusedDeclaredDependency>net.sf.saxon:Saxon-HE</ignoredUnusedDeclaredDependency>
+                            </ignoredUnusedDeclaredDependencies>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M4</version>
+            </plugin>
         </plugins>
     </build>
 
 
     <dependencies>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>${commons-beanutils.version}</version>
-        </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
             <artifactId>commons-cli</artifactId>
@@ -162,21 +185,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>${commons-collections.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-configuration2</artifactId>
-            <version>${commons-configuration.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
-        </dependency>
-        <dependency>
             <groupId>commons-jxpath</groupId>
             <artifactId>commons-jxpath</artifactId>
             <version>${commons-jxpath.version}</version>
@@ -186,12 +194,6 @@
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang.version}</version>
         </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>${commons-logging.version}</version>
-        </dependency>
-      
         <dependency>
             <groupId>org.jdom</groupId>
             <artifactId>jdom2</artifactId>
@@ -281,12 +283,6 @@
             <artifactId>jcabi-manifests</artifactId>
             <version>${jcabi.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
-		<dependency>
-		    <groupId>javax.annotation</groupId>
-		    <artifactId>javax.annotation-api</artifactId>
-		    <version>${javax-annotation-api.version}</version>
-		</dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
