@@ -1202,6 +1202,14 @@
     <metadata num="1o">PublisherCorporate</metadata>
     <group num="1o">LocationGroup</group>
   </Group>
+  
+  <Group>
+  	<Name>TestGroup</Name>
+  	<language name="de">TestGroup</language>
+  	<language name="en">TestGroup</language>
+  	<group num="*">UnusedGroup</group>
+  	<group num="+">LocationGroup</group>
+  </Group>
 
   <Group>
     <Name>LocationGroup</Name>
@@ -1219,6 +1227,7 @@
     <language name="en">UnusedGroup</language>
     <metadata num="*">StatementOfResponsibility</metadata>
   </Group>
+  
 
 
   <!-- Subjects start -->
