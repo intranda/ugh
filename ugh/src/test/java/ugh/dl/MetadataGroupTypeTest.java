@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,6 +117,29 @@ public class MetadataGroupTypeTest {
     }
 
     @Test
+    public void testAddMetadataTypeGivenEquivalentButDifferentMetadataTypeObjects() {
+        // the method equals(MetadataType) in class MetadataType determines if a MetadataType object is still addable
+        // i.e. one can never add similar MetadataType objects twice, if there is already one, then it would be the only one
+        MetadataType type1 = new MetadataType();
+        MetadataType type2 = new MetadataType();
+        type1.setName("name");
+        type2.setName("name");
+        HashMap<String, String> hash1 = new HashMap<>();
+        HashMap<String, String> hash2 = new HashMap<>();
+        hash1.put("de", "deutsch");
+        hash2.put("de", "Deutsch");
+        type1.setAllLanguages(hash1);
+        type2.setAllLanguages(hash2);
+        assertTrue(type1.equals(type2));
+        assertEquals(0, mdgType.getMetadataTypeList().size());
+        mdgType.addMetadataType(type1, null, false, false);
+        assertEquals(1, mdgType.getMetadataTypeList().size());
+        mdgType.addMetadataType(type2, null, false, false);
+        assertEquals(1, mdgType.getMetadataTypeList().size());
+        assertEquals("deutsch", mdgType.getMetadataTypeList().get(0).getAllLanguages().get("de"));
+    }
+
+    @Test
     public void testAddMetadataTypeAgainstModificationsOfTheAddedObjectFromOutside1() throws MetadataTypeNotAllowedException {
         // add MetadataType without setting its language list first
         MetadataType mdType = new MetadataType();
@@ -153,6 +177,54 @@ public class MetadataGroupTypeTest {
     }
 
     /* Tests for the method removeMetadataType(MetadataType) */
+    @Test
+    public void testRemoveMetadataTypeGivenNull() {
+        int length = mdgType.getMetadataTypeList().size();
+        mdgType.removeMetadataType(null);
+        assertEquals(length, mdgType.getMetadataTypeList().size());
+    }
+
+    @Test
+    public void testRemoveMetadataTypeGivenUnexistingElement() {
+        MetadataType typeAdded = new MetadataType();
+        typeAdded.setName("added");
+        mdgType.addMetadataType(typeAdded, null, false, false);
+        assertEquals(1, mdgType.getMetadataTypeList().size());
+        MetadataType type = new MetadataType();
+        type.setName("type");
+        assertFalse(type.equals(typeAdded));
+        mdgType.removeMetadataType(type);
+        assertEquals(1, mdgType.getMetadataTypeList().size());
+    }
+
+    @Test
+    public void testRemoveMetadataTypeGivenExistingElement() {
+        assertEquals(0, mdgType.getMetadataTypeList().size());
+        MetadataType typeAdded = new MetadataType();
+        typeAdded.setName("added");
+        mdgType.addMetadataType(typeAdded, null, false, false);
+        assertEquals(1, mdgType.getMetadataTypeList().size());
+        mdgType.removeMetadataType(typeAdded);
+        assertEquals(0, mdgType.getMetadataTypeList().size());
+    }
+
+    @Test
+    public void testRemoveMetadataTypeGivenEquivalentButDifferentElements() {
+        // the method equals(MetadataType) in class MetadataType determines if a MetadataType object is removable
+        // i.e. one can remove a MetadataType object via one sufficiently similar to the one in the group
+        MetadataType typeAdded = new MetadataType();
+        typeAdded.setName("name");
+        typeAdded.setAllowNameParts(true);
+        MetadataType typeSimilar = new MetadataType();
+        typeSimilar.setName("name");
+        typeSimilar.setAllowNameParts(false);
+        assertTrue(typeAdded.equals(typeSimilar));
+        assertEquals(0, mdgType.getMetadataTypeList().size());
+        mdgType.addMetadataType(typeAdded, null, false, false);
+        assertEquals(1, mdgType.getMetadataTypeList().size());
+        mdgType.removeMetadataType(typeSimilar);
+        assertEquals(0, mdgType.getMetadataTypeList().size());
+    }
 
 }
 
