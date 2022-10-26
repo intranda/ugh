@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Before;
@@ -16,6 +17,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import ugh.exceptions.MetadataTypeNotAllowedException;
+import ugh.exceptions.PreferencesException;
 
 public class MetadataGroupTypeTest {
     private MetadataGroupType mdgType;
@@ -226,6 +228,311 @@ public class MetadataGroupTypeTest {
         assertEquals(0, mdgType.getMetadataTypeList().size());
     }
 
+    /* Tests for the method equals(Object) */
+    @Ignore("The logic in the method cannot pass this test. Either give the field name a default value, or add additional logic into this method.")
+    @Test
+    public void testEqualsToItself() {
+        assertTrue(mdgType == mdgType);
+        assertTrue(mdgType.equals(mdgType));
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Null check needed.")
+    @Test
+    public void testEqualsGivenNull() {
+        mdgType.setName("");
+        assertFalse(mdgType.equals(null));
+    }
+
+    @Test
+    public void testEqualsToItsCopy() {
+        mdgType.setName("name");
+        MetadataGroupType mdgTypeCopy = mdgType.copy();
+        assertFalse(mdgType == mdgTypeCopy);
+        assertTrue(mdgType.equals(mdgTypeCopy));
+    }
+
+    @Test
+    public void testEqualsGivenExtendedObject() {
+        mdgType.setName("name");
+        ExtendedMetadataGroupType extendedType = new ExtendedMetadataGroupType("name");
+        assertTrue(mdgType.equals(extendedType));
+        assertTrue(extendedType.equals(mdgType));
+    }
+
+    // class needed for the test case above
+    private class ExtendedMetadataGroupType extends MetadataGroupType {
+        public ExtendedMetadataGroupType(String name) {
+            super();
+            super.setName(name);
+        }
+
+        public ExtendedMetadataGroupType() {
+            new ExtendedMetadataGroupType("");
+        }
+    }
+
+    /* Tests for the following methods: 
+     * getAllLanguages()
+     * setAllLanguages(HashMap<String,String>)
+     * getLanguage(String)
+     * getNameByLanguage(String)
+     * addLanguage(String, String) 
+     */
+    @Ignore("The logic in the method cannot pass this test. Null check and initialization needed.")
+    @Test
+    public void testAddLanguageGivenUninitializedFieldAllLanguages() {
+        assertNull(mdgType.getAllLanguages());
+        try {
+            mdgType.addLanguage("de", "Deutsch");
+        } catch (Exception e) {
+            // intentionally left blank
+        }
+        assertEquals(1, mdgType.getAllLanguages().size());
+    }
+
+    @Ignore("The logic in the methods cannot pass this test. ENCAPSULATION !!!")
+    @Test
+    public void testAddLanguageTogetherWithModificationsOnTheResultOfGetAllLanguages() {
+        HashMap<String, String> hashMap = new HashMap<>();
+        mdgType.setAllLanguages(hashMap);
+        mdgType.addLanguage("de", "Deutsch");
+        assertEquals(1, mdgType.getAllLanguages().size());
+        assertEquals("Deutsch", mdgType.getNameByLanguage("de"));
+        mdgType.addLanguage("de", "deutsch"); // should make no change according to the logic of the method addLanguage(String, String)
+        assertEquals(1, mdgType.getAllLanguages().size());
+        assertEquals("Deutsch", mdgType.getNameByLanguage("de"));
+        HashMap<String, String> languages = mdgType.getAllLanguages();
+        languages.put("de", "deutsch"); // but one can still modify the value from outside, which is DANGEROUS !
+        assertEquals(1, mdgType.getAllLanguages().size());
+        assertEquals("Deutsch", mdgType.getNameByLanguage("de"));
+    }
+
+    @Test
+    public void testGetLanguageGivenNull() {
+        mdgType.setAllLanguages(new HashMap<String, String>());
+        mdgType.addLanguage("de", "Deutsch");
+        assertNull(mdgType.getLanguage(null));
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
+    @Test
+    public void testGetLanguageGivenUninitializedFieldAllLanguages() {
+        assertNull(mdgType.getLanguage("de"));
+    }
+
+    @Test
+    public void testGetLanguageGivenUnexistingLanguage() {
+        mdgType.setAllLanguages(new HashMap<String, String>());
+        mdgType.addLanguage("de", "Deutsch");
+        assertNull(mdgType.getLanguage("en"));
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Input validation needed.")
+    @Test
+    public void testAddLanguageGivenNullAsFirstArgument() {
+        mdgType.setAllLanguages(new HashMap<String, String>());
+        assertThrows(IllegalArgumentException.class, () -> mdgType.addLanguage(null, "null"));
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Input validation needed.")
+    @Test
+    public void testAddLanguageGivenNullAsSecondArgument() {
+        mdgType.setAllLanguages(new HashMap<String, String>());
+        assertThrows(IllegalArgumentException.class, () -> mdgType.addLanguage("de", null));
+    }
+    
+    /* Tests for the method getNumberOfMetadataType(PrefsType) */
+    @Test
+    public void testGetNumberOfMetadataTypeGivenEmptyMetadataTypeListAndNullAsArgument() {
+        assertEquals("0", mdgType.getNumberOfMetadataType(null));
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Handle unnamed MetadataType objects to avoid the NullPointerException.")
+    @Test
+    public void testGetNumberOfMetadataTypeGivenUnemptyMetadataTypeListOfUnnamedMetadataTypeObjectsAndNullAsArgument() {
+        MetadataType type = new MetadataType();
+        mdgType.addMetadataType(type, null, false, false);
+        assertEquals("0", mdgType.getNumberOfMetadataType(null));
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Null check needed.")
+    @Test
+    public void testGetNumberOfMetadataTypeGivenUnemptyMetadataTypeListOfNamedMetadataTypeObjectsAndNullAsArgument() {
+        MetadataType type = new MetadataType();
+        type.setName("name");
+        mdgType.addMetadataType(type, null, false, false);
+        assertEquals("0", mdgType.getNumberOfMetadataType(null));
+    }
+
+    @Test
+    public void testGetNumberOfMetadataTypeGivenNamelessMetadataTypeObjectAsArgument() {
+        MetadataType type = new MetadataType();
+        type.setName("name");
+        mdgType.addMetadataType(type, null, false, false);
+        assertEquals("0", mdgType.getNumberOfMetadataType(new MetadataType()));
+    }
+
+    @Test
+    public void testGetNumberOfMetadataTypeGivenNamedUnexistingMetadataTypeObjectAsArgument() {
+        MetadataType type = new MetadataType();
+        type.setName("name");
+        mdgType.addMetadataType(type, null, false, false);
+        MetadataType anotherType = new MetadataType();
+        anotherType.setName("another name");
+        assertEquals("0", mdgType.getNumberOfMetadataType(anotherType));
+    }
+
+    @Ignore("The logic cannot pass this test. Might be a feature. Check the comment below.")
+    @Test
+    public void testGetNumberOfMetadataTypeGivenNormalInput() throws PreferencesException {
+        Prefs prefs = new Prefs();
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
+        mdgType = prefs.getMetadataGroupTypeByName("PublisherGroup");
+        MetadataType type1 = new MetadataType();
+        MetadataType type2 = new MetadataType();
+        MetadataType type3 = new MetadataType();
+        MetadataType type4 = new MetadataType();
+        MetadataType type5 = new MetadataType();
+        type1.setName("PublisherPerson");
+        type2.setName("PlaceOfPublication");
+        type3.setName("PublicationYear");
+        type4.setName("PublisherCorporate");
+        type5.setName("PublisherName");
+        assertEquals("0", mdgType.getNumberOfMetadataType(type1)); // It seems that num will be defaulted to "*" if not set manually, but I haven't found out how so. - Zehong
+        assertEquals("+", mdgType.getNumberOfMetadataType(type2));
+        assertEquals("1m", mdgType.getNumberOfMetadataType(type3));
+        assertEquals("1o", mdgType.getNumberOfMetadataType(type4));
+        assertEquals("0", mdgType.getNumberOfMetadataType(type5));
+    }
+
+    /* Tests for the method copy() */
+    @Test
+    public void testCopy() throws PreferencesException {
+        Prefs prefs = new Prefs();
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
+        mdgType = prefs.getMetadataGroupTypeByName("PublisherGroup");
+        MetadataGroupType mdgType2 = mdgType.copy();
+        assertFalse(mdgType2 == mdgType);
+        assertTrue(mdgType2.equals(mdgType));
+        assertEquals(mdgType2.getNum(), mdgType.getNum());
+        assertEquals(mdgType2.getName(), mdgType.getName());
+        assertEquals(mdgType2.getAllLanguages(), mdgType.getAllLanguages());
+        assertTrue(mdgType2.getAllLanguages() == mdgType.getAllLanguages()); // The copy and the original share the same HashMap allLanguages
+        assertFalse(mdgType2.getAllAllowedGroupTypeTypes() == mdgType.getAllAllowedGroupTypeTypes());
+        assertFalse(mdgType2.getMetadataTypeList() == mdgType.getMetadataTypeList());
+        assertTrue(mdgType2.getAllAllowedGroupTypeTypes().size() == mdgType.getAllAllowedGroupTypeTypes().size());
+        assertTrue(mdgType2.getMetadataTypeList().size() == mdgType.getMetadataTypeList().size());
+        Iterator<AllowedMetadataGroupType> allGroupsIterator1 = mdgType.getAllAllowedGroupTypeTypes().iterator();
+        Iterator<AllowedMetadataGroupType> allGroupsIterator2 = mdgType2.getAllAllowedGroupTypeTypes().iterator();
+        while (allGroupsIterator1.hasNext()) {
+            AllowedMetadataGroupType type1 = allGroupsIterator1.next();
+            AllowedMetadataGroupType type2 = allGroupsIterator2.next();
+            assertEquals(type1.getGroupName(), type2.getGroupName());
+            assertEquals(type1.getNumAllowed(), type2.getNumAllowed());
+            assertEquals(type1.isDefaultDisplay(), type2.isDefaultDisplay());
+            assertEquals(type1.isHidden(), type2.isHidden());
+        }
+        Iterator<MetadataType> mdTypeListIterator1 = mdgType.getMetadataTypeList().iterator();
+        Iterator<MetadataType> mdTypeListIterator2 = mdgType2.getMetadataTypeList().iterator();
+        while (mdTypeListIterator1.hasNext()) {
+            assertTrue(mdTypeListIterator1.next().equals(mdTypeListIterator2.next()));
+        }
+    }
+
+    /* Tests for the method getAllDefaultDisplayMetadataTypes() */
+    @Test
+    public void testGetAllDefaultDisplayMetadataTypesWhenUninitialized() {
+        assertNotNull(mdgType.getAllDefaultDisplayMetadataTypes());
+        assertEquals(0, mdgType.getAllAllowedGroupTypeTypes().size());
+    }
+
+    @Test
+    public void testGetAllDefaultDisplayMetadataTypesUnderCommonScenario() throws PreferencesException {
+        Prefs prefs = new Prefs();
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
+        mdgType = prefs.getMetadataGroupTypeByName("PublisherGroup");
+        assertEquals(3, mdgType.getAllDefaultDisplayMetadataTypes().size());
+    }
+
+    /* Tests for the following methods:
+     *  addGroupTypeAsChild(String, String, boolean, boolean)
+     *  removeGroupTypeAsChild(String)
+     *  getAllAllowedGroupTypeTypes()
+     *  getAllowedMetadataGroupTypeByName(String)
+      */
+    @Test
+    public void testAddGroupTypeAsChildGivenSameObjectTwice() {
+        assertEquals(0, mdgType.getAllAllowedGroupTypeTypes().size());
+        mdgType.addGroupTypeAsChild("group", null, false, false);
+        assertEquals(1, mdgType.getAllAllowedGroupTypeTypes().size());
+        mdgType.addGroupTypeAsChild("group", "*", false, false);
+        assertEquals(1, mdgType.getAllAllowedGroupTypeTypes().size());
+        assertNull(mdgType.getAllAllowedGroupTypeTypes().get(0).getNumAllowed());
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Null should be avoided to be used as the first argument.")
+    @Test
+    public void testAddGroupTypeAsChildGivenNull() {
+        assertThrows(IllegalArgumentException.class, () -> mdgType.addGroupTypeAsChild(null, null, false, false));
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Empty string should be avoided to be used as the first argument.")
+    @Test
+    public void testAddGroupTypeAsChildGivenEmptyGroupName() {
+        assertThrows(IllegalArgumentException.class, () -> mdgType.addGroupTypeAsChild("", null, false, false));
+    }
+
+    @Test
+    public void testRemoveGroupTypeAsChildGivenNull() {
+        mdgType.addGroupTypeAsChild("group", null, false, false);
+        assertEquals(1, mdgType.getAllAllowedGroupTypeTypes().size());
+        mdgType.removeGroupTypeAsChild(null);
+        assertEquals(1, mdgType.getAllAllowedGroupTypeTypes().size());
+    }
+
+    @Test
+    public void testRemoveGroupTypeAsChildGivenUnexistingGroupType() {
+        mdgType.addGroupTypeAsChild("group", null, false, false);
+        assertEquals(1, mdgType.getAllAllowedGroupTypeTypes().size());
+        mdgType.removeGroupTypeAsChild("another group");
+        assertEquals(1, mdgType.getAllAllowedGroupTypeTypes().size());
+    }
+
+    @Test
+    public void testRemoveGroupTypeAsChildGivenExistingGroupType() {
+        mdgType.addGroupTypeAsChild("group", null, false, false);
+        assertEquals(1, mdgType.getAllAllowedGroupTypeTypes().size());
+        mdgType.removeGroupTypeAsChild("group");
+        assertEquals(0, mdgType.getAllAllowedGroupTypeTypes().size());
+    }
+
+    @Test
+    public void testGetAllowedMetadataGroupTypeByNameGivenNull() {
+        assertNull(mdgType.getAllowedMetadataGroupTypeByName(null));
+        mdgType.addGroupTypeAsChild("group", null, false, false);
+        assertNull(mdgType.getAllowedMetadataGroupTypeByName(null));
+    }
+
+    @Ignore("The logic in the method cannot pass this test. ENCAPSULATION !!!")
+    @Test
+    public void testAddGroupTypeAsChildTogetherWithModificationsOnTheResultOfGetAllAllowedGroupTypeTypes() {
+        mdgType.addGroupTypeAsChild("group", null, false, false);
+        assertEquals(1, mdgType.getAllAllowedGroupTypeTypes().size());
+        mdgType.addGroupTypeAsChild("group", "+", true, true); // should make no change according to the logic of the method addGroupTypeAsChild(String, String, boolean, boolean)
+        assertEquals(1, mdgType.getAllAllowedGroupTypeTypes().size());
+        assertFalse(mdgType.getAllowedMetadataGroupTypeByName("group").isDefaultDisplay());
+        List<AllowedMetadataGroupType> groups = mdgType.getAllAllowedGroupTypeTypes();
+        groups.add(new AllowedMetadataGroupType("group", "+", true, true)); // but we can still modify the value from outside, which is DANGEROUS !
+        assertEquals(1, mdgType.getAllAllowedGroupTypeTypes().size()); // <- change 1 to 2 to go through the following steps
+        assertFalse(mdgType.getAllowedMetadataGroupTypeByName("group").isDefaultDisplay()); // this one still passes, since the older object comes first
+        mdgType.removeGroupTypeAsChild("group"); // but if we perform once remove, then the older object is gone while the newer one is still there, which ONE MAY NOT KNOW !
+        assertTrue(mdgType.getAllowedMetadataGroupTypeByName("group").isDefaultDisplay());
+        mdgType.addGroupTypeAsChild("group", "*", false, false); // and then if we perform once add without knowing that there is already one inside
+        assertFalse(mdgType.getAllowedMetadataGroupTypeByName("group").isDefaultDisplay()); // we would end up with troubles
+        assertEquals("*", mdgType.getAllowedMetadataGroupTypeByName("group").getNumAllowed());
+    }
+
 }
+
 
 
