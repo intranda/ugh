@@ -43,6 +43,7 @@ public class VirtualFileGroupTest {
     @Ignore("The logic in the method cannot pass this test. Should we allow null as legal parameter?")
     @Test
     public void testConstructorWithParametersIncludingNull() {
+        // TODO add null check, but empty string is allowed
         vfg = new VirtualFileGroup("name", null, "mimetype", "fileSuffix");
         assertNotNull(vfg.getPathToFiles());
     }
@@ -52,6 +53,7 @@ public class VirtualFileGroupTest {
     @Test
     public void testSetNameGivenNull() {
         assertNotNull(vfg.getName());
+        // TODO add null check, but empty string is allowed
         vfg.setName(null);
         assertNotNull(vfg.getName());
     }
@@ -60,6 +62,7 @@ public class VirtualFileGroupTest {
     @Test
     public void testSetPathToFilesGivenNull() {
         assertNotNull(vfg.getPathToFiles());
+        // TODO add null check, but empty string is allowed
         vfg.setPathToFiles(null);
         assertNotNull(vfg.getPathToFiles());
     }
@@ -95,6 +98,8 @@ public class VirtualFileGroupTest {
     @Ignore("The logic in the method cannot pass this test. Should we handle the case of two-point-leading input?")
     @Test
     public void testSetFileSuffixGivenStringHeadedByTwoPoints() {
+        // TODO I don't think this is needed. Removing the first dot from file extension is useful, because some might
+        // enter 'tif' and others '.tif' as extension. But '..tif' is clearly a wrong user input and can be fixed by the user
         String suffix = "..suffix";
         vfg.setFileSuffix(suffix);
         assertEquals("suffix", vfg.getFileSuffix());
@@ -103,6 +108,7 @@ public class VirtualFileGroupTest {
     @Ignore("The logic in the method cannot pass this test. Should we allow null as legal argument?")
     @Test
     public void testSetIdSuffixGivenNull() {
+        // TODO add null check, but allow empty string
         assertNotNull(vfg.getIdSuffix());
         vfg.setIdSuffix(null);
         assertNotNull(vfg.getIdSuffix());
@@ -129,6 +135,7 @@ public class VirtualFileGroupTest {
     @Ignore("The logic in the method cannot pass this test. Null should make no difference.")
     @Test
     public void testAddContentFileGivenNull1() {
+        // TODO add null check
         assertSame(vfg.ALL_FILES, vfg.getContentFiles());
         vfg.addContentFile(null);
         assertSame(vfg.ALL_FILES, vfg.getContentFiles());
@@ -148,6 +155,7 @@ public class VirtualFileGroupTest {
     @Test
     public void testAddContentFilesGivenNull1() {
         assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        // TODO handle null as empty list
         vfg.addContentFiles(null);
         assertSame(vfg.ALL_FILES, vfg.getContentFiles());
     }
@@ -157,6 +165,7 @@ public class VirtualFileGroupTest {
     public void testAddContentFilesGivenNull2() {
         vfg.restrictFiles();
         assertEquals(0, vfg.getContentFiles().size());
+        // TODO handle null as empty list
         vfg.addContentFiles(null);
         assertEquals(0, vfg.getContentFiles().size());
     }
@@ -220,7 +229,7 @@ public class VirtualFileGroupTest {
         assertEquals(0, vfg.getContentFiles().size());
         assertNotSame(vfg.ALL_FILES, vfg.getContentFiles());
     }
-    
+
     @Test
     public void testRemoveContentFilesGivenNull() {
         assertSame(vfg.ALL_FILES, vfg.getContentFiles());
@@ -257,6 +266,7 @@ public class VirtualFileGroupTest {
     @Test
     public void testContainsGivenNullWhenAllAllowed() {
         assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        // TODO add null check to ContentFile equals
         assertFalse(vfg.contains(null));
     }
 

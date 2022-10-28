@@ -55,6 +55,8 @@ public class ReferenceTest {
     @Ignore("The test passes, but it is just to show to what surprise the design could lead to. Check the comments below. Same for the method setTarget.")
     @Test
     public void testSetSourceGivenNull() throws TypeNotAllowedForParentException {
+        // TODO I never used sourceId/targetId, I always work with the source objects. Getter/Setter are only used in this tests. So you can ignore this.
+        // Maybe we can remove them from the code, but that might break XStream reader
         dsType1 = new DocStructType();
         ds1 = new DocStruct(dsType1);
         // Compare the following two tracks

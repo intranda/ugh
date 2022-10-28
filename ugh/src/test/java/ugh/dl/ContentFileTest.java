@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -65,23 +66,21 @@ public class ContentFileTest {
     }
 
     /* Tests for the method addMetadata(Metadata) */
-    @Ignore("The logic in the method cannot pass this test. Null check and initialization needed.")
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testAddMetadataBeforeInitialization() throws MetadataTypeNotAllowedException {
         MetadataType mdType = new MetadataType();
         Metadata md = new Metadata(mdType);
         assertTrue(cf.addMetadata(md));
     }
 
-    @Ignore("There is no way to initialize the field allMetadata, hence no test can be designed.")
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testAddMetadataGivenNull() {
         // Null should be avoided
+        assertTrue(cf.addMetadata(null));
     }
 
     /* Tests for the method removeMetadata(Metadata) */
-    @Ignore("The logic in the method cannot pass this test. Null check and initialization needed.")
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testRemoveMetadataBeforeInitialization() throws MetadataTypeNotAllowedException {
         MetadataType mdType = new MetadataType();
         Metadata md = new Metadata(mdType);
@@ -113,7 +112,7 @@ public class ContentFileTest {
         assertEquals(1, cf.getReferencedDocStructs().size());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
+    @Ignore("The logic in the method cannot pass this test. Null check needed.") // TODO add null check
     @Test
     public void testAddDocStructAsReferenceGivenNull() {
         assertNull(cf.getReferencedDocStructs());
@@ -122,7 +121,7 @@ public class ContentFileTest {
         assertEquals(0, cf.getReferencedDocStructs().size());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Better to avoid adding same object again.")
+    @Ignore("The logic in the method cannot pass this test. Better to avoid adding same object again.") // TODO fix it
     @Test
     public void testAddDocStructAsReferenceGivenSameObjectTwice() throws TypeNotAllowedForParentException {
         DocStructType dsType = new DocStructType();
@@ -162,7 +161,7 @@ public class ContentFileTest {
         assertTrue(dsType1.equals(dsType2));
         DocStruct ds1 = new DocStruct(dsType1);
         DocStruct ds2 = new DocStruct(dsType2);
-        assertFalse(ds1 == ds2);
+        assertNotSame(ds1, ds2);
         assertTrue(ds1.equals(ds2));
         assertTrue(cf.addDocStructAsReference(ds1));
         assertEquals(1, cf.getReferencedDocStructs().size());
@@ -255,7 +254,7 @@ public class ContentFileTest {
         assertNotNull(cf.getTechMds());
     }
 
-    @Ignore("This test actually passes in order to show the importance of ENCAPSULATION !!!")
+    @Ignore("This test actually passes in order to show the importance of ENCAPSULATION !!!") // TODO fix it
     @Test
     public void testAddTechMdTogetherWithModificationsOnTheResultOfGetterThenApplySetter() {
         // according to the design of the method addTechMd(Md), null can not be added
@@ -267,6 +266,8 @@ public class ContentFileTest {
         assertEquals(1, cf.getTechMds().size());
         assertFalse(cf.getTechMds().contains(null));
         // however, we can still achieve that in the following way
+
+        // TODO don't allow this, maybe change the setter and remove all null elements from the new list
         List<Md> techMdList = cf.getTechMds();
         techMdList.add(null);
         cf.setTechMds(techMdList);
@@ -275,18 +276,16 @@ public class ContentFileTest {
     }
 
     /* Tests for the methods getUuidMap(), addUUID(String, String), getUUID(String) */
-    @Ignore("The logic in the method cannot pass this test. Should null be allowed as the first argument? Same question for empty string.")
     @Test
     public void testAddUUIDGivenNullAsFirstArgument() {
         cf.addUUID(null, "uuid");
-        assertEquals(0, cf.getUuidMap().size());
+        assertEquals(1, cf.getUuidMap().size());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Should null be allowed as the second argument? Same question for empty string.")
     @Test
     public void testAddUUIDGivenNullAsSecondArgument() {
         cf.addUUID("type", null);
-        assertEquals(0, cf.getUuidMap().size());
+        assertEquals(1, cf.getUuidMap().size());
     }
 
     @Test
@@ -301,6 +300,3 @@ public class ContentFileTest {
     }
 
 }
-
-
-

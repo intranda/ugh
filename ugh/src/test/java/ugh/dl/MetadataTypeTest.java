@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -45,6 +46,7 @@ public class MetadataTypeTest {
     @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testAddLanguageWithoutSettingAllLanguagesFirst() {
+        // TODO instantiate allLanguages if null
         mdt.addLanguage("de", "Deutsch");
         assertTrue(mdt.getAllLanguages().containsKey("de"));
     }
@@ -141,6 +143,7 @@ public class MetadataTypeTest {
     @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testSetNumGivenNull() {
+        // TODO fix check in setNum
         mdt.setNum(null);
         assertNull(mdt.getNum());
     }
@@ -195,9 +198,10 @@ public class MetadataTypeTest {
         assertNotNull(mdt2.getValidationExpression());
         assertNull(mdt2.getValidationErrorMessages());
     }
-    
+
     @Ignore("The logic in the method cannot pass this test. Deep copy needed.")
     @Test
+    // TODO this is the expected behavior. If you change the type, all objects based on the type are affected. Change test
     public void testCopyGivenVaryingOrigin() {
         mdt.setAllLanguages(hashMap);
         MetadataType mdt2 = mdt.copy();
@@ -207,11 +211,12 @@ public class MetadataTypeTest {
         mdt2.addLanguage("de", "deutsch");
         assertEquals("Deutsch", mdt.getNameByLanguage("de"));
     }
-    
+
     /* Tests for the method getNameByLanguage(String) */
     @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testGetNameByLanguageGivenUninitializedLanguageMap() {
+        // TODO instantiate allLanguages if null
         assertNull(mdt.getNameByLanguage(null));
         assertNull(mdt.getNameByLanguage("de"));
     }
@@ -223,14 +228,14 @@ public class MetadataTypeTest {
         assertEquals(1, mdt.getAllLanguages().size());
         assertNull(mdt.getNameByLanguage(null));
     }
-    
+
     @Test
     public void testGetNameByLanguageGivenNullAsValue() {
         mdt.setAllLanguages(hashMap);
         mdt.addLanguage("de", null);
         assertNull(mdt.getNameByLanguage("de"));
     }
-    
+
     @Test
     public void testGetNameByLanguageGivenNullAsKey() {
         mdt.setAllLanguages(hashMap);
@@ -238,32 +243,33 @@ public class MetadataTypeTest {
         assertEquals(1, mdt.getAllLanguages().size());
         assertEquals("Deutsch", mdt.getNameByLanguage(null));
     }
-    
+
     @Test
     public void testGetNameByLanguageGivenUnknownKey() {
         mdt.setAllLanguages(hashMap);
         mdt.addLanguage("de", "Deutsch");
         assertNull(mdt.getNameByLanguage("en"));
     }
-    
+
     @Test
     public void testGetNameByLanguageGivenEmptyStringAsKey() {
         mdt.setAllLanguages(hashMap);
         mdt.addLanguage("", "Deutsch");
         assertEquals("Deutsch", mdt.getNameByLanguage(new String()));
     }
-    
+
     @Test
     public void testGetNameByLanguageGivenKnownKey() {
         mdt.setAllLanguages(hashMap);
         mdt.addLanguage("de", "Deutsch");
         assertEquals("Deutsch", mdt.getNameByLanguage("de"));
     }
-    
+
     /* Tests for the method changeLanguageByName(String, String) */
     @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testChangeLanguageByNameGivenUninitializedLanguageMap() {
+        // TODO instantiate allLanguages if null
         mdt.changeLanguageByName("de", "Deutsch");
         assertTrue(mdt.getAllLanguages().containsKey("de"));
     }
@@ -308,6 +314,7 @@ public class MetadataTypeTest {
     @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testRemoveLanguageGivenUninitializedLanguageMap() {
+        // TODO instantiate allLanguages if null
         assertFalse(mdt.removeLanguage("de"));
     }
 
@@ -373,6 +380,7 @@ public class MetadataTypeTest {
     @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testGetLanguageGivenKnownNullAsKey() {
+        // TODO instantiate allLanguages if null
         mdt.setAllLanguages(hashMap);
         mdt.addLanguage(null, "Deutsch");
         assertEquals("Deutsch", mdt.getLanguage(null));
@@ -388,7 +396,7 @@ public class MetadataTypeTest {
     public void testEqualsGivenTwoBrandNewMDTs() {
         MetadataType mdt2 = new MetadataType();
         assertNotEquals(mdt, mdt2); // mdt and mdt2 are different objects
-        assertFalse(mdt == mdt2); // in the sense that they are located differently
+        assertNotSame(mdt, mdt2); // in the sense that they are located differently
         assertTrue(mdt2.equals(mdt)); // but according to our rewritten equals(MetadataType) method, they are equal
     }
 
