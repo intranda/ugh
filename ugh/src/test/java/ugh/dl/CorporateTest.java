@@ -3,6 +3,7 @@ package ugh.dl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
@@ -83,6 +84,7 @@ public class CorporateTest {
     @Ignore("The logic in the method cannot pass this test. Null should be prevented from adding into subNames.")
     @Test
     public void testAddSubNameGivenNull() {
+        // TODO fix this
         corporate.addSubName(null);
         assertFalse(corporate.getSubNames().contains(null));
     }
@@ -110,7 +112,7 @@ public class CorporateTest {
     public void testAddSubNameGivenTwoEquivalentNamePartObjects() {
         NamePart part1 = new NamePart("type", "value");
         NamePart part2 = new NamePart("type", "value");
-        assertFalse(part1 == part2); // part1 and part2 are actually two different objects located at different addresses
+        assertNotSame(part1, part2); // part1 and part2 are actually two different objects located at different addresses
         assertEquals(part1, part2); // but they are equal regarding the rewritten equals(Object) method defined in the NamePart class
         corporate.addSubName(part1);
         assertEquals(1, corporate.getSubNames().size());

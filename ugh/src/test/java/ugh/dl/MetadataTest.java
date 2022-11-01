@@ -38,7 +38,7 @@ public class MetadataTest {
         assertFalse(md.isValidationErrorPresent()); // the flag validationErrorPresent will be automatically initiated with false
         assertNull(md.getValidationMessage()); // but the string fields will remain null
     }
-    
+
     @Test
     public void testConstructorAppliedTwiceUsingSameMetadataTypeObject() throws MetadataTypeNotAllowedException {
         assertSame(type, md.getType());
@@ -71,17 +71,19 @@ public class MetadataTest {
     @Ignore("The logic in the method cannot pass this test. Comparison logic needed in the setValue(String) method.")
     @Test
     public void testSetValueGetValueTogetherWithWasUpdatedGivenNullToSet() {
+        // TODO remove wasUpdated from code, it is not needed or used anywhere
         assertFalse(md.wasUpdated());
         assertNull(md.getValue());
         md.setValue(null);
         assertNull(md.getValue());
         assertEquals(null, md.getValue());
-        assertFalse(md.wasUpdated()); // setting null again should not change the flag of updated       
+        assertFalse(md.wasUpdated()); // setting null again should not change the flag of updated
     }
 
     @Ignore("The logic in the method cannot pass this test. Comparison logic needed in the setValue(String) method.")
     @Test
     public void testSetValueGetValueTogetherWithWasUpdatedGivenSameValueToSetTwice() {
+        // TODO remove wasUpdated from code, it is not needed or used anywhere
         assertFalse(md.wasUpdated());
         assertNull(md.getValue());
         md.setValue("value");
@@ -118,7 +120,7 @@ public class MetadataTest {
                 && md.getAuthorityURI() == md2.getAuthorityURI()
                 && md.getAuthorityValue() == md2.getAuthorityValue());
     }
-    
+
     @Test
     public void testSetAndGetValueQualifierGivenNull() {
         assertNull(md.getValueQualifier());
@@ -148,12 +150,14 @@ public class MetadataTest {
     @Test
     public void testAddAuthorityUriToMapGivenNullAsFirstArgument() {
         // null should not be allowed as an identifier for an authorityFile
+        // TODO add check for null or blank key
         assertThrows(IllegalArgumentException.class, () -> md.addAuthorityUriToMap(null, "uri"));
     }
 
     @Ignore("The logic in the method cannot pass this test. Validation logic for the first argument needed.")
     @Test
     public void testAddAuthorityUriToMapGivenEmptyStringAsFirstArgument() {
+        // TODO add check for null or blank key
         // empty string should not be allowed as an identifier for an authorityFile
         assertThrows(IllegalArgumentException.class, () -> md.addAuthorityUriToMap("", "uri"));
     }
@@ -249,6 +253,7 @@ public class MetadataTest {
     @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testEqualsGivenNull() {
+        // TODO add null check
         assertFalse(md.equals(null));
     }
 
@@ -314,22 +319,23 @@ public class MetadataTest {
         assertEquals(md.getValue(), md2.getValue());
         assertEquals(md.getValueQualifier(), md2.getValueQualifier());
         assertEquals(md.getValueQualifierType(), md2.getValueQualifierType());
-        // assure that they are however somehow different 
+        // assure that they are however somehow different
         md.setAutorityFile("id1", "uri1", "value1");
         md2.setAutorityFile("id2", "uri2", "value2");
         md.wasUpdated(false);
         md2.wasUpdated(true);
-        // then we do the comparison 
+        // then we do the comparison
         assertTrue(md.equals(md2));
     }
 
     @Ignore("The logic in the method cannot pass this test. Class check needed.")
     @Test
     public void testEqualsGivenInheritedObjects() throws MetadataTypeNotAllowedException {
+        // TODO add class check to equals
         Person p = new Person(type, "first name", "second name");
-        Metadata mdp = (Metadata) p;
+        Metadata mdp = p;
         Corporate c = new Corporate(type);
-        Metadata mdc = (Metadata) c;
+        Metadata mdc = c;
         assertNotSame(mdp.getClass(), mdc.getClass());
         assertFalse(md.equals(mdp));
         assertFalse(mdp.equals(mdc));

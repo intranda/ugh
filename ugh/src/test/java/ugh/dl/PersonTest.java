@@ -56,7 +56,7 @@ public class PersonTest {
         assertEquals("Last", person.getLastname());
         assertNull(person.getFirstname());
     }
-    
+
     @Test
     public void testConstructorGivenNullForBothNames() throws MetadataTypeNotAllowedException {
         person = new Person(type, null, null);
@@ -90,6 +90,8 @@ public class PersonTest {
     @Test
     public void testToStringGivenNullAsLastname() throws MetadataTypeNotAllowedException {
         type.setName("TypeName");
+        // TODO fix toString method, one of firstname / lastname is needed
+        // also I never used this constructor, I only use new Person(type)
         person = new Person(type, "First", null);
         assertEquals("Person (TypeName): NULL, \"First\"\n", person.toString());
     }
@@ -119,6 +121,7 @@ public class PersonTest {
     @Test
     public void testEqualsGivenNull() throws MetadataTypeNotAllowedException {
         person = new Person(type);
+        // TODO add null check
         assertFalse(person.equals(null));
     }
 
@@ -173,12 +176,15 @@ public class PersonTest {
     @Test
     public void testAddNamePartGivenNull() throws MetadataTypeNotAllowedException {
         person = new Person(type);
+        // TODO add null check
         assertThrows(IllegalArgumentException.class, () -> person.addNamePart(null));
     }
 
     @Ignore("The logic in the method cannot pass this test. Might be a better idea to make a deep copy of a list.")
     @Test
     public void testSetAdditionalNamePartsOnTwoPersonObjectsUsingSameListThenAddNamePartToJustOne() throws MetadataTypeNotAllowedException {
+        // TODO I am not sure what the expected behavior should be and if a change would break existing code
+        // but I think its better if each object gets its own list. Just change the setter to new ArrayList<>(list)
         person = new Person(type);
         ArrayList<NamePart> list = new ArrayList<>();
         person.setAdditionalNameParts(list);
