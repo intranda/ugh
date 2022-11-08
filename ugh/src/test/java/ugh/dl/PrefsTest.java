@@ -9,10 +9,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import lombok.extern.log4j.Log4j2;
 import ugh.exceptions.PreferencesException;
 
-@Log4j2
 public class PrefsTest {
     private Prefs prefs;
 
