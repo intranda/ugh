@@ -112,7 +112,6 @@ public class ContentFileTest {
         assertEquals(1, cf.getReferencedDocStructs().size());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed.") // TODO add null check
     @Test
     public void testAddDocStructAsReferenceGivenNull() {
         assertNull(cf.getReferencedDocStructs());
@@ -121,7 +120,6 @@ public class ContentFileTest {
         assertEquals(0, cf.getReferencedDocStructs().size());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Better to avoid adding same object again.") // TODO fix it
     @Test
     public void testAddDocStructAsReferenceGivenSameObjectTwice() throws TypeNotAllowedForParentException {
         DocStructType dsType = new DocStructType();
@@ -254,7 +252,6 @@ public class ContentFileTest {
         assertNotNull(cf.getTechMds());
     }
 
-    @Ignore("This test actually passes in order to show the importance of ENCAPSULATION !!!") // TODO fix it
     @Test
     public void testAddTechMdTogetherWithModificationsOnTheResultOfGetterThenApplySetter() {
         // according to the design of the method addTechMd(Md), null can not be added
@@ -265,14 +262,12 @@ public class ContentFileTest {
         cf.addTechMd(null);
         assertEquals(1, cf.getTechMds().size());
         assertFalse(cf.getTechMds().contains(null));
-        // however, we can still achieve that in the following way
 
-        // TODO don't allow this, maybe change the setter and remove all null elements from the new list
         List<Md> techMdList = cf.getTechMds();
         techMdList.add(null);
         cf.setTechMds(techMdList);
-        assertEquals(2, cf.getTechMds().size());
-        assertTrue(cf.getTechMds().contains(null));
+        assertEquals(1, cf.getTechMds().size());
+        assertFalse(cf.getTechMds().contains(null));
     }
 
     /* Tests for the methods getUuidMap(), addUUID(String, String), getUUID(String) */

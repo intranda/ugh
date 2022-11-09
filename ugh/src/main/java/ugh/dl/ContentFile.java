@@ -203,12 +203,15 @@ public class ContentFile implements Serializable {
      * </p>
      * 
      * @param inStruct
-     * @return true, if adding was successful
+     * @return true, if adding was successful; false otherwise.
      **************************************************************************/
     public boolean addDocStructAsReference(DocStruct inStruct) {
 
         if (this.referencedDocStructs == null) {
             this.referencedDocStructs = new LinkedList<>();
+        }
+        if (inStruct == null || this.referencedDocStructs.contains(inStruct)) {
+            return false;
         }
         this.referencedDocStructs.add(inStruct);
 
@@ -319,6 +322,9 @@ public class ContentFile implements Serializable {
         if (mds != null) {
             this.techMdList = mds;
         }
+        // remove all nulls from the list
+        while (this.techMdList.remove(null))
+            ;
     }
 
     public boolean isRepresentative() {
