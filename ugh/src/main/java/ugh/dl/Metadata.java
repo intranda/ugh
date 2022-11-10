@@ -26,6 +26,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -238,6 +240,9 @@ public class Metadata implements Serializable {
      */
 
     public void addAuthorityUriToMap(String authorityFile, String uri) {
+        if (StringUtils.isBlank(authorityFile)) {
+            throw new IllegalArgumentException("Empty identifier is not allowed for an authority file!");
+        }
         authorityUriMap.put(authorityFile, uri);
     }
 
@@ -426,6 +431,12 @@ public class Metadata implements Serializable {
      * @param MetaData metadata
      **************************************************************************/
     public boolean equals(Metadata metadata) {
+        if (metadata == null) {
+            return false;
+        }
+        if (this.getClass() != metadata.getClass()) {
+            return false;
+        }
 
         log.debug("\r\n" + "metaData getClass()=" + this.getClass() + " ->id:" + this.getType().getName());
 

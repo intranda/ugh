@@ -146,18 +146,14 @@ public class MetadataTest {
     }
 
     /* Tests for the method addAuthorityUriToMap(String, String) */
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testAddAuthorityUriToMapGivenNullAsFirstArgument() {
         // null should not be allowed as an identifier for an authorityFile
-        // TODO add check for null or blank key
         assertThrows(IllegalArgumentException.class, () -> md.addAuthorityUriToMap(null, "uri"));
     }
 
-    @Ignore("The logic in the method cannot pass this test. Validation logic for the first argument needed.")
     @Test
     public void testAddAuthorityUriToMapGivenEmptyStringAsFirstArgument() {
-        // TODO add check for null or blank key
         // empty string should not be allowed as an identifier for an authorityFile
         assertThrows(IllegalArgumentException.class, () -> md.addAuthorityUriToMap("", "uri"));
     }
@@ -250,10 +246,8 @@ public class MetadataTest {
         assertTrue(md.equals(md));
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testEqualsGivenNull() {
-        // TODO add null check
         assertFalse(md.equals(null));
     }
 
@@ -328,10 +322,8 @@ public class MetadataTest {
         assertTrue(md.equals(md2));
     }
 
-    @Ignore("The logic in the method cannot pass this test. Class check needed.")
     @Test
     public void testEqualsGivenInheritedObjects() throws MetadataTypeNotAllowedException {
-        // TODO add class check to equals
         Person p = new Person(type, "first name", "second name");
         Metadata mdp = p;
         Corporate c = new Corporate(type);
