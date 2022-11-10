@@ -141,10 +141,8 @@ public class FileSetTest {
     }
 
     /* Tests for the method addVirtualFileGroup(VirtualFileGroup) */
-    @Ignore("The logic in the method cannot pass this test. Null should not be addable.")
     @Test (expected = IllegalArgumentException.class)
     public void testAddVirtualFileGroupGivenNull() {
-        // TODO fix this
         fs.addVirtualFileGroup(null);
     }
 

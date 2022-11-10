@@ -184,6 +184,9 @@ public class FileSet implements Serializable {
      * @param virtualFileGroups
      **************************************************************************/
     public void addVirtualFileGroup(VirtualFileGroup theFilegroup) {
+        if (theFilegroup == null) {
+            throw new IllegalArgumentException("Null is not addable as VirtualFileGroup!");
+        }
         this.virtualFileGroups.add(theFilegroup);
     }
 
