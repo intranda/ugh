@@ -103,7 +103,7 @@ public class Corporate extends Metadata {
     }
 
     public void addSubName(NamePart name) {
-        if (!subNames.contains(name)) {
+        if (name != null && !subNames.contains(name)) {
             subNames.add(name);
         }
     }

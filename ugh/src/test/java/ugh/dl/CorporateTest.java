@@ -8,7 +8,6 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ugh.exceptions.MetadataTypeNotAllowedException;
@@ -81,10 +80,8 @@ public class CorporateTest {
 
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null should be prevented from adding into subNames.")
     @Test
     public void testAddSubNameGivenNull() {
-        // TODO fix this
         corporate.addSubName(null);
         assertFalse(corporate.getSubNames().contains(null));
     }
