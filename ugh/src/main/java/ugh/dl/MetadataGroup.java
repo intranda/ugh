@@ -139,13 +139,20 @@ public class MetadataGroup implements Serializable, HoldingElement {
      * </p>
      * 
      * @param inType
+     * @throws MetadataTypeNotAllowedException
      **************************************************************************/
-    public void setType(MetadataGroupType inType) {
+    public void setType(MetadataGroupType inType) throws MetadataTypeNotAllowedException {
+        if (inType == null) {
+            throw new MetadataTypeNotAllowedException("Null is not allowed here!");
+        }
         this.metadataGroupType = inType;
     }
 
     @Override
     public void addMetadata(Metadata metadata) throws MetadataTypeNotAllowedException {
+        if (metadata == null) {
+            throw new MetadataTypeNotAllowedException("Null is not addable as Metadata!");
+        }
         MetadataType type = metadata.getType();
         String inMdName = type.getName();
         boolean insert = false;
@@ -339,6 +346,9 @@ public class MetadataGroup implements Serializable, HoldingElement {
 
     @Override
     public boolean isMetadataTypeBeRemoved(PrefsType inMDType) {
+        if (inMDType == null) {
+            return false;
+        }
         // How many metadata of this type do we have already.
         int typesavailable = countMDofthisType(inMDType.getName());
         // How many types must be at least available.
@@ -728,6 +738,9 @@ public class MetadataGroup implements Serializable, HoldingElement {
      **************************************************************************/
     @Override
     public boolean removeMetadataGroup(MetadataGroup theMd, boolean force) {
+        if (theMd == null) {
+            return false;
+        }
 
         MetadataGroupType inMdType;
         String maxnumbersallowed;
@@ -776,7 +789,10 @@ public class MetadataGroup implements Serializable, HoldingElement {
     }
 
     @Override
-    public void changeMetadataGroup(MetadataGroup theOldMd, MetadataGroup theNewMd) {
+    public void changeMetadataGroup(MetadataGroup theOldMd, MetadataGroup theNewMd) throws MetadataTypeNotAllowedException {
+        if (theOldMd == null || theNewMd == null) {
+            throw new IllegalArgumentException("Arguments should not be null!");
+        }
 
         MetadataGroupType oldMdt;
         MetadataGroupType newMdt;

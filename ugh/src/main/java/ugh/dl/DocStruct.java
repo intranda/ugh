@@ -1378,9 +1378,10 @@ public class DocStruct implements Serializable, HoldingElement {
      * @param theOldMd Metadata object which should be replaced.
      * @param theNewMd New Metadata object.
      * @return True, if Metadata object could be exchanged; otherwise false.
+     * @throws MetadataTypeNotAllowedException
      **************************************************************************/
     @Override
-    public void changeMetadataGroup(MetadataGroup theOldMd, MetadataGroup theNewMd) {
+    public void changeMetadataGroup(MetadataGroup theOldMd, MetadataGroup theNewMd) throws MetadataTypeNotAllowedException {
 
         MetadataGroupType oldMdt;
         MetadataGroupType newMdt;

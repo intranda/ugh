@@ -74,11 +74,9 @@ public class MetadataGroupTest {
         assertEquals(groupType, group.getType());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test(expected = MetadataTypeNotAllowedException.class)
     public void testSetTypeGivenNull() throws MetadataTypeNotAllowedException {
         MetadataGroup group = new MetadataGroup(groupType);
-        // TODO fix this
         group.setType(null);
     }
 
@@ -138,10 +136,8 @@ public class MetadataGroupTest {
     }
 
     /* Tests for the method addMetadata(Metadata) */
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test(expected = MetadataTypeNotAllowedException.class)
     public void testAddMetadataGivenNull() throws Exception {
-        // TODO fix this
         fixture.addMetadata(null);
     }
 
@@ -393,10 +389,8 @@ public class MetadataGroupTest {
         assertEquals(0, fixture.getAllMetadataGroups().size());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed. Avoid NullPointerException whenever possible.")
     @Test
     public void testRemoveMetadataGroupGivenNullAsFirstArgument() {
-        // TODO fix this
         assertFalse(fixture.removeMetadataGroup(null, false));
     }
 
@@ -411,19 +405,15 @@ public class MetadataGroupTest {
     }
 
     /* Tests for the method changeMetadataGroup(MetadataGroup, MetadataGroup) */
-    @Ignore("The logic in the method cannot pass this test. Null check needed. Avoid NullPointerException whenever possible.")
     @Test
     public void testChangeMetadataGroupGivenNullAsFirstArgument() throws MetadataTypeNotAllowedException {
-        // TODO fix this
         MetadataGroupType type = prefs.getMetadataGroupTypeByName("LocationGroup");
         MetadataGroup group = new MetadataGroup(type);
         assertThrows(IllegalArgumentException.class, () -> fixture.changeMetadataGroup(null, group));
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed. Avoid NullPointerException whenever possible.")
     @Test
     public void testChangeMetadataGroupGivenNullAsSecondArgument() throws MetadataTypeNotAllowedException {
-        // TODO fix this
         MetadataGroupType type = prefs.getMetadataGroupTypeByName("LocationGroup");
         MetadataGroup group = new MetadataGroup(type);
         fixture.addMetadataGroup(group);
@@ -521,10 +511,8 @@ public class MetadataGroupTest {
     }
 
     /* Tests for the method isMetadataTypeBeRemoved(PrefsType) */
-    @Ignore("The logic in the method cannot pass this test. Null check needed. Avoid NullPointerException whenever possible.")
     @Test
     public void testIsMetadataTypeBeRemovedGivenNull() {
-        // TODO fix this
         assertFalse(fixture.isMetadataTypeBeRemoved(null));
     }
 
