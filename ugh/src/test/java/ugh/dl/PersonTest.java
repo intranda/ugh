@@ -138,17 +138,17 @@ public class PersonTest {
     public void testEqualsGivenObjectOfAnExtendedClassOfPerson() throws MetadataTypeNotAllowedException {
         person = new Person(type);
         ExtendedPerson extendedPerson = new ExtendedPerson(type);
-        assertTrue(person.equals(extendedPerson));
+        assertFalse(person.equals(extendedPerson));
         person = new Person(type, "First", "Last");
         extendedPerson = new ExtendedPerson(type, "First", "Last");
-        assertTrue(extendedPerson.equals(person));
+        assertFalse(extendedPerson.equals(person));
         person.setDisplayname("display name");
         assertFalse(extendedPerson.equals(person));
         extendedPerson.setDisplayname("display name");
-        assertTrue(person.equals(extendedPerson));
+        assertFalse(person.equals(extendedPerson));
         extendedPerson.setExtendedProperty("property");
-        assertTrue(person.equals(extendedPerson));
-        assertTrue(extendedPerson.equals(person));
+        assertFalse(person.equals(extendedPerson));
+        assertFalse(extendedPerson.equals(person));
     }
 
     // class needed for the test case above
