@@ -277,7 +277,6 @@ public class MetadataTypeTest {
         assertTrue(mdt.getAllLanguages().containsKey(null));
     }
 
-    //@Ignore("The logic in the method cannot pass this test. Null check needed in the method removeLanguage(String).")
     @Test
     public void testChangeLanguageByNameGivenNullAsFirstParameterTwice() {
         mdt.setAllLanguages(hashMap);
