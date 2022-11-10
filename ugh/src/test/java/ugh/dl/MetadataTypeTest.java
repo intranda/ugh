@@ -43,10 +43,8 @@ public class MetadataTypeTest {
     }
 
     /* Tests for the method addLanguage(String, String) */
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testAddLanguageWithoutSettingAllLanguagesFirst() {
-        // TODO instantiate allLanguages if null
         mdt.addLanguage("de", "Deutsch");
         assertTrue(mdt.getAllLanguages().containsKey("de"));
     }
@@ -213,10 +211,8 @@ public class MetadataTypeTest {
     }
 
     /* Tests for the method getNameByLanguage(String) */
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testGetNameByLanguageGivenUninitializedLanguageMap() {
-        // TODO instantiate allLanguages if null
         assertNull(mdt.getNameByLanguage(null));
         assertNull(mdt.getNameByLanguage("de"));
     }
@@ -229,6 +225,7 @@ public class MetadataTypeTest {
         assertNull(mdt.getNameByLanguage(null));
     }
 
+    @Ignore("Should we allow null as value?")
     @Test
     public void testGetNameByLanguageGivenNullAsValue() {
         mdt.setAllLanguages(hashMap);
@@ -236,6 +233,7 @@ public class MetadataTypeTest {
         assertNull(mdt.getNameByLanguage("de"));
     }
 
+    @Ignore("Should we allow null as key?")
     @Test
     public void testGetNameByLanguageGivenNullAsKey() {
         mdt.setAllLanguages(hashMap);
@@ -266,10 +264,8 @@ public class MetadataTypeTest {
     }
 
     /* Tests for the method changeLanguageByName(String, String) */
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testChangeLanguageByNameGivenUninitializedLanguageMap() {
-        // TODO instantiate allLanguages if null
         mdt.changeLanguageByName("de", "Deutsch");
         assertTrue(mdt.getAllLanguages().containsKey("de"));
     }
@@ -281,7 +277,7 @@ public class MetadataTypeTest {
         assertTrue(mdt.getAllLanguages().containsKey(null));
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed in the method removeLanguage(String).")
+    //@Ignore("The logic in the method cannot pass this test. Null check needed in the method removeLanguage(String).")
     @Test
     public void testChangeLanguageByNameGivenNullAsFirstParameterTwice() {
         mdt.setAllLanguages(hashMap);
@@ -311,10 +307,8 @@ public class MetadataTypeTest {
     }
 
     /* Tests for the method removeLanguage(String) */
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testRemoveLanguageGivenUninitializedLanguageMap() {
-        // TODO instantiate allLanguages if null
         assertFalse(mdt.removeLanguage("de"));
     }
 
@@ -356,7 +350,6 @@ public class MetadataTypeTest {
     }
 
     /* Tests for the method getLanguage(String) */
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testGetLanguageGivenUninitializedLanguageMap() {
         assertNull(mdt.getLanguage("de"));

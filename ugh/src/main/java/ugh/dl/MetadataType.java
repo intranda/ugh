@@ -238,6 +238,9 @@ public class MetadataType implements Serializable, PrefsType {
      **************************************************************************/
     @Override
     public void addLanguage(String theLanguage, String theValue) {
+        if (this.allLanguages == null) {
+            this.allLanguages = new HashMap<>();
+        }
         this.allLanguages.put(theLanguage, theValue);
     }
 
@@ -251,12 +254,10 @@ public class MetadataType implements Serializable, PrefsType {
      **************************************************************************/
     @Override
     public String getNameByLanguage(String lang) {
-
-        if (this.allLanguages.get(lang) == null) {
-            return null;
+        if (this.allLanguages == null) {
+            this.allLanguages = new HashMap<>();
         }
-
-        return this.allLanguages.get(lang);
+        return this.allLanguages.get(lang); // might be null
     }
 
     /***************************************************************************
@@ -268,6 +269,9 @@ public class MetadataType implements Serializable, PrefsType {
      * @param content new name
      **************************************************************************/
     public void changeLanguageByName(String lang, String content) {
+        if (this.allLanguages == null) {
+            this.allLanguages = new HashMap<>();
+        }
         removeLanguage(lang);
         addLanguage(lang, content);
     }
@@ -281,6 +285,12 @@ public class MetadataType implements Serializable, PrefsType {
      * @return true, if successful
      **************************************************************************/
     public boolean removeLanguage(String theLanguage) {
+        if (theLanguage == null) {
+            return false;
+        }
+        if (this.allLanguages == null) {
+            this.allLanguages = new HashMap<>();
+        }
 
         // Check, if language already is available, if so, remove it.
         for (Map.Entry<String, String> lang : this.allLanguages.entrySet()) {
@@ -299,6 +309,9 @@ public class MetadataType implements Serializable, PrefsType {
      * @return
      **************************************************************************/
     public String getLanguage(String theLanguage) {
+        if (this.allLanguages == null) {
+            this.allLanguages = new HashMap<>();
+        }
 
         // Find language "inLanguage".
         for (Map.Entry<String, String> lang : getAllLanguages().entrySet()) {
