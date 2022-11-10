@@ -40,29 +40,23 @@ public class VirtualFileGroupTest {
         assertNull(vfg.getFileExtensionsToIgnore());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Should we allow null as legal parameter?")
     @Test
     public void testConstructorWithParametersIncludingNull() {
-        // TODO add null check, but empty string is allowed
         vfg = new VirtualFileGroup("name", null, "mimetype", "fileSuffix");
         assertNotNull(vfg.getPathToFiles());
     }
 
     /* Tests for setters */
-    @Ignore("The logic in the method cannot pass this test. Should we allow null as legal argument?")
     @Test
     public void testSetNameGivenNull() {
         assertNotNull(vfg.getName());
-        // TODO add null check, but empty string is allowed
         vfg.setName(null);
         assertNotNull(vfg.getName());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Should we allow null as legal argument?")
     @Test
     public void testSetPathToFilesGivenNull() {
         assertNotNull(vfg.getPathToFiles());
-        // TODO add null check, but empty string is allowed
         vfg.setPathToFiles(null);
         assertNotNull(vfg.getPathToFiles());
     }
@@ -105,10 +99,8 @@ public class VirtualFileGroupTest {
         assertEquals("suffix", vfg.getFileSuffix());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Should we allow null as legal argument?")
     @Test
     public void testSetIdSuffixGivenNull() {
-        // TODO add null check, but allow empty string
         assertNotNull(vfg.getIdSuffix());
         vfg.setIdSuffix(null);
         assertNotNull(vfg.getIdSuffix());
@@ -132,16 +124,13 @@ public class VirtualFileGroupTest {
         assertSame(vfg.ALL_FILES, vfg.getContentFiles());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null should make no difference.")
     @Test
     public void testAddContentFileGivenNull1() {
-        // TODO add null check
         assertSame(vfg.ALL_FILES, vfg.getContentFiles());
         vfg.addContentFile(null);
         assertSame(vfg.ALL_FILES, vfg.getContentFiles());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null should not be added.")
     @Test
     public void testAddContentFileGivenNull2() {
         vfg.restrictFiles();
@@ -262,11 +251,9 @@ public class VirtualFileGroupTest {
         assertFalse(vfg.contains(cf2));
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testContainsGivenNullWhenAllAllowed() {
         assertSame(vfg.ALL_FILES, vfg.getContentFiles());
-        // TODO add null check to ContentFile equals
         assertFalse(vfg.contains(null));
     }
 
