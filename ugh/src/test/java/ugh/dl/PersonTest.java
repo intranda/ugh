@@ -9,7 +9,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ugh.exceptions.MetadataTypeNotAllowedException;
@@ -86,17 +85,14 @@ public class PersonTest {
         assertEquals("Person (TypeName): \"Last\", \"\"\n", person.toString());
     }
 
-    @Ignore("The logic in the method cannot pass this test. The checking logic following if seems contradictory to the formulation logic in the block.")
     @Test
     public void testToStringGivenNullAsLastname() throws MetadataTypeNotAllowedException {
         type.setName("TypeName");
-        // TODO fix toString method, one of firstname / lastname is needed
-        // also I never used this constructor, I only use new Person(type)
+        // I never used this constructor, I only use new Person(type). - Robert
         person = new Person(type, "First", null);
         assertEquals("Person (TypeName): NULL, \"First\"\n", person.toString());
     }
 
-    @Ignore("The logic in the method cannot pass this test. The checking logic following if seems contradictory to the formulation logic in the block.")
     @Test
     public void testToStringGivenEmptyLastname() throws MetadataTypeNotAllowedException {
         type.setName("TypeName");
@@ -110,6 +106,60 @@ public class PersonTest {
         assertEquals("Person (null): \"Last\", \"First\"\n", person.toString());
     }
 
+    @Test
+    public void testToStringGivenNoName() throws MetadataTypeNotAllowedException {
+        person = new Person(type, "", null);
+        assertEquals("", person.toString());
+    }
+
+    @Test
+    public void testToStringGivenNullTypeButFullNames() throws MetadataTypeNotAllowedException {
+        person = new Person(type, "First", "Last");
+        person.setType(null);
+        assertNull(person.getType());
+        assertEquals("Person (WITHOUT TYPE!!): \"Last\", \"First\"\n", person.toString());
+    }
+
+    @Test
+    public void testToStringGivenNullTypeAndNullAsFirstname() throws MetadataTypeNotAllowedException {
+        person = new Person(type, null, "Last");
+        person.setType(null);
+        assertNull(person.getType());
+        assertEquals("Person (WITHOUT TYPE!!): \"Last\", NULL\n", person.toString());
+    }
+
+    @Test
+    public void testToStringGivenNullTypeAndEmptyFirstname() throws MetadataTypeNotAllowedException {
+        person = new Person(type, "", "Last");
+        person.setType(null);
+        assertNull(person.getType());
+        assertEquals("Person (WITHOUT TYPE!!): \"Last\", \"\"\n", person.toString());
+    }
+
+    @Test
+    public void testToStringGivenNullTypeAndNullAsLastname() throws MetadataTypeNotAllowedException {
+        person = new Person(type, "First", null);
+        person.setType(null);
+        assertNull(person.getType());
+        assertEquals("Person (WITHOUT TYPE!!): NULL, \"First\"\n", person.toString());
+    }
+
+    @Test
+    public void testToStringGivenNullTypeAndEmptyLastname() throws MetadataTypeNotAllowedException {
+        person = new Person(type, "First", "");
+        person.setType(null);
+        assertNull(person.getType());
+        assertEquals("Person (WITHOUT TYPE!!): \"\", \"First\"\n", person.toString());
+    }
+
+    @Test
+    public void testToStringGivenNullTypeAndNoValidName() throws MetadataTypeNotAllowedException {
+        person = new Person(type, "", null);
+        person.setType(null);
+        assertNull(person.getType());
+        assertEquals("Person (WITHOUT TYPE!!): NULL, \"\"\n", person.toString());
+    }
+
     /* Tests for the method equals(Person) */
     @Test
     public void testEqualsToItself() throws MetadataTypeNotAllowedException {
@@ -117,11 +167,9 @@ public class PersonTest {
         assertTrue(person.equals(person));
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testEqualsGivenNull() throws MetadataTypeNotAllowedException {
         person = new Person(type);
-        // TODO add null check
         assertFalse(person.equals(null));
     }
 
@@ -172,19 +220,14 @@ public class PersonTest {
     }
 
     /* Tests for the methods setAdditionalNameParts(List<NamePart> && addNamePart(NamePart)*/
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testAddNamePartGivenNull() throws MetadataTypeNotAllowedException {
         person = new Person(type);
-        // TODO add null check
-        assertThrows(IllegalArgumentException.class, () -> person.addNamePart(null));
+        person.addNamePart(null);
     }
 
-    @Ignore("The logic in the method cannot pass this test. Might be a better idea to make a deep copy of a list.")
     @Test
     public void testSetAdditionalNamePartsOnTwoPersonObjectsUsingSameListThenAddNamePartToJustOne() throws MetadataTypeNotAllowedException {
-        // TODO I am not sure what the expected behavior should be and if a change would break existing code
-        // but I think its better if each object gets its own list. Just change the setter to new ArrayList<>(list)
         person = new Person(type);
         ArrayList<NamePart> list = new ArrayList<>();
         person.setAdditionalNameParts(list);

@@ -25,6 +25,8 @@ package ugh.dl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ugh.exceptions.MetadataTypeNotAllowedException;
@@ -103,6 +105,10 @@ public class Person extends Metadata {
      **************************************************************************/
     public Person(MetadataType theType) throws MetadataTypeNotAllowedException {
         super(theType);
+        // perhaps it is not a good idea to add the following lines to control 
+        //        if (!theType.getIsPerson()) {
+        //            throw new MetadataTypeNotAllowedException("To create a Person one needs a MetadataType with isPerson set to be true.");
+        //        }
     }
 
     /***************************************************************************
@@ -294,8 +300,8 @@ public class Person extends Metadata {
 
         String result = "";
 
-        if (this.getType() != null && this.getLastname() != null
-                && !this.getLastname().equals("")) {
+        // MetadataType is needed. Furthermore there should be at least one name part available.
+        if (this.getType() != null && (StringUtils.isNotBlank(this.getFirstname()) || StringUtils.isNotBlank(this.getLastname()))) {
             // Get person type and value.
             result += "Person ("
                     + this.getType().getName()
@@ -305,7 +311,8 @@ public class Person extends Metadata {
                     + ", "
                     + (this.getFirstname() == null ? "NULL" : "\""
                             + this.getFirstname() + "\"") + "\n";
-        } else if (this.getType() == null) {
+        } else if (this.getType() == null) { 
+            // But if the MetadataType is null, then there would be no limits at all on both name parts. Feature OR Bug? - Zehong
             result += "Person (WITHOUT TYPE!!): "
                     + (this.getLastname() == null ? "NULL" : "\""
                             + this.getLastname() + "\"")
@@ -327,7 +334,12 @@ public class Person extends Metadata {
      **************************************************************************/
     public boolean equals(Person person) {
 
-        // First check the underlying Metadata Object.
+        // First check null
+        if (person == null) {
+            return false;
+        }
+
+        // Then check the underlying Metadata Object.
         if (!super.equals(person)) {
             return false;
         }
@@ -406,12 +418,15 @@ public class Person extends Metadata {
     }
 
     public void setAdditionalNameParts(List<NamePart> additionalNameParts) {
-        this.additionalNameParts = additionalNameParts;
+        this.additionalNameParts = new ArrayList<>(additionalNameParts);
     }
 
     public void addNamePart(NamePart part) {
         if (additionalNameParts == null) {
             additionalNameParts = new ArrayList<>();
+        }
+        if (part == null) {
+            throw new IllegalArgumentException("Cannot add null as NamePart!");
         }
         additionalNameParts.add(part);
     }
