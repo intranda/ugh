@@ -63,6 +63,15 @@ public class ContentFileReference implements Serializable {
      * @param ContentFileReference contentFileReference
      ***************************************************************************/
     public boolean equals(ContentFileReference contentFileReference) {
+        // null check first
+        if (contentFileReference == null) {
+            return false;
+        }
+        // self check then
+        if (contentFileReference == this) {
+            return true;
+        }
+        // ContentFile check at last
         return this.getCf().equals(contentFileReference.getCf());
     }
 

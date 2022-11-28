@@ -36,7 +36,6 @@ public class ContentFileReferenceTest {
         assertEquals(area, reference.getCfa());
     }
 
-    @Ignore("The logic of the method does not support this comparison yet.")
     @Test
     public void testEqualsGivenOneNull() {
         assertFalse(reference.equals(null));
@@ -50,7 +49,6 @@ public class ContentFileReferenceTest {
         assertTrue(reference.equals(reference));
     }
 
-    @Ignore("The logic of the method does not support this comparison yet.")
     @Test
     public void testEqualsToItselfWithoutInitialization() {
         assertTrue(reference.equals(reference));
