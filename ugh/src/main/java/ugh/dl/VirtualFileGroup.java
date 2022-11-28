@@ -152,7 +152,7 @@ public class VirtualFileGroup implements Serializable {
     	if(fileSuffix != null) {
     		// If the given file suffix starts with a ".", remove the ".".
 	        if (fileSuffix.startsWith(".")) {
-	            this.fileSuffix = fileSuffix.replaceFirst("\\.", "");
+                this.fileSuffix = fileSuffix.replaceAll("^\\.+", "");
 	        } else {
 	            this.fileSuffix = fileSuffix;
 	        }
@@ -227,6 +227,10 @@ public class VirtualFileGroup implements Serializable {
     public void addContentFiles(Collection<ContentFile> contentFiles) {
         if(this.contentFiles == ALL_FILES) {
             this.contentFiles = new ArrayList<>();
+        }
+        // handle null as empty list
+        if (contentFiles == null) {
+            return;
         }
         this.contentFiles.addAll(contentFiles);
     }

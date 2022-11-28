@@ -89,11 +89,10 @@ public class VirtualFileGroupTest {
         assertEquals("suffix", vfg.getFileSuffix());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Should we handle the case of two-point-leading input?")
     @Test
     public void testSetFileSuffixGivenStringHeadedByTwoPoints() {
-        // TODO I don't think this is needed. Removing the first dot from file extension is useful, because some might
-        // enter 'tif' and others '.tif' as extension. But '..tif' is clearly a wrong user input and can be fixed by the user
+        // I don't think this is needed. Removing the first dot from file extension is useful, because some might
+        // enter 'tif' and others '.tif' as extension. But '..tif' is clearly a wrong user input and can be fixed by the user. - Robert
         String suffix = "..suffix";
         vfg.setFileSuffix(suffix);
         assertEquals("suffix", vfg.getFileSuffix());
@@ -145,16 +144,14 @@ public class VirtualFileGroupTest {
     public void testAddContentFilesGivenNull1() {
         assertSame(vfg.ALL_FILES, vfg.getContentFiles());
         // TODO handle null as empty list
-        vfg.addContentFiles(null);
+        vfg.addContentFiles(null); // should the flag vfg.ALL_FILES be changed at all?
         assertSame(vfg.ALL_FILES, vfg.getContentFiles());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
     @Test
     public void testAddContentFilesGivenNull2() {
         vfg.restrictFiles();
         assertEquals(0, vfg.getContentFiles().size());
-        // TODO handle null as empty list
         vfg.addContentFiles(null);
         assertEquals(0, vfg.getContentFiles().size());
     }
