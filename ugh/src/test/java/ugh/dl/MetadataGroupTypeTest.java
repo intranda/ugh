@@ -62,11 +62,9 @@ public class MetadataGroupTypeTest {
         assertEquals(1, mdgType.getMetadataTypeList().size());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
     @Test
     public void testSetTypesGivenNullThenGetMetadataTypeList() {
         assertNotNull(mdgType.getMetadataTypeList());
-        // TODO fix this
         mdgType.setTypes(null);
         assertNull(mdgType.getMetadataTypeList());
     }
@@ -89,12 +87,10 @@ public class MetadataGroupTypeTest {
     }
 
     /* Tests for the method addMetadataType(MetadataType, String, boolean, boolean) */
-    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testAddMetadataTypeGivenNullAsFirstArgument() {
         assertEquals(0, mdgType.getMetadataTypeList().size());
-        // TODO fix this
-        assertThrows(IllegalArgumentException.class, () -> mdgType.addMetadataType(null, null, false, false));
+        mdgType.addMetadataType(null, null, false, false);
     }
 
     @Test
@@ -109,10 +105,8 @@ public class MetadataGroupTypeTest {
         assertFalse(new MetadataTypeForDocStructType(mdgType.getMetadataTypeList().get(0)).isInvisible());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
     @Test
     public void testAddMetadataTypeGivenUnnamedMetadataTypeObjectTwice() {
-        // TODO fix this in isMetadataTypeAlreadyAvailable
         MetadataType mdType = new MetadataType();
         assertEquals(0, mdgType.getMetadataTypeList().size());
         mdgType.addMetadataType(mdType, null, false, false);
@@ -232,19 +226,15 @@ public class MetadataGroupTypeTest {
     }
 
     /* Tests for the method equals(Object) */
-    @Ignore("The logic in the method cannot pass this test. Either give the field name a default value, or add additional logic into this method.")
     @Test
     public void testEqualsToItself() {
         assertTrue(mdgType == mdgType);
-        // TODO change equals to true, if both names are null or both are blank
         assertTrue(mdgType.equals(mdgType));
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testEqualsGivenNull() {
         mdgType.setName("");
-        // TODO fix this
         assertFalse(mdgType.equals(null));
     }
 
@@ -283,16 +273,10 @@ public class MetadataGroupTypeTest {
      * getNameByLanguage(String)
      * addLanguage(String, String)
      */
-    @Ignore("The logic in the method cannot pass this test. Null check and initialization needed.")
     @Test
     public void testAddLanguageGivenUninitializedFieldAllLanguages() {
         assertNull(mdgType.getAllLanguages());
-        try {
-            // TODO initialize allLanguages in addLanguage
-            mdgType.addLanguage("de", "Deutsch");
-        } catch (Exception e) {
-            // intentionally left blank
-        }
+        mdgType.addLanguage("de", "Deutsch");
         assertEquals(1, mdgType.getAllLanguages().size());
     }
 
@@ -319,7 +303,6 @@ public class MetadataGroupTypeTest {
         assertNull(mdgType.getLanguage(null));
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
     @Test
     public void testGetLanguageGivenUninitializedFieldAllLanguages() {
         assertNull(mdgType.getLanguage("de"));
@@ -332,20 +315,17 @@ public class MetadataGroupTypeTest {
         assertNull(mdgType.getLanguage("en"));
     }
 
-    @Ignore("The logic in the method cannot pass this test. Input validation needed.")
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testAddLanguageGivenNullAsFirstArgument() {
-        // TODO add null check to addLanguage
-        mdgType.setAllLanguages(new HashMap<String, String>());
-        assertThrows(IllegalArgumentException.class, () -> mdgType.addLanguage(null, "null"));
+        mdgType.addLanguage(null, "null");
     }
 
-    @Ignore("The logic in the method cannot pass this test. Input validation needed.")
     @Test
     public void testAddLanguageGivenNullAsSecondArgument() {
-        // TODO this should be allowed
+        // Null should be allowed as value. - Robert
         mdgType.setAllLanguages(new HashMap<String, String>());
-        assertThrows(IllegalArgumentException.class, () -> mdgType.addLanguage("de", null));
+        mdgType.addLanguage("de", null);
+        assertNull(mdgType.getNameByLanguage("de"));
     }
 
     /* Tests for the method getNumberOfMetadataType(PrefsType) */
@@ -354,22 +334,18 @@ public class MetadataGroupTypeTest {
         assertEquals("0", mdgType.getNumberOfMetadataType(null));
     }
 
-    @Ignore("The logic in the method cannot pass this test. Handle unnamed MetadataType objects to avoid the NullPointerException.")
     @Test
     public void testGetNumberOfMetadataTypeGivenUnemptyMetadataTypeListOfUnnamedMetadataTypeObjectsAndNullAsArgument() {
         MetadataType type = new MetadataType();
-        // TODO fix this in isMetadataTypeAlreadyAvailable
         mdgType.addMetadataType(type, null, false, false);
         assertEquals("0", mdgType.getNumberOfMetadataType(null));
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testGetNumberOfMetadataTypeGivenUnemptyMetadataTypeListOfNamedMetadataTypeObjectsAndNullAsArgument() {
         MetadataType type = new MetadataType();
         type.setName("name");
         mdgType.addMetadataType(type, null, false, false);
-        // TODO add null check
         assertEquals("0", mdgType.getNumberOfMetadataType(null));
     }
 
@@ -391,7 +367,6 @@ public class MetadataGroupTypeTest {
         assertEquals("0", mdgType.getNumberOfMetadataType(anotherType));
     }
 
-    //    @Ignore("The logic cannot pass this test. Might be a feature. Check the comment below.")
     @Test
     public void testGetNumberOfMetadataTypeGivenNormalInput() throws PreferencesException {
         Prefs prefs = new Prefs();
@@ -407,7 +382,7 @@ public class MetadataGroupTypeTest {
         type3.setName("PublicationYear");
         type4.setName("PublisherCorporate");
         type5.setName("PublisherName");
-        // that is the correct behaviour, "*" is default if nothing is set
+        // that is the correct behaviour, "*" is default if nothing is set. - Robert
         assertEquals("*", mdgType.getNumberOfMetadataType(type1)); // It seems that num will be defaulted to "*" if not set manually, but I haven't found out how so. - Zehong
         assertEquals("+", mdgType.getNumberOfMetadataType(type2));
         assertEquals("1m", mdgType.getNumberOfMetadataType(type3));
@@ -480,18 +455,14 @@ public class MetadataGroupTypeTest {
         assertNull(mdgType.getAllAllowedGroupTypeTypes().get(0).getNumAllowed());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null should be avoided to be used as the first argument.")
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testAddGroupTypeAsChildGivenNull() {
-        // TODO add null check
-        assertThrows(IllegalArgumentException.class, () -> mdgType.addGroupTypeAsChild(null, null, false, false));
+        mdgType.addGroupTypeAsChild(null, null, false, false);
     }
 
-    @Ignore("The logic in the method cannot pass this test. Empty string should be avoided to be used as the first argument.")
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testAddGroupTypeAsChildGivenEmptyGroupName() {
-        // TODO add null check
-        assertThrows(IllegalArgumentException.class, () -> mdgType.addGroupTypeAsChild("", null, false, false));
+        mdgType.addGroupTypeAsChild("", null, false, false);
     }
 
     @Test

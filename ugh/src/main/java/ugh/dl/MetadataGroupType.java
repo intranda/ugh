@@ -31,6 +31,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author Robert Sehr
  */
@@ -55,6 +57,12 @@ public class MetadataGroupType implements Serializable, PrefsType {
     protected List<AllowedMetadataGroupType> allGroups = new LinkedList<>();
 
     public List<MetadataType> getMetadataTypeList() {
+        // if null return null  
+        if (metadataTypeList == null) {
+            return null;
+        }
+
+        // otherwise make a copy of metadataTypeList
         List<MetadataType> out = new LinkedList<>();
 
         Iterator<MetadataTypeForDocStructType> it = metadataTypeList.iterator();
@@ -86,6 +94,11 @@ public class MetadataGroupType implements Serializable, PrefsType {
     }
 
     public void addMetadataType(MetadataType metadataToAdd, String inNumber, boolean isDefault, boolean isInvisible) {
+        // null should not be used as metadataToAdd
+        if (metadataToAdd == null) {
+            throw new IllegalArgumentException("Cannot add null as MetadataType!");
+        }
+
         // New MetadataType obejct which is added to this DocStructType.
         MetadataType myType;
 
@@ -121,7 +134,14 @@ public class MetadataGroupType implements Serializable, PrefsType {
 
     @Override
     public boolean equals(Object obj) {
-        return this.name.equals(((MetadataGroupType) obj).getName());
+        if (obj == null) {
+            return false;
+        }
+        MetadataGroupType mdgType = (MetadataGroupType) obj;
+        if (this.name == null) {
+            return mdgType.getName() == null;
+        }
+        return this.name.equals(mdgType.getName());
     }
 
     @Override
@@ -147,6 +167,11 @@ public class MetadataGroupType implements Serializable, PrefsType {
     }
 
     public String getLanguage(String theLanguage) {
+        // initialize the field allLanguages if not done yet
+        if (allLanguages == null) {
+            allLanguages = new HashMap<>();
+        }
+
         for (Map.Entry<String, String> lang : getAllLanguages().entrySet()) {
             if (lang.getKey().equals(theLanguage)) {
                 return lang.getValue();
@@ -178,6 +203,9 @@ public class MetadataGroupType implements Serializable, PrefsType {
      * @return String containing the number (number can be: "1o", "1m", "*", "+")
      **************************************************************************/
     public String getNumberOfMetadataType(PrefsType inType) {
+        if (inType == null) {
+            return "0";
+        }
 
         Iterator<MetadataTypeForDocStructType> it = metadataTypeList.iterator();
         while (it.hasNext()) {
@@ -238,6 +266,10 @@ public class MetadataGroupType implements Serializable, PrefsType {
             PrefsType mdt = test.getMetadataType();
             testname = mdt.getName();
             typename = type.getName();
+
+            if (testname == null || typename == null) {
+                return testname == typename;
+            }
 
             if (testname.equals(typename)) {
                 // It is already available.
@@ -515,6 +547,16 @@ public class MetadataGroupType implements Serializable, PrefsType {
         Map.Entry<String, String> test;
         String key;
 
+        // initialize the field allLanguages if not done
+        if (allLanguages == null) {
+            allLanguages = new HashMap<>();
+        }
+
+        // null should not be used as key
+        if (lang == null) {
+            throw new IllegalArgumentException("null should not be used as key");
+        }
+
         // Check, if language already available.
         Iterator<Map.Entry<String, String>> it = this.allLanguages.entrySet().iterator();
         while (it.hasNext()) {
@@ -531,6 +573,9 @@ public class MetadataGroupType implements Serializable, PrefsType {
 
     @Override
     public String getNameByLanguage(String lang) {
+        if (this.allLanguages == null) {
+            return null;
+        }
 
         String languageName = this.allLanguages.get(lang);
         if (languageName == null) {
@@ -541,6 +586,11 @@ public class MetadataGroupType implements Serializable, PrefsType {
     }
 
     public void addGroupTypeAsChild(String groupName, String occurrence, boolean defaultDisplay, boolean hidden) {
+        // null should not be used as groupName
+        if (StringUtils.isBlank(groupName)) {
+            throw new IllegalArgumentException("groupName should not be blank");
+        }
+
         for (AllowedMetadataGroupType other : allGroups) {
             if (other.getGroupName().equals(groupName)) {
                 // new element is already in list
