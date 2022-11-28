@@ -72,6 +72,7 @@ public class MetadataTest {
     @Test
     public void testSetValueGetValueTogetherWithWasUpdatedGivenNullToSet() {
         // TODO remove wasUpdated from code, it is not needed or used anywhere
+        // Actually it is used in ugh.fileformats.slimjson.SlimMetadata on Line 85. - Zehong
         assertFalse(md.wasUpdated());
         assertNull(md.getValue());
         md.setValue(null);
@@ -316,8 +317,8 @@ public class MetadataTest {
         // assure that they are however somehow different
         md.setAutorityFile("id1", "uri1", "value1");
         md2.setAutorityFile("id2", "uri2", "value2");
-        md.wasUpdated(false);
-        md2.wasUpdated(true);
+        md.setValidationErrorPresent(false);
+        md2.setValidationErrorPresent(true);
         // then we do the comparison
         assertTrue(md.equals(md2));
     }

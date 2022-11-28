@@ -142,7 +142,7 @@ public class MetadataTypeTest {
     @Test
     public void testSetNumGivenNull() {
         // TODO fix check in setNum
-        mdt.setNum(null);
+        mdt.setNum(null); // should we allow null?
         assertNull(mdt.getNum());
     }
 
@@ -197,17 +197,16 @@ public class MetadataTypeTest {
         assertNull(mdt2.getValidationErrorMessages());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Deep copy needed.")
     @Test
-    // TODO this is the expected behavior. If you change the type, all objects based on the type are affected. Change test
     public void testCopyGivenVaryingOrigin() {
+        // Expected behavior: if you change the type, all objects based on the type are affected. - Robert
         mdt.setAllLanguages(hashMap);
         MetadataType mdt2 = mdt.copy();
         assertNotNull(mdt2.getAllLanguages());
         mdt.addLanguage("de", "Deutsch");
-        assertFalse(mdt2.getAllLanguages().containsKey("de"));
+        assertTrue(mdt2.getAllLanguages().containsKey("de"));
         mdt2.addLanguage("de", "deutsch");
-        assertEquals("Deutsch", mdt.getNameByLanguage("de"));
+        assertEquals("deutsch", mdt.getNameByLanguage("de"));
     }
 
     /* Tests for the method getNameByLanguage(String) */

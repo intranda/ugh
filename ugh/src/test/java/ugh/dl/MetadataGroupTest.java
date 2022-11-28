@@ -182,6 +182,9 @@ public class MetadataGroupTest {
         MetadataType type = new MetadataType();
         type.setName("PublisherCorporate");
         // TODO fix this in Person constructor
+        // This might not be a good idea. Since that would require the isPerson field to be set to true any time we prepare a MetadataType for Person.
+        // And this setting should not take place manually or otherwise we would crash a lot of codes by adding a small check in Person's constructor.
+        // Same for the Corporate issue.
         assertThrows(MetadataTypeNotAllowedException.class, () -> fixture.addPerson(new Person(type)));
     }
 

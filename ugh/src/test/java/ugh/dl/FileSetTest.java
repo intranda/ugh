@@ -36,7 +36,7 @@ public class FileSetTest {
     public void testAddFileGivenNull() {
         // TODO fix this
         assertEquals(0, fs.getAllFiles().size());
-        assertFalse(fs.addFile(null));
+        assertFalse(fs.addFile(null)); // should we return false or just keep it true?
         assertEquals(0, fs.getAllFiles().size());
     }
 
@@ -94,7 +94,7 @@ public class FileSetTest {
     @Test
     public void testAddMetadataGivenNull() {
         // TODO fix this
-        assertFalse(fs.addMetadata(null));
+        assertFalse(fs.addMetadata(null)); // should we return false or just keep it true?
         assertEquals(0, fs.getAllMetadata().size());
     }
 
