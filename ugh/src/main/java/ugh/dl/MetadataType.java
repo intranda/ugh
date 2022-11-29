@@ -135,7 +135,9 @@ public class MetadataType implements Serializable, PrefsType {
      **************************************************************************/
     public void setNum(String in) {
 
-        if (!in.equals("1m") && !in.equals("1o") && !in.equals("+") && !in.equals("*")) {
+        // When max_number is null, then a default value would be used, but that logic is implemented somewhere else, which might be unpredictable. 
+        // I think it might be a better idea to set a default value directly here in this class. - Zehong
+        if (in != null && !in.equals("1m") && !in.equals("1o") && !in.equals("+") && !in.equals("*")) {
             // Unknown syntax.
             return ;
         }
@@ -238,6 +240,10 @@ public class MetadataType implements Serializable, PrefsType {
      **************************************************************************/
     @Override
     public void addLanguage(String theLanguage, String theValue) {
+        // null should not be used as key
+        if (theLanguage == null) {
+            return;
+        }
         if (this.allLanguages == null) {
             this.allLanguages = new HashMap<>();
         }

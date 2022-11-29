@@ -11,7 +11,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class MetadataTypeTest {
@@ -57,19 +56,18 @@ public class MetadataTypeTest {
         assertEquals(0, mdt.getAllLanguages().size());
         mdt.addLanguage(null, null);
         assertEquals(hashMap, mdt.getAllLanguages());
-        assertTrue(mdt.getAllLanguages().containsKey(null));
-        assertTrue(mdt.getAllLanguages().containsValue(null));
-        assertEquals(1, mdt.getAllLanguages().size());
-        mdt.addLanguage(null, null); // add it once more
-        assertEquals(1, mdt.getAllLanguages().size());
+        assertFalse(mdt.getAllLanguages().containsKey(null));
+        assertFalse(mdt.getAllLanguages().containsValue(null));
+        assertEquals(0, mdt.getAllLanguages().size());
     }
 
     @Test
     public void testAddLanguageGivenNullAsFirstParameter() {
         mdt.setAllLanguages(hashMap);
         mdt.addLanguage(null, "Deutsch");
-        assertTrue(mdt.getAllLanguages().containsKey(null));
-        assertTrue(mdt.getAllLanguages().containsValue("Deutsch"));
+        assertFalse(mdt.getAllLanguages().containsKey(null));
+        assertFalse(mdt.getAllLanguages().containsValue("Deutsch"));
+        assertNull(mdt.getAllLanguages().get(null));
     }
 
     @Test
@@ -78,17 +76,7 @@ public class MetadataTypeTest {
         mdt.addLanguage("de", null);
         assertTrue(mdt.getAllLanguages().containsKey("de"));
         assertTrue(mdt.getAllLanguages().containsValue(null));
-    }
-
-    @Test
-    public void testAddLanguageGivenNullAsFirstParameterTwice() {
-        mdt.setAllLanguages(hashMap);
-        mdt.addLanguage(null, "Deutsch");
-        mdt.addLanguage(null, "English");
-        assertEquals(1, mdt.getAllLanguages().size());
-        assertTrue(mdt.getAllLanguages().containsKey(null));
-        assertTrue(mdt.getAllLanguages().containsValue("English"));
-        assertFalse(mdt.getAllLanguages().containsValue("Deutsch"));
+        assertNull(mdt.getAllLanguages().get("de"));
     }
 
     @Test
@@ -138,10 +126,8 @@ public class MetadataTypeTest {
         }
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testSetNumGivenNull() {
-        // TODO fix check in setNum
         mdt.setNum(null); // should we allow null?
         assertNull(mdt.getNum());
     }
@@ -220,25 +206,24 @@ public class MetadataTypeTest {
     public void testGetNameByLanguageGivenNullAsKeyAndValue() {
         mdt.setAllLanguages(hashMap);
         mdt.addLanguage(null, null);
-        assertEquals(1, mdt.getAllLanguages().size());
+        assertEquals(0, mdt.getAllLanguages().size());
         assertNull(mdt.getNameByLanguage(null));
     }
 
-    @Ignore("Should we allow null as value?")
     @Test
     public void testGetNameByLanguageGivenNullAsValue() {
         mdt.setAllLanguages(hashMap);
         mdt.addLanguage("de", null);
+        assertEquals(1, mdt.getAllLanguages().size());
         assertNull(mdt.getNameByLanguage("de"));
     }
 
-    @Ignore("Should we allow null as key?")
     @Test
     public void testGetNameByLanguageGivenNullAsKey() {
         mdt.setAllLanguages(hashMap);
         mdt.addLanguage(null, "Deutsch");
-        assertEquals(1, mdt.getAllLanguages().size());
-        assertEquals("Deutsch", mdt.getNameByLanguage(null));
+        assertEquals(0, mdt.getAllLanguages().size());
+        assertNull(mdt.getNameByLanguage(null));
     }
 
     @Test
@@ -273,17 +258,7 @@ public class MetadataTypeTest {
     public void testChangeLanguageByNameGivenNullAsFirstParameter() {
         mdt.setAllLanguages(hashMap);
         mdt.changeLanguageByName(null, "Deutsch");
-        assertTrue(mdt.getAllLanguages().containsKey(null));
-    }
-
-    @Test
-    public void testChangeLanguageByNameGivenNullAsFirstParameterTwice() {
-        mdt.setAllLanguages(hashMap);
-        mdt.changeLanguageByName(null, "Deutsch");
-        mdt.changeLanguageByName(null, "deutsch");
-        assertEquals(1, mdt.getAllLanguages().size());
-        assertTrue(mdt.getAllLanguages().containsValue("deutsch"));
-        assertFalse(mdt.getAllLanguages().containsValue("Deutsch"));
+        assertFalse(mdt.getAllLanguages().containsKey(null));
     }
 
     @Test
@@ -319,22 +294,11 @@ public class MetadataTypeTest {
     }
 
     @Test
-    public void testRemoveLanguageGivenNullAsUnknownKey() {
+    public void testRemoveLanguageGivenNullAsKey() {
         mdt.setAllLanguages(hashMap);
         mdt.addLanguage("de", "Deutsch");
         mdt.addLanguage("en", "English");
         assertFalse(mdt.removeLanguage(null));
-    }
-
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
-    @Test
-    public void testRemoveLanguageGivenNullAsKnownKey() {
-        mdt.setAllLanguages(hashMap);
-        mdt.addLanguage(null, "Deutsch");
-        assertEquals(1, mdt.getAllLanguages().size());
-        assertTrue(mdt.removeLanguage(null));
-        assertFalse(mdt.getAllLanguages().containsKey(null));
-        assertEquals(0, mdt.getAllLanguages().size());
     }
 
     @Test
@@ -362,19 +326,10 @@ public class MetadataTypeTest {
     }
 
     @Test
-    public void testGetLanguageGivenUnknownNullAsKey() {
+    public void testGetLanguageGivenNullAsKey() {
         mdt.setAllLanguages(hashMap);
         mdt.addLanguage("de", "Deutsch");
         assertNull(mdt.getLanguage(null));
-    }
-
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
-    @Test
-    public void testGetLanguageGivenKnownNullAsKey() {
-        // TODO instantiate allLanguages if null
-        mdt.setAllLanguages(hashMap);
-        mdt.addLanguage(null, "Deutsch");
-        assertEquals("Deutsch", mdt.getLanguage(null));
     }
 
     /* Tests for the method equals(MetadataType) */
