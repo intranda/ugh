@@ -225,12 +225,13 @@ public class VirtualFileGroup implements Serializable {
      * @param contentFiles
      */
     public void addContentFiles(Collection<ContentFile> contentFiles) {
-        if(this.contentFiles == ALL_FILES) {
-            this.contentFiles = new ArrayList<>();
-        }
-        // handle null as empty list
+        // handle null as empty list, and it should make no difference, since if one would like to add restrictions on files, 
+        // there is a better way to achieve that using the method restrictFiles() instead of applying this method with null.
         if (contentFiles == null) {
             return;
+        }
+        if(this.contentFiles == ALL_FILES) {
+            this.contentFiles = new ArrayList<>();
         }
         this.contentFiles.addAll(contentFiles);
     }

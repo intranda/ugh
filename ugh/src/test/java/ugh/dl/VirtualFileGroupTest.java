@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class VirtualFileGroupTest {
@@ -139,12 +138,10 @@ public class VirtualFileGroupTest {
         assertEquals(0, vfg.getContentFiles().size());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
     @Test
     public void testAddContentFilesGivenNull1() {
         assertSame(vfg.ALL_FILES, vfg.getContentFiles());
-        // TODO handle null as empty list
-        vfg.addContentFiles(null); // should the flag vfg.ALL_FILES be changed at all?
+        vfg.addContentFiles(null);
         assertSame(vfg.ALL_FILES, vfg.getContentFiles());
     }
 
