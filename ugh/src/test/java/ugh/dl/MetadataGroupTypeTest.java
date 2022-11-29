@@ -384,6 +384,9 @@ public class MetadataGroupTypeTest {
         type5.setName("PublisherName");
         // that is the correct behaviour, "*" is default if nothing is set. - Robert
         assertEquals("*", mdgType.getNumberOfMetadataType(type1)); // It seems that num will be defaulted to "*" if not set manually, but I haven't found out how so. - Zehong
+        // two findings until now:
+        // 1. in ugh.dl.Prefs from Line 367 to 374, "1" seems to be taken as default value for num if it is not set manually.
+        // 2. in ugh.dl.DocStruct around Line 1518, however, "*" would be used as default value instead, which also happens to be the expected behavior. 
         assertEquals("+", mdgType.getNumberOfMetadataType(type2));
         assertEquals("1m", mdgType.getNumberOfMetadataType(type3));
         assertEquals("1o", mdgType.getNumberOfMetadataType(type4));
