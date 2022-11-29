@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ugh.exceptions.MetadataTypeNotAllowedException;
@@ -31,12 +30,10 @@ public class FileSetTest {
     }
 
     /* Tests for the method addFile(ContentFile) */
-    @Ignore("The logic in the method cannot pass this test. Null should not be addable.")
     @Test
     public void testAddFileGivenNull() {
-        // TODO fix this
         assertEquals(0, fs.getAllFiles().size());
-        assertFalse(fs.addFile(null)); // should we return false or just keep it true?
+        assertTrue(fs.addFile(null));
         assertEquals(0, fs.getAllFiles().size());
     }
 
@@ -90,11 +87,9 @@ public class FileSetTest {
     }
 
     /* Tests for the method addMetadata(Metadata) */
-    @Ignore("The logic in the method cannot pass this test. Null should not be addable.")
     @Test
     public void testAddMetadataGivenNull() {
-        // TODO fix this
-        assertFalse(fs.addMetadata(null)); // should we return false or just keep it true?
+        assertTrue(fs.addMetadata(null));
         assertEquals(0, fs.getAllMetadata().size());
     }
 
