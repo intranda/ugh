@@ -89,10 +89,10 @@ public class VirtualFileGroup implements Serializable {
             String theMimetype, String theFileSuffix) {
 
         super();
-        this.name = theFilegroupName;
-        this.pathToFiles = thePath;
-        this.mimetype = theMimetype;
-        this.fileSuffix = theFileSuffix;
+        this.name = theFilegroupName != null ? theFilegroupName : "";
+        this.pathToFiles = thePath != null ? thePath : "";
+        this.mimetype = theMimetype != null ? theMimetype : "";
+        this.fileSuffix = theFileSuffix != null ? theFileSuffix : "";
     }
 
     /***************************************************************************
@@ -106,7 +106,7 @@ public class VirtualFileGroup implements Serializable {
      * @param name
      **************************************************************************/
     public void setName(String name) {
-        this.name = name;
+        this.name = name != null ? name : "";
     }
 
     /***************************************************************************
@@ -120,7 +120,7 @@ public class VirtualFileGroup implements Serializable {
      * @param pathToFiles
      **************************************************************************/
     public void setPathToFiles(String pathToFiles) {
-        this.pathToFiles = pathToFiles;
+        this.pathToFiles = pathToFiles != null ? pathToFiles : "";
     }
 
     /***************************************************************************
@@ -134,11 +134,7 @@ public class VirtualFileGroup implements Serializable {
      * @param mimetype
      **************************************************************************/
     public void setMimetype(String mimetype) {
-    	if(mimetype != null) {	
-    		this.mimetype = mimetype;
-        }else {
-        	this.mimetype = "";
-        }
+        this.mimetype = mimetype != null ? mimetype : "";
     }
 
     /***************************************************************************
@@ -156,7 +152,7 @@ public class VirtualFileGroup implements Serializable {
     	if(fileSuffix != null) {
     		// If the given file suffix starts with a ".", remove the ".".
 	        if (fileSuffix.startsWith(".")) {
-	            this.fileSuffix = fileSuffix.replaceFirst("\\.", "");
+                this.fileSuffix = fileSuffix.replaceAll("^\\.+", "");
 	        } else {
 	            this.fileSuffix = fileSuffix;
 	        }
@@ -176,7 +172,7 @@ public class VirtualFileGroup implements Serializable {
      * @param idSuffix
      **************************************************************************/
     public void setIdSuffix(String idSuffix) {
-        this.idSuffix = idSuffix;
+        this.idSuffix = idSuffix != null ? idSuffix : "";
     }
 
     /**
@@ -214,6 +210,9 @@ public class VirtualFileGroup implements Serializable {
      * @param contentFile
      */
     public void addContentFile(ContentFile contentFile) {
+        if (contentFile == null) { // adding null should make no difference
+            return;
+        }
         if(this.contentFiles == ALL_FILES) {
             this.contentFiles = new ArrayList<>();
         }
@@ -226,6 +225,11 @@ public class VirtualFileGroup implements Serializable {
      * @param contentFiles
      */
     public void addContentFiles(Collection<ContentFile> contentFiles) {
+        // handle null as empty list, and it should make no difference, since if one would like to add restrictions on files, 
+        // there is a better way to achieve that using the method restrictFiles() instead of applying this method with null.
+        if (contentFiles == null) {
+            return;
+        }
         if(this.contentFiles == ALL_FILES) {
             this.contentFiles = new ArrayList<>();
         }
@@ -255,6 +259,9 @@ public class VirtualFileGroup implements Serializable {
     }
 
     public boolean contains(ContentFile contentFile) {
+        if (contentFile == null) { // It's already assured that null is not addable.
+            return false;
+        }
         return this.contentFiles == ALL_FILES || this.contentFiles.contains(contentFile);
     }
 

@@ -135,7 +135,9 @@ public class MetadataType implements Serializable, PrefsType {
      **************************************************************************/
     public void setNum(String in) {
 
-        if (!in.equals("1m") && !in.equals("1o") && !in.equals("+") && !in.equals("*")) {
+        // When max_number is null, then a default value would be used, but that logic is implemented somewhere else, which might be unpredictable. 
+        // I think it might be a better idea to set a default value directly here in this class. - Zehong
+        if (in != null && !in.equals("1m") && !in.equals("1o") && !in.equals("+") && !in.equals("*")) {
             // Unknown syntax.
             return ;
         }
@@ -238,6 +240,13 @@ public class MetadataType implements Serializable, PrefsType {
      **************************************************************************/
     @Override
     public void addLanguage(String theLanguage, String theValue) {
+        // null should not be used as key
+        if (theLanguage == null) {
+            return;
+        }
+        if (this.allLanguages == null) {
+            this.allLanguages = new HashMap<>();
+        }
         this.allLanguages.put(theLanguage, theValue);
     }
 
@@ -251,12 +260,10 @@ public class MetadataType implements Serializable, PrefsType {
      **************************************************************************/
     @Override
     public String getNameByLanguage(String lang) {
-
-        if (this.allLanguages.get(lang) == null) {
-            return null;
+        if (this.allLanguages == null) {
+            this.allLanguages = new HashMap<>();
         }
-
-        return this.allLanguages.get(lang);
+        return this.allLanguages.get(lang); // might be null
     }
 
     /***************************************************************************
@@ -268,6 +275,9 @@ public class MetadataType implements Serializable, PrefsType {
      * @param content new name
      **************************************************************************/
     public void changeLanguageByName(String lang, String content) {
+        if (this.allLanguages == null) {
+            this.allLanguages = new HashMap<>();
+        }
         removeLanguage(lang);
         addLanguage(lang, content);
     }
@@ -281,6 +291,12 @@ public class MetadataType implements Serializable, PrefsType {
      * @return true, if successful
      **************************************************************************/
     public boolean removeLanguage(String theLanguage) {
+        if (theLanguage == null) {
+            return false;
+        }
+        if (this.allLanguages == null) {
+            this.allLanguages = new HashMap<>();
+        }
 
         // Check, if language already is available, if so, remove it.
         for (Map.Entry<String, String> lang : this.allLanguages.entrySet()) {
@@ -299,6 +315,9 @@ public class MetadataType implements Serializable, PrefsType {
      * @return
      **************************************************************************/
     public String getLanguage(String theLanguage) {
+        if (this.allLanguages == null) {
+            this.allLanguages = new HashMap<>();
+        }
 
         // Find language "inLanguage".
         for (Map.Entry<String, String> lang : getAllLanguages().entrySet()) {

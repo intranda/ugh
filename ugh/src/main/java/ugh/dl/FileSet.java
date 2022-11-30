@@ -103,14 +103,14 @@ public class FileSet implements Serializable {
      * Adds a ContentFile object to the FileSet, if it is not yet existing.
      * </p>
      * 
-     * @param inImage
-     *            ContentFile to be added
+     * @param inImage ContentFile to be added
      * @return always true
      **************************************************************************/
     public boolean addFile(ContentFile inImage) {
+        // This method should be void actually, but out of some historical reasons, it is boolean... 
 
-        // Only add the file, if it is not yet existing in the list.
-        if (!this.allImages.contains(inImage)) {
+        // Only add the file, if it is not null and it is not in the list yet.
+        if (inImage != null && !this.allImages.contains(inImage)) {
             this.allImages.add(inImage);
         }
 
@@ -137,7 +137,11 @@ public class FileSet implements Serializable {
      * @return
      **************************************************************************/
     public boolean addMetadata(Metadata inMD) {
-        this.allMetadata.add(inMD);
+        // This method should be void actually, but out of some historical reasons, it is boolean... 
+
+        if (inMD != null) {
+            this.allMetadata.add(inMD);
+        }
         return true;
     }
 
@@ -184,6 +188,9 @@ public class FileSet implements Serializable {
      * @param virtualFileGroups
      **************************************************************************/
     public void addVirtualFileGroup(VirtualFileGroup theFilegroup) {
+        if (theFilegroup == null) {
+            throw new IllegalArgumentException("Null is not addable as VirtualFileGroup!");
+        }
         this.virtualFileGroups.add(theFilegroup);
     }
 

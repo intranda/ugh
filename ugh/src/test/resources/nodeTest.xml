@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<group>
+	<node id="1">
+		<node11>11</node11>
+		<node12>12</node12>
+	</node>
+	
+	<node id="2">
+		<node21>21</node21>
+		<node22>22</node22>
+	</node>
+	
+	<node id="3">
+		<node31>31</node31>
+		<node32>32</node32>
+		<node33></node33>
+	</node>
+	
+	<edon>
+		<edon11></edon11>
+	</edon>
+</group>
