@@ -12,6 +12,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import ugh.exceptions.TypeNotAllowedAsChildException;
 import ugh.exceptions.UGHException;
 
 public class DocStructTest {
@@ -401,7 +402,6 @@ public class DocStructTest {
         assertTrue(ds.hasMetadataGroupType(mgt));
     }
 
-
     @Test
     public void testHasMetadataype() throws Exception {
         DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
@@ -458,7 +458,6 @@ public class DocStructTest {
         assertEquals(1, ds.getAllContentFiles().size());
     }
 
-
     @Test
     public void testRemoveContentFile() throws Exception {
         DigitalDocument dd = new DigitalDocument();
@@ -470,8 +469,6 @@ public class DocStructTest {
         assertEquals(1, ds.getAllContentFiles().size());
         assertTrue(ds.removeContentFile(cf));
     }
-
-
 
     @Test
     public void testAddReferenceFrom() throws Exception {
@@ -506,6 +503,309 @@ public class DocStructTest {
         assertTrue(page.getAllFromReferences().isEmpty());
     }
 
-    // TODO continue with line 1312
+    @Test
+    public void testForceRemoveMetadataGroup() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataGroupType mgt = prefs.getMetadataGroupTypeByName("PublisherGroup");
+        assertFalse(ds.hasMetadataGroupType(mgt));
+        MetadataGroup mg = new MetadataGroup(prefs.getMetadataGroupTypeByName("PublisherGroup"));
+        ds.addMetadataGroup(mg);
+        assertTrue(ds.hasMetadataGroupType(mgt));
+        ds.removeMetadataGroup(mg, true);
+        assertFalse(ds.hasMetadataGroupType(mgt));
+    }
 
+    @Test
+    public void testRemoveMetadataGroup() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataGroupType mgt = prefs.getMetadataGroupTypeByName("PublisherGroup");
+        assertFalse(ds.hasMetadataGroupType(mgt));
+        MetadataGroup mg = new MetadataGroup(prefs.getMetadataGroupTypeByName("PublisherGroup"));
+        ds.addMetadataGroup(mg);
+        assertTrue(ds.hasMetadataGroupType(mgt));
+        ds.removeMetadataGroup(mg);
+        assertFalse(ds.hasMetadataGroupType(mgt));
+    }
+
+    @Test
+    public void testChangeMetadataGroup() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataGroupType mgt = prefs.getMetadataGroupTypeByName("PublisherGroup");
+        MetadataGroupType mgt2 = prefs.getMetadataGroupTypeByName("LocationGroup");
+        MetadataGroup mg = new MetadataGroup(mgt);
+        MetadataGroup mg2 = new MetadataGroup(mgt2);
+
+        Metadata place = new Metadata(prefs.getMetadataTypeByName("PlaceOfPublication"));
+        place.setValue("fixture");
+        mg.addMetadata(place);
+
+        Metadata place2 = new Metadata(prefs.getMetadataTypeByName("City"));
+        place2.setValue("fixture2");
+        mg2.addMetadata(place2);
+
+        ds.addMetadataGroup(mg);
+
+        assertEquals("fixture", ds.getAllMetadataGroups().get(0).getMetadataList().get(0).getValue());
+
+        ds.changeMetadataGroup(mg, mg2);
+
+        assertEquals("fixture2", ds.getAllMetadataGroups().get(0).getMetadataList().get(0).getValue());
+
+    }
+
+    @Test
+    public void testGetAllMetadataGroupsByType() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataGroupType mgt = prefs.getMetadataGroupTypeByName("PublisherGroup");
+        MetadataGroup mg = new MetadataGroup(mgt);
+        // empty as type is null
+        assertTrue(ds.getAllMetadataGroupsByType(null).isEmpty());
+        // empty as ds has no groups
+        assertTrue(ds.getAllMetadataGroupsByType(mgt).isEmpty());
+
+        ds.addMetadataGroup(mg);
+        // not empty
+        assertEquals(1, ds.getAllMetadataGroupsByType(mgt).size());
+
+    }
+
+    @Test
+    public void testAddMetadata() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        Metadata md = new Metadata(prefs.getMetadataTypeByName("TitleDocMain"));
+        md.setValue("fixture");
+        ds.addMetadata(md);
+        assertEquals("fixture", ds.getAllMetadata().get(0).getValue());
+    }
+
+    @Test
+    public void testRemoveMetadata() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        Metadata md = new Metadata(prefs.getMetadataTypeByName("TitleUniform"));
+        md.setValue("fixture");
+        ds.addMetadata(md);
+        assertEquals("fixture", ds.getAllMetadata().get(0).getValue());
+        ds.removeMetadata(md);
+        assertNull(ds.getAllMetadata());
+    }
+
+    @Test
+    public void testChangeMetadata() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        Metadata md = new Metadata(prefs.getMetadataTypeByName("TitleDocMain"));
+        md.setValue("main title");
+        Metadata md2 = new Metadata(prefs.getMetadataTypeByName("TitleDocMain"));
+        md2.setValue("uniform title");
+
+        ds.addMetadata(md);
+        assertEquals("main title", ds.getAllMetadata().get(0).getValue());
+        ds.changeMetadata(md, md2);
+        assertEquals("uniform title", ds.getAllMetadata().get(0).getValue());
+    }
+
+    @Test
+    public void testAllMetadataByType() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataType mtype = prefs.getMetadataTypeByName("TitleDocMain");
+        MetadataType ptype = prefs.getMetadataTypeByName("Author");
+        MetadataType ctype = prefs.getMetadataTypeByName("CorporateOther");
+        Metadata m = new Metadata(mtype);
+
+        Person p = new Person(ptype);
+        Corporate c = new Corporate(ctype);
+
+        assertTrue(ds.getAllMetadataByType(null).isEmpty());
+        assertTrue(ds.getAllMetadataByType(mtype).isEmpty());
+        assertTrue(ds.getAllMetadataByType(ptype).isEmpty());
+        assertTrue(ds.getAllMetadataByType(ctype).isEmpty());
+
+        ds.addMetadata(m);
+        ds.addPerson(p);
+        ds.addCorporate(c);
+        assertEquals(1, ds.getAllMetadataByType(mtype).size());
+        assertEquals(1, ds.getAllMetadataByType(ptype).size());
+        assertEquals(1, ds.getAllMetadataByType(ctype).size());
+    }
+
+    @Test
+    public void testAllPersonsByType() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataType ptype = prefs.getMetadataTypeByName("Author");
+        Person p = new Person(ptype);
+        assertNull(ds.getAllPersonsByType(null));
+        assertNull(ds.getAllPersonsByType(ptype));
+        ds.addPerson(p);
+        assertEquals(1, ds.getAllPersonsByType(ptype).size());
+    }
+
+    @Test
+    public void testAllCorporatesByType() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataType ctype = prefs.getMetadataTypeByName("CorporateOther");
+        Corporate c = new Corporate(ctype);
+        assertNull(ds.getAllCorporatesByType(null));
+        assertNull(ds.getAllCorporatesByType(ctype));
+        ds.addCorporate(c);
+        assertEquals(1, ds.getAllCorporatesByType(ctype).size());
+    }
+
+    @Test
+    public void testAllVisibleMetadata() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataType mtype = prefs.getMetadataTypeByName("TitleDocMain");
+        MetadataType invistype = prefs.getMetadataTypeByName("_digitalOrigin");
+        Metadata m = new Metadata(mtype);
+        Metadata invis = new Metadata(invistype);
+
+        assertNull(ds.getAllVisibleMetadata());
+
+        ds.addMetadata(invis);
+        assertNull(ds.getAllVisibleMetadata());
+        ds.addMetadata(m);
+        assertEquals(1, ds.getAllVisibleMetadata().size());
+    }
+
+    @Test
+    public void testDefaultDisplayMetadataGroupTypes() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+
+        // PublisherGroup is set to DefaultDisplay="true"
+        assertEquals(1, ds.getDefaultDisplayMetadataGroupTypes().size());
+    }
+
+    @Test
+    public void testDisplayMetadataGroupTypes() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        assertEquals(1, ds.getDisplayMetadataGroupTypes().size());
+    }
+
+    @Test
+    public void testGetDefaultDisplayMetadataTypes() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+
+        // 11 metadata assignments are set to DefaultDisplay="true"
+        assertEquals(11, ds.getDefaultDisplayMetadataTypes().size());
+    }
+
+    @Test
+    public void testGetDisplayMetadataTypes() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        assertEquals(11, ds.getDisplayMetadataTypes().size());
+    }
+
+    @Test
+    public void testCountMDofthisType() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataType mtype = prefs.getMetadataTypeByName("TitleDocMain");
+        MetadataType ptype = prefs.getMetadataTypeByName("Author");
+        MetadataType ctype = prefs.getMetadataTypeByName("CorporateOther");
+        MetadataGroupType mgt = prefs.getMetadataGroupTypeByName("PublisherGroup");
+        MetadataGroup mg = new MetadataGroup(mgt);
+        Metadata m = new Metadata(mtype);
+        Person p = new Person(ptype);
+        Corporate c = new Corporate(ctype);
+
+        assertEquals(0, ds.countMDofthisType("TitleDocMain"));
+
+        ds.addMetadata(m);
+        ds.addPerson(p);
+        ds.addCorporate(c);
+        ds.addMetadataGroup(mg);
+        assertEquals(1, ds.countMDofthisType("TitleDocMain"));
+        assertEquals(1, ds.countMDofthisType("Author"));
+        assertEquals(1, ds.countMDofthisType("CorporateOther"));
+        assertEquals(1, ds.countMDofthisType("PublisherGroup"));
+    }
+
+    @Test
+    public void testGetAddableMetadataGroupTypes() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+
+        assertEquals(2, ds.getAddableMetadataGroupTypes().size());
+
+        MetadataGroupType mgt2 = prefs.getMetadataGroupTypeByName("LocationGroup");
+        MetadataGroup mg2 = new MetadataGroup(mgt2);
+        ds.addMetadataGroup(mg2);
+
+        assertEquals(1, ds.getAddableMetadataGroupTypes().size());
+    }
+
+    @Test
+    public void testGetPossibleMetadataGroupTypes() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+
+        assertEquals(2, ds.getAddableMetadataGroupTypes().size());
+
+        MetadataGroupType mgt2 = prefs.getMetadataGroupTypeByName("LocationGroup");
+        MetadataGroup mg2 = new MetadataGroup(mgt2);
+        ds.addMetadataGroup(mg2);
+
+        assertEquals(1, ds.getPossibleMetadataGroupTypes().size());
+    }
+
+
+    @Test
+    public void testGetAddableMetadataTypes() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+
+        assertEquals(110, ds.getAddableMetadataTypes(false).size());
+        assertEquals(119, ds.getAddableMetadataTypes(true).size());
+
+        Metadata md = new Metadata(prefs.getMetadataTypeByName("TitleDocMain"));
+        md.setValue("fixture");
+        ds.addMetadata(md);
+        Person p = new Person(prefs.getMetadataTypeByName("Editor"));
+        p.setLastname("fixture");
+        ds.addPerson(p);
+
+        assertEquals(109, ds.getAddableMetadataTypes(false).size());
+        assertEquals(118, ds.getAddableMetadataTypes(true).size());
+
+    }
+
+    @Test
+    public void testAddChild() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        assertFalse (ds.addChild(null));
+
+        DocStruct sub = new DocStruct(prefs.getDocStrctTypeByName("Chapter"));
+        assertTrue(ds.addChild(sub));
+    }
+
+    @Test (expected = TypeNotAllowedAsChildException.class)
+    public void testAddChildException() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        ds.addChild(ds);
+    }
+
+    @Test
+    public void testRemove() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        DocStruct sub = new DocStruct(prefs.getDocStrctTypeByName("Chapter"));
+        assertTrue(ds.addChild(sub));
+
+        assertTrue(ds.removeChild(sub));
+    }
+
+    @Test
+    public void testMoveChild() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        DocStruct sub = new DocStruct(prefs.getDocStrctTypeByName("Chapter"));
+        DocStruct sub2 = new DocStruct(prefs.getDocStrctTypeByName("Cover"));
+        assertTrue(ds.addChild(sub));
+        assertTrue(ds.addChild(sub2));
+
+        assertEquals("Chapter", ds.getAllChildren().get(0).getType().getName());
+        assertEquals("Cover", ds.getAllChildren().get(1).getType().getName());
+
+        assertFalse( ds.moveChild(sub2, -1));
+        assertTrue( ds.moveChild(sub2, 0));
+
+        assertEquals("Cover", ds.getAllChildren().get(0).getType().getName());
+        assertEquals("Chapter", ds.getAllChildren().get(1).getType().getName());
+    }
+
+
+
+    // TODO continue with line 2312
 }

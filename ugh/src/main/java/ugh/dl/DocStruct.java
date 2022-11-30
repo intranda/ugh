@@ -2104,45 +2104,7 @@ public class DocStruct implements Serializable, HoldingElement {
     }
 
     public List<MetadataGroupType> getPossibleMetadataGroupTypes() {
-        // If e.g. the topstruct has no Metadata, or something...
-        if (this.type == null) {
-            return null; //NOSONAR
-        }
-
-        // Get all Metadatatypes for my DocStructType.
-        List<MetadataGroupType> addableMetadata = new LinkedList<>();
-        List<MetadataGroupType> allTypes = this.type.getAllMetadataGroupTypes();
-
-        // Get all metadata types which are known, iterate over them and check,
-        // if they are still addable.
-        for (MetadataGroupType mdt : allTypes) {
-
-            // Metadata beginning with the HIDDEN_METADATA_CHAR are internal
-            // metadata are not user addable.
-            String maxnumber = this.type.getNumberOfMetadataGroups(mdt);
-
-            // Metadata can only be available once; so we have to check if
-            // it is already available.
-            if (maxnumber.equals("1m") || maxnumber.equals("1o")) {
-                // Check metadata here only.
-                List<? extends MetadataGroup> availableMD = this.getAllMetadataGroupsByType(mdt);
-
-                if (availableMD.isEmpty()) {
-                    // Metadata is NOT available; we are allowed to add it.
-                    addableMetadata.add(mdt);
-                }
-            } else {
-                // We can add as many metadata as we want (+ or *).
-                addableMetadata.add(mdt);
-            }
-
-        }
-
-        if (addableMetadata.isEmpty()) {
-            return null; //NOSONAR
-        }
-
-        return addableMetadata;
+        return getAddableMetadataGroupTypes();
     }
 
     /***************************************************************************
@@ -3026,7 +2988,7 @@ public class DocStruct implements Serializable, HoldingElement {
             }
         }
         if (getAllCorporates() != null) {
-            List<Corporate> corporateList = getAllCorporates();
+            List<Corporate> corporateList = new LinkedList<>(getAllCorporates());
             for (Corporate corp : corporateList) {
                 if (StringUtils.isBlank(corp.getMainName()) && StringUtils.isBlank(corp.getPartName()) && corp.getSubNames().isEmpty()) {
                     getAllCorporates().remove(corp);
@@ -3079,12 +3041,12 @@ public class DocStruct implements Serializable, HoldingElement {
                             }
                         }
                     }
-
-                    if (isEmpty) {
-                        this.getAllMetadataGroups().remove(md);
-                    }
+                }
+                if (isEmpty) {
+                    this.getAllMetadataGroups().remove(md);
                 }
             }
+
         }
     }
 
