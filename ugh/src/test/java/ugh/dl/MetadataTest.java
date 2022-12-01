@@ -327,6 +327,8 @@ public class MetadataTest {
 
     @Test
     public void testEqualsGivenInheritedObjects() throws MetadataTypeNotAllowedException {
+        type.setIsPerson(true);
+        type.isCorporate = true;
         Person p = new Person(type, "first name", "second name");
         Metadata mdp = p;
         Corporate c = new Corporate(type);
