@@ -99,6 +99,9 @@ public class Corporate extends Metadata {
 
     public Corporate(MetadataType type) throws MetadataTypeNotAllowedException {
         super(type);
+        if (!type.isCorporate) {
+            throw new MetadataTypeNotAllowedException("To create a Corporate one needs a MetadataType with isCorporate set to be true.");
+        }
         role = type.getName();
     }
 

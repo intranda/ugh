@@ -176,16 +176,10 @@ public class MetadataGroupTest {
         assertThrows(NullPointerException.class, () -> fixture.addPerson(null));
     }
 
-    @Ignore("The logic of the method cannot pass this test. Type check needed before creating Person objects. Better move this test to PersonTest.")
-    @Test
-    public void testAddPersonGivenPersonObjectBasedOnMetadataTypeCorporate() {
-        MetadataType type = new MetadataType();
-        type.setName("PublisherCorporate");
-        // TODO fix this in Person constructor
-        // This might not be a good idea. Since that would require the isPerson field to be set to true any time we prepare a MetadataType for Person.
-        // And this setting should not take place manually or otherwise we would crash a lot of codes by adding a small check in Person's constructor.
-        // Same for the Corporate issue.
-        assertThrows(MetadataTypeNotAllowedException.class, () -> fixture.addPerson(new Person(type)));
+    @Test(expected = MetadataTypeNotAllowedException.class)
+    public void testAddPersonGivenPersonObjectBasedOnMetadataTypeCorporate() throws MetadataTypeNotAllowedException {
+        MetadataType type = prefs.getMetadataTypeByName("PublisherCorporate");
+        fixture.addPerson(new Person(type));
     }
 
     @Test
@@ -203,6 +197,7 @@ public class MetadataGroupTest {
         MetadataType type2 = type1.copy();
         MetadataType type3 = new MetadataType();
         type3.setName("PublisherPerson");
+        type3.setIsPerson(true);
         fixture.addPerson(new Person(type1));
         fixture.addPerson(new Person(type2));
         fixture.addPerson(new Person(type3));
@@ -213,6 +208,7 @@ public class MetadataGroupTest {
     public void testAddPersonGivenObjectExtendedFromPerson() throws MetadataTypeNotAllowedException {
         MetadataType type = new MetadataType();
         type.setName("PublisherPerson");
+        type.setIsPerson(true);
         Person person = new Person(type);
         ExtendedPerson exPerson = new ExtendedPerson(type);
         fixture.addPerson(person);
@@ -240,12 +236,10 @@ public class MetadataGroupTest {
         assertThrows(NullPointerException.class, () -> fixture.addCorporate(null));
     }
 
-    @Ignore("The logic of the method cannot pass this test. Type check needed before creating Corporate objects. Better move this test to CorporateTest.")
     @Test
     public void testAddCorporateGivenCorporateObjectBasedOnMetadataTypePerson() {
         MetadataType type = new MetadataType();
         type.setName("PublisherPerson");
-        // TODO fix this in Corporate constructor
         assertThrows(MetadataTypeNotAllowedException.class, () -> fixture.addCorporate(new Corporate(type)));
     }
 
@@ -273,10 +267,14 @@ public class MetadataGroupTest {
     @Test
     public void testAddCorporateGivenObjectExtendedFromCorporate() throws MetadataTypeNotAllowedException {
         MetadataType type = prefs.getMetadataTypeByName("PublisherCorporate");
+        //        MetadataType type = new MetadataType();
+        //        type.setName("PublisherCorporate");
+        //        type.isCorporate = true;
         Corporate corporate = new Corporate(type);
         ExtendedCorporate exCorporate = new ExtendedCorporate(type);
         fixture.addCorporate(corporate);
-        fixture.addCorporate(new Corporate(type));
+        //fixture.addCorporate(new Corporate(type));
+        fixture.addCorporate(exCorporate);
         assertEquals(2, fixture.getCorporateList().size());
         assertNotEquals("This is the ExtendedCorporate", fixture.getCorporateList().get(0).toString());
         assertEquals("This is the ExtendedCorporate", fixture.getCorporateList().get(1).toString());
@@ -469,7 +467,9 @@ public class MetadataGroupTest {
         MetadataGroupType anotherType = prefs.getMetadataGroupTypeByName("PublisherGroup");
         assertEquals(fixture.getType(), anotherType);
         MetadataGroup anotherGroup = new MetadataGroup(anotherType);
-        MetadataType mdType = prefs.getMetadataTypeByName("PublisherPerson");
+        MetadataType mdType = prefs.getMetadataTypeByName("PublisherCorporate");
+        assertTrue(mdType.isCorporate);
+        assertFalse(mdType.getIsPerson());
         anotherGroup.addCorporate(new Corporate(mdType));
         assertNotSame(fixture, anotherGroup);
         assertEquals(fixture, anotherGroup);

@@ -105,10 +105,9 @@ public class Person extends Metadata {
      **************************************************************************/
     public Person(MetadataType theType) throws MetadataTypeNotAllowedException {
         super(theType);
-        // perhaps it is not a good idea to add the following lines to control 
-        //        if (!theType.getIsPerson()) {
-        //            throw new MetadataTypeNotAllowedException("To create a Person one needs a MetadataType with isPerson set to be true.");
-        //        }
+        if (!theType.getIsPerson()) {
+            throw new MetadataTypeNotAllowedException("To create a Person one needs a MetadataType with isPerson set to be true.");
+        }
     }
 
     /***************************************************************************
