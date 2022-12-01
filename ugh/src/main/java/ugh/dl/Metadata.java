@@ -189,8 +189,8 @@ public class Metadata implements Serializable {
 
     /***************************************************************************
      * <p>
-     * Sets the Metadata value and returns true, if it was set correctly. Otherwise false The only parameter is the value of the type String, all
-     * other types (integer, long etc.) must be converted to a string before.
+     * Sets the Metadata value, and the flag `updated` to true or false according to the correctness of the value setting. The only parameter is the
+     * value of the type String, all other types (integer, long etc.) must be converted to a string before.
      * </p>
      * 
      * TODO For future versions: Check, if the value is of the correct type?
@@ -198,6 +198,7 @@ public class Metadata implements Serializable {
      * @param inValue The value as String.
      **************************************************************************/
     public void setValue(String inValue) {
+        // When the same value is set again, should we change the `updated` flag? - Zehong
         this.metadataValue = inValue;
         this.updated = true;
     }
