@@ -22,6 +22,7 @@ public class CorporateTest {
         type = new MetadataType();
         type.setName("fixture");
         type.setNum("*");
+        type.isCorporate = true;
     }
 
     @Before
