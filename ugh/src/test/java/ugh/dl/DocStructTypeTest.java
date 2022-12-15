@@ -27,6 +27,7 @@ public class DocStructTypeTest {
     }
 
     /* Tests for the constructor */
+
     @Test
     public void testConstructor() {
         // this.allChildrenTypes
@@ -49,6 +50,7 @@ public class DocStructTypeTest {
     }
 
     /* Tests for setters and getters */
+
     @Ignore("Should we allow null to be set as name?")
     @Test
     public void testSetNameGivenNull() {
@@ -102,6 +104,7 @@ public class DocStructTypeTest {
      * 3. changeLanguageByName(String, String)
      * 4. removeLanguage(String)
      * */
+
     @Ignore("The logic in the method cannot pass this test. Null check for the first argument needed.")
     @Test
     public void testAddLanguageGivenNullAsKey() {
@@ -246,6 +249,7 @@ public class DocStructTypeTest {
      * 2. getAllMetadataTypes()
      * 3. getAllDefaultDisplayMetadataTypes()
      * */
+
     @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
     @Test
     public void testSetAllMetadataTypesGivenNull() {
@@ -308,7 +312,6 @@ public class DocStructTypeTest {
         assertEquals(1, dsType.getAllMetadataTypes().size());
     }
 
-    @Ignore("Is this method useful at all? I have no idea how to modify the field defaultDisplay. See the comments below.")
     @Test
     public void testGetAllDefaultDisplayMetadataTypesAgainstModificationFromOutside() {
         ArrayList<MetadataType> newList = new ArrayList<>();
@@ -325,16 +328,21 @@ public class DocStructTypeTest {
         assertEquals("MetadataType 1", dsType.getAllMetadataTypes().get(0).getName());
         // since false is the default value for defaultDisplay whenever we create a MetadataTypeForDocStructType object based on
         // a MetadataType object, a call of the method getAllDefaultDisplayMetadataTypes should theoretically give us nothing unless
-        // we can somehow manage to modify some values of the field defaultDisplay
+        // we could somehow manage to modify some values of the field defaultDisplay
         assertFalse(new MetadataTypeForDocStructType(mdt1).isDefaultdisplay());
         assertEquals(0, dsType.getAllDefaultDisplayMetadataTypes().size());
-        // since the MetadataType objects retrieved by the method getAllMetadataTypes are still connected to those
-        // MetadataTypeForDocStructType objects, so theoretically we can still modify the value of the field defaultDisplay
-        // if only we can somehow manage to cast
-
+        // until now I have found only way to add a MetadataTypeForDocStructType object whose field defaultDisplay is set to true,
+        // that is to use the method addMetadataType(MetadataType, String, boolean, boolean)
+        // for those already added into the list allMetadataTypes, I have found no way to modify their field defaultDisplay
+        MetadataType mdt3 = new MetadataType();
+        mdt3.setName("MetadataType 3");
+        assertNotNull(dsType.addMetadataType(mdt3, null, true, false));
+        assertEquals(1, dsType.getAllDefaultDisplayMetadataTypes().size());
+        assertTrue(mdt3.equals(dsType.getAllDefaultDisplayMetadataTypes().get(0)));
     }
 
     /* Tests for the method getNumberOfMetadataType(PrefsType) */
+
     @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
     @Test
     public void testGetNumberOfMetadataTypeGivenNull() {
@@ -386,6 +394,7 @@ public class DocStructTypeTest {
      * 5. getMetadataTypeByType(PrefsType)
      * 6. isMetadataTypeAlreadyAvailable(PrefsType) [ PRIVATE ]
      *  */
+
     @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
     @Test
     public void testAddMetadataTypeGivenNullAsFirstArgument() {
@@ -512,9 +521,550 @@ public class DocStructTypeTest {
 
     /* Tests for the following methods:
      * 1. addDocStructTypeAsChild(String)
-     * 2. removeDocStructTypeAsChild(String)
-     * 3. getAllAllowedDocStructTypes()
+     * 2. addDocStructTypeAsChild(DocStructType)
+     * 3. removeDocStructTypeAsChild(String)
+     * 4. removeDocStructTypeAsChild(DocStructType)
+     * 5. getAllAllowedDocStructTypes()
      *  */
 
+    @Test
+    public void testAddDocStructTypeAsChildGivenNull() {
+        // First of all, nothing to do with the following test, but I think the first checking condition in Line 611 is redundant. - Zehong
+
+        // To the method design:
+        // 1. "null" is not addable, which also makes sense, and that is assured via the trick that applying this method on null would be ambiguous.
+        // 2. In this way, unnamed DocStructType would also be non-addable. 
+
+        // Hence there is no need to test anything here.
+    }
+
+    @Test
+    public void testAddDocStructTypeAsChildGivenEmptyString() {
+        // I have no idea if that is a good idea to allow empty string as name for a DocStructType object, but let's assume yes:
+        assertTrue(dsType.addDocStructTypeAsChild(""));
+    }
+
+    @Test
+    public void testAddDocStructTypeAsChildGivenSameStringTwice() {
+        // The same name should not be added twice:
+        assertEquals(0, dsType.getAllAllowedDocStructTypes().size());
+        assertTrue(dsType.addDocStructTypeAsChild("name"));
+        assertEquals(1, dsType.getAllAllowedDocStructTypes().size());
+        assertFalse(dsType.addDocStructTypeAsChild("name"));
+        assertEquals(1, dsType.getAllAllowedDocStructTypes().size());
+    }
+
+    @Test
+    public void testAddDocStructTypeAsChildGivenTwoDocStructTypeObjectsWithTheSameName() {
+        // According to the checking logic in Line 611, the names in the list allChildrenTypes will all be unique: therefore we still have
+        // to assure that every DocStructType is uniquely named. 
+        DocStructType child1 = new DocStructType();
+        child1.setName("child");
+        child1.isAnchor(false);
+        DocStructType child2 = new DocStructType();
+        child2.setName("child");
+        child2.isAnchor(true);
+        assertNotSame(child1.isAnchor(), child2.isAnchor());
+        // once child1 is added into dsType.allChildrenTypes, child2 will not be addable anymore
+        assertTrue(dsType.addDocStructTypeAsChild(child1));
+        assertFalse(dsType.addDocStructTypeAsChild(child2));
+    }
+
+    @Test
+    public void testAddDocStructTypeAsChildGivenANameStringAndADocStructTypeObjectOfThatName() {
+        String name1 = "name1";
+        String name2 = "name2";
+        DocStructType child1 = new DocStructType();
+        child1.setName(name1);
+        DocStructType child2 = new DocStructType();
+        child2.setName(name2);
+        // 1. first apply the method on name1, then check if child1 is still addable:
+        assertTrue(dsType.addDocStructTypeAsChild(name1));
+        assertFalse(dsType.addDocStructTypeAsChild(child1));
+        // 2. first apply the method on child2, then check if name2 is still addable:
+        assertTrue(dsType.addDocStructTypeAsChild(child2));
+        assertFalse(dsType.addDocStructTypeAsChild(name2));
+    }
+
+    @Test
+    public void testRemoveDocStructTypeAsChildGivenNull() {
+        // To the method design:
+        // 1. "null" is an illegal argument, since that would make the call ambiguous.
+        // 2. In this way, unnamed DocStructType would also be non-removable.
+
+        // Hence there is no need to test anything here.
+    }
+
+    @Test
+    public void testRemoveDocStructTypeAsChildGivenEmptyString() {
+        // It should work like a normal string:
+        assertFalse(dsType.removeDocStructTypeAsChild(""));
+        assertEquals(0, dsType.getAllAllowedDocStructTypes().size());
+        assertTrue(dsType.addDocStructTypeAsChild(""));
+        assertEquals(1, dsType.getAllAllowedDocStructTypes().size());
+        assertTrue(dsType.removeDocStructTypeAsChild(""));
+        assertEquals(0, dsType.getAllAllowedDocStructTypes().size());
+    }
+
+    @Test
+    public void testRemoveDocStructTypeAsChildGivenSameStringTwice() {
+        String name = "name";
+        assertTrue(dsType.addDocStructTypeAsChild(name));
+        assertTrue(dsType.removeDocStructTypeAsChild(name));
+        assertFalse(dsType.removeDocStructTypeAsChild(name));
+    }
+
+    @Test
+    public void testRemoveDocStructTypeAsChildGivenMixedStringNameAndSoNamedDocStructTypeObjects() {
+        String name = "name";
+        DocStructType child1 = new DocStructType();
+        child1.setName(name);
+        child1.isAnchor(false);
+        DocStructType child2 = new DocStructType();
+        child2.setName(name);
+        child2.isAnchor(true);
+        // 1. first add using name, then remove using child1, finally try to remove using child2
+        assertTrue(dsType.addDocStructTypeAsChild(name));
+        assertTrue(dsType.removeDocStructTypeAsChild(child1));
+        assertFalse(dsType.removeDocStructTypeAsChild(child2));
+
+        // 2. first add using child1, then remove using child2, finally try to remove using name
+        assertTrue(dsType.addDocStructTypeAsChild(child1));
+        assertTrue(dsType.removeDocStructTypeAsChild(child2));
+        assertFalse(dsType.removeDocStructTypeAsChild(name));
+
+        // 3. first add using child2, then remove using name, finally try to remove using child1
+        assertTrue(dsType.addDocStructTypeAsChild(child2));
+        assertTrue(dsType.removeDocStructTypeAsChild(name));
+        assertFalse(dsType.removeDocStructTypeAsChild(child1));
+    }
+
+    @Ignore("The following test shows how dangerous the design of this method could be. See comments below. Deep copy needed.")
+    @Test
+    public void testGetAllAllowedDocStructTypesAgainstModificationFromOutside() {
+        // According to the design of the method addDocStructTypeAsChild, "null" and unnamed DocStructType objects are not addable,
+        // however, we can still achieve that with help of the method getAllAllowedDocStructTypes in the following way:
+        assertEquals(0, dsType.getAllAllowedDocStructTypes().size());
+        dsType.getAllAllowedDocStructTypes().add(null);
+        assertEquals(1, dsType.getAllAllowedDocStructTypes().size());
+        // Since it is also syntactically assured that the method removeDocStructTypeAsChild cannot be applied on "null" nor unnamed
+        // DocStructType objects, this modification from outside would cause a memory leak, unless we are aware of the cause and call:
+        dsType.getAllAllowedDocStructTypes().remove(null);
+        assertEquals(0, dsType.getAllAllowedDocStructTypes().size());
+        // The design of this method would also allow the entrance of redundant elements into allChildrenTypes, which is not allowed using
+        // the method addDocStructTypeAsChild. There would be a problem if you removed some DocStructType from the allChildrenTypes
+        //  without awareness that there is still a copy of it in the list resulted from some dummy modification from outside via this method:
+        dsType.addDocStructTypeAsChild("name");
+        assertFalse(dsType.addDocStructTypeAsChild("name"));
+        dsType.getAllAllowedDocStructTypes().add("name");
+        assertEquals(2, dsType.getAllAllowedDocStructTypes().size());
+        assertTrue(dsType.removeDocStructTypeAsChild("name"));
+        assertEquals(1, dsType.getAllAllowedDocStructTypes().size());
+        assertTrue(dsType.getAllAllowedDocStructTypes().contains("name"));
+        // Hence in this way one has to remove it twice:
+        assertTrue(dsType.removeDocStructTypeAsChild("name"));
+        assertEquals(0, dsType.getAllAllowedDocStructTypes().size());
+    }
+
+    /* Tests for the method toString() */
+
+    @Ignore("Should we allow DocStructType objects to be unnamed?")
+    @Test
+    public void testToStringGivenUnnamedDocStructType() {
+        assertEquals(null, dsType.toString());
+    }
+
+    /* Tests for the method equals(DocStructType) */
+
+    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
+    @Test
+    public void testEqualsGivenNull() {
+        dsType.setName("name");
+        assertFalse(dsType.equals(null));
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Unnamed objects should be handled, or their existence should be avoided.")
+    @Test
+    public void testEqualsGivenUnnamedDocStructTypeObjectAgainstItself() {
+        assertTrue(dsType.equals(dsType));
+    }
+
+    @Test
+    public void testEqualsGivenNamedDocStructTypeObjectAgainstItself() {
+        dsType.setName("name");
+        assertTrue(dsType.equals(dsType));
+    }
+
+    @Test
+    public void testEqualsGivenOneExtendedObject() {
+        String name = "name";
+        dsType.setName(name);
+        ExtendedDocStructType1 edsType1 = new ExtendedDocStructType1();
+        edsType1.setName(name);
+        assertTrue(dsType.equals(edsType1));
+        assertTrue(edsType1.equals(dsType));
+    }
+
+    @Test
+    public void testEqualsGivenTwoExtendedObjects() {
+        String name = "name";
+        ExtendedDocStructType1 edsType1 = new ExtendedDocStructType1();
+        edsType1.setName(name);
+        ExtendedDocStructType2 edsType2 = new ExtendedDocStructType2();
+        edsType2.setName(name);
+        assertTrue(edsType1.equals(edsType2));
+    }
+
+    // The following two inner-classes are to be used for the two previous test cases:
+    private class ExtendedDocStructType1 extends DocStructType {
+        public ExtendedDocStructType1() {
+            super();
+        }
+    }
+
+    private class ExtendedDocStructType2 extends DocStructType {
+        public ExtendedDocStructType2() {
+            super();
+        }
+    }
+    
+    /* Tests for the following methods:
+     * 1. setAllMetadataGroups(List<MetadataGroupType>)
+     * 2. getAllMetadataGroupTypes()
+     * 3. getAllDefaultDisplayMetadataGroups()
+     *  */
+    
+    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
+    @Test
+    public void testSetAllMetadataGroupsGivenNull() {
+        // null should be regarded as empty list
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+        dsType.setAllMetadataGroups(null);
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+        // hence if we already have a non-empty list allMetadataGroups
+        ArrayList<MetadataGroupType> mdgTypes = new ArrayList<>();
+        mdgTypes.add(new MetadataGroupType());
+        dsType.setAllMetadataGroups(mdgTypes);
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+        // then applying the method setAllMetadataGroups again with null should clear the contents of allMetadataGroups
+        dsType.setAllMetadataGroups(null);
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Reinitialization of the field allMetadataGroups needed.")
+    @Test
+    public void testSetAllMetadataGroupsGivenEmptyList() {
+        ArrayList<MetadataGroupType> emptyList = new ArrayList<>();
+        ArrayList<MetadataGroupType> mdgTypes = new ArrayList<>();
+        mdgTypes.add(new MetadataGroupType());
+
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+        dsType.setAllMetadataGroups(emptyList);
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+        // if we already have a non-empty list allMetadataGroups
+        dsType.setAllMetadataGroups(mdgTypes);
+        assertEquals(mdgTypes.size(), dsType.getAllMetadataGroupTypes().size());
+        // then applying the method setAllMetadataGroups again with emptyList should clear the contents of allMetadataGroups
+        dsType.setAllMetadataGroups(emptyList);
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Reinitialization of the field allMetadataGroups needed.")
+    @Test
+    public void testSetAllMetadataGroupsGivenSameListTwice() {
+        ArrayList<MetadataGroupType> mdgTypes = new ArrayList<>();
+        mdgTypes.add(new MetadataGroupType());
+
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+        dsType.setAllMetadataGroups(mdgTypes);
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+        // applying the method setAllMetadataGroups again with mdgTypes should not change the contents of allMetadataGroups
+        dsType.setAllMetadataGroups(mdgTypes);
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+    }
+
+    @Test
+    public void testSetGetAllMetadataGroupsAgainstModificationFromOutside() {
+        ArrayList<MetadataGroupType> mdgTypes = new ArrayList<>();
+        mdgTypes.add(new MetadataGroupType());
+        assertEquals(1, mdgTypes.size());
+        dsType.setAllMetadataGroups(mdgTypes);
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+        // modification of the original list mdgTypes should not affect the field dsType.allMetadataGroups
+        mdgTypes.add(new MetadataGroupType());
+        assertEquals(2, mdgTypes.size());
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+        // modification of the returned value of getAllMetadataGroupTypes() should not affect the field dsType.allMetadataGroups
+        List<MetadataGroupType> returned = dsType.getAllMetadataGroupTypes();
+        assertEquals(1, returned.size());
+        returned.add(new MetadataGroupType());
+        assertEquals(2, returned.size());
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+    }
+
+    @Test
+    public void testGetAllDefaultDisplayMetadataGroupsAgainstModificationFromOutside() {
+        ArrayList<MetadataGroupType> mdgTypes = new ArrayList<>();
+        MetadataGroupType mdgType1 = new MetadataGroupType();
+        mdgType1.setName("MetadataGroupType 1");
+        MetadataGroupType mdgType2 = new MetadataGroupType();
+        mdgType2.setName("MetadataGroupType 2");
+        mdgTypes.add(mdgType1);
+        mdgTypes.add(mdgType2);
+        // the method setAllMetadataGroups(List<MetadataGroupType>) will construct a MetadataGroupForDocStructType object based
+        // on every incoming MetadataGroupType object, and by default the field defaultdisplay will all be set to false
+        dsType.setAllMetadataGroups(mdgTypes);
+        assertEquals(mdgTypes.size(), dsType.getAllMetadataGroupTypes().size());
+        assertEquals(0, dsType.getAllDefaultDisplayMetadataGroups().size());
+        // until now I have only found one way to add a MetadataGroupForDocStructType object whose defaultdisplay field is set to true
+        // into the list allMetadataGroups, and that is via the method addMetadataGroup(MetadataGroupType, String, boolean, boolean)
+        MetadataGroupType mdgType3 = new MetadataGroupType();
+        mdgType3.setName("MetadataGroupType 3");
+        dsType.addMetadataGroup(mdgType3, null, true, false);
+        assertEquals(1, dsType.getAllDefaultDisplayMetadataGroups().size());
+        assertTrue(mdgType3.equals(dsType.getAllDefaultDisplayMetadataGroups().get(0)));
+        // for those already added into the list allMetadataGroups, I haven't found out any way to modify their field defaultdisplay
+    }
+
+    /* Tests for the method getNumberOfMetadataGroups(MetadataGroupType) */
+
+    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
+    @Test
+    public void testGetNumberOfMetadataGroupsGivenNull() {
+        // the list allMetadataGroups is still empty
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+        assertEquals("0", dsType.getNumberOfMetadataGroups(null));
+        // make it non-empty
+        ArrayList<MetadataGroupType> mdgTypes = new ArrayList<>();
+        MetadataGroupType mdgType = new MetadataGroupType();
+        mdgType.setName("name");
+        mdgType.setNum("*");
+        mdgTypes.add(mdgType);
+        dsType.setAllMetadataGroups(mdgTypes);
+        // "0" should be returned by default
+        assertEquals("0", dsType.getNumberOfMetadataGroups(null));
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Instead of '0' there is always a null returned by default.")
+    @Test
+    public void testGetNumberOfMetadataGroupsGivenNormalInput() {
+        ArrayList<MetadataGroupType> mdgTypes = new ArrayList<>();
+        String[] nums = new String[] { "1o", "1m", "*", "+" };
+        for (String num : nums) {
+            MetadataGroupType mdgType = new MetadataGroupType();
+            mdgType.setName("normal " + num);
+            mdgType.setNum(num);
+            mdgTypes.add(mdgType);
+        }
+        String[] specialNums = new String[] { null, "0", "Hakuna Matata!" };
+        for (String num : specialNums) {
+            MetadataGroupType mdgType = new MetadataGroupType();
+            mdgType.setName("special " + num);
+            try {
+                mdgType.setNum(num);
+            } catch (Exception e) {
+                // intentionally left blank since we only want to catch the NullPointerException caused by the special num "null"
+            }
+            mdgTypes.add(mdgType);
+        }
+        dsType.setAllMetadataGroups(mdgTypes);
+        List<MetadataGroupType> types = dsType.getAllMetadataGroupTypes();
+        for (int i = 0; i < nums.length; ++i) {
+            assertEquals(nums[i], types.get(i).getNum());
+        }
+        for (int j = 0; j < specialNums.length; ++j) {
+            assertEquals("0", types.get(nums.length + j).getNum());
+        }
+    }
+
+    /* Tests for the following methods:
+     * 1. isMDTGroupAllowed(MetadataGroupType)
+     * 2. addMetadataGroup(MetadataGroupType, String)
+     * 3. addMetadataGroup(MetadataGroupType, String, boolean, boolean) [ Will Be Omitted Since It Is Almost The Same As 2. ]
+     * 4. getMetadataGroupByGroup(MetadataGroupType)
+     * 5. removeMetadataGroup(MetadataGroupType)
+     * 6. isMetadataGroupAlreadyAvailable(MetadataGroupType) [ PRIVATE ] [ It Is Actually The Same As 1. ]
+     *  */
+
+    @Test
+    public void testIsMDTGroupAllowedGivenNull() {
+        assertFalse(dsType.isMDTGroupAllowed(null));
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
+    @Test
+    public void testIsMDTGroupAllowedGivenAvailableUnnamedInput() {
+        MetadataGroupType mdgt = new MetadataGroupType();
+        assertNotNull(dsType.addMetadataGroup(mdgt, null));
+        assertTrue(dsType.isMDTGroupAllowed(mdgt)); // Should we allow the existence of unnamed MetadataGroupType at all?
+    }
+
+    @Test
+    public void testIsMDTGroupAllowedGivenNamedInput() {
+        MetadataGroupType mdgt = new MetadataGroupType();
+        mdgt.setName("mdgt");
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+        // test the method while mdgt is still unavailable
+        assertFalse(dsType.isMDTGroupAllowed(mdgt));
+        // now add mdgt into the list allMetadataGroups and test the method again
+        assertNotNull(dsType.addMetadataGroup(mdgt, null));
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+        assertTrue(dsType.isMDTGroupAllowed(mdgt));
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
+    @Test
+    public void testAddMetadataGroupGivenNullAsFirstArgument() {
+        // null as MetadataGroupType should not be addable
+        assertNull(dsType.addMetadataGroup(null, "num"));
+    }
+
+    @Test
+    public void testAddMetadataGroupGivenNullAsSecondArgument() {
+        // null should be allowed as the second argument
+        MetadataGroupType mdgt = new MetadataGroupType();
+        mdgt.setName("name");
+        mdgt.setNum("*");
+        assertTrue(mdgt.equals(dsType.addMetadataGroup(mdgt, null)));
+        // and this "null" as inNumber is for the MetadataGroupForDocStructType object based on our mdgt
+        // hence the num value of mdgt will not be affected
+        assertEquals("*", dsType.getAllMetadataGroupTypes().get(0).getNum());
+    }
+
+    @Ignore("This test actually passed. But should we allow the modification of a MetadataGroupType's name?")
+    @Test
+    public void testAddMetadataGroupGivenSameMetadataGroupTypeObjectThreeTimes() {
+        MetadataGroupType mdgt = new MetadataGroupType();
+        mdgt.setName("name");
+        mdgt.setNum("*");
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+        // try to add mdgt for the first time
+        assertNotNull(dsType.addMetadataGroup(mdgt, null));
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+        // modify its num and try it again
+        mdgt.setNum("+");
+        assertNull(dsType.addMetadataGroup(mdgt, null));
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+        // modify its name and try it again
+        mdgt.setName("name2");
+        assertNotNull(dsType.addMetadataGroup(mdgt, null));
+        // It seems that by changing its name, we make the same object a totally different one! Bug or Feature?
+        assertEquals(2, dsType.getAllMetadataGroupTypes().size());
+    }
+
+    @Test
+    public void testAddMetadataGroupGivenTwoMetadataGroupTypeObjectsWithTheSameName() {
+        MetadataGroupType mdgt1 = new MetadataGroupType();
+        mdgt1.setName("name");
+        mdgt1.setNum("*");
+        MetadataGroupType mdgt2 = new MetadataGroupType();
+        mdgt2.setName("name");
+        mdgt2.setNum("+");
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+        // try to add mdgt1 into the list
+        assertTrue(mdgt2.equals(dsType.addMetadataGroup(mdgt1, null)));
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+        // try to add mdgt2 into the list, and it should not succeed
+        assertNull(dsType.addMetadataGroup(mdgt2, null));
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+        assertEquals("*", dsType.getAllMetadataGroupTypes().get(0).getNum());
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
+    @Test
+    public void testGetMetadataGroupByGroupGivenNull() {
+        // while the list allMetadataGroups is still empty
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+        assertNull(dsType.getMetadataGroupByGroup(null));
+        // now make the list non-empty
+        MetadataGroupType mdgt = new MetadataGroupType();
+        mdgt.setName("name");
+        assertNotNull(dsType.addMetadataGroup(mdgt, null));
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+        // and try to test the method on null again
+        assertNull(dsType.getMetadataGroupByGroup(null));
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Either handle unnamed MetadataGroupType objects, or avoid their existence.")
+    @Test
+    public void testGetMetadataGroupByGroupGivenAvailableUnnamedGroupItself() {
+        MetadataGroupType mdgt = new MetadataGroupType();
+        // without naming it
+        assertNotNull(dsType.addMetadataGroup(mdgt, null));
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+        assertNotNull(dsType.getMetadataGroupByGroup(mdgt));
+    }
+
+    @Test
+    public void testGetMetadataGroupByGroupGivenAvailableNamedGroupItself() {
+        MetadataGroupType mdgt = new MetadataGroupType();
+        mdgt.setName("name");
+        assertNotNull(dsType.addMetadataGroup(mdgt, null));
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+        assertNotNull(dsType.getMetadataGroupByGroup(mdgt));
+
+    }
+
+    @Test
+    public void testGetMetadataGroupByGroupGivenAvailableGroupOfTheSameName() {
+        String name = "name";
+        MetadataGroupType mdgt1 = new MetadataGroupType();
+        MetadataGroupType mdgt2 = new MetadataGroupType();
+        mdgt1.setName(name);
+        mdgt1.setNum("*");
+        mdgt2.setName(name);
+        mdgt2.setNum("+");
+        // add mdgt1 into the list allMetadataGroups
+        dsType.addMetadataGroup(mdgt1, null);
+        // try to retrieve it using mdgt2
+        MetadataGroupType mdgt = dsType.getMetadataGroupByGroup(mdgt2);
+        assertEquals("*", mdgt.getNum());
+    }
+
+    @Test
+    public void testRemoveMetadataGroupGivenNull() {
+        // while the list allMetadataGroups is still empty
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+        assertFalse(dsType.removeMetadataGroup(null));
+        // now make the list non-empty
+        MetadataGroupType mdgt = new MetadataGroupType();
+        mdgt.setName("name");
+        assertNotNull(dsType.addMetadataGroup(mdgt, null));
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+        // and try this method again with null
+        assertFalse(dsType.removeMetadataGroup(null));
+    }
+
+    @Test
+    public void testRemoveMetadataGroupGivenSameMetadataGroupTypeObjectTwice() {
+        MetadataGroupType mdgt = new MetadataGroupType();
+        mdgt.setName("name");
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+        // add mdgt once
+        assertNotNull(dsType.addMetadataGroup(mdgt, null));
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+        // try to remove mdgt twice
+        assertTrue(dsType.removeMetadataGroup(mdgt));
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+        assertFalse(dsType.removeMetadataGroup(mdgt));
+    }
+
+    @Test
+    public void testRemoveMetadataGroupGivenTwoMetadataGroupTypeObjectsOfTheSameName() {
+        String name = "name";
+        MetadataGroupType mdgt1 = new MetadataGroupType();
+        MetadataGroupType mdgt2 = new MetadataGroupType();
+        mdgt1.setName(name);
+        mdgt1.setNum("*");
+        mdgt2.setName(name);
+        mdgt2.setNum("+");
+        // add mdgt1 into the list allMetadataGroups
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+        assertNotNull(dsType.addMetadataGroup(mdgt1, null));
+        assertEquals(1, dsType.getAllMetadataGroupTypes().size());
+        // try to remove mdgt2 
+        assertTrue(dsType.removeMetadataGroup(mdgt2));
+        assertEquals(0, dsType.getAllMetadataGroupTypes().size());
+    }
 }
 
