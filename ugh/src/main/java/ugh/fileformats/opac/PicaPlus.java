@@ -31,12 +31,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
@@ -44,8 +45,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.oro.text.perl.MalformedPerl5PatternException;
-import org.apache.oro.text.perl.Perl5Util;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -125,12 +124,12 @@ public class PicaPlus implements ugh.dl.Fileformat {
      * STATIC FINALS
      **************************************************************************/
 
-
     protected static final String PICAPLUS_PREFS_NODE_NAME_STRING = "PicaPlus";
 
     private static final String PREFS_METADATA_STRING = "Metadata";
     private static final String PREFS_VALUECONDITION_STRING = "ValueCondition";
     private static final String PREFS_VALUEREGEXP_STRING = "ValueRegExp";
+    private static final String PREFS_VALUEREPLACEMENT_STRING = "ValueReplacement";
     private static final String PREFS_DOCSTRUCT_STRING = "DocStruct";
     private static final String PREFS_PERSON_STRING = "Person";
     private static final String PREFS_PICAPLUSGROUP_STRING = "PicaPlusGroup";
@@ -327,6 +326,9 @@ public class PicaPlus implements ugh.dl.Fileformat {
             }
             if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_VALUEREGEXP_STRING)) {
                 mmo.setValueRegExp(readTextNode(n));
+            }
+            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_VALUEREPLACEMENT_STRING)) {
+                mmo.setValueRegExReplacement(readTextNode(n));
             }
         }
 
@@ -1010,41 +1012,22 @@ public class PicaPlus implements ugh.dl.Fileformat {
 
                 // Check conditions from the prefs. If they exist and do NOT
                 // match, continue with the next mmo.
-                Perl5Util perlUtil = new Perl5Util();
-                try {
-                    if (mmo != null && mmo.getValueCondition() != null && !mmo.getValueCondition().equals("")
-                            && !perlUtil.match(mmo.getValueCondition(), content)) {
-                        //  Check what happens to "\"s in the String from
-                        // the Prefs' XML value.
+
+                if (mmo != null && mmo.getValueCondition() != null && !mmo.getValueCondition().equals("")) {
+                    Pattern pattern = Pattern.compile(mmo.getValueCondition());
+                    Matcher matcher = pattern.matcher(content);
+                    if (!matcher.find()) {
                         log.info("Condition '" + mmo.getValueCondition() + "' for " + mmo.getType() + " '" + mmo.getInternalName() + " (" + content
                                 + ")" + "' does not match, skipping...");
                         continue;
                     }
-                } catch (MalformedPerl5PatternException e) {
-                    String message =
-                            "The regular expression '" + mmo.getValueCondition() + "' delivered with " + mmo.getType() + " '" + mmo.getInternalName()
-                            + "' in the " + PICAPLUS_PREFS_NODE_NAME_STRING + " section of the preferences file is not valid!";
-                    log.error(message, e);
-                    throw new ReadException(message, e);
                 }
 
                 // Check regular expression from the prefs. If it exist, do
                 // process.
-                try {
-                    if (mmo != null && mmo.getValueRegExp() != null && !mmo.getValueRegExp().equals("")) {
-                        String oldContent = content;
-                        // Check what happens to "\"s in the String from
-                        // the Prefs' XML value.
-                        content = new String(perlUtil.substitute(mmo.getValueRegExp(), content));
-                        log.info("Regular expression '" + mmo.getValueRegExp() + "' changed value of " + mmo.getType() + " '"
-                                + mmo.getInternalName() + "' from '" + oldContent + "' to '" + content + "'");
-                    }
-                } catch (MalformedPerl5PatternException e) {
-                    String message =
-                            "The regular expression '" + mmo.getValueRegExp() + "' delivered with " + mmo.getType() + " '" + mmo.getInternalName()
-                            + "' in the " + PICAPLUS_PREFS_NODE_NAME_STRING + " section of the preferences file is not valid!";
-                    log.error(message, e);
-                    throw new ReadException(message, e);
+
+                if (content != null && mmo != null && mmo.getValueRegExp() != null && !mmo.getValueRegExp().equals("")) {
+                    content = content.replaceAll(mmo.getValueRegExp(), mmo.getValueRegExReplacement());
                 }
 
                 // Now we have the MMO; check, if mmo has a subfield or not; if
@@ -1506,6 +1489,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
         private String picaplusGroupname = null;
         private String valueCondition = null;
         private String valueRegExp = null;
+        private String valueRegExReplacement = null;
 
         // These are only important, if MMO matches a person.
         private boolean isFirstname = false;

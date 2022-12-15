@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,8 +25,6 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.oro.text.perl.MalformedPerl5PatternException;
-import org.apache.oro.text.perl.Perl5Util;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
@@ -206,6 +206,8 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
     protected static final String METS_PREFS_MODSXMLLANG_STRING = "MODSXMLLang";
     protected static final String METS_PREFS_VALUECONDITION_STRING = "ValueCondition";
     protected static final String METS_PREFS_VALUEREGEXP_STRING = "ValueRegExp";
+    protected static final String METS_PREFS_VALUEREPLACEMENT_STRING = "ValueReplacement";
+
     protected static final String METS_PREFS_DATABASE_SOURCE = "DatabaseXpath";
     protected static final String METS_PREFS_DATABASE_IDENTIFIER = "IdentifierXpath";
 
@@ -374,9 +376,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                                 String metadataValue = md.getValue();
                                 // If existing, process the valueRegExp.
                                 if (this.valueRegExpAnchorReference != null && !this.valueRegExpAnchorReference.equals("")) {
-                                    Perl5Util perlUtil = new Perl5Util();
                                     String oldMetadataValue = metadataValue;
-                                    metadataValue = new String(perlUtil.substitute(this.valueRegExpAnchorReference, metadataValue));
+
+                                    metadataValue = metadataValue.replaceAll(valueRegExpAnchorReference, valueReplacementAnchorReference);
                                     log.info("Regular expression '" + this.valueRegExpAnchorReference + "' changed value of Anchor Identifier '"
                                             + md.getType().getName() + "' from '" + oldMetadataValue + "' to '" + metadataValue + "'");
                                 }
@@ -1687,42 +1689,33 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         // Get metadata to set.
         String newMetadataValue = theMetadata.getValue();
 
-        // newMetadataValue = newMetadataValue.replace("< ", "&lt; ").replace("> ", "&gt; ").replace("\"", "&quot;");
 
         // Check conditions from the prefs. If they exist and do NOT
         // match, continue with the next mmo.
-        Perl5Util perlUtil = new Perl5Util();
 
-        try {
-            if (theMMO != null && theMMO.getValueCondition() != null && !theMMO.getValueCondition().equals("")
-                    && !perlUtil.match(theMMO.getValueCondition(), theMetadata.getValue())) {
 
+        if (theMMO != null && theMMO.getValueCondition() != null && !theMMO.getValueCondition().equals("")) {
+            Pattern pattern = Pattern.compile(theMMO.getValueCondition());
+            Matcher matcher = pattern.matcher(theMetadata.getValue());
+            if (!matcher.find()) {
                 log.info("Condition '" + theMMO.getValueCondition() + "' for Metadata '" + theMMO.getInternalName() + " (" + theMetadata.getValue()
                 + ")" + "' does not match, no node was created...");
                 return;
+
             }
-        } catch (MalformedPerl5PatternException e) {
-            String message = "The regular expression '" + theMMO.getValueCondition() + "' delivered with Metadata '" + theMMO.getInternalName()
-            + "' in the " + METS_PREFS_NODE_NAME_STRING + " section of the preferences file is not valid!";
-            log.error(message, e);
-            throw new PreferencesException(message, e);
+
         }
+
 
         // Check and process regular expression from the prefs.
 
-        try {
-            if (theMMO != null && theMMO.getValueRegExp() != null && !theMMO.getValueRegExp().equals("")) {
 
-                newMetadataValue = new String(perlUtil.substitute(theMMO.getValueRegExp(), theMetadata.getValue()));
-                log.info("Regular expression '" + theMMO.getValueRegExp() + "' changed value of Metadata '" + theMMO.getInternalName() + "' from '"
-                        + theMetadata.getValue() + "' to '" + newMetadataValue + "'");
-            }
-        } catch (MalformedPerl5PatternException e) {
-            String message = "The regular expression '" + theMMO.getValueRegExp() + "' delivered with Metadata '" + theMMO.getInternalName()
-            + "' in the " + METS_PREFS_NODE_NAME_STRING + " section of the preferences file is not valid!";
-            log.error(message, e);
-            throw new PreferencesException(message, e);
+        if (theMMO != null && theMMO.getValueRegExp() != null && !theMMO.getValueRegExp().equals("")) {
+            newMetadataValue=newMetadataValue.replaceAll(theMMO.getValueRegExp(), theMMO.getValueReplacement());
+            log.info("Regular expression '" + theMMO.getValueRegExp() + "' changed value of Metadata '" + theMMO.getInternalName() + "' from '"
+                    + theMetadata.getValue() + "' to '" + newMetadataValue + "'");
         }
+
 
         // Only create node, if a value is existing.
         if (!newMetadataValue.equals("")) {
@@ -2384,19 +2377,25 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                     mmo.setValueRegExp(internalName.trim());
                 }
 
+
+                if (currentNode.getNodeName().equals(METS_PREFS_VALUEREPLACEMENT_STRING)) {
+                    internalName = getTextNodeValue(currentNode);
+                    if (internalName != null) {
+                        mmo.setValueReplacement(internalName);
+                    }
+                }
+
                 // Get MODS XPATH settings.
                 if (currentNode.getNodeName().equalsIgnoreCase(METS_PREFS_XPATH_STRING)) {
                     String xpathName = getTextNodeValue(currentNode);
-                    if (xpathName == null) {
-                        log.warn("<" + METS_PREFS_XPATH_STRING + "> is existing for metadata '" + internalName + "', but has no value!");
+                    if (xpathName != null) {
+                        mmo.setReadXQuery(xpathName.trim());
                     }
-                    mmo.setReadXQuery(xpathName.trim());
                 }
                 if (currentNode.getNodeName().equalsIgnoreCase(METS_PREFS_WRITEXPATH_STRING)) {
                     String xpathName = getTextNodeValue(currentNode);
                     if (xpathName == null) {
-                        PreferencesException pe = new PreferencesException("<" + METS_PREFS_WRITEXPATH_STRING + "> is existing, but has no value!");
-                        throw pe;
+                        throw  new PreferencesException("<" + METS_PREFS_WRITEXPATH_STRING + "> is existing, but has no value!");
                     }
                     mmo.setWriteXQuery(xpathName.trim());
                 }
@@ -2833,20 +2832,25 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
     private String checkForRegExp(String theString) {
 
         // Look, if things shall be substituted.
-        Perl5Util perlUtil = new Perl5Util();
-        if (perlUtil.match("/\\$REGEXP(.*)/", theString)) {
+
+        Pattern pattern = Pattern.compile("\\$REGEXP(.*)");
+        Matcher matcher = pattern.matcher(theString);
+        if (matcher.find()) {
             // Get the index of the "(" and the index of the ")".
-            int bracketStartIndex = perlUtil.beginOffset(0);
-            int bracketEndIndex = perlUtil.endOffset(1);
+            int bracketStartIndex = matcher.start();
+            int bracketEndIndex = matcher.end();
 
             // Get the RegExp out of the string.
             String regExp = theString.substring(bracketStartIndex + 8, bracketEndIndex - 1);
 
+
+
+            String[] parts = regExp.split("$$");
             // Remove the RegExp from the string.
             theString = theString.substring(0, bracketStartIndex);
 
             // Substitute things, if any $REGEXP() is existing.
-            theString = perlUtil.substitute(regExp, theString);
+            theString = theString.replaceAll(parts[0], parts[1]);
         }
 
         return theString;

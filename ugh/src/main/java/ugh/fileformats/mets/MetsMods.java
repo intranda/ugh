@@ -44,7 +44,6 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.oro.text.perl.Perl5Util;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptionCharEscapeMap;
@@ -489,6 +488,7 @@ public class MetsMods implements ugh.dl.Fileformat {
     protected static final String PREFS_XPATHANCHORQUERY_STRING = "XPathAnchorQuery";
     protected static final String PREFS_ANCHORIDENTIFIERMETADATATYPE_STRING = "AnchorIdentifierMetadataType";
     protected static final String PREFS_ANCHORIDENTIFIERVALUEREGEXP_STRING = "ValueRegExp";
+    protected static final String PREFS_ANCHORIDENTIFIERVALUEREPLACEMENT_STRING = "ValueReplacement";
     protected static final String PREFS_NAMESPACE_URI_STRING = "URI";
     protected static final String PREFS_NAMESPACE_PREFIX_STRING = "prefix";
     protected static final String PREFS_NAMESPACE_SCHEMALOCATION = "schemaLocation";
@@ -579,6 +579,7 @@ public class MetsMods implements ugh.dl.Fileformat {
     protected String xPathAnchorReference = null;
     // Contains the valueRegExp for the reference the anchor.
     protected String valueRegExpAnchorReference = null;
+    protected String valueReplacementAnchorReference = null;
 
     // Default namespace URIs for some namespaces and namespace declarations.
     protected String metsNamespacePrefix;
@@ -1006,6 +1007,10 @@ public class MetsMods implements ugh.dl.Fileformat {
                     if (childnode.getNodeName().equalsIgnoreCase(PREFS_ANCHORIDENTIFIERVALUEREGEXP_STRING)) {
                         this.valueRegExpAnchorReference = getTextNodeValue(childnode).trim();
                     }
+                    if (childnode.getNodeName().equalsIgnoreCase(PREFS_ANCHORIDENTIFIERVALUEREPLACEMENT_STRING)) {
+                        this.valueReplacementAnchorReference = getTextNodeValue(childnode).trim();
+                    }
+
                 }
 
                 // Check some values, e.g. if metadata types are available etc.
@@ -3888,11 +3893,15 @@ public class MetsMods implements ugh.dl.Fileformat {
         //
         // This is a really dirty hack, I will fix it tomorrow! (hihi)
         // Check element for MODS grouping brackets.
-        Perl5Util perlUtil = new Perl5Util();
-        if (perlUtil.match("/\\[(\\d)+\\]/", query)) {
+        Pattern pattern = Pattern.compile("\\[(\\d)+\\]");
+        Matcher matcher = pattern.matcher(query);
+        if (matcher.find()) {
+            //        if (perlUtil.match("/\\[(\\d)+\\]/", query)) {
             // Get the index of the "[" and the index of the "]".
-            int bracketStartIndex = perlUtil.beginOffset(0);
-            int bracketEndIndex = perlUtil.endOffset(1);
+
+
+            int bracketStartIndex =  matcher.start();
+            int bracketEndIndex = matcher.end()-1;
             int colonIndex = (query.substring(0, bracketStartIndex)).lastIndexOf(":");
             // Get the group number and the group tag name.
             group = query.substring(bracketStartIndex + 1, bracketEndIndex);
@@ -3908,7 +3917,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         // Split query into single elements and check, if some of these elements
         // are already available.
-        String elementPath[] = splitPath(query);
+        String[] elementPath = splitPath(query);
 
         // Iterate over all elements from path and check, which part of the path
         // is already available in the DOM tree.
