@@ -2,6 +2,7 @@ package ugh.dl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
@@ -69,6 +70,25 @@ public class PrefsTest {
         assertTrue(prefs.getAllMetadataTypes().size() > 0);
         assertTrue(prefs.getAllDocStructTypes().size() > 0);
     }
+
+    /* Tests for the method parseDocStrctType(Node) */
+
+    /* Tests for the method parseMetadataType(Node) */
+
+    /* Tests for the method parseMetadataGroup(Node) */
+
+    /* Tests for the method getDocStrctTypeByName(String) */
+    @Test
+    public void testGetDocStrctTypeByNameGivenNull() {
+        assertNull(prefs.getDocStrctTypeByName(null));
+    }
+
+    @Test
+    public void testGetDocStrctTypeByNameGivenEmptyString() {
+
+    }
+
+    /* Tests for the method getAllAnchorDocStructTypes() */
 
 }
 

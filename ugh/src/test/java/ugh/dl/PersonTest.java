@@ -21,6 +21,7 @@ public class PersonTest {
     @Before
     public void setUp() {
         type = new MetadataType();
+        type.setIsPerson(true);
     }
 
     /* Tests for constructors */
