@@ -331,12 +331,18 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 mmo.setValueRegExp(val);
             }
             if (n.getNodeType() == ELEMENT_NODE && PREFS_VALUEREPLACEMENT_STRING.equalsIgnoreCase(n.getNodeName())) {
-                mmo.setValueRegExReplacement(readTextNode(n));
+                String val = readTextNode(n);
+                if (val == null) {
+                    val = "";
+                }
+                mmo.setValueRegExReplacement(val);
             }
         }
 
         // Check if all required data is set.
-        if (mmo.getPicaplusField() == null || mmo.getType() == null) {
+        if (mmo.getPicaplusField() == null || mmo.getType() == null)
+
+        {
             return null;
         }
         if (mmo.getPicaplusField() == null && mmo.getPicaplusGroupname() == null) {
