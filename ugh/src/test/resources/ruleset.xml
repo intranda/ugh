@@ -1191,7 +1191,6 @@
   </MetadataType>
 
 
-
   <Group>
     <Name>PublisherGroup</Name>
     <language name="de">PublisherGroup</language>
@@ -1202,13 +1201,13 @@
     <metadata num="1o">PublisherCorporate</metadata>
     <group num="1o">LocationGroup</group>
   </Group>
-  
+
   <Group>
-  	<Name>TestGroup</Name>
-  	<language name="de">TestGroup</language>
-  	<language name="en">TestGroup</language>
-  	<group num="*">UnusedGroup</group>
-  	<group num="+">LocationGroup</group>
+    <Name>TestGroup</Name>
+    <language name="de">TestGroup</language>
+    <language name="en">TestGroup</language>
+    <group num="*">UnusedGroup</group>
+    <group num="+">LocationGroup</group>
   </Group>
 
   <Group>
@@ -1227,7 +1226,6 @@
     <language name="en">UnusedGroup</language>
     <metadata num="*">StatementOfResponsibility</metadata>
   </Group>
-  
 
 
   <!-- Subjects start -->
@@ -3974,10 +3972,10 @@
         <picaSubTag type="partName">d</picaSubTag>
         <picaSubTag type="partName">n</picaSubTag>
         <picaSubTag type="partName">g</picaSubTag>
-        <picaSubTag type="identifier">7</picaSubTag>        
-      </Corporate>      
-      
-      
+        <picaSubTag type="identifier">7</picaSubTag>
+      </Corporate>
+
+
       <Metadata>
         <Name>ContentDescription</Name>
         <picaMainTag>ooe001</picaMainTag>
@@ -4161,10 +4159,10 @@
         <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <!-- If <conditionField> is used, <conditionValue> must be used as well. Checks if the the subfield definied in conditionField is filled and matches the regular expression of conditionValue. If this is not the case, the metadata will not created.
                      -->
-        <conditionField/>
-        <conditionValue/>
+        <conditionField />
+        <conditionValue />
         <!-- run the regex and keep the value of $1 -->
-        <fieldReplacement/>
+        <fieldReplacement />
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Metadata>
@@ -5357,7 +5355,7 @@
           <fieldMainTag>110</fieldMainTag>
           <fieldMainName>a</fieldMainName>
           <fieldSubName>b</fieldSubName>
-          <fieldSubName>p</fieldSubName>          
+          <fieldSubName>p</fieldSubName>
           <fieldPartName>c</fieldPartName>
           <fieldPartName>n</fieldPartName>
           <fieldPartName>d</fieldPartName>
@@ -5381,7 +5379,7 @@
         <identifierConditionField>/DE-588/</identifierConditionField>
         <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-		<conditionValue>/dgg/</conditionValue>
+        <conditionValue>/dgg/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Corporate>
@@ -6403,10 +6401,10 @@
         <Name>Periodical</Name>
         <leader6>a</leader6>
         <leader7>s</leader7>
-        <leader19/>
-        <field007_0/>
-        <field007_1/>
-        <field008_21/>
+        <leader19 />
+        <field007_0 />
+        <field007_1 />
+        <field008_21 />
       </DocStruct>
       <DocStruct>
         <Name>Periodical</Name>
@@ -6595,9 +6593,10 @@
         <InternalName>CurrentNoSorting</InternalName>
         <WriteXPath>./mods:mods/#mods:part[@type='host']/@order</WriteXPath>
         <!-- check, if the value starts with a number -->
-        <ValueCondition>/^\d+.*/</ValueCondition>
+        <ValueCondition>^\d+.*</ValueCondition>
         <!-- use everything until the first non-numeric character -->
-        <ValueRegExp>s/^(\d+)\D*.*/$1/</ValueRegExp>
+        <ValueRegExp>^(\d+)\D*.*</ValueRegExp>
+        <ValueReplacement>$1</ValueReplacement>
       </Metadata>
       <Metadata>
         <InternalName>CatalogIDSource</InternalName>
@@ -6679,26 +6678,30 @@
       </Metadata>
       <Metadata>
         <InternalName>AccessLicense</InternalName>
-        <ValueCondition>/^51_vgg/</ValueCondition>
-        <ValueRegExp>s/51_vgg/In Copyright 1.0/</ValueRegExp>
+        <ValueCondition>^51_vgg</ValueCondition>
+        <ValueRegExp>51_vgg</ValueRegExp>
+        <ValueReplacement>In Copyright 1.0</ValueReplacement>
         <WriteXPath>./mods:mods/#mods:accessCondition[@type='use and reproduction'][@href='http://rightsstatements.org/page/InC/1.0/']</WriteXPath>
       </Metadata>
       <Metadata>
         <InternalName>AccessLicense</InternalName>
-        <ValueCondition>/^51_vgg/</ValueCondition>
-        <ValueRegExp>s/51_vgg/Wahrnehmung der Rechte durch die VG WORT \(§ 51 VGG\)/</ValueRegExp>
+        <ValueCondition>^51_vgg</ValueCondition>
+        <ValueRegExp>51_vgg</ValueRegExp>
+        <ValueReplacement>Wahrnehmung der Rechte durch die VG WORT \(§ 51 VGG\)</ValueReplacement>
         <WriteXPath>./mods:mods/#mods:accessCondition[@type='use and reproduction']</WriteXPath>
       </Metadata>
       <Metadata>
         <InternalName>AccessLicense</InternalName>
-        <ValueCondition>/^public_domain/</ValueCondition>
-        <ValueRegExp>s/public_domain/Public Domain Mark 1.0/</ValueRegExp>
+        <ValueCondition>^public_domain</ValueCondition>
+        <ValueRegExp>public_domain</ValueRegExp>
+        <ValueReplacement>Public Domain Mark 1.0</ValueReplacement>
         <WriteXPath>./mods:mods/#mods:accessCondition[@type='use and reproduction'][@href='https://creativecommons.org/publicdomain/mark/1.0/']</WriteXPath>
       </Metadata>
       <Metadata>
         <InternalName>AccessLicense</InternalName>
-        <ValueCondition>/^cc_by/</ValueCondition>
-        <ValueRegExp>s/cc_by/CC BY 4.0/</ValueRegExp>
+        <ValueCondition>^cc_by</ValueCondition>
+        <ValueRegExp>cc_by</ValueRegExp>
+        <ValueReplacement>CC BY 4.0</ValueReplacement>
         <WriteXPath>./mods:mods/#mods:accessCondition[@type='use and reproduction'][@href='https://creativecommons.org/licenses/by/4.0/']</WriteXPath>
       </Metadata>
       <Metadata>
@@ -7273,7 +7276,7 @@
           <PartNameXPath>./mods:namePart</PartNameXPath>
         </Corporate>
       </Group>
-            <Group>
+      <Group>
         <InternalName>LocationGroup</InternalName>
         <!--  absolute path based on mets:xmlData starts with /, relative path based on the parent group element starts with "."  -->
         <WriteXPath>./#mods:place</WriteXPath>

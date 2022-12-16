@@ -27,7 +27,6 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -214,18 +213,18 @@ public class PicaPlus implements ugh.dl.Fileformat {
             if (n.getNodeType() == ELEMENT_NODE) {
                 // Check the name of the node.
                 MatchingMetadataObject mmo = null;
-                if (n.getNodeName().equalsIgnoreCase(PREFS_METADATA_STRING)) {
+                if (PREFS_METADATA_STRING.equalsIgnoreCase(n.getNodeName())) {
                     mmo = readMetadata(n);
-                } else if (n.getNodeName().equalsIgnoreCase(PREFS_DOCSTRUCT_STRING)) {
+                } else if (PREFS_DOCSTRUCT_STRING.equalsIgnoreCase(n.getNodeName())) {
                     mmo = readDocStruct(n);
-                } else if (n.getNodeName().equalsIgnoreCase(PREFS_PERSON_STRING)) {
+                } else if (PREFS_PERSON_STRING.equalsIgnoreCase(n.getNodeName())) {
                     Set<MatchingMetadataObject> hs = readPerson(n);
                     this.mmoList.addAll(hs);
-                } else if (n.getNodeName().equalsIgnoreCase(PREFS_PICAPLUSGROUP_STRING)) {
+                } else if (PREFS_PICAPLUSGROUP_STRING.equalsIgnoreCase(n.getNodeName())) {
                     readPicaGroup(n);
-                } else if (n.getNodeName().equalsIgnoreCase(PREFS_METADATAGROUP_STRING)) {
+                } else if (PREFS_METADATAGROUP_STRING.equalsIgnoreCase(n.getNodeName())) {
                     readMetadataGroup(n);
-                } else if (n.getNodeName().equalsIgnoreCase("Corporate")) {
+                } else if ("Corporate".equalsIgnoreCase(n.getNodeName())) {
                     mmoList.addAll(readPicaCorporateNode(n));
                 }
 
@@ -256,9 +255,9 @@ public class PicaPlus implements ugh.dl.Fileformat {
         for (int i = 0; i < children.getLength(); i++) {
             Node child = children.item(i);
             if (child.getNodeType() == ELEMENT_NODE) {
-                if (child.getNodeName().equalsIgnoreCase(PREFS_NAME_STRING)) {
+                if (PREFS_NAME_STRING.equalsIgnoreCase(child.getNodeName())) {
                     resultMetadataGroupType = readTextNode(child);
-                } else if (child.getNodeName().equalsIgnoreCase(PREFS_PICAMAINTAG_STRING)) {
+                } else if (PREFS_PICAMAINTAG_STRING.equalsIgnoreCase(child.getNodeName())) {
                     resultPicaMainTag = readTextNode(child);
                 }
             }
@@ -279,15 +278,15 @@ public class PicaPlus implements ugh.dl.Fileformat {
         NodeList nl = inNode.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_GROUPNAME_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_GROUPNAME_STRING.equalsIgnoreCase(n.getNodeName())) {
                 String groupname = readTextNode(n);
                 mmg.setGroupname(groupname);
             }
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_METADATA_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_METADATA_STRING.equalsIgnoreCase(n.getNodeName())) {
                 String internalname = readTextNode(n);
                 mmg.setMetadatatypename(internalname);
             }
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_DELIMETER_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_DELIMETER_STRING.equalsIgnoreCase(n.getNodeName())) {
                 String delimiter = readTextNode(n);
                 mmg.setDelimiter(delimiter);
             }
@@ -309,25 +308,29 @@ public class PicaPlus implements ugh.dl.Fileformat {
         NodeList nl = inNode.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_PICAMAINTAG_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_PICAMAINTAG_STRING.equalsIgnoreCase(n.getNodeName())) {
                 mmo.setPicaplusField(readTextNode(n));
             }
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_PICASUBTAG_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_PICASUBTAG_STRING.equalsIgnoreCase(n.getNodeName())) {
                 mmo.setPicaplusSubfield(readTextNode(n));
             }
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_PICAPLUSGROUP_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_PICAPLUSGROUP_STRING.equalsIgnoreCase(n.getNodeName())) {
                 mmo.setPicaplusGroupname(readTextNode(n));
             }
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_NAME_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_NAME_STRING.equalsIgnoreCase(n.getNodeName())) {
                 mmo.setInternalName(readTextNode(n));
             }
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_VALUECONDITION_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_VALUECONDITION_STRING.equalsIgnoreCase(n.getNodeName())) {
                 mmo.setValueCondition(readTextNode(n));
             }
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_VALUEREGEXP_STRING)) {
-                mmo.setValueRegExp(readTextNode(n));
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_VALUEREGEXP_STRING.equalsIgnoreCase(n.getNodeName())) {
+                String val = readTextNode(n);
+                if (val == null) {
+                    val = "";
+                }
+                mmo.setValueRegExp(val);
             }
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_VALUEREPLACEMENT_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_VALUEREPLACEMENT_STRING.equalsIgnoreCase(n.getNodeName())) {
                 mmo.setValueRegExReplacement(readTextNode(n));
             }
         }
@@ -357,11 +360,11 @@ public class PicaPlus implements ugh.dl.Fileformat {
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
             if (n.getNodeType() == ELEMENT_NODE) {
-                if (n.getNodeName().equalsIgnoreCase(PREFS_PICAMAINTAG_STRING)) {
+                if (PREFS_PICAMAINTAG_STRING.equalsIgnoreCase(n.getNodeName())) {
                     maintag = readTextNode(n);
                     mmo.setPicaplusField(maintag);
                 }
-                if (n.getNodeName().equalsIgnoreCase(PREFS_PICASUBTAG_STRING)) {
+                if (PREFS_PICASUBTAG_STRING.equalsIgnoreCase(n.getNodeName())) {
                     String subtag = readTextNode(n);
                     mmo.setPicaplusSubfield(subtag);
 
@@ -369,20 +372,20 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     Node tn = nnm.getNamedItem("type");
                     String attributeValue = tn.getNodeValue();
 
-                    if (attributeValue.equalsIgnoreCase("mainName")) {
+                    if ("mainName".equalsIgnoreCase(attributeValue)) {
                         mmo.setMainField(true);
-                    } else if (attributeValue.equalsIgnoreCase("subName")) {
+                    } else if ("subName".equalsIgnoreCase(attributeValue)) {
                         mmo.setSubField(true);
-                    } else if (attributeValue.equalsIgnoreCase("partName")) {
+                    } else if ("partName".equalsIgnoreCase(attributeValue)) {
                         mmo.setPartField(true);
-                    } else if (attributeValue.equalsIgnoreCase("identifier")) {
+                    } else if ("identifier".equalsIgnoreCase(attributeValue)) {
                         mmo.setIdentifier(true);
                     }
-                } else if (n.getNodeName().equalsIgnoreCase(PREFS_NAME_STRING)) {
+                } else if (PREFS_NAME_STRING.equalsIgnoreCase(n.getNodeName())) {
                     mmo.setInternalName(readTextNode(n));
-                } else if (n.getNodeName().equalsIgnoreCase(PREFS_VALUECONDITION_STRING)) {
+                } else if (PREFS_VALUECONDITION_STRING.equalsIgnoreCase(n.getNodeName())) {
                     mmo.setValueCondition(readTextNode(n));
-                } else if (n.getNodeName().equalsIgnoreCase(PREFS_VALUEREGEXP_STRING)) {
+                } else if (PREFS_VALUEREGEXP_STRING.equalsIgnoreCase(n.getNodeName())) {
                     mmo.setValueRegExp(readTextNode(n));
                 }
 
@@ -401,14 +404,11 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     mmo.setInternalName(internal);
                 }
 
-                if (n.getNodeName().equalsIgnoreCase(PREFS_NAME_STRING)) {
+                if (PREFS_NAME_STRING.equalsIgnoreCase(n.getNodeName())) {
                     internal = readTextNode(n);
                     mmo.setInternalName(internal);
 
-                    // Add it also to MMOs with other subfields.
-                    Iterator<MatchingMetadataObject> it = result.iterator();
-                    while (it.hasNext()) {
-                        MatchingMetadataObject mmo2 = it.next();
+                    for (MatchingMetadataObject mmo2 : result) {
                         mmo2.setInternalName(internal);
                     }
                 }
@@ -435,7 +435,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
         NodeList nl = inNode.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_PICAMAINTAG_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_PICAMAINTAG_STRING.equalsIgnoreCase(n.getNodeName())) {
                 maintag = readTextNode(n);
                 mmo.setPicaplusField(maintag);
 
@@ -444,7 +444,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     mmo2.setPicaplusField(maintag);
                 }
             }
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_PICASUBTAG_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_PICASUBTAG_STRING.equalsIgnoreCase(n.getNodeName())) {
                 String subtag = readTextNode(n);
                 mmo.setPicaplusSubfield(subtag);
 
@@ -453,19 +453,19 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 // Get value of type attribute.
                 String attributeValue = tn.getNodeValue();
 
-                if (attributeValue.equalsIgnoreCase(PREFS_PERSONLASTNAME_STRING)) {
+                if (PREFS_PERSONLASTNAME_STRING.equalsIgnoreCase(attributeValue)) {
                     mmo.setLastname(true);
                 }
-                if (attributeValue.equalsIgnoreCase(PREFS_PERSONFIRSTNAME_STRING)) {
+                if (PREFS_PERSONFIRSTNAME_STRING.equalsIgnoreCase(attributeValue)) {
                     mmo.setFirstname(true);
                 }
-                if (attributeValue.equalsIgnoreCase(PREFS_PERSONIDENTIFIER_STRING)) {
+                if (PREFS_PERSONIDENTIFIER_STRING.equalsIgnoreCase(attributeValue)) {
                     mmo.setIdentifier(true);
                 }
-                if (attributeValue.equalsIgnoreCase(PREFS_PERSONEXPANSION_STRING)) {
+                if (PREFS_PERSONEXPANSION_STRING.equalsIgnoreCase(attributeValue)) {
                     mmo.setExpansion(true);
                 }
-                if (attributeValue.equalsIgnoreCase(PREFS_PERSONFUNCTION_STRING)) {
+                if (PREFS_PERSONFUNCTION_STRING.equalsIgnoreCase(attributeValue)) {
                     mmo.setFunction(true);
                 }
 
@@ -482,14 +482,11 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     mmo.setInternalName(internal);
                 }
             }
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_NAME_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_NAME_STRING.equalsIgnoreCase(n.getNodeName())) {
                 internal = readTextNode(n);
                 mmo.setInternalName(internal);
 
-                // Add it also to MMOs with other subfields.
-                Iterator<MatchingMetadataObject> it = result.iterator();
-                while (it.hasNext()) {
-                    MatchingMetadataObject mmo2 = it.next();
+                for (MatchingMetadataObject mmo2 : result) {
                     mmo2.setInternalName(internal);
                 }
             }
@@ -515,19 +512,19 @@ public class PicaPlus implements ugh.dl.Fileformat {
         NodeList nl = inNode.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_PICAMAINTAG_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_PICAMAINTAG_STRING.equalsIgnoreCase(n.getNodeName())) {
                 String maintag = readTextNode(n);
                 mmo.setPicaplusField(maintag);
             }
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_PICASUBTAG_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_PICASUBTAG_STRING.equalsIgnoreCase(n.getNodeName())) {
                 String subtag = readTextNode(n);
                 mmo.setPicaplusSubfield(subtag);
             }
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_PICACONTENT_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_PICACONTENT_STRING.equalsIgnoreCase(n.getNodeName())) {
                 String content = readTextNode(n);
                 mmo.setContent(content);
             }
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equalsIgnoreCase(PREFS_NAME_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_NAME_STRING.equalsIgnoreCase(n.getNodeName())) {
                 String internal = readTextNode(n);
                 mmo.setInternalName(internal);
             }
@@ -596,7 +593,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
             Node ppr = inNode;
             if (ppr.getNodeType() == ELEMENT_NODE) {
                 String nodename = ppr.getNodeName();
-                if (nodename.equals(PREFS_PPPICAPLUSRESULTS_STRING) || nodename.equals(PREFS_PPCOLLECTION_STRING)) {
+                if (PREFS_PPPICAPLUSRESULTS_STRING.equals(nodename) || PREFS_PPCOLLECTION_STRING.equals(nodename)) {
 
                     // Iterate over all results.
                     NodeList picaplusrecords = ppr.getChildNodes();
@@ -605,7 +602,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
 
                         if (n.getNodeType() == ELEMENT_NODE) {
                             nodename = n.getNodeName();
-                            if (nodename.equals(PREFS_PPPICAPLUSRECORD_STRING) || nodename.equals(PREFS_PPRECORD_STRING)) {
+                            if (PREFS_PPPICAPLUSRECORD_STRING.equals(nodename) || PREFS_PPRECORD_STRING.equals(nodename)) {
                                 // Parse a single picaplus record.
                                 ds = parsePicaPlusRecord(n);
                                 // It's the first one, so this becomes the
@@ -691,7 +688,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 Node ppr = upperChildlist.item(i);
                 if (ppr.getNodeType() == ELEMENT_NODE) {
                     String nodename = ppr.getNodeName();
-                    if (nodename.equals(PREFS_PPPICAPLUSRESULTS_STRING) || nodename.equals(PREFS_PPCOLLECTION_STRING)) {
+                    if (PREFS_PPPICAPLUSRESULTS_STRING.equals(nodename) || PREFS_PPCOLLECTION_STRING.equals(nodename)) {
 
                         // Iterate over all results.
                         NodeList picaplusrecords = ppr.getChildNodes();
@@ -700,7 +697,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
 
                             if (n.getNodeType() == ELEMENT_NODE) {
                                 nodename = n.getNodeName();
-                                if (nodename.equals(PREFS_PPPICAPLUSRECORD_STRING) || nodename.equals(PREFS_PPRECORD_STRING)) {
+                                if (PREFS_PPPICAPLUSRECORD_STRING.equals(nodename) || PREFS_PPRECORD_STRING.equals(nodename)) {
                                     // Parse a single picaplus record.
                                     ds = parsePicaPlusRecord(n);
                                     // It's the first one, so this becomes the
@@ -782,7 +779,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
         DocStruct ds = null;
         Metadata md = null;
         Person per = null;
-        if (!inNode.getNodeName().equals(PREFS_PPPICAPLUSRECORD_STRING) && !inNode.getNodeName().equals(PREFS_PPRECORD_STRING)) {
+        if (!PREFS_PPPICAPLUSRECORD_STRING.equals(inNode.getNodeName()) && !PREFS_PPRECORD_STRING.equals(inNode.getNodeName())) {
             throw new ReadException("Unable to parse record node, not a pica plus record. Node name is " + inNode.getNodeName());
         }
 
@@ -964,19 +961,19 @@ public class PicaPlus implements ugh.dl.Fileformat {
         // content should be aggragated.
         boolean hasNoSubfields = false;
 
-        if (!inNode.getNodeName().equals(PREFS_PPPICAPLUS_STRING) && !inNode.getNodeName().equals(PREFS_PPFIELD_STRING)) {
+        if (!PREFS_PPPICAPLUS_STRING.equals(inNode.getNodeName()) && !PREFS_PPFIELD_STRING.equals(inNode.getNodeName())) {
             return null;
         }
 
         // Old version of XML file.
-        if (inNode.getNodeName().equals(PREFS_PPPICAPLUS_STRING)) {
+        if (PREFS_PPPICAPLUS_STRING.equals(inNode.getNodeName())) {
             nnm = inNode.getAttributes();
             attributeNode = nnm.getNamedItem(PREFS_PPFIELD_STRING);
             fieldAttribute = attributeNode.getNodeValue();
 
         }
         // Picaplus compliant version of XML file.
-        else if (inNode.getNodeName().equals(PREFS_PPFIELD_STRING)) {
+        else if (PREFS_PPFIELD_STRING.equals(inNode.getNodeName())) {
             nnm = inNode.getAttributes();
             attributeNode = nnm.getNamedItem(PREFS_PPTAG_STRING);
             fieldAttribute = attributeNode.getNodeValue();
@@ -992,13 +989,13 @@ public class PicaPlus implements ugh.dl.Fileformat {
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
 
-            if (n.getNodeType() == ELEMENT_NODE && n.getNodeName().equals(PREFS_PPVALUE_STRING) || n.getNodeName().equals(PREFS_PPSUBFIELD_STRING)) {
+            if (n.getNodeType() == ELEMENT_NODE && PREFS_PPVALUE_STRING.equals(n.getNodeName()) || PREFS_PPSUBFIELD_STRING.equals(n.getNodeName())) {
                 // Get value of "field" attribute.
                 nnm = n.getAttributes();
-                if (n.getNodeName().equals(PREFS_PPVALUE_STRING)) {
+                if (PREFS_PPVALUE_STRING.equals(n.getNodeName())) {
                     // Old version of xml file.
                     attributeNode = nnm.getNamedItem(PREFS_PPSUBFIELD_STRING);
-                } else if (n.getNodeName().equals(PREFS_PPSUBFIELD_STRING)) {
+                } else if (PREFS_PPSUBFIELD_STRING.equals(n.getNodeName())) {
                     // Picaplus compliant version of XML file.
                     attributeNode = nnm.getNamedItem(PREFS_PPCODE_STRING);
                 }
@@ -1013,7 +1010,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 // Check conditions from the prefs. If they exist and do NOT
                 // match, continue with the next mmo.
 
-                if (mmo != null && mmo.getValueCondition() != null && !mmo.getValueCondition().equals("")) {
+                if (mmo != null && mmo.getValueCondition() != null && !"".equals(mmo.getValueCondition())) {
                     Pattern pattern = Pattern.compile(mmo.getValueCondition());
                     Matcher matcher = pattern.matcher(content);
                     if (!matcher.find()) {
@@ -1026,14 +1023,14 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 // Check regular expression from the prefs. If it exist, do
                 // process.
 
-                if (content != null && mmo != null && mmo.getValueRegExp() != null && !mmo.getValueRegExp().equals("")) {
+                if (content != null && mmo != null && mmo.getValueRegExp() != null && !"".equals(mmo.getValueRegExp())) {
                     content = content.replaceAll(mmo.getValueRegExp(), mmo.getValueRegExReplacement());
                 }
 
                 // Now we have the MMO; check, if mmo has a subfield or not; if
                 // not, all information from all subfields are added to the
                 // appropriate field.
-                if (mmo != null && mmo.getType().equals("DocStruct")) {
+                if (mmo != null && "DocStruct".equals(mmo.getType())) {
                     // It's a docstruct type; they must contain a ??.
                     mmo = findMMO(fieldAttribute, subfieldAttribute, content);
                     DocStructType dst;
@@ -1057,61 +1054,54 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     this.mydoc.setLogicalDocStruct(ds);
                     result.add(ds);
 
-                } else if (mmo != null && mmo.getType().equals("Metadata")) {
+                } else if (mmo != null && "Metadata".equals(mmo.getType())) {
                     // It's a metadata type if it belongs to a group, add it.
                     log.debug("Picafield (" + mmo.getPicaplusField() + "): " + content);
 
                     if (mmo.getPicaplusGroupname() != null) {
-                        // Get list with appropriate name.
-                        Iterator<MatchingMetadataGroup> it = this.allGroups.iterator();
-                        while (it.hasNext()) {
-                            MatchingMetadataGroup mmg = it.next();
+                        for (MatchingMetadataGroup mmg : this.allGroups) {
                             if (mmg.getGroupname().equals(mmo.getPicaplusGroupname())) {
                                 mmg.addContent(content);
                             }
                         }
-                    } else {
-                        // It belongs NOT to a group; add to Metadataobject.
+                    } else // Now check, if the mmo has a subfield.
+                    if (mmo.getPicaplusSubfield() == null) {
+                        // It has no subfield, so iterate over all subfields
+                        // and add content from all subfields to the one
+                        // metadata field.
 
-                        // Now check, if the mmo has a subfield.
-                        if (mmo.getPicaplusSubfield() == null) {
-                            // It has no subfield, so iterate over all subfields
-                            // and add content from all subfields to the one
-                            // metadata field.
+                        String value;
 
-                            String value;
-
-                            if (md == null) {
-                                String internalName = mmo.getInternalName();
-                                MetadataType mdt = this.myPreferences.getMetadataTypeByName(internalName);
-                                if (mdt == null) {
-                                    log.warn("Can't create unknown Metadata object '" + internalName + "'");
-                                } else {
-                                    md = new Metadata(mdt);
-                                    value = content;
-                                }
-                            } else {
-                                value = md.getValue();
-                                value = value + "; " + content;
-                                md.setValue(value);
-                                hasNoSubfields = true;
-                            }
-                        } else {
-                            // It has a subfield, so create a Metadata
-                            // object, add content and return it.
-                            String internalname = mmo.getInternalName();
-                            MetadataType mdt = this.myPreferences.getMetadataTypeByName(internalname);
+                        if (md == null) {
+                            String internalName = mmo.getInternalName();
+                            MetadataType mdt = this.myPreferences.getMetadataTypeByName(internalName);
                             if (mdt == null) {
-                                log.warn("Can't create unknown Metadata object '" + internalname + "'");
+                                log.warn("Can't create unknown Metadata object '" + internalName + "'");
                             } else {
                                 md = new Metadata(mdt);
-                                md.setValue(content);
-
-                                result.add(md);
+                                value = content;
                             }
+                        } else {
+                            value = md.getValue();
+                            value = value + "; " + content;
+                            md.setValue(value);
+                            hasNoSubfields = true;
+                        }
+                    } else {
+                        // It has a subfield, so create a Metadata
+                        // object, add content and return it.
+                        String internalname = mmo.getInternalName();
+                        MetadataType mdt = this.myPreferences.getMetadataTypeByName(internalname);
+                        if (mdt == null) {
+                            log.warn("Can't create unknown Metadata object '" + internalname + "'");
+                        } else {
+                            md = new Metadata(mdt);
+                            md.setValue(content);
+
+                            result.add(md);
                         }
                     }
-                } else if (mmo != null && mmo.getType().equals("Corporate")) {
+                } else if (mmo != null && "Corporate".equals(mmo.getType())) {
                     // TODO
                     String internalname = mmo.getInternalName();
                     if (corp == null) {
@@ -1130,7 +1120,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                             if (content.contains("/")) {
                                 String catalogue = content.substring(0, content.indexOf("/"));
                                 String identifier = content.substring(content.indexOf("/") + 1);
-                                if (catalogue.equals("gnd")) {
+                                if ("gnd".equals(catalogue)) {
                                     corp.setAutorityFile(catalogue, "http://d-nb.info/gnd/", identifier);
                                 }
                             } else if (content.matches("gnd\\.+")) {
@@ -1160,7 +1150,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
 
                 }
 
-                else if (mmo != null && mmo.getType().equals("Person")) {
+                else if (mmo != null && "Person".equals(mmo.getType())) {
                     // It's a person; we can get to this point several times, as
                     // person's metadata information is split over several
                     // subfields.
@@ -1189,7 +1179,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                             if (content.contains("/")) {
                                 String catalogue = content.substring(0, content.indexOf("/"));
                                 String identifier = content.substring(content.indexOf("/") + 1);
-                                if (catalogue.equals("gnd")) {
+                                if ("gnd".equals(catalogue)) {
                                     per.setAutorityFile(catalogue, "http://d-nb.info/gnd/", identifier);
                                 }
                             } else if (content.matches("gnd\\.+")) {
@@ -1230,8 +1220,8 @@ public class PicaPlus implements ugh.dl.Fileformat {
                                 // for '<' (i.e. "&lt;") or missing comma.
                                 if (heading.contains("&lt;") || heading.contains("<") || !heading.contains(",")) {
                                     // Take personal name as lastname.
-                                    heading = heading.replaceAll("&lt;", "<");
-                                    heading = heading.replaceAll("&gt;", ">");
+                                    heading = heading.replace("&lt;", "<");
+                                    heading = heading.replace("&gt;", ">");
                                     lastname = heading.trim();
                                     firstname = "";
                                 } else {
@@ -1258,7 +1248,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                         // without whitespaces and dots.
                         if (mmo.isFunction() && content != null) {
                             content = content.replaceAll("\\s+", "");
-                            content = content.replaceAll("\\.", "");
+                            content = content.replace(".", "");
 
                             MetadataType mdt = null;
                             if (content.length() > 0) {
