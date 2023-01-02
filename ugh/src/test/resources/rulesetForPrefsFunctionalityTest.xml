@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Preferences>
+	<DocStrctTypeTest>
+		<DocStrctType>
+			<Name>name</Name>
+			<language name="en">name</language>
+			<language name="de">Name</language>
+			<!-- TODO: add nodes 'metadata' 'group' and 'allowedchildtype' here -->
+		</DocStrctType>
+	</DocStrctTypeTest>
+
+	<MetadataTypeTest>
+		<MetadataType type="person" normdata="true">
+			<Name>person</Name>
+			<language name="en">person</language>
+			<langauge name="de">Person</langauge>
+		</MetadataType>
+		<MetadataType type="identifier" normdata="false">
+			<Name>id</Name>
+			<language name="en">id</language>
+			<language name="de">Id</language>
+		</MetadataType>
+		<MetadataType type="corporate">
+			<Name>corporate</Name>
+			<language name="en">corporate</language>
+			<language name="de">Corporate</language>
+		</MetadataType>
+		
+	</MetadataTypeTest>
+	
+</Preferences>
+
+
+
+
+
+
+
+
+
