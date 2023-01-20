@@ -9,8 +9,15 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,7 +31,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import ugh.dl.DigitalDocument.ListPairCheck;
+import ugh.dl.DigitalDocument.PhysicalElement;
+import ugh.exceptions.ContentFileNotLinkedException;
+import ugh.exceptions.MetadataTypeNotAllowedException;
 import ugh.exceptions.PreferencesException;
+import ugh.exceptions.TypeNotAllowedAsChildException;
 import ugh.exceptions.TypeNotAllowedForParentException;
 import ugh.exceptions.WriteException;
 import ugh.fileformats.mets.MetsMods;
@@ -213,8 +224,129 @@ public class DigitalDocumentTest {
     }
 
     /* Tests for the method createDocStruct(DocStructType) */
+    @Ignore("Should null be allowed as DocStructType for a DocStruct object?")
+    @Test(expected = Exception.class)
+    public void testCreateDocStructGivenNull() throws TypeNotAllowedForParentException {
+        dd.createDocStruct(null);
+    }
+
+    @Test
+    public void testCreateDocStructGivenValidDocStructType() throws TypeNotAllowedForParentException {
+        DocStructType dsType = new DocStructType();
+        DocStruct ds = dd.createDocStruct(dsType);
+        // since there is no normal way to access to the DocStruct's field DigitalDocument, we only test that it is not null here
+        assertNotNull(ds);
+    }
+
+    /* Tests for the enum PhysicalElement */
+    @Test
+    public void testPhysicalElementCheckPhysicalType() {
+        for (String type : new String[] { "page", "audio", "video", "object" }) {
+            assertTrue(PhysicalElement.checkPhysicalType(type));
+        }
+        for (String other : new String[] { "", " ", "_", "not a name", "BAZINGA!" }) {
+            assertFalse(PhysicalElement.checkPhysicalType(other));
+        }
+        assertFalse(PhysicalElement.checkPhysicalType(null));
+    }
+
+    @Ignore("This test actually passes. But should we allow null as argument for the enum's method getTypeFromValue?")
+    @Test
+    public void testPhysicalElementGetTypeFromValue() {
+        assertEquals(PhysicalElement.AUDIO, PhysicalElement.getTypeFromValue("audio"));
+        assertEquals(PhysicalElement.VIDEO, PhysicalElement.getTypeFromValue("video"));
+        assertEquals(PhysicalElement.OBJECT, PhysicalElement.getTypeFromValue("object"));
+        for (String s : new String[] { "page", "", " ", "_", "not a name", "BAZINGA!" }) {
+            assertEquals(PhysicalElement.PAGE, PhysicalElement.getTypeFromValue(s));
+        }
+        assertEquals(PhysicalElement.PAGE, PhysicalElement.getTypeFromValue(null));
+    }
 
     /* Tests for the method getAllDocStructsByType(String) */
+    @Test
+    public void testGetAllDocStructsByTypeGivenNull() throws TypeNotAllowedForParentException {
+        // before initializing the fields topPhysicalStruct and topLogicalStruct
+        assertNull(dd.getPhysicalDocStruct());
+        assertNull(dd.getLogicalDocStruct());
+        assertNull(dd.getAllDocStructsByType(null));
+
+        // initialize both fields
+        DocStructType phyType = new DocStructType();
+        DocStructType logType = new DocStructType();
+        // names of DocStructType objects are important for the private method getAllDocStructsByTypePrivate(DocStruct, String)
+        phyType.setName("phy");
+        logType.setName("log");
+        DocStruct phyDS = new DocStruct(phyType);
+        DocStruct logDS = new DocStruct(logType);
+        dd.setPhysicalDocStruct(phyDS);
+        dd.setLogicalDocStruct(logDS);
+
+        // test this method again
+        assertNotNull(dd.getPhysicalDocStruct());
+        assertNotNull(dd.getLogicalDocStruct());
+        assertNull(dd.getAllDocStructsByType(null));
+    }
+
+    @Test
+    public void testGetAllDocStructsByTypeGivenDifferentNames() throws TypeNotAllowedForParentException, TypeNotAllowedAsChildException {
+        // initialize both fields
+        DocStructType phyType = new DocStructType();
+        DocStructType logType0 = new DocStructType();
+        DocStructType logType1 = new DocStructType();
+        DocStructType logType2 = new DocStructType();
+        DocStructType someType = new DocStructType();
+        // names of DocStructType objects are important for the private method getAllDocStructsByTypePrivate(DocStruct, String)
+        phyType.setName("phy");
+        logType0.setName("logParent");
+        logType1.setName("log");
+        logType2.setName("log");
+        someType.setName("sth");
+        DocStruct phyDS0 = new DocStruct(phyType);
+        DocStruct phyDS1 = new DocStruct(phyType);
+        DocStruct phyDS2 = new DocStruct(phyType);
+        DocStruct logDS0 = new DocStruct(logType0);
+        DocStruct logDS1 = new DocStruct(logType1);
+        DocStruct logDS2 = new DocStruct(logType2);
+        DocStruct logDS3 = new DocStruct(logType1);
+        DocStruct someDS = new DocStruct(someType);
+
+        // to make DocStruct objects addable as child, one has to make the according DocStructType objects addable
+        phyType.addDocStructTypeAsChild(phyType);
+        phyType.addDocStructTypeAsChild(someType);
+        logType0.addDocStructTypeAsChild(logType1);
+        logType0.addDocStructTypeAsChild(logType2);
+        logType0.addDocStructTypeAsChild(someType);
+        // add two children of type named "phy" to phyDS0
+        for (DocStruct ds : new DocStruct[] { phyDS1, phyDS2 }) {
+            phyDS0.addChild(ds);
+        }
+        // add three children of type named "log" to logDS0
+        for (DocStruct ds : new DocStruct[] { logDS1, logDS2, logDS3 }) {
+            logDS0.addChild(ds);
+        }
+        // add someDS to both phyDS0 and logDS0
+        phyDS0.addChild(someDS);
+        logDS0.addChild(someDS);
+        // set both fields topPhysicalStruct and topLogicalStruct
+        dd.setPhysicalDocStruct(phyDS0);
+        dd.setLogicalDocStruct(logDS0);
+
+        assertEquals(2, dd.getAllDocStructsByType("phy").size());
+        assertEquals(3, dd.getAllDocStructsByType("log").size());
+        assertEquals(2, dd.getAllDocStructsByType("sth").size());
+        for (String name : new String[] { "", " ", "_", "not a name", "BAZINGA!" }) {
+            assertNull(dd.getAllDocStructsByType(name));
+        }
+    }
+
+    @Test
+    public void testGetAllDocStructsByTypeGivenFileformat() throws PreferencesException {
+        DigitalDocument doc = fileformat.getDigitalDocument();
+        assertEquals(2, doc.getAllDocStructsByType("area").size());
+        for (String name : new String[] { "", " ", "_", "div", "not a name", "BAZINGA!" }) {
+            assertNull(doc.getAllDocStructsByType(name));
+        }
+    }
 
     /* Tests for the method readXStreamXml(String, Prefs) */
 
@@ -224,8 +356,192 @@ public class DigitalDocumentTest {
      */
 
     /* Tests for the method addContentFileFromPhysicalPage(DocStruct) */
+    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
+    @Test
+    public void testAddContentFileFromPhysicalPageGivenNull() {
+        dd.addContentFileFromPhysicalPage(null);
+    }
+
+    @Test
+    public void testAddContentFileFromPhysicalPageGivenDocStructWithContentFiles()
+            throws TypeNotAllowedForParentException, MetadataTypeNotAllowedException {
+        // prepare a MetadataType named physPageNumber that is normally addable
+        MetadataType mdType = new MetadataType();
+        mdType.setName("physPageNumber");
+        Metadata md = new Metadata(mdType);
+        // the field value is necessary for the private method createContentFile(DocStruct, String)
+        md.setValue("7");
+
+        // prepare a DocStructType which allows adding of the previously created mdType
+        DocStructType dsType = new DocStructType();
+        dsType.addMetadataType(mdType, "*");
+
+        // create a DocStruct object ds related to our DigitalDocument object dd
+        DocStruct ds = dd.createDocStruct(dsType);
+        assertNull(ds.getAllContentFiles());
+
+        // add some ContentFile object to make ds not empty any more
+        ContentFile file = new ContentFile();
+        ds.addContentFile(file);
+        assertNotNull(ds.getAllContentFiles());
+        assertEquals(1, ds.getAllContentFiles().size());
+        assertNull(ds.getAllContentFiles().get(0).getMimetype());
+        assertNull(ds.getAllContentFiles().get(0).getLocation());
+
+        // check this method
+        ds.addMetadata(md);
+
+        for (String type : new String[] { "page", "audio", "video", "object" }) {
+            dsType.setName(type);
+            dd.addContentFileFromPhysicalPage(ds);
+            assertEquals(1, ds.getAllContentFiles().size());
+            // if this method addContentFileFromPhysicalPage would really add content files
+            // then the private createContentFile would set both fields MimeType and Location
+            assertNull(ds.getAllContentFiles().get(0).getMimetype());
+            assertNull(ds.getAllContentFiles().get(0).getLocation());
+        }
+    }
+
+    @Test
+    public void testAddContentFileFromPhysicalPageGivenDocStructOtherThanPage()
+            throws MetadataTypeNotAllowedException, TypeNotAllowedForParentException {
+        // prepare a MetadataType named physPageNumber that is normally addable
+        MetadataType mdType = new MetadataType();
+        mdType.setName("physPageNumber");
+        Metadata md = new Metadata(mdType);
+        // the field value is necessary for the private method createContentFile(DocStruct, String)
+        md.setValue("7");
+
+        // prepare a DocStructType which allows adding of the previously created mdType
+        DocStructType dsType = new DocStructType();
+        dsType.addMetadataType(mdType, "1o");
+
+        // create a DocStruct object ds related to our DigitalDocument object dd
+        DocStruct ds = dd.createDocStruct(dsType);
+        assertNull(ds.getAllContentFiles());
+
+        // check this method
+        ds.addMetadata(md);
+
+        for (String type : new String[] { "", " ", "_", "BAZINGA!", "bottle" }) {
+            dsType.setName(type);
+            dd.addContentFileFromPhysicalPage(ds);
+            assertNull(ds.getAllContentFiles());
+        }
+    }
+
+    @Test
+    public void testAddContentFileFromPhysicalPageGivenDocStructPageWithoutContentFiles()
+            throws MetadataTypeNotAllowedException, TypeNotAllowedForParentException, ContentFileNotLinkedException {
+        // prepare a MetadataType named physPageNumber that is normally addable
+        MetadataType mdType = new MetadataType();
+        mdType.setName("physPageNumber");
+        Metadata md = new Metadata(mdType);
+        // the field value is necessary for the private method createContentFile(DocStruct, String)
+        md.setValue("7");
+
+        // prepare a DocStructType which allow adding of the previously created mdType
+        DocStructType dsType = new DocStructType();
+        dsType.addMetadataType(mdType, "+");
+
+        // create a DocStruct object ds related to our DigitalDocument object dd
+        DocStruct ds = dd.createDocStruct(dsType);
+        assertNull(ds.getAllContentFiles());
+
+        // check this method
+        ds.addMetadata(md);
+
+        for (String type : new String[] { "page", "audio", "video", "object" }) {
+            dsType.setName(type);
+            // check if a ContentFile could be added
+            dd.addContentFileFromPhysicalPage(ds);
+            assertNotNull(ds.getAllContentFiles());
+            // remove the ContentFile to assure the emptiness of our DocStruct object ds
+            ds.removeContentFile(ds.getAllContentFiles().get(0));
+            assertNull(ds.getAllContentFiles());
+        }
+    }
 
     /* Tests for the method addAllContentFiles() */
+    @Test
+    public void testAddAllContentFiles() throws MetadataTypeNotAllowedException, TypeNotAllowedForParentException, TypeNotAllowedAsChildException {
+        // prepare FileSet containing a list of VirtualFileGroups
+        VirtualFileGroup vfg1 = new VirtualFileGroup();
+        VirtualFileGroup vfg2 = new VirtualFileGroup();
+        List<VirtualFileGroup> vfgList = new ArrayList<>();
+        vfgList.add(vfg1);
+        vfgList.add(vfg2);
+        FileSet fileSet = new FileSet();
+        fileSet.setVirtualFileGroups(vfgList);
+
+        // add a Metadata object and a ContentFile object to show the changes of FileSet during the application of this method
+        fileSet.addMetadata(new Metadata(new MetadataType()));
+        fileSet.addFile(new ContentFile());
+
+        dd.setFileSet(fileSet);
+        assertNotNull(dd.getFileSet());
+        assertNotNull(dd.getFileSet().getVirtualFileGroups());
+        assertEquals(2, dd.getFileSet().getVirtualFileGroups().size());
+        assertNotNull(dd.getFileSet().getAllMetadata());
+        assertEquals(1, dd.getFileSet().getAllMetadata().size());
+        assertNotNull(dd.getFileSet().getAllFiles());
+        assertEquals(1, dd.getFileSet().getAllFiles().size());
+
+        // tests
+        dd.addAllContentFiles();
+        // the field virtualFileGroups should not be affected
+        assertEquals(2, dd.getFileSet().getVirtualFileGroups().size());
+        assertSame(vfgList, dd.getFileSet().getVirtualFileGroups());
+        // the fields allMetadata and allImages should be reset
+        assertEquals(0, dd.getFileSet().getAllMetadata().size());
+        assertEquals(0, dd.getFileSet().getAllFiles().size());
+
+        // prepare a DocStruct for further tests
+        MetadataType pifType = new MetadataType();
+        pifType.setName("pathimagefiles");
+        MetadataType repType = new MetadataType();
+        repType.setName("_representative");
+        MetadataType pageType = new MetadataType();
+        pageType.setName("physPageNumber");
+
+        DocStructType pagesType = new DocStructType();
+        pagesType.setName("pages");
+        pagesType.addMetadataType(pageType, "*");
+        DocStructType tpType = new DocStructType();
+        tpType.setName("top");
+        tpType.addDocStructTypeAsChild(pagesType);
+        tpType.addMetadataType(pifType, "+");
+        tpType.addMetadataType(repType, "+");
+
+        Metadata pif = new Metadata(pifType);
+        Metadata rep = new Metadata(repType);
+        Metadata page1 = new Metadata(pageType);
+        page1.setValue("1");
+        Metadata page2 = new Metadata(pageType);
+        page2.setValue("2");
+        Metadata page3 = new Metadata(pageType);
+        page3.setValue("3");
+
+        DocStruct tp = new DocStruct(tpType);
+        DocStruct pages = new DocStruct(pagesType);
+
+        for (Metadata md : new Metadata[] { pif, rep }) {
+            tp.addMetadata(md);
+        }
+        for (Metadata page : new Metadata[] { page1, page2, page3 }) {
+            pages.addMetadata(page);
+        }
+        tp.addChild(pages);
+
+        dd.setPhysicalDocStruct(tp);
+        // before applying this method, all Metadata objects should have null as value for both fields Location and MimeType
+        //        for (Metadata md : dd.getPhysicalDocStruct().getAllChildren().get(0).getAllMetadata()) {
+        //            assertNull(md.)
+        //        }
+//        assertNull(dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles());
+        dd.addAllContentFiles();
+//        assertNotNull(dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles());
+    }
 
     /* Tests for the method overrideContentFiles(List<String>) */
 
@@ -359,7 +675,6 @@ public class DigitalDocumentTest {
      * 4. getTechMds()
      * 5. getTechMd(String)
      */
-
     @Test
     public void testAddTechMdGivenNodeObject() {
         // before initializing the field amdSec
@@ -531,10 +846,131 @@ public class DigitalDocumentTest {
 
     /* Tests for the method copyDigitalDocument() */
     @Test
+    public void testCopyBeforeInitializingTheFieldAmdSec() throws WriteException {
+        DigitalDocument doc = dd.copyDigitalDocument();
+        assertTrue(dd.equals(doc));
+        assertTrue(doc.equals(dd));
+        assertNull(dd.getAmdSec());
+        assertNull(doc.getAmdSec());
+    }
+
+    @Test
+    public void testCopyAfterInitializingTheFieldAmdSec() throws WriteException {
+        assertEquals(0, dd.getTechMds().size());
+        Md md1 = new Md(upperChild);
+        Md md2 = new Md(upperChild);
+        dd.addTechMd(md1);
+        dd.addTechMd(md2);
+        assertEquals(2, dd.getTechMds().size());
+        // make a copy of dd and check its contents
+        DigitalDocument doc = dd.copyDigitalDocument();
+        assertEquals(2, doc.getTechMds().size());
+        assertSame(md1, doc.getTechMds().get(0));
+        assertSame(md2, doc.getTechMds().get(1));
+    }
+
+    @Test
     public void testCopy() throws WriteException, PreferencesException {
-        fileformat.getDigitalDocument().copyDigitalDocument();
+        DigitalDocument docOriginal = fileformat.getDigitalDocument();
+        DigitalDocument docCopy = docOriginal.copyDigitalDocument();
+
+        // check the fields topPhysicalStruct and topLogicalStruct
+        assertTrue(docOriginal.equals(docCopy));
+        assertTrue(docCopy.equals(docOriginal));
+
+        // check the field amdSec
+        List<Md> mdsOriginal = docOriginal.getTechMds();
+        List<Md> mdsCopy = docCopy.getTechMds();
+        assertEquals(mdsOriginal.size(), mdsCopy.size());
+        for (int i = 0; i < mdsOriginal.size(); ++i) {
+            // copied are actually only the addresses of these Md objects
+            assertSame(mdsOriginal.get(i), mdsCopy.get(i));
+        }
+
+        // check the field allImages
+        FileSet setOriginal = docOriginal.getFileSet();
+        FileSet setCopy = docCopy.getFileSet();
+        List<ContentFile> filesOriginal = setOriginal.getAllFiles();
+        List<ContentFile> filesCopy = setCopy.getAllFiles();
+        List<Metadata> metadatenOriginal = setOriginal.getAllMetadata();
+        List<Metadata> metadatenCopy = setCopy.getAllMetadata();
+        List<VirtualFileGroup> vfgOriginal = setOriginal.getVirtualFileGroups();
+        List<VirtualFileGroup> vfgCopy = setCopy.getVirtualFileGroups();
+        assertEquals(filesOriginal.size(), filesCopy.size());
+        assertEquals(metadatenOriginal.size(), metadatenCopy.size());
+        assertEquals(vfgOriginal.size(), vfgCopy.size());
+        for (int i = 0; i < filesOriginal.size(); ++i) {
+            assertTrue(filesOriginal.get(i).equals(filesCopy.get(i)));
+        }
+        for (int i = 0; i < metadatenOriginal.size(); ++i) {
+            assertTrue(metadatenOriginal.get(i).equals(metadatenCopy.get(i)));
+        }
+        for (int i = 0; i < vfgOriginal.size(); ++i) {
+            assertTrue(vfgOriginal.get(i).equals(vfgCopy.get(i)));
+        }
     }
 
     /* Tests for the method detectMimeType(Path) */
+    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
+    @Test
+    public void testDetectMimeTypeGivenNull() {
+        assertEquals("", dd.detectMimeType(null));
+    }
+
+    @Test
+    public void testDetectMimeTypeGivenDirectoryPath() {
+        assertEquals("", dd.detectMimeType(Paths.get("/", "tmp")));
+    }
+
+    @Ignore("Check the comments below.")
+    @Test
+    public void testDetectMimeTypeGivenUnexistingPath() throws IOException {
+        // prepare a map containing some known formats
+        Map<String, String> typeMap = new HashMap<>();
+        for (String s : new String[] { "jpg", "jpeg", "jpe" }) {
+            typeMap.put(s, "image/jpeg");
+        }
+        for (String s : new String[] { "tiff", "tif" }) {
+            typeMap.put(s, "image/tiff");
+        }
+        for (String s : new String[] { "jp2", "png", "gif" }) {
+            typeMap.put(s, "image/" + s);
+        }
+        for (String s : new String[] { "pdf", "xml" }) {
+            typeMap.put(s, "application/" + s);
+        }
+        typeMap.put("mp3", "audio/mpeg");
+        typeMap.put("wav", "audio/wav");
+        for (String s : new String[] { "mpeg", "mpg", "mpe" }) {
+            typeMap.put(s, "video/mpeg");
+        }
+        for (String s : new String[] { "mp4", "mxf", "ogg", "webm" }) {
+            typeMap.put(s, "video/" + s);
+        }
+        typeMap.put("mov", "video/quicktime");
+        typeMap.put("avi", "video/x-msvideo");
+        typeMap.put("txt", "text/plain");
+        for (String s : new String[] { "x3d", "x3dv", "x3db" }) {
+            typeMap.put(s, "model/x3d+XXX");
+        }
+        for (String s : new String[] { "obj", "ply", "stl", "fbx", "gltf", "glb" }) {
+            typeMap.put(s, "object/" + s);
+        }
+
+        for (String key : typeMap.keySet()) {
+            Path path = Paths.get("/tmp/", "test." + key);
+            System.out.println(key + " : " + typeMap.get(key));
+            System.out.println(Files.probeContentType(path));
+            System.out.println(URLConnection.guessContentTypeFromName(path.getFileName().toString()));
+            System.out.println(dd.detectMimeType(path));
+            System.out.println("=======");
+        }
+
+        /* ======= Problems found [ via Ubuntu 21.10 ] ======= */
+        // ogg: Files.probeContentType -> "audio/ogg", URLConnection.guessContentTypeFromName -> "audio/ogg"
+        // mxf: Files.probeContentType -> "application/mxf"
+        // wav: Files.probeContentType -> "audio/x-wav", URLConnection.guessContentTypeFromName -> "audio/x-wav"
+        // items desired to be mapped to "object/..." are actually mapped to "model/..." by Files.probeContentType
+    }
 
 }
