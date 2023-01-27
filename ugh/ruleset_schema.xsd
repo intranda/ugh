@@ -18,7 +18,7 @@
         <xs:element maxOccurs="unbounded" ref="language" />
         <xs:sequence minOccurs="0">
           <xs:element ref="validationExpression" />
-          <xs:element maxOccurs="unbounded" ref="validationErrorMessage" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="validationErrorMessage" />
         </xs:sequence>
       </xs:sequence>
       <xs:attribute name="normdata" type="xs:boolean" />
@@ -147,7 +147,7 @@
 
   <xs:element name="PicaPlus">
     <xs:complexType>
-      <xs:sequence>
+      <xs:choice maxOccurs="unbounded">
         <xs:element maxOccurs="unbounded" name="Metadata">
           <xs:complexType>
             <xs:sequence>
@@ -176,7 +176,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-      </xs:sequence>
+      </xs:choice>
     </xs:complexType>
   </xs:element>
 
@@ -184,7 +184,6 @@
   <xs:element name="Marc">
     <xs:complexType>
       <xs:choice maxOccurs="unbounded">
-
         <xs:element maxOccurs="unbounded" name="Group">
           <xs:complexType>
             <xs:sequence>
@@ -212,7 +211,6 @@
           </xs:complexType>
         </xs:element>
 
-
         <xs:element maxOccurs="unbounded" name="Metadata">
           <xs:complexType>
             <xs:sequence>
@@ -233,28 +231,33 @@
         </xs:element>
         <xs:element maxOccurs="unbounded" name="Corporate">
           <xs:complexType>
-            <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
               <xs:element ref="Name" />
               <xs:element ref="field" />
               <xs:element ref="identifierField" />
               <xs:element ref="identifierConditionField" />
               <xs:element ref="identifierReplacement" />
+              <xs:element ref="conditionField" />
+              <xs:element ref="conditionValue" />              
               <xs:element ref="separateEntries" />
-            </xs:sequence>
+              <xs:element ref="separator" />              
+            </xs:choice>
           </xs:complexType>
 
         </xs:element>
         <xs:element maxOccurs="unbounded" name="Person">
           <xs:complexType>
-            <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
               <xs:element ref="Name" />
               <xs:element maxOccurs="unbounded" ref="field" />
               <xs:element ref="identifierField" />
               <xs:element ref="identifierConditionField" />
               <xs:element ref="identifierReplacement" />
+              <xs:element ref="conditionField" />
+              <xs:element ref="conditionValue" />
               <xs:element ref="separateEntries" />
               <xs:element ref="separator" />
-            </xs:sequence>
+            </xs:choice>
           </xs:complexType>
         </xs:element>
         <xs:element maxOccurs="unbounded" name="DocStruct">
@@ -264,11 +267,11 @@
               <xs:element ref="leader6" />
               <xs:element ref="leader7" />
               <xs:sequence minOccurs="0">
-                <xs:element ref="leader19" />
-                <xs:element ref="field007_0" />
-                <xs:element ref="field007_1" />
+                <xs:element ref="leader19" minOccurs="0"/>
+                <xs:element ref="field007_0" minOccurs="0"/>
+                <xs:element ref="field007_1" minOccurs="0"/>
+                <xs:element ref="field008_21" minOccurs="0"/>
               </xs:sequence>
-              <xs:element ref="field008_21" />
             </xs:sequence>
           </xs:complexType>
 
@@ -280,12 +283,12 @@
   <xs:element name="conditionField" type="xs:string" />
   <xs:element name="conditionValue" type="xs:string" />
   <xs:element name="fieldReplacement" type="xs:string" />
-  <xs:element name="leader6" type="xs:NCName" />
-  <xs:element name="leader7" type="xs:NCName" />
-  <xs:element name="leader19" type="xs:NCName" />
-  <xs:element name="field007_0" type="xs:NCName" />
-  <xs:element name="field007_1" type="xs:NCName" />
-  <xs:element name="field008_21" type="xs:NCName" />
+  <xs:element name="leader6" type="xs:string" />
+  <xs:element name="leader7" type="xs:string" />
+  <xs:element name="leader19" type="xs:string" />
+  <xs:element name="field007_0" type="xs:string" />
+  <xs:element name="field007_1" type="xs:string" />
+  <xs:element name="field008_21" type="xs:string" />
 
 
   <xs:element name="METS">
@@ -393,7 +396,7 @@
 
 
   <xs:element name="MetsType" type="xs:NCName" />
-  <xs:element name="Name" type="xs:NCName" />
+  <xs:element name="Name" type="xs:string" />
   <xs:element name="group">
     <xs:complexType>
       <xs:simpleContent>
@@ -443,13 +446,13 @@
   <xs:element name="XPathLogical" type="xs:string" />
   <xs:element name="XPathPhysical" type="xs:string" />
   <xs:element name="fieldMainTag" type="xs:integer" />
-  <xs:element name="fieldMainName" type="xs:NCName" />
-  <xs:element name="fieldSubName" type="xs:NCName" />
-  <xs:element name="fieldPartName" type="xs:NCName" />
+  <xs:element name="fieldMainName" type="xs:string" />
+  <xs:element name="fieldSubName" type="xs:string" />
+  <xs:element name="fieldPartName" type="xs:string" />
   <xs:element name="expansion" type="xs:NCName" />
-  <xs:element name="fieldSubTag" type="xs:NCName" />
-  <xs:element name="fieldInd1" type="xs:NCName" />
-  <xs:element name="fieldInd2" type="xs:NCName" />
+  <xs:element name="fieldSubTag" type="xs:string" />
+  <xs:element name="fieldInd1" type="xs:string" />
+  <xs:element name="fieldInd2" type="xs:string" />
   <xs:element name="identifierField" type="xs:integer" />
   <xs:element name="identifierConditionField" type="xs:string" />
   <xs:element name="identifierReplacement" type="xs:string" />
