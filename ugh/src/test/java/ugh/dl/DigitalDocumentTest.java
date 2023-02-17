@@ -2,6 +2,7 @@ package ugh.dl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
@@ -15,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -497,6 +499,41 @@ public class DigitalDocumentTest {
         assertEquals(0, dd.getFileSet().getAllFiles().size());
 
         // prepare a DocStruct for further tests
+        DocStruct tp = preparePhysicalDocStruct();
+        dd.setPhysicalDocStruct(tp);
+
+        // before applying this method, there should be no content files and no references available
+        DocStruct docStruct = dd.getPhysicalDocStruct().getAllChildren().get(0);
+        assertEquals(0, docStruct.getAllContentFileReferences().size());
+        assertNull(docStruct.getAllContentFiles());
+
+        // apply this method and check its content files and references again
+        dd.addAllContentFiles();
+
+        List<ContentFileReference> contentFileRefs = docStruct.getAllContentFileReferences();
+        List<ContentFile> contentFiles = docStruct.getAllContentFiles();
+
+        assertNotNull(contentFiles);
+
+        int numberOfRefs = contentFileRefs.size();
+        int numberOfFiles = contentFiles.size();
+
+        assertNotEquals(0, numberOfRefs);
+        assertNotEquals(0, numberOfFiles);
+
+        for (ContentFile contentFile : contentFiles) {
+            assertTrue(contentFile.getLocation().contains(".tif"));
+            assertEquals("image/tiff", contentFile.getMimetype());
+        }
+
+        // applying this method again should not result in duplicates
+        dd.addAllContentFiles();
+        assertEquals(numberOfRefs, dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFileReferences().size());
+        assertEquals(numberOfFiles, dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles().size());
+    }
+    
+    private DocStruct preparePhysicalDocStruct()
+            throws TypeNotAllowedAsChildException, MetadataTypeNotAllowedException, TypeNotAllowedForParentException {
         MetadataType pifType = new MetadataType();
         pifType.setName("pathimagefiles");
         MetadataType repType = new MetadataType();
@@ -505,7 +542,7 @@ public class DigitalDocumentTest {
         pageType.setName("physPageNumber");
 
         DocStructType pagesType = new DocStructType();
-        pagesType.setName("pages");
+        pagesType.setName("page");
         pagesType.addMetadataType(pageType, "*");
         DocStructType tpType = new DocStructType();
         tpType.setName("top");
@@ -514,7 +551,9 @@ public class DigitalDocumentTest {
         tpType.addMetadataType(repType, "+");
 
         Metadata pif = new Metadata(pifType);
+        pif.setValue("/tmp/");
         Metadata rep = new Metadata(repType);
+        rep.setValue("");
         Metadata page1 = new Metadata(pageType);
         page1.setValue("1");
         Metadata page2 = new Metadata(pageType);
@@ -533,17 +572,204 @@ public class DigitalDocumentTest {
         }
         tp.addChild(pages);
 
-        dd.setPhysicalDocStruct(tp);
-        // before applying this method, all Metadata objects should have null as value for both fields Location and MimeType
-        //        for (Metadata md : dd.getPhysicalDocStruct().getAllChildren().get(0).getAllMetadata()) {
-        //            assertNull(md.)
-        //        }
-//        assertNull(dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles());
-        dd.addAllContentFiles();
-//        assertNotNull(dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles());
+        // ============================ ATTENTION ============================= //
+        // Only page3 will be added after applying the method DigitalDocument::addAllContentFiles
+        // the reason is that for that method, the order of pages matters:
+        // in the for loop over all Metadata objects of the DocStruct pages, the following will happen in order:
+        // 1. page1 added
+        // 2. page1 deleted, page2 added
+        // 3. page2 deleted, page3 added
+        // ============================ ATTENTION ============================= //
+
+        // DigitalDocument is needed for calling the method DocStruct::addContentFile
+        DigitalDocument ddPages = new DigitalDocument();
+        pages.setDigitalDocument(ddPages);
+
+        return tp;
     }
 
     /* Tests for the method overrideContentFiles(List<String>) */
+    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
+    @Test
+    public void testOverrideContentFilesGivenNull() {
+        dd.overrideContentFiles(null);
+    }
+
+    @Test
+    public void testOverrideContentFilesGivenEmptyDigitalDocumentAndEmptyStringList() throws MetadataTypeNotAllowedException {
+        // prepare FileSet containing a list of VirtualFileGroups
+        VirtualFileGroup vfg1 = new VirtualFileGroup();
+        VirtualFileGroup vfg2 = new VirtualFileGroup();
+        List<VirtualFileGroup> vfgList = new ArrayList<>();
+        vfgList.add(vfg1);
+        vfgList.add(vfg2);
+        FileSet fileSet = new FileSet();
+        fileSet.setVirtualFileGroups(vfgList);
+
+        // add a Metadata object and a ContentFile object to show the changes of FileSet during the application of this method
+        fileSet.addMetadata(new Metadata(new MetadataType()));
+        fileSet.addFile(new ContentFile());
+
+        dd.setFileSet(fileSet);
+        assertNotNull(dd.getFileSet());
+        assertNotNull(dd.getFileSet().getVirtualFileGroups());
+        assertEquals(2, dd.getFileSet().getVirtualFileGroups().size());
+        assertNotNull(dd.getFileSet().getAllMetadata());
+        assertEquals(1, dd.getFileSet().getAllMetadata().size());
+        assertNotNull(dd.getFileSet().getAllFiles());
+        assertEquals(1, dd.getFileSet().getAllFiles().size());
+
+        // tests
+        List<String> images = new ArrayList<>();
+        dd.overrideContentFiles(images);
+        // the field virtualFileGroups should not be affected
+        assertEquals(2, dd.getFileSet().getVirtualFileGroups().size());
+        assertSame(vfgList, dd.getFileSet().getVirtualFileGroups());
+        // the fields allMetadata and allImages should be reset
+        assertEquals(0, dd.getFileSet().getAllMetadata().size());
+        assertEquals(0, dd.getFileSet().getAllFiles().size());
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Empty list should be handled to avoid the IndexOutOfBoundsException.")
+    @Test
+    public void testOverrideContentFilesGivenUnemptyDigitalDocumentButEmptyStringList()
+            throws MetadataTypeNotAllowedException, TypeNotAllowedForParentException, TypeNotAllowedAsChildException {
+        // prepare FileSet containing a list of VirtualFileGroups
+        VirtualFileGroup vfg1 = new VirtualFileGroup();
+        VirtualFileGroup vfg2 = new VirtualFileGroup();
+        List<VirtualFileGroup> vfgList = new ArrayList<>();
+        vfgList.add(vfg1);
+        vfgList.add(vfg2);
+        FileSet fileSet = new FileSet();
+        fileSet.setVirtualFileGroups(vfgList);
+
+        // add a Metadata object and a ContentFile object to show the changes of FileSet during the application of this method
+        fileSet.addMetadata(new Metadata(new MetadataType()));
+        fileSet.addFile(new ContentFile());
+
+        dd.setFileSet(fileSet);
+        assertNotNull(dd.getFileSet());
+        assertNotNull(dd.getFileSet().getVirtualFileGroups());
+        assertEquals(2, dd.getFileSet().getVirtualFileGroups().size());
+        assertNotNull(dd.getFileSet().getAllMetadata());
+        assertEquals(1, dd.getFileSet().getAllMetadata().size());
+        assertNotNull(dd.getFileSet().getAllFiles());
+        assertEquals(1, dd.getFileSet().getAllFiles().size());
+
+        // prepare contents
+        DocStruct tp = preparePhysicalDocStruct();
+        dd.setPhysicalDocStruct(tp);
+
+        // tests
+        List<String> images = new ArrayList<>();
+        dd.overrideContentFiles(images);
+        // the field virtualFileGroups should not be affected
+        assertEquals(2, dd.getFileSet().getVirtualFileGroups().size());
+        assertSame(vfgList, dd.getFileSet().getVirtualFileGroups());
+        // the fields allMetadata and allImages should be reset
+        assertEquals(0, dd.getFileSet().getAllMetadata().size());
+        assertEquals(0, dd.getFileSet().getAllFiles().size());
+    }
+
+    @Test
+    public void testOverrideContentFilesGivenUnemptyDigitalDocumentAndUnemptyStringListWithMatchedSize()
+            throws MetadataTypeNotAllowedException, TypeNotAllowedAsChildException, TypeNotAllowedForParentException {
+        // prepare FileSet containing a list of VirtualFileGroups
+        VirtualFileGroup vfg1 = new VirtualFileGroup();
+        VirtualFileGroup vfg2 = new VirtualFileGroup();
+        List<VirtualFileGroup> vfgList = new ArrayList<>();
+        vfgList.add(vfg1);
+        vfgList.add(vfg2);
+        FileSet fileSet = new FileSet();
+        fileSet.setVirtualFileGroups(vfgList);
+
+        // add a Metadata object and a ContentFile object to show the changes of FileSet during the application of this method
+        fileSet.addMetadata(new Metadata(new MetadataType()));
+        fileSet.addFile(new ContentFile());
+
+        dd.setFileSet(fileSet);
+        assertNotNull(dd.getFileSet());
+        assertNotNull(dd.getFileSet().getVirtualFileGroups());
+        assertEquals(2, dd.getFileSet().getVirtualFileGroups().size());
+        assertNotNull(dd.getFileSet().getAllMetadata());
+        assertEquals(1, dd.getFileSet().getAllMetadata().size());
+        assertNotNull(dd.getFileSet().getAllFiles());
+        assertEquals(1, dd.getFileSet().getAllFiles().size());
+
+        // prepare contents
+        DocStruct tp = preparePhysicalDocStruct();
+        dd.setPhysicalDocStruct(tp);
+        dd.addAllContentFiles();
+
+        String oldLocation = dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles().get(0).getLocation();
+        String oldMimeType = dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles().get(0).getMimetype();
+
+        // tests
+        List<String> images = Arrays.asList("11", "12", "13");
+        dd.overrideContentFiles(images);
+        // the field virtualFileGroups should not be affected
+        assertEquals(2, dd.getFileSet().getVirtualFileGroups().size());
+        assertSame(vfgList, dd.getFileSet().getVirtualFileGroups());
+        // the fields allMetadata and allImages should be reset
+        assertEquals(0, dd.getFileSet().getAllMetadata().size());
+        assertEquals(0, dd.getFileSet().getAllFiles().size());
+
+        // location should be changed
+        assertNotEquals(oldLocation, dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles().get(0).getLocation());
+        // mimetype should remain the same
+        assertEquals(oldMimeType, dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles().get(0).getMimetype());
+    }
+
+    @Ignore("The logic in the method cannot pass this test. Since the length of the input list matters, it should also be somehow checked.")
+    @Test
+    public void testOverrideContentFilesGivenUnemptyDigitalDocumentAndUnemptyStringListWithSmallerSize()
+            throws TypeNotAllowedAsChildException, MetadataTypeNotAllowedException, TypeNotAllowedForParentException {
+        // prepare FileSet containing a list of VirtualFileGroups
+        VirtualFileGroup vfg1 = new VirtualFileGroup();
+        VirtualFileGroup vfg2 = new VirtualFileGroup();
+        List<VirtualFileGroup> vfgList = new ArrayList<>();
+        vfgList.add(vfg1);
+        vfgList.add(vfg2);
+        FileSet fileSet = new FileSet();
+        fileSet.setVirtualFileGroups(vfgList);
+
+        // add a Metadata object and a ContentFile object to show the changes of FileSet during the application of this method
+        fileSet.addMetadata(new Metadata(new MetadataType()));
+        fileSet.addFile(new ContentFile());
+
+        dd.setFileSet(fileSet);
+        assertNotNull(dd.getFileSet());
+        assertNotNull(dd.getFileSet().getVirtualFileGroups());
+        assertEquals(2, dd.getFileSet().getVirtualFileGroups().size());
+        assertNotNull(dd.getFileSet().getAllMetadata());
+        assertEquals(1, dd.getFileSet().getAllMetadata().size());
+        assertNotNull(dd.getFileSet().getAllFiles());
+        assertEquals(1, dd.getFileSet().getAllFiles().size());
+
+        // prepare contents
+        DocStruct tp = preparePhysicalDocStruct();
+        dd.setPhysicalDocStruct(tp);
+        dd.addAllContentFiles();
+
+        String oldLocation = dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles().get(0).getLocation();
+        String oldMimeType = dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles().get(0).getMimetype();
+
+        // tests
+        List<String> images = Arrays.asList("11", "12"); // <<<--- HERE IS THE PROBLEM, too short for our page valued "3"
+        dd.overrideContentFiles(images);
+        // the field virtualFileGroups should not be affected
+        assertEquals(2, dd.getFileSet().getVirtualFileGroups().size());
+        assertSame(vfgList, dd.getFileSet().getVirtualFileGroups());
+        // the fields allMetadata and allImages should be reset
+        assertEquals(0, dd.getFileSet().getAllMetadata().size());
+        assertEquals(0, dd.getFileSet().getAllFiles().size());
+
+        // location should be changed
+        assertNotEquals(oldLocation, dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles().get(0).getLocation());
+        // mimetype should remain the same
+        assertEquals(oldMimeType, dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles().get(0).getMimetype());
+    }
+
 
     /* Tests for the methods:
      * 1. equals(DigitalDocument)
