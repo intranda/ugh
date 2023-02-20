@@ -10,7 +10,9 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,6 +33,8 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import com.thoughtworks.xstream.XStream;
 
 import ugh.dl.DigitalDocument.ListPairCheck;
 import ugh.dl.DigitalDocument.PhysicalElement;
@@ -351,11 +355,72 @@ public class DigitalDocumentTest {
     }
 
     /* Tests for the method readXStreamXml(String, Prefs) */
+    //@Ignore("No idea how to set up the xml to get rid of the com.thoughtworkds.xstream.security.ForbiddenClassException.")
+    @Test(expected = PreferencesException.class)
+    public void testReadXStreamXmlGivenNullAsPrefs() throws FileNotFoundException, UnsupportedEncodingException {
+        dd.readXStreamXml("src/test/resources/digitalDocumentTest.xml", null);
+    }
+
+    @Test(expected = FileNotFoundException.class)
+    public void testReadXStreamXmlGivenUnexistingFile() throws FileNotFoundException, UnsupportedEncodingException {
+        dd.readXStreamXml("src/test/resources/unexisting.xml", prefs);
+    }
+
+    @Ignore("This was used to generate the digitalDocumentTest.xml file via XStream. Not a test actually.")
+    @Test
+    public void testReadXStreamXml() throws TypeNotAllowedAsChildException, MetadataTypeNotAllowedException, TypeNotAllowedForParentException {
+        // prepare FileSet containing a list of VirtualFileGroups
+        VirtualFileGroup vfg1 = new VirtualFileGroup();
+        VirtualFileGroup vfg2 = new VirtualFileGroup();
+        List<VirtualFileGroup> vfgList = new ArrayList<>();
+        vfgList.add(vfg1);
+        vfgList.add(vfg2);
+        FileSet fileSet = new FileSet();
+        fileSet.setVirtualFileGroups(vfgList);
+        dd.setFileSet(fileSet);
+
+        DocStruct tp = preparePhysicalDocStruct();
+        dd.setPhysicalDocStruct(tp);
+
+        XStream xstream = new XStream();
+        String xml = xstream.toXML(dd);
+        System.out.println(xml);
+    }
 
     /* Tests for the methods:
      * 1. sortMetadataRecursivelyAbcdefg() 
      * 2. sortMetadataRecursively(Prefs)
      */
+    @Test
+    public void testSortMetadataRecursivelyAbcdefgGivenUninitializedLogicalOrPhysicalStruct() {
+        assertNull(dd.getPhysicalDocStruct());
+        assertNull(dd.getLogicalDocStruct());
+        // just run this method to check if it throws any exceptions
+        dd.sortMetadataRecursivelyAbcdefg();
+    }
+
+    @Test
+    public void testSortMetadataRecursivelyGivenNull() throws TypeNotAllowedForParentException {
+        // without initializing the fields topLogicalStruct and topPhysicalStruct
+        assertNull(dd.getPhysicalDocStruct());
+        assertNull(dd.getLogicalDocStruct());
+        // run this method to check if it throws any exceptions
+        dd.sortMetadataRecursively(null);
+
+        // initialize both fields and check the method again
+        DocStructType phyType = new DocStructType();
+        DocStructType logType = new DocStructType();
+        // names of DocStructType objects are important for the private method getAllDocStructsByTypePrivate(DocStruct, String)
+        phyType.setName("phy");
+        logType.setName("log");
+        DocStruct phyDS = new DocStruct(phyType);
+        DocStruct logDS = new DocStruct(logType);
+        dd.setPhysicalDocStruct(phyDS);
+        dd.setLogicalDocStruct(logDS);
+
+        // as long as there is no exception thrown, we are good
+        dd.sortMetadataRecursively(null);
+    }
 
     /* Tests for the method addContentFileFromPhysicalPage(DocStruct) */
     @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")

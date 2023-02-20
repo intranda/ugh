@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ugh.dl.DigitalDocument>
+  <topPhysicalStruct>
+    <allMetadata class="linked-list">
+      <ugh.dl.Metadata>
+        <MDType>
+          <name>pathimagefiles</name>
+          <isPerson>false</isPerson>
+          <isCorporate>false</isCorporate>
+          <isIdentifier>false</isIdentifier>
+          <allowNameParts>false</allowNameParts>
+          <allowNormdata>false</allowNormdata>
+          <validationExpression></validationExpression>
+        </MDType>
+        <parent class="ugh.dl.DocStruct" reference="../../.."/>
+        <metadataValue>/tmp/</metadataValue>
+        <updated>true</updated>
+        <authorityUriMap/>
+        <validationErrorPresent>false</validationErrorPresent>
+      </ugh.dl.Metadata>
+      <ugh.dl.Metadata>
+        <MDType>
+          <name>_representative</name>
+          <isPerson>false</isPerson>
+          <isCorporate>false</isCorporate>
+          <isIdentifier>false</isIdentifier>
+          <allowNameParts>false</allowNameParts>
+          <allowNormdata>false</allowNormdata>
+          <validationExpression></validationExpression>
+        </MDType>
+        <parent class="ugh.dl.DocStruct" reference="../../.."/>
+        <metadataValue></metadataValue>
+        <updated>true</updated>
+        <authorityUriMap/>
+        <validationErrorPresent>false</validationErrorPresent>
+      </ugh.dl.Metadata>
+    </allMetadata>
+    <children class="linked-list">
+      <ugh.dl.DocStruct>
+        <allMetadata class="linked-list">
+          <ugh.dl.Metadata>
+            <MDType>
+              <name>physPageNumber</name>
+              <isPerson>false</isPerson>
+              <isCorporate>false</isCorporate>
+              <isIdentifier>false</isIdentifier>
+              <allowNameParts>false</allowNameParts>
+              <allowNormdata>false</allowNormdata>
+              <validationExpression></validationExpression>
+            </MDType>
+            <parent class="ugh.dl.DocStruct" reference="../../.."/>
+            <metadataValue>1</metadataValue>
+            <updated>true</updated>
+            <authorityUriMap/>
+            <validationErrorPresent>false</validationErrorPresent>
+          </ugh.dl.Metadata>
+          <ugh.dl.Metadata>
+            <MDType reference="../../ugh.dl.Metadata/MDType"/>
+            <parent class="ugh.dl.DocStruct" reference="../../.."/>
+            <metadataValue>2</metadataValue>
+            <updated>true</updated>
+            <authorityUriMap/>
+            <validationErrorPresent>false</validationErrorPresent>
+          </ugh.dl.Metadata>
+          <ugh.dl.Metadata>
+            <MDType reference="../../ugh.dl.Metadata/MDType"/>
+            <parent class="ugh.dl.DocStruct" reference="../../.."/>
+            <metadataValue>3</metadataValue>
+            <updated>true</updated>
+            <authorityUriMap/>
+            <validationErrorPresent>false</validationErrorPresent>
+          </ugh.dl.Metadata>
+        </allMetadata>
+        <contentFileReferences/>
+        <parent reference="../../.."/>
+        <docStructRefsTo/>
+        <docStructRefsFrom/>
+        <type>
+          <name>page</name>
+          <isanchor>false</isanchor>
+          <hasfileset>true</hasfileset>
+          <topmost>false</topmost>
+          <allLanguages/>
+          <allMetadataTypes class="linked-list">
+            <ugh.dl.MetadataTypeForDocStructType>
+              <mdt reference="../../../../allMetadata/ugh.dl.Metadata/MDType"/>
+              <num>*</num>
+              <defaultdisplay>false</defaultdisplay>
+              <invisible>false</invisible>
+            </ugh.dl.MetadataTypeForDocStructType>
+          </allMetadataTypes>
+          <allChildrenTypes class="linked-list"/>
+          <allMetadataGroups class="linked-list"/>
+        </type>
+        <digdoc/>
+        <databaseid>0</databaseid>
+        <logical>false</logical>
+        <physical>true</physical>
+        <docstructType>div</docstructType>
+        <validationErrorPresent>false</validationErrorPresent>
+      </ugh.dl.DocStruct>
+    </children>
+    <contentFileReferences/>
+    <docStructRefsTo/>
+    <docStructRefsFrom/>
+    <type>
+      <name>top</name>
+      <isanchor>false</isanchor>
+      <hasfileset>true</hasfileset>
+      <topmost>false</topmost>
+      <allLanguages/>
+      <allMetadataTypes class="linked-list">
+        <ugh.dl.MetadataTypeForDocStructType>
+          <mdt reference="../../../../allMetadata/ugh.dl.Metadata/MDType"/>
+          <num>+</num>
+          <defaultdisplay>false</defaultdisplay>
+          <invisible>false</invisible>
+        </ugh.dl.MetadataTypeForDocStructType>
+        <ugh.dl.MetadataTypeForDocStructType>
+          <mdt reference="../../../../allMetadata/ugh.dl.Metadata[2]/MDType"/>
+          <num>+</num>
+          <defaultdisplay>false</defaultdisplay>
+          <invisible>false</invisible>
+        </ugh.dl.MetadataTypeForDocStructType>
+      </allMetadataTypes>
+      <allChildrenTypes class="linked-list">
+        <string>page</string>
+      </allChildrenTypes>
+      <allMetadataGroups class="linked-list"/>
+    </type>
+    <databaseid>0</databaseid>
+    <logical>false</logical>
+    <physical>true</physical>
+    <docstructType>div</docstructType>
+    <validationErrorPresent>false</validationErrorPresent>
+  </topPhysicalStruct>
+  <allImages>
+    <allImages class="linked-list"/>
+    <allMetadata class="linked-list"/>
+    <removedMetadata class="linked-list"/>
+    <virtualFileGroups>
+      <ugh.dl.VirtualFileGroup>
+        <name></name>
+        <pathToFiles></pathToFiles>
+        <mimetype></mimetype>
+        <fileSuffix></fileSuffix>
+        <idSuffix></idSuffix>
+        <contentFiles class="empty-list"/>
+        <mainGroup>false</mainGroup>
+        <ignoreConfiguredMimetypeAndSuffix>false</ignoreConfiguredMimetypeAndSuffix>
+      </ugh.dl.VirtualFileGroup>
+      <ugh.dl.VirtualFileGroup>
+        <name></name>
+        <pathToFiles></pathToFiles>
+        <mimetype></mimetype>
+        <fileSuffix></fileSuffix>
+        <idSuffix></idSuffix>
+        <contentFiles class="empty-list"/>
+        <mainGroup>false</mainGroup>
+        <ignoreConfiguredMimetypeAndSuffix>false</ignoreConfiguredMimetypeAndSuffix>
+      </ugh.dl.VirtualFileGroup>
+    </virtualFileGroups>
+  </allImages>
+</ugh.dl.DigitalDocument>
