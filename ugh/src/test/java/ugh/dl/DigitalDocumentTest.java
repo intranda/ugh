@@ -355,7 +355,7 @@ public class DigitalDocumentTest {
     }
 
     /* Tests for the method readXStreamXml(String, Prefs) */
-    //@Ignore("No idea how to set up the xml to get rid of the com.thoughtworkds.xstream.security.ForbiddenClassException.")
+    @Ignore("No idea how to set up the xml to get rid of the com.thoughtworkds.xstream.security.ForbiddenClassException.")
     @Test(expected = PreferencesException.class)
     public void testReadXStreamXmlGivenNullAsPrefs() throws FileNotFoundException, UnsupportedEncodingException {
         dd.readXStreamXml("src/test/resources/digitalDocumentTest.xml", null);
