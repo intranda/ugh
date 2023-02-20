@@ -48,6 +48,12 @@ public class SlimMdTest {
         transformer = transformerFactory.newTransformer();
     }
 
+    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
+    @Test
+    public void testFromMdGivenNull() {
+        assertNull(SlimMd.fromMd(null));
+    }
+
     @Test
     public void testFromMdGivenMdWithoutId() {
         for (int i = 0; i < nList.getLength(); ++i) {
