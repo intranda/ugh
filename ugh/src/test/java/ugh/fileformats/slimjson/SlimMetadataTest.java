@@ -97,7 +97,19 @@ public class SlimMetadataTest {
 
         SlimMetadata smd = SlimMetadata.fromMetadata(md, sdd);
         Metadata md2 = smd.toMetadata(new DigitalDocument());
+        // 1. toMetadata needs to call SlimDigitalDocument::getDsMap, which needs a String myDocStructId
+        // 2. the String myDocStructId will be set in the method SlimMetadata::fromMetadata
+        // 3. and myDocStructId will be equal to the id of the input Metadata object's parent, i.e. MetadataGroup's id
 
+        // 4. dsMap is a HashMap<String, SlimDocStruct>
+        // 5. the only way to add an element to dsMap is via the method SlimDigitalDocument::addSlimDocStruct
+        // 6. the input SlimDocStruct should contain an id as String, and this id will be used as key, while the SlimDocStruct object will be its value
+
+        // 7. there will also be a call of the method SlimDocStruct::toDocStruct, which needs a DigitalDocument object
+        // 8. the DigitalDocument object will use a DocStructType object to create a DocStruct
+        // 9. this DocStructType object is got via SlimDigitalDocument::getDsTypeMap
+        // 10. dsTypeMap is a HashMap<String, DocStructType>, where key is the type's name
+        // 11. one can add an item to dsTypeMap via SlimDigitalDocument::addDsType
     }
 
 }
