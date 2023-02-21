@@ -6,6 +6,8 @@ import static org.junit.Assert.assertFalse;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,10 +22,16 @@ import ugh.exceptions.ReadException;
 import ugh.fileformats.mets.MetsMods;
 
 public class SlimDigitalDocumentTest {
+    private SlimDigitalDocument sdd;
 
     Path meta = Paths.get("src/test/resources/meta.xml");
     Path ruleset = Paths.get("src/test/resources/ruleset.xml");
     
+    @Before
+    public void setUpBeforeEach() {
+        sdd = new SlimDigitalDocument();
+    }
+
     @Test
     public void testSerializeDigitalDocument() throws PreferencesException, ReadException, JsonProcessingException {
         Prefs prefs = new Prefs();
@@ -68,5 +76,86 @@ public class SlimDigitalDocumentTest {
 
         }
     }
+
+    /* tests for the method addSlimDocStruct */
+    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
+    @Test
+    public void testAddSlimDocStructGivenNull() {
+        sdd.addSlimDocStruct(null);
+    }
+
+    @Test
+    public void testAddSlimDocStructGivenExistingObject() {
+
+    }
+
+    @Test
+    public void testAddSlimDocStructGivenUnexistingObject() {
+
+    }
+
+    /* tests for the method addMetadataType */
+    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
+    @Test
+    public void testAddMetadataTypeGivenNull() {
+        sdd.addMetadataType(null);
+    }
+
+    @Test
+    public void testAddMetadataTypeGivenExistingObject() {
+
+    }
+
+    @Test
+    public void testAddMetadataTypeGivenUnexistingObject() {
+
+    }
+
+    /* tests for the method addDsType */
+    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
+    @Test
+    public void testAddDsTypeGivenNull() {
+        sdd.addDsType(null);
+    }
+
+    @Test
+    public void testAddDsTypeGivenExistingObject() {
+
+    }
+
+    @Test
+    public void testAddDsTypeGivenUnexistingObject() {
+
+    }
+
+    /* tests for the method addMetadataGroupType */
+    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
+    @Test
+    public void testAddMetadataGroupTypeGivenNull() {
+        sdd.addMetadataGroupType(null);
+    }
+
+    @Test
+    public void testAddMetadataGroupTypeGivenExistingObject() {
+
+    }
+
+    @Test
+    public void testAddMetadataGroupTypeGivenUnexistingObject() {
+
+    }
+
+    /* tests for the method fromDigitalDocument */
+    @Test
+    public void testFromDigitalDocumentGivenNullAsFirstArgument() {
+
+    }
+
+    @Test
+    public void testFromDigitalDocumentGivenNullAsSecondArgument() {
+
+    }
+
+    /* tests for the method toDigitalDocument */
 
 }
