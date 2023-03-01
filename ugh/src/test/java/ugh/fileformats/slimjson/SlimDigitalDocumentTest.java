@@ -2,6 +2,8 @@ package ugh.fileformats.slimjson;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,7 +16,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
+import ugh.dl.DocStructType;
 import ugh.dl.Metadata;
+import ugh.dl.MetadataGroupType;
+import ugh.dl.MetadataType;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
 import ugh.exceptions.PreferencesException;
@@ -86,12 +91,34 @@ public class SlimDigitalDocumentTest {
 
     @Test
     public void testAddSlimDocStructGivenExistingObject() {
-
+        // SlimDocStruct objects are distinguished by their ids
+        SlimDocStruct sds = new SlimDocStruct();
+        String id = "id";
+        sds.setId(id);
+        assertEquals(0, sdd.getDsMap().size());
+        sdd.addSlimDocStruct(sds);
+        assertEquals(1, sdd.getDsMap().size());
+        sdd.addSlimDocStruct(sds);
+        assertEquals(1, sdd.getDsMap().size());
+        assertSame(sds, sdd.getDsMap().get(id));
     }
 
     @Test
     public void testAddSlimDocStructGivenUnexistingObject() {
-
+        SlimDocStruct sds1 = new SlimDocStruct();
+        SlimDocStruct sds2 = new SlimDocStruct();
+        String id1 = "1";
+        String id2 = "2";
+        sds1.setId(id1);
+        sds2.setId(id2);
+        assertEquals(0, sdd.getDsMap().size());
+        sdd.addSlimDocStruct(sds1);
+        assertEquals(1, sdd.getDsMap().size());
+        sdd.addSlimDocStruct(sds2);
+        assertEquals(2, sdd.getDsMap().size());
+        assertSame(sds1, sdd.getDsMap().get(id1));
+        assertNotSame(sds1, sdd.getDsMap().get(id2));
+        assertSame(sds2, sdd.getDsMap().get(id2));
     }
 
     /* tests for the method addMetadataType */
@@ -103,12 +130,34 @@ public class SlimDigitalDocumentTest {
 
     @Test
     public void testAddMetadataTypeGivenExistingObject() {
-
+        // MetadataType objects are distinguished by their names
+        MetadataType mdt = new MetadataType();
+        String name = "name";
+        mdt.setName(name);
+        assertEquals(0, sdd.getMetadataTypeMap().size());
+        sdd.addMetadataType(mdt);
+        assertEquals(1, sdd.getMetadataTypeMap().size());
+        sdd.addMetadataType(mdt);
+        assertEquals(1, sdd.getMetadataTypeMap().size());
+        assertSame(mdt, sdd.getMetadataTypeMap().get(name));
     }
 
     @Test
     public void testAddMetadataTypeGivenUnexistingObject() {
-
+        String name1 = "1";
+        String name2 = "2";
+        MetadataType mdt1 = new MetadataType();
+        MetadataType mdt2 = new MetadataType();
+        mdt1.setName(name1);
+        mdt2.setName(name2);
+        assertEquals(0, sdd.getMetadataTypeMap().size());
+        sdd.addMetadataType(mdt1);
+        assertEquals(1, sdd.getMetadataTypeMap().size());
+        sdd.addMetadataType(mdt2);
+        assertEquals(2, sdd.getMetadataTypeMap().size());
+        assertSame(mdt1, sdd.getMetadataTypeMap().get(name1));
+        assertNotSame(mdt1, sdd.getMetadataTypeMap().get(name2));
+        assertSame(mdt2, sdd.getMetadataTypeMap().get(name2));
     }
 
     /* tests for the method addDsType */
@@ -120,12 +169,34 @@ public class SlimDigitalDocumentTest {
 
     @Test
     public void testAddDsTypeGivenExistingObject() {
-
+        // DocStructType objects are distinguished by their names
+        String name = "dst";
+        DocStructType dst = new DocStructType();
+        dst.setName(name);
+        assertEquals(0, sdd.getDsTypeMap().size());
+        sdd.addDsType(dst);
+        assertEquals(1, sdd.getDsTypeMap().size());
+        sdd.addDsType(dst);
+        assertEquals(1, sdd.getDsTypeMap().size());
+        assertSame(dst, sdd.getDsTypeMap().get(name));
     }
 
     @Test
     public void testAddDsTypeGivenUnexistingObject() {
-
+        String name1 = "1";
+        String name2 = "2";
+        DocStructType dst1 = new DocStructType();
+        dst1.setName(name1);
+        DocStructType dst2 = new DocStructType();
+        dst2.setName(name2);
+        assertEquals(0, sdd.getDsTypeMap().size());
+        sdd.addDsType(dst1);
+        assertEquals(1, sdd.getDsTypeMap().size());
+        sdd.addDsType(dst2);
+        assertEquals(2, sdd.getDsTypeMap().size());
+        assertSame(dst1, sdd.getDsTypeMap().get(name1));
+        assertNotSame(dst1, sdd.getDsTypeMap().get(name2));
+        assertSame(dst2, sdd.getDsTypeMap().get(name2));
     }
 
     /* tests for the method addMetadataGroupType */
@@ -137,12 +208,34 @@ public class SlimDigitalDocumentTest {
 
     @Test
     public void testAddMetadataGroupTypeGivenExistingObject() {
-
+        // MetadataGroupType objects are distinguished by their names
+        String name = "name";
+        MetadataGroupType mdgt = new MetadataGroupType();
+        mdgt.setName(name);
+        assertEquals(0, sdd.getMetadataGroupTypeMap().size());
+        sdd.addMetadataGroupType(mdgt);
+        assertEquals(1, sdd.getMetadataGroupTypeMap().size());
+        sdd.addMetadataGroupType(mdgt);
+        assertEquals(1, sdd.getMetadataGroupTypeMap().size());
+        assertSame(mdgt, sdd.getMetadataGroupTypeMap().get(name));
     }
 
     @Test
     public void testAddMetadataGroupTypeGivenUnexistingObject() {
-
+        String name1 = "1";
+        String name2 = "2";
+        MetadataGroupType mdgt1 = new MetadataGroupType();
+        MetadataGroupType mdgt2 = new MetadataGroupType();
+        mdgt1.setName(name1);
+        mdgt2.setName(name2);
+        assertEquals(0, sdd.getMetadataGroupTypeMap().size());
+        sdd.addMetadataGroupType(mdgt1);
+        assertEquals(1, sdd.getMetadataGroupTypeMap().size());
+        sdd.addMetadataGroupType(mdgt2);
+        assertEquals(2, sdd.getMetadataGroupTypeMap().size());
+        assertSame(mdgt1, sdd.getMetadataGroupTypeMap().get(name1));
+        assertNotSame(mdgt1, sdd.getMetadataGroupTypeMap().get(name2));
+        assertSame(mdgt2, sdd.getMetadataGroupTypeMap().get(name2));
     }
 
     /* tests for the method fromDigitalDocument */
