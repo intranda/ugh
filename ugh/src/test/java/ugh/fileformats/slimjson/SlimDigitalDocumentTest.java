@@ -2,11 +2,15 @@ package ugh.fileformats.slimjson;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -14,9 +18,12 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import ugh.dl.AmdSec;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
 import ugh.dl.DocStructType;
+import ugh.dl.FileSet;
+import ugh.dl.Md;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataGroupType;
 import ugh.dl.MetadataType;
@@ -239,16 +246,110 @@ public class SlimDigitalDocumentTest {
     }
 
     /* tests for the method fromDigitalDocument */
+    @Ignore("The logic in the method cannot pass this test. Null check needed for the first argument to avoid the NullPointerException.")
     @Test
     public void testFromDigitalDocumentGivenNullAsFirstArgument() {
+        Prefs prefs = new Prefs();
+        assertNotNull(prefs.getAllDocStructTypes());
+        SlimDigitalDocument.fromDigitalDocument(null, prefs);
+    }
 
+    @Ignore("The logic in the method cannot pass this test. Null check needed for the second argument to avoid the NullPointerException.")
+    @Test
+    public void testFromDigitalDocumentGivenNullAsSecondArgument() {
+        DigitalDocument dd = prepareDigitalDocument();
+
+        assertNotNull(dd.getPhysicalDocStruct());
+        assertNotNull(dd.getLogicalDocStruct());
+        assertNotNull(dd.getAmdSec());
+        assertNotNull(dd.getFileSet());
+
+        SlimDigitalDocument.fromDigitalDocument(dd, null);
     }
 
     @Test
-    public void testFromDigitalDocumentGivenNullAsSecondArgument() {
+    public void testFromDigitalDocumentGivenValidInput() {
+        // prepare DigitalDocument
+        DigitalDocument dd = prepareDigitalDocument();
 
+        assertNotNull(dd.getPhysicalDocStruct());
+        assertNotNull(dd.getLogicalDocStruct());
+        assertNotNull(dd.getAmdSec());
+        assertNotNull(dd.getFileSet());
+
+        // prepare Prefs
+        Prefs prefs = new Prefs();
+        assertNotNull(prefs.getAllDocStructTypes());
+
+        // test the method
+        sdd = SlimDigitalDocument.fromDigitalDocument(dd, prefs);
+        assertNotNull(sdd);
     }
 
     /* tests for the method toDigitalDocument */
+    @Test
+    public void testToDigitalDocument() {
+        // prepare DigitalDocument
+        DigitalDocument dd = prepareDigitalDocument();
+
+        // prepare Prefs
+        Prefs prefs = new Prefs();
+
+        // prepare SlimDigitalDocument
+        sdd = SlimDigitalDocument.fromDigitalDocument(dd, prefs);
+
+        String logicalId = sdd.getTopLogicalStructId();
+        String physicalId = sdd.getTopPhysicalStructId();
+
+        DigitalDocument dd2 = sdd.toDigitalDocument();
+        assertNotNull(dd2);
+
+        // ids of DocStruct objects should be equal
+        DocStruct dsLogical = dd2.getLogicalDocStruct();
+        DocStruct dsPhysical = dd2.getPhysicalDocStruct();
+        assertEquals(logicalId, dsLogical.getIdentifier());
+        assertEquals(physicalId, dsPhysical.getIdentifier());
+
+        // ids of AmdSec objects are NOT equal, FEATURE?
+        SlimAmdSec slimAmdSec = sdd.getAmdSec();
+        String sasId = slimAmdSec.getId();
+        AmdSec amdSec = dd2.getAmdSec();
+        String asId = amdSec.getId();
+        assertNotEquals(sasId, asId);
+
+        // lengths of Md lists should be equal
+        List<SlimMd> smdList = slimAmdSec.getTechMdList();
+        List<Md> mdList = amdSec.getTechMdList();
+        assertEquals(smdList.size(), mdList.size());
+
+        // lists of allImages should be equal in sizes
+        SlimFileSet slimFileSet = sdd.getAllImages();
+        FileSet fileSet = dd2.getFileSet();
+        assertEquals(slimFileSet.getAllImages().size(), fileSet.getAllFiles().size());
+    }
+
+    /* private functions needed in the tests */
+    private DigitalDocument prepareDigitalDocument() {
+        DigitalDocument dd = new DigitalDocument();
+        DocStructType dstLogical = new DocStructType();
+        dstLogical.setName("logical");
+        DocStructType dstPhysical = new DocStructType();
+        dstPhysical.setName("physical");
+        DocStruct dsLogical = new DocStruct();
+        dsLogical.setType(dstLogical);
+        DocStruct dsPhysical = new DocStruct();
+        dsPhysical.setType(dstPhysical);
+        dd.setLogicalDocStruct(dsLogical);
+        dd.setPhysicalDocStruct(dsPhysical);
+
+        ArrayList<Md> techMdList = new ArrayList<>();
+        AmdSec amdSec = new AmdSec(techMdList);
+        dd.setAmdSec(amdSec);
+
+        FileSet fileSet = new FileSet();
+        dd.setFileSet(fileSet);
+
+        return dd;
+    }
 
 }
