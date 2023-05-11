@@ -18,7 +18,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -85,20 +84,6 @@ public class ContentFileTest {
         MetadataType mdType = new MetadataType();
         Metadata md = new Metadata(mdType);
         assertFalse(cf.removeMetadata(md));
-    }
-
-    @Ignore("There is no way to initialize the fields allMetadata and removedMetadata, hence no test can be designed.")
-    @Test
-    public void testRemoveMetadataGivenNull() {
-        // Null should not be added into the removedMetadata list, since that would be nonsense
-        // Return value should rather be True OR False?
-    }
-
-    @Ignore("There is no way to initialize the fields allMetadata and removedMetadata, hence no test can be designed.")
-    @Test
-    public void testRemoveMetadataGivenUnexistingMetadataObject() {
-        // Unexisting Metadata object should not be added into the removedMetadata list, since it is not removed at all
-        // Return value should rather be True OR False?
     }
 
     /* Tests for the method addDocStructAsReference(DocStruct) */

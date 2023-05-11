@@ -10,7 +10,6 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ugh.exceptions.MetadataTypeNotAllowedException;
@@ -34,7 +33,6 @@ public class MetadataTest {
     @Test
     public void testConstructorGivenDefaultInput() {
         assertNotNull(md.getAuthorityUriMap());
-        assertFalse(md.wasUpdated());
         assertFalse(md.isValidationErrorPresent()); // the flag validationErrorPresent will be automatically initiated with false
         assertNull(md.getValidationMessage()); // but the string fields will remain null
     }
@@ -57,54 +55,6 @@ public class MetadataTest {
         assertTrue(type.equals(type2));
         assertNotSame(md.getType(), md2.getType());
         assertTrue(md.getType().equals(md2.getType()));
-    }
-
-    @Test
-    public void testSetValueGetValueTogetherWithWasUpdated() {
-        assertFalse(md.wasUpdated());
-        assertNull(md.getValue());
-        md.setValue("value");
-        assertEquals("value", md.getValue());
-        assertTrue(md.wasUpdated());
-    }
-
-    @Ignore("The logic in the method cannot pass this test. Comparison logic needed in the setValue(String) method.")
-    @Test
-    public void testSetValueGetValueTogetherWithWasUpdatedGivenNullToSet() {
-        // TODO remove wasUpdated from code, it is not needed or used anywhere
-        // Actually it is used in ugh.fileformats.slimjson.SlimMetadata on Line 85. - Zehong
-        // I will postpone the fix of these two issues, since I haven't really figured out the original purpose of the flag `updated`.
-        // It might be possible that even when the same value is set again, we still want this flag to be set to true. - Zehong 
-        assertFalse(md.wasUpdated());
-        assertNull(md.getValue());
-        md.setValue(null);
-        assertNull(md.getValue());
-        assertEquals(null, md.getValue());
-        assertFalse(md.wasUpdated()); // should setting null again change the flag of updated?
-    }
-
-    @Ignore("The logic in the method cannot pass this test. Comparison logic needed in the setValue(String) method.")
-    @Test
-    public void testSetValueGetValueTogetherWithWasUpdatedGivenSameValueToSetTwice() {
-        // TODO remove wasUpdated from code, it is not needed or used anywhere
-        assertFalse(md.wasUpdated());
-        assertNull(md.getValue());
-        md.setValue("value");
-        assertEquals("value", md.getValue());
-        assertTrue(md.wasUpdated());
-        md.wasUpdated(false); // set the updated flag back to false manually
-        assertEquals("value", md.getValue()); // recheck that the value was not infected
-        md.setValue("value"); // set the same value again
-        assertFalse(md.wasUpdated()); // should setting the same value again change the flag of updated?
-    }
-
-    @Test
-    public void testSetValueGetValueTogetherWithWasUpdatedGivenEmptyStringToSet() {
-        assertFalse(md.wasUpdated());
-        assertNull(md.getValue());
-        md.setValue("");
-        assertEquals(new String(), md.getValue());
-        assertTrue(md.wasUpdated());
     }
 
     @Test

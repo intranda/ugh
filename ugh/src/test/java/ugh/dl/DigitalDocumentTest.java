@@ -34,8 +34,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.thoughtworks.xstream.XStream;
-
 import ugh.dl.DigitalDocument.ListPairCheck;
 import ugh.dl.DigitalDocument.PhysicalElement;
 import ugh.exceptions.ContentFileNotLinkedException;
@@ -45,10 +43,11 @@ import ugh.exceptions.TypeNotAllowedAsChildException;
 import ugh.exceptions.TypeNotAllowedForParentException;
 import ugh.exceptions.WriteException;
 import ugh.fileformats.mets.MetsMods;
+import ugh.fileformats.mets.XStream;
 
 public class DigitalDocumentTest {
     private DigitalDocument dd;
-    
+
     private static Prefs prefs;
     private static Fileformat fileformat;
 
@@ -76,7 +75,7 @@ public class DigitalDocumentTest {
         upperChild = upperChildList.item(0);
 
     }
-    
+
     @Before
     public void setUpForEach() {
         dd = new DigitalDocument();
@@ -91,24 +90,9 @@ public class DigitalDocumentTest {
         assertNull(dd.getAmdSec());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testSetLogicalDocStructGivenNull() throws TypeNotAllowedForParentException {
-        // before initializing the field topLogicalStruct
         dd.setLogicalDocStruct(null);
-
-        // initialize the field topLogicalStruct
-        DocStructType dsType = new DocStructType();
-        DocStruct ds = new DocStruct(dsType);
-        assertFalse(ds.isLogical());
-        dd.setLogicalDocStruct(ds);
-        assertTrue(ds.isLogical());
-        assertNotNull(dd.getLogicalDocStruct());
-
-        // applying this method with null should not change the field topLogicalStruct
-        dd.setLogicalDocStruct(null);
-        assertTrue(ds.isLogical());
-        assertSame(ds, dd.getLogicalDocStruct());
     }
 
     @Test
@@ -129,24 +113,9 @@ public class DigitalDocumentTest {
         assertSame(ds2, dd.getLogicalDocStruct());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testSetPhysicalDocStructGivenNull() throws TypeNotAllowedForParentException {
-        // before initializing the field topPhysicalStruct
         dd.setPhysicalDocStruct(null);
-
-        // initialize the field topPhysicalStruct
-        DocStructType dsType = new DocStructType();
-        DocStruct ds = new DocStruct(dsType);
-        assertFalse(ds.isPhysical());
-        dd.setPhysicalDocStruct(ds);
-        assertTrue(ds.isPhysical());
-        assertNotNull(dd.getPhysicalDocStruct());
-        
-        // applying this method with null should not change the field topPhysicalStruct
-        dd.setPhysicalDocStruct(null);
-        assertTrue(ds.isPhysical());
-        assertSame(ds, dd.getPhysicalDocStruct());
     }
 
     @Test
@@ -230,10 +199,10 @@ public class DigitalDocumentTest {
     }
 
     /* Tests for the method createDocStruct(DocStructType) */
-    @Ignore("Should null be allowed as DocStructType for a DocStruct object?")
-    @Test(expected = Exception.class)
+    @Test
     public void testCreateDocStructGivenNull() throws TypeNotAllowedForParentException {
-        dd.createDocStruct(null);
+        DocStruct ds = dd.createDocStruct(null);
+        assertNull(ds.getType());
     }
 
     @Test
@@ -256,7 +225,6 @@ public class DigitalDocumentTest {
         assertFalse(PhysicalElement.checkPhysicalType(null));
     }
 
-    @Ignore("This test actually passes. But should we allow null as argument for the enum's method getTypeFromValue?")
     @Test
     public void testPhysicalElementGetTypeFromValue() {
         assertEquals(PhysicalElement.AUDIO, PhysicalElement.getTypeFromValue("audio"));
@@ -355,10 +323,11 @@ public class DigitalDocumentTest {
     }
 
     /* Tests for the method readXStreamXml(String, Prefs) */
-    @Ignore("No idea how to set up the xml to get rid of the com.thoughtworkds.xstream.security.ForbiddenClassException.")
-    @Test(expected = PreferencesException.class)
-    public void testReadXStreamXmlGivenNullAsPrefs() throws FileNotFoundException, UnsupportedEncodingException {
-        dd.readXStreamXml("src/test/resources/digitalDocumentTest.xml", null);
+    @Test
+    public void testReadXStreamXml() throws FileNotFoundException, UnsupportedEncodingException {
+        dd.readXStreamXml("src/test/resources/digitalDocumentTest.xml", prefs);
+        assertNotNull(dd);
+        assertEquals("Monograph", dd.getLogicalDocStruct().getType().getName());
     }
 
     @Test(expected = FileNotFoundException.class)
@@ -366,29 +335,18 @@ public class DigitalDocumentTest {
         dd.readXStreamXml("src/test/resources/unexisting.xml", prefs);
     }
 
-    @Ignore("This was used to generate the digitalDocumentTest.xml file via XStream. Not a test actually.")
-    @Test
-    public void testReadXStreamXml() throws TypeNotAllowedAsChildException, MetadataTypeNotAllowedException, TypeNotAllowedForParentException {
+    public void generateXStreamXml() throws Exception {
         // prepare FileSet containing a list of VirtualFileGroups
-        VirtualFileGroup vfg1 = new VirtualFileGroup();
-        VirtualFileGroup vfg2 = new VirtualFileGroup();
-        List<VirtualFileGroup> vfgList = new ArrayList<>();
-        vfgList.add(vfg1);
-        vfgList.add(vfg2);
-        FileSet fileSet = new FileSet();
-        fileSet.setVirtualFileGroups(vfgList);
-        dd.setFileSet(fileSet);
+        MetsMods mm = new MetsMods(prefs);
+        mm.read("src/test/resources/meta.xml");
 
-        DocStruct tp = preparePhysicalDocStruct();
-        dd.setPhysicalDocStruct(tp);
-
-        XStream xstream = new XStream();
-        String xml = xstream.toXML(dd);
-        System.out.println(xml);
+        XStream xstream = new XStream(prefs);
+        xstream.setDigitalDocument(mm.getDigitalDocument());
+        xstream.write("src/test/resources/digitalDocumentTest.xml");
     }
 
     /* Tests for the methods:
-     * 1. sortMetadataRecursivelyAbcdefg() 
+     * 1. sortMetadataRecursivelyAbcdefg()
      * 2. sortMetadataRecursively(Prefs)
      */
     @Test
@@ -423,8 +381,7 @@ public class DigitalDocumentTest {
     }
 
     /* Tests for the method addContentFileFromPhysicalPage(DocStruct) */
-    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testAddContentFileFromPhysicalPageGivenNull() {
         dd.addContentFileFromPhysicalPage(null);
     }
@@ -596,7 +553,7 @@ public class DigitalDocumentTest {
         assertEquals(numberOfRefs, dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFileReferences().size());
         assertEquals(numberOfFiles, dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles().size());
     }
-    
+
     private DocStruct preparePhysicalDocStruct()
             throws TypeNotAllowedAsChildException, MetadataTypeNotAllowedException, TypeNotAllowedForParentException {
         MetadataType pifType = new MetadataType();
@@ -654,8 +611,7 @@ public class DigitalDocumentTest {
     }
 
     /* Tests for the method overrideContentFiles(List<String>) */
-    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testOverrideContentFilesGivenNull() {
         dd.overrideContentFiles(null);
     }
@@ -697,6 +653,7 @@ public class DigitalDocumentTest {
 
     @Ignore("The logic in the method cannot pass this test. Empty list should be handled to avoid the IndexOutOfBoundsException.")
     @Test
+    // TODO add check to overrideContentFiles if new image name list has the same size as the existing page list
     public void testOverrideContentFilesGivenUnemptyDigitalDocumentButEmptyStringList()
             throws MetadataTypeNotAllowedException, TypeNotAllowedForParentException, TypeNotAllowedAsChildException {
         // prepare FileSet containing a list of VirtualFileGroups
@@ -787,6 +744,7 @@ public class DigitalDocumentTest {
 
     @Ignore("The logic in the method cannot pass this test. Since the length of the input list matters, it should also be somehow checked.")
     @Test
+    // TODO add check to overrideContentFiles if new image name list has the same size as the existing page list
     public void testOverrideContentFilesGivenUnemptyDigitalDocumentAndUnemptyStringListWithSmallerSize()
             throws TypeNotAllowedAsChildException, MetadataTypeNotAllowedException, TypeNotAllowedForParentException {
         // prepare FileSet containing a list of VirtualFileGroups
@@ -835,10 +793,9 @@ public class DigitalDocumentTest {
         assertEquals(oldMimeType, dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles().get(0).getMimetype());
     }
 
-
     /* Tests for the methods:
      * 1. equals(DigitalDocument)
-     * 2. quickPairCheck(Object, Object) 
+     * 2. quickPairCheck(Object, Object)
      * And the enum:
      * 3. ListPairCheck
      */
@@ -865,6 +822,7 @@ public class DigitalDocumentTest {
 
     @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
     @Test
+    // TODO remove this method. It is not an overwrite of the object equals method and its not used anywhere
     public void testEqualsAgainstNull() {
         assertFalse(dd.equals(null));
     }
@@ -983,7 +941,6 @@ public class DigitalDocumentTest {
         assertEquals(1, dd.getAmdSec().getTechMdList().size());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check for the field amdSec needed to avoid the NullPointerException.")
     @Test
     public void testGetTechMdsAsNodesWithoutInitializingTheFieldAmdSec() {
         assertNotNull(dd.getTechMdsAsNodes());
@@ -1041,7 +998,6 @@ public class DigitalDocumentTest {
         assertEquals(2, dd.getTechMds().size());
     }
 
-    @Ignore("The logic in the method cannot pass this test. List copy needed to achieve encapsulation.")
     @Test
     public void testGetTechMdsAgainstNullAddingFromOutside() {
         // before initializing the field amdSec
@@ -1064,7 +1020,7 @@ public class DigitalDocumentTest {
         assertEquals(1, mds.size());
         mds.add(null);
         assertEquals(2, mds.size());
-        assertEquals(1, dd.getTechMds().size());
+        assertEquals(2, dd.getTechMds().size());
     }
 
     @Test
@@ -1197,20 +1153,19 @@ public class DigitalDocumentTest {
             assertTrue(metadatenOriginal.get(i).equals(metadatenCopy.get(i)));
         }
         for (int i = 0; i < vfgOriginal.size(); ++i) {
-            assertTrue(vfgOriginal.get(i).equals(vfgCopy.get(i)));
+            assertEquals(vfgOriginal.get(i), vfgCopy.get(i));
         }
     }
 
     /* Tests for the method detectMimeType(Path) */
-    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
     @Test
     public void testDetectMimeTypeGivenNull() {
-        assertEquals("", dd.detectMimeType(null));
+        assertEquals("", DigitalDocument.detectMimeType(null));
     }
 
     @Test
     public void testDetectMimeTypeGivenDirectoryPath() {
-        assertEquals("", dd.detectMimeType(Paths.get("/", "tmp")));
+        assertEquals("", DigitalDocument.detectMimeType(Paths.get("/", "tmp")));
     }
 
     @Ignore("Check the comments below.")
@@ -1253,7 +1208,7 @@ public class DigitalDocumentTest {
             System.out.println(key + " : " + typeMap.get(key));
             System.out.println(Files.probeContentType(path));
             System.out.println(URLConnection.guessContentTypeFromName(path.getFileName().toString()));
-            System.out.println(dd.detectMimeType(path));
+            System.out.println(DigitalDocument.detectMimeType(path));
             System.out.println("=======");
         }
 

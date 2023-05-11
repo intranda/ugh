@@ -265,6 +265,7 @@ public class MetadataGroupTest {
 
     @Ignore("The logic in the method cannot pass this test. No suggestions available. Same logic of addPerson passed the same test. Feature OR Bug?")
     @Test
+    // TODO your example PublisherCorporate is set to num="1o" in your group. So you can't add it a second time. PublisherPerson can be added multiple times
     public void testAddCorporateGivenObjectExtendedFromCorporate() throws MetadataTypeNotAllowedException {
         MetadataType type = prefs.getMetadataTypeByName("PublisherCorporate");
         //        MetadataType type = new MetadataType();

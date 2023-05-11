@@ -529,7 +529,8 @@ public class DigitalDocument implements Serializable {
             }
         };
         xStream.allowTypes(new Class[] { DigitalDocument.class, Metadata.class, Person.class, MetadataGroup.class, Corporate.class, DocStruct.class,
-                MetadataTypeForDocStructType.class, MetadataGroupForDocStructType.class });
+                MetadataTypeForDocStructType.class, MetadataGroupForDocStructType.class, Reference.class, ContentFileReference.class,
+                AllowedMetadataGroupType.class, ContentFile.class });
 
         DigitalDocument digDoc = (DigitalDocument) xStream.fromXML(infile);
 
@@ -1124,6 +1125,9 @@ public class DigitalDocument implements Serializable {
      * @return the techMd
      */
     public List<Node> getTechMdsAsNodes() {
+        if (this.amdSec == null) {
+            amdSec = new AmdSec(new ArrayList<>());
+        }
         return amdSec.getTechMdsAsNodes();
     }
 
@@ -1237,13 +1241,14 @@ public class DigitalDocument implements Serializable {
     public static String detectMimeType(Path path) {
 
         String mimeType = "";
-        if (Files.isDirectory(path)) {
+        if (path == null || Files.isDirectory(path)) {
             return mimeType;
         }
         try {
             // first try to detect mimetype from OS map
             mimeType = Files.probeContentType(path);
         } catch (IOException e) {
+            // do nothing
         }
         // if this didn't work, try to get it from the internal FileNameMap to resolve the type from the extension
         if (StringUtils.isBlank(mimeType)) {
@@ -1294,6 +1299,7 @@ public class DigitalDocument implements Serializable {
                     break;
                 case "mxf":
                     mimeType = "video/mxf";
+                    break;
                 case "ogg":
                     mimeType = "video/ogg";
                     break;

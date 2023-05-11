@@ -168,7 +168,7 @@ public class Prefs implements Serializable {
         //
         // Parse the DOM.
         upperChildlist = document.getElementsByTagName("Preferences");
-        if (upperChildlist == null) {
+        if (upperChildlist == null || upperChildlist.getLength() == 0) {
             // No preference element -> wrong XML file.
             String message = "Preference file does not begin with <Preferences> element!";
             log.error(message);
@@ -546,8 +546,8 @@ public class Prefs implements Serializable {
                     if (!bResult) {
                         // Error occured; so exit this method; no new
                         // DocStrctType.
-                        log.error("Error reading config for DocStructType '" + currentDocStrctType.getName()
-                        + "'! Can't addDocStructType as child '" + allowedChild + "'");
+                        log.error("Error reading config for DocStructType '" + currentDocStrctType.getName() + "'! Can't addDocStructType as child '"
+                                + allowedChild + "'");
                         return null;
                     }
                 }
@@ -679,8 +679,7 @@ public class Prefs implements Serializable {
                 } else if (currentNode.getNodeName().equals("validationErrorMessage")) {
                     attributeNodelist = currentNode.getAttributes();
                     attributeNode = attributeNodelist.getNamedItem("name");
-                    String  lang = attributeNode.getNodeValue();
-
+                    String lang = attributeNode.getNodeValue();
 
                     NodeList textnodes = currentNode.getChildNodes();
                     if (textnodes != null) {
@@ -765,9 +764,10 @@ public class Prefs implements Serializable {
                         Node attribNode = attributeNodelist.getNamedItem("num");
                         if (attribNode != null) {
                             mdtypeNum = attribNode.getNodeValue();
-                        }  Node defaultNode = attributeNodelist.getNamedItem("DefaultDisplay");
-                        if (defaultNode != null &&  defaultNode.getNodeValue().equals("true")) {
-                            defaultDisplay=true;
+                        }
+                        Node defaultNode = attributeNodelist.getNamedItem("DefaultDisplay");
+                        if (defaultNode != null && defaultNode.getNodeValue().equals("true")) {
+                            defaultDisplay = true;
                         }
                     }
                     mdtypeName = "";
@@ -799,10 +799,10 @@ public class Prefs implements Serializable {
                         return null;
                     }
                     newMdType.setNum(mdtypeNum);
-                    currenGroup.addMetadataType(newMdType, mdtypeNum,defaultDisplay , false);
+                    currenGroup.addMetadataType(newMdType, mdtypeNum, defaultDisplay, false);
                 } else if (currentNode.getNodeName().equals("group")) {
                     attributeNodelist = currentNode.getAttributes();
-                    Node    attribNode = attributeNodelist.getNamedItem("num");
+                    Node attribNode = attributeNodelist.getNamedItem("num");
                     Node defaultNode = attributeNodelist.getNamedItem("DefaultDisplay");
 
                     if (attribNode == null) {
@@ -812,12 +812,12 @@ public class Prefs implements Serializable {
                         // Get max. number: 1,+,*
                         mdtypeNum = attribNode.getNodeValue();
                     }
-                    boolean defaultValue= false;
-                    if (defaultNode != null &&  defaultNode.getNodeValue().equals("true")) {
-                        defaultValue=true;
+                    boolean defaultValue = false;
+                    if (defaultNode != null && defaultNode.getNodeValue().equals("true")) {
+                        defaultValue = true;
                     }
 
-                    String groupName =null;
+                    String groupName = null;
                     NodeList textnodes = currentNode.getChildNodes();
                     if (textnodes != null) {
                         Node textnode = textnodes.item(0);
@@ -832,7 +832,6 @@ public class Prefs implements Serializable {
                     }
                     boolean invisibleValue = groupName.startsWith("_");
                     currenGroup.addGroupTypeAsChild(groupName, mdtypeNum, defaultValue, invisibleValue);
-
 
                 } else if (currentNode.getNodeName().equals("language")) {
                     attributeNodelist = currentNode.getAttributes();
@@ -1010,7 +1009,7 @@ public class Prefs implements Serializable {
 
         PrefsType tempType;
 
-        if (inType == null) {
+        if (inType == null || inType.getName() == null) {
             return false;
         }
         if (getMetadataTypeByName(inType.getName()) == null) {
@@ -1163,7 +1162,7 @@ public class Prefs implements Serializable {
 
         MetadataGroupType tempType;
 
-        if (inGroup == null) {
+        if (inGroup == null || inGroup.getName() == null) {
             return false;
         }
         if (getMetadataGroupTypeByName(inGroup.getName()) == null) {

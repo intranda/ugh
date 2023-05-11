@@ -26,6 +26,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -90,7 +92,7 @@ public class MetadataType implements Serializable, PrefsType {
 
     // Maximum number of occurences of this MetadataType for one DocStrct (can
     // be 1 (1), one or more (+) or as many as you want (*).
-    private String max_number;
+    private String max_number = "1o";
 
     // Hash containing all languages.
     private HashMap<String, String> allLanguages;
@@ -99,9 +101,9 @@ public class MetadataType implements Serializable, PrefsType {
     protected boolean isPerson = false;
 
     // is set to true, if metadata is a corporate
-    @Getter @Setter
+    @Getter
+    @Setter
     protected boolean isCorporate = false;
-
 
     // Is set to true, if this MetadataType acts as an element; which means,
     // that a metadata with the same value cannot be available twice.
@@ -134,14 +136,12 @@ public class MetadataType implements Serializable, PrefsType {
      * @param in
      **************************************************************************/
     public void setNum(String in) {
-
-        // When max_number is null, then a default value would be used, but that logic is implemented somewhere else, which might be unpredictable. 
-        // I think it might be a better idea to set a default value directly here in this class. - Zehong
-        if (in != null && !in.equals("1m") && !in.equals("1o") && !in.equals("+") && !in.equals("*")) {
+        if (StringUtils.isBlank(in) || (!in.equals("1m") && !in.equals("1o") && !in.equals("+") && !in.equals("*"))) {
             // Unknown syntax.
-            return ;
+            return;
+        } else {
+            this.max_number = in;
         }
-        this.max_number = in;
     }
 
     /***************************************************************************
@@ -358,8 +358,7 @@ public class MetadataType implements Serializable, PrefsType {
             if (!((this.getName() == null && metadataType.getName() == null) || this.getName().equals(metadataType.getName()))) {
                 return false;
             }
-        }
-        catch (NullPointerException npe) {
+        } catch (NullPointerException npe) {
             return false;
         }
 

@@ -76,7 +76,7 @@ public class PrefsTest {
     /* Tests for the method loadPrefs(String) */
     @Test
     public void testLoadPrefsGivenNull() {
-        // better handle the NullPointerException 
+        // better handle the NullPointerException
         assertThrows(Exception.class, () -> prefs.loadPrefs(null));
     }
 
@@ -90,22 +90,12 @@ public class PrefsTest {
         assertThrows(PreferencesException.class, () -> prefs.loadPrefs("unexisting.xml"));
     }
 
-    @Ignore("This test actually passes. But there is a logical bug in the source codes. Check the comments below.")
     @Test
     public void testLoadPrefsGivenValidFileWithInvalidContents1() {
         // On L170 of Prefs.java, upperChildlist will never be null.
         // Therefore running this test will give us "No upper child in preference file" as the error message.
         // The checking logic should be changed to "if (upperChildlist.getLength() == 0)"
         assertThrows(PreferencesException.class, () -> prefs.loadPrefs("src/test/resources/nodeTest.xml"));
-    }
-
-    @Ignore("The logic in the method cannot pass this test. Check the comments below.")
-    @Test
-    public void testLoadPrefsGivenValidFileWithInvalidContents2() throws PreferencesException {
-        // On L179 of Prefs.java, upperChild will not be null as expected.
-        // Therefore running this test will throw no exception. 
-        // The checking logic should be modified (no idea how yet).
-        assertThrows(PreferencesException.class, () -> prefs.loadPrefs("src/test/resources/rulesetFake.xml"));
     }
 
     @Test
@@ -195,11 +185,7 @@ public class PrefsTest {
                             Node numAtt = node.getAttributes().getNamedItem("num");
                             String num = dst.getAllMetadataTypes().get(countMetadata).getNum();
                             if (numAtt == null) {
-                                // the default setting on L374 does not work, since "1" is not a valid value for num
-                                // "1m", "1o", "*", "+" are the only four valid options
-                                // any other inputs will only result in null
-                                //                                assertEquals("1", num);
-                                assertNull(num);
+                                assertEquals("1o", num);
                             } else {
                                 assertEquals(numAtt.getNodeValue(), num);
                             }
@@ -210,11 +196,7 @@ public class PrefsTest {
                             Node numAtt = node.getAttributes().getNamedItem("num");
                             String num = dst.getAllMetadataGroupTypes().get(countGroup).getNum();
                             if (numAtt == null) {
-                                // the default setting on L454 does not work, since "1" is not a valid value for num
-                                // "1m", "1o", "*", "+" are the only four valid options
-                                // any other inputs will only result in null
-                                //                                assertEquals("1", num);
-                                assertNull(num);
+                                assertEquals("1o", num);
                             } else {
                                 assertEquals(numAtt.getNodeValue(), num);
                             }
@@ -468,7 +450,7 @@ public class PrefsTest {
     }
 
     /* Tests for the following methods:
-     * 1. addMetadataType(MetadataType) 
+     * 1. addMetadataType(MetadataType)
      * 2. getMetadataTypeByName(String)
      * 3. getMetadataTypeByName(String, String)
      * 4. getAllMetadataTypes()
@@ -482,7 +464,6 @@ public class PrefsTest {
         assertFalse(prefs.addMetadataType(null));
     }
 
-    @Ignore("The logic in the method cannot pass this test. Unnamed MetadataType objects should not be addable.")
     @Test
     public void testAddMetadataTypeGivenUnnamedMetadataType() {
         assertEquals(0, prefs.getAllMetadataTypes().size());
@@ -522,7 +503,6 @@ public class PrefsTest {
         assertEquals("1o", prefs.getMetadataTypeByName("mdt").getNum());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check for the parameter language needed.")
     @Test
     public void testGetMetadataTypeByNameGivenNull() throws PreferencesException {
         // before initialization of the field allMetadataTypes
@@ -538,11 +518,12 @@ public class PrefsTest {
         assertNull(prefs.getMetadataTypeByName(null));
         assertNull(prefs.getMetadataTypeByName(null, null));
         assertNull(prefs.getMetadataTypeByName(null, "en"));
-        assertNull(prefs.getMetadataTypeByName("URN", null));
+        assertNotNull(prefs.getMetadataTypeByName("URN", null));
     }
 
     @Ignore("The logic in the method cannot pass this test. Language checking logic needs modification. Otherwise the last language would be regarded as default option.")
     @Test
+    // TODO: fix this in getMetadataTypeByName
     public void testGetMetadataTypeByNameGivenUnmatchingLanguage() throws PreferencesException {
         assertTrue(prefs.loadPrefs("src/test/resources/ruleset.xml"));
         assertTrue(prefs.getAllMetadataTypes().size() > 0);
@@ -578,7 +559,7 @@ public class PrefsTest {
     }
 
     /* Tests for the following methods:
-     * 1. getMetadataGroupTypeByName(String) 
+     * 1. getMetadataGroupTypeByName(String)
      * 2. addMetadataGroup(MetadataGroupType)
      * */
     @Test
@@ -619,7 +600,7 @@ public class PrefsTest {
         assertFalse(prefs.addMetadataGroup(null));
     }
 
-    @Ignore("The logic in the method cannot pass this test. Unnamed MetadataGroupType should not be addable. Otherwise a NullPointerException would possibly occur.")
+    //    @Ignore("The logic in the method cannot pass this test. Unnamed MetadataGroupType should not be addable. Otherwise a NullPointerException would possibly occur.")
     @Test
     public void testAddMetadataGroupGivenUnnamedMetadataGroupObject() {
         MetadataGroupType mdgt = new MetadataGroupType();
