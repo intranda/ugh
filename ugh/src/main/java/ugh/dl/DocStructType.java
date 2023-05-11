@@ -254,6 +254,9 @@ public class DocStructType implements Serializable, PrefsType {
      **************************************************************************/
     @Override
     public void addLanguage(String lang, String value) {
+        if (lang == null) {
+            return;
+        }
         this.allLanguages.put(lang, value);
     }
 
@@ -326,10 +329,12 @@ public class DocStructType implements Serializable, PrefsType {
      * @param in
      **************************************************************************/
     public void setAllMetadataTypes(List<MetadataType> in) {
-
-        for (MetadataType mdt : in) {
-            MetadataTypeForDocStructType mdtfdst = new MetadataTypeForDocStructType(mdt);
-            this.allMetadataTypes.add(mdtfdst);
+        if (in != null) {
+            allMetadataTypes.clear();
+            for (MetadataType mdt : in) {
+                MetadataTypeForDocStructType mdtfdst = new MetadataTypeForDocStructType(mdt);
+                this.allMetadataTypes.add(mdtfdst);
+            }
         }
     }
 
@@ -399,15 +404,15 @@ public class DocStructType implements Serializable, PrefsType {
      * @return String containing the number (number can be: "1o", "1m", "*", "+")
      **************************************************************************/
     public String getNumberOfMetadataType(PrefsType inType) {
-
-        Iterator<MetadataTypeForDocStructType> it = this.allMetadataTypes.iterator();
-        while (it.hasNext()) {
-            MetadataTypeForDocStructType mdtfdst = it.next();
-            if (mdtfdst.getMetadataType().getName().equals(inType.getName())) {
-                return mdtfdst.getNumber();
+        if (inType != null) {
+            Iterator<MetadataTypeForDocStructType> it = this.allMetadataTypes.iterator();
+            while (it.hasNext()) {
+                MetadataTypeForDocStructType mdtfdst = it.next();
+                if (mdtfdst.getMetadataType().getName().equals(inType.getName())) {
+                    return mdtfdst.getNumber();
+                }
             }
         }
-
         return "0";
     }
 
@@ -449,7 +454,7 @@ public class DocStructType implements Serializable, PrefsType {
         MetadataType myType;
 
         // Metadata is already available.
-        if (isMetadataTypeAlreadyAvailable(type)) {
+        if (type == null || isMetadataTypeAlreadyAvailable(type)) {
             return null;
         }
 
@@ -752,10 +757,12 @@ public class DocStructType implements Serializable, PrefsType {
      * @param in
      **************************************************************************/
     public void setAllMetadataGroups(List<MetadataGroupType> in) {
-
-        for (MetadataGroupType mdt : in) {
-            MetadataGroupForDocStructType mdtfdst = new MetadataGroupForDocStructType(mdt);
-            this.allMetadataGroups.add(mdtfdst);
+        allMetadataGroups.clear();
+        if (in != null) {
+            for (MetadataGroupType mdt : in) {
+                MetadataGroupForDocStructType mdtfdst = new MetadataGroupForDocStructType(mdt);
+                this.allMetadataGroups.add(mdtfdst);
+            }
         }
     }
 
@@ -825,7 +832,9 @@ public class DocStructType implements Serializable, PrefsType {
      * @return String containing the number (number can be: "1o", "1m", "*", "+")
      **************************************************************************/
     public String getNumberOfMetadataGroups(MetadataGroupType inType) {
-
+        if (inType == null) {
+            return "0";
+        }
         Iterator<MetadataGroupForDocStructType> it = this.allMetadataGroups.iterator();
         while (it.hasNext()) {
             MetadataGroupForDocStructType mdtfdst = it.next();
@@ -846,14 +855,15 @@ public class DocStructType implements Serializable, PrefsType {
      * @return true, if it is allowed; otherwise false
      **************************************************************************/
     public boolean isMDTGroupAllowed(MetadataGroupType inMDType) {
-        Iterator<MetadataGroupForDocStructType> it = allMetadataGroups.iterator();
-        while (it.hasNext()) {
-            MetadataGroupType mdt = it.next().getMetadataGroup();
-            if (mdt.getName().equals(inMDType.getName())) {
-                return true; // it is already available
+        if (inMDType!= null) {
+            Iterator<MetadataGroupForDocStructType> it = allMetadataGroups.iterator();
+            while (it.hasNext()) {
+                MetadataGroupType mdt = it.next().getMetadataGroup();
+                if (mdt.getName().equals(inMDType.getName())) {
+                    return true; // it is already available
+                }
             }
         }
-
         return false; // sorry, not available
     }
 
@@ -891,15 +901,15 @@ public class DocStructType implements Serializable, PrefsType {
      * @return MetadataGroup or null, if not available for this DocStructType
      **************************************************************************/
     public MetadataGroupType getMetadataGroupByGroup(MetadataGroupType inMDType) {
+        if (inMDType!= null) {
+            Iterator<MetadataGroupForDocStructType> it = this.allMetadataGroups.iterator();
+            while (it.hasNext()) {
+                MetadataGroupForDocStructType mdtfdst = it.next();
+                MetadataGroupType mdt = mdtfdst.getMetadataGroup();
 
-        // Check, if MetadataType is already available.
-        Iterator<MetadataGroupForDocStructType> it = this.allMetadataGroups.iterator();
-        while (it.hasNext()) {
-            MetadataGroupForDocStructType mdtfdst = it.next();
-            MetadataGroupType mdt = mdtfdst.getMetadataGroup();
-
-            if (mdt.getName().equals(inMDType.getName())) {
-                return mdt;
+                if (mdt.getName().equals(inMDType.getName())) {
+                    return mdt;
+                }
             }
         }
 
@@ -918,7 +928,9 @@ public class DocStructType implements Serializable, PrefsType {
      * @return newly created copy of the MetadataGroup object; if not successful null is returned
      **************************************************************************/
     public MetadataGroupType addMetadataGroup(MetadataGroupType type, String inNumber) {
-
+        if (type==null) {
+            return null;
+        }
         // New MetadataType obejct which is added to this DocStructType.
         MetadataGroupType myType;
 

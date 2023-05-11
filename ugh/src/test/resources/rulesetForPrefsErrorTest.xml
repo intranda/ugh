@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Preferences>
+	<DocStrctTypeTest>
+		<!-- Name should not be empty -->
+		<!-- ErrorCode: not set yet-->
+		<!-- unblock the following block when the bug on L323 in Prefs.java is fixed -->
+		<!-- 
+		<DocStrctType>
+			<Name></Name>
+		</DocStrctType>
+		<DocStrctType>
+			<Name/>
+		</DocStrctType>
+		-->
+	
+		<!-- the first child node of Name should be a TextNode -->
+		<!-- ErrorCode: p004a -->
+		<DocStrctType>
+			<Name><sth/></Name>
+		</DocStrctType>
+		
+		<!-- language should have a name attribute -->
+		<!-- ErrorCode: p005 -->
+		<DocStrctType>
+			<Name>name1</Name>
+			<language/>
+		</DocStrctType>
+		<DocStrctType>
+			<Name>name2</Name>
+			<language></language>
+		</DocStrctType>
+		<DocStrctType>
+			<Name>name3</Name>
+			<language>deutsch</language>
+		</DocStrctType>
+		
+		<!-- the first child node of language should be a TextNode -->
+		<!-- ErrorCode: p006 -->
+		<DocStrctType>
+			<Name>name</Name>
+			<language name=""><sth/></language>
+		</DocStrctType>
+		
+		<!-- the first child node of metadata should be a TextNode -->
+		<!-- ErrorCode: not set yet -->
+		<DocStrctType>
+			<Name>name</Name>
+			<metadata><sth/></metadata>
+		</DocStrctType>
+		
+		<!-- the value of the first TextNode of metadata should be available in the list allMetadataTypes -->
+		<!-- ErrorCode: not set yet -->
+		<DocStrctType>
+			<Name>name</Name>
+			<metadata>md</metadata>
+		</DocStrctType>
+		
+		<!-- metadata should not be empty -->
+		<!-- ErrorCode: not set yet -->
+		<!-- unblock the following block when a proper checking logic is added -->
+		<!-- 
+		<DocStrctType>
+			<Name>name</Name>
+			<metadata/>
+		</DocStrctType>
+		<DocStrctType>
+			<Name>name</Name>
+			<metadata></metadata>
+		</DocStrctType>
+		-->
+		
+		<!-- TODO: test the null on L443 in Prefs.java -->
+		<DocStrctType>
+			<Name>name</Name>
+			<metadata DefaultDisplay="TrUe">md</metadata>
+		</DocStrctType>
+		
+		<!-- the first child node of group should be a TextNode -->
+		<!-- ErrorCode: not set yet -->
+		<DocStrctType>
+			<Name>name</Name>
+			<group><sth/></group>
+		</DocStrctType>
+		
+		<!-- group should not be empty -->
+		<!-- ErrorCode: not set yet -->
+		<!-- unblock the following block when a proper checking logic is added -->
+		<!-- 
+		<DocStrctType>
+			<Name>name</Name>
+			<group/>
+		</DocStrctType>
+		<DocStrctType>
+			<Name>name</Name>
+			<group></group>
+		</DocStrctType>
+		-->
+		
+		<!-- the value of the first TextNode of group should be available in the list allMetadataTypes -->
+		<!-- ErrorCode: not set yet -->
+		<DocStrctType>
+			<Name>name</Name>
+			<group>group</group>
+		</DocStrctType>
+		
+		<!-- TODO: test the null on L523 in Prefs.java -->
+		<DocStrctType>
+			<Name>name</Name>
+			<group DefaultDisplay="TrUe">group</group>
+		</DocStrctType>
+		
+		<!-- the first child node of allowedchildtype should be a TextNode -->
+		<!-- ErrorCode: not set yet -->
+		<DocStrctType>
+			<Name>name</Name>
+			<allowedchildtype><sth/></allowedchildtype>
+		</DocStrctType>
+		
+		<!--  the node allowedchildtype should not be empty -->
+		<!-- ErrorCode: not set yet -->
+		<!-- unblock the following block when a proper checking logic is added -->
+		<!-- 
+		<DocStrctType>
+			<Name>name</Name>
+			<allowedchildtype></allowedchildtype>
+		</DocStrctType>
+		<DocStrctType>
+			<Name>name</Name>
+			<allowedchildtype/>
+		<DocStrctType>
+		-->
+		
+		<!-- TODO: test the null on L551 in Prefs.java -->
+		
+	</DocStrctTypeTest>
+	
+	<MetadataTypeTest>
+		<!-- Name should not be empty -->
+		<!-- ErrorCode: p002b -->
+ 		<MetadataType>
+			<Name/>
+		</MetadataType>	
+		<MetadataType>
+			<Name></Name>
+		</MetadataType>
+		
+		<!-- the first child node of Name should be a TextNode -->
+		<!-- ErrorCode: p002 -->
+		<MetadataType>
+			<Name><sth></sth>
+				name
+			</Name>
+		</MetadataType>
+		
+		<!-- language should not be empty -->
+		<!-- ErrorCode: p001b -->
+		<MetadataType>
+			<Name>name1</Name>
+			<language name="en"></language>
+		</MetadataType>
+		<MetadataType>
+			<name>name2</name>
+			<language name="en"/>
+		</MetadataType>
+		
+		<!-- the first child node of language should be a TextNode -->
+		<!-- ErrorCode: p001 -->
+		<MetadataType>
+			<Name>name</Name>
+			<language name="en"><sth/>english</language>
+		</MetadataType>
+		
+		<!-- validationErrorMessage should not be empty -->
+		<!-- ErrorCode: p001b -->
+		<MetadataType>
+			<validationErrorMessage name=""></validationErrorMessage>
+		</MetadataType>
+		<MetadataType>
+			<validationErrorMessage name=""/>
+		</MetadataType>
+		
+		<!-- the first child node of validationErrorMessage should be a TextNode -->
+		<!-- ErrorCode: p001 -->
+		<MetadataType>
+			<validationErrorMessage name=""><sth/></validationErrorMessage>
+		</MetadataType>
+		
+	</MetadataTypeTest>
+	
+	<GroupTest>
+		<!-- the Name node should not be empty -->
+		<!-- ErrorCode: not set yet -->
+		<Group>
+			<Name></Name>
+		</Group>
+		<Group>
+			<Name/>
+		</Group>
+		
+		<!-- the first child node of Name should be a TextNode -->
+		<!-- ErrorCode: not set yet -->
+		<Group>
+			<Name><sth/>name</Name>
+		</Group>
+		
+		<!-- the metadata node should not be empty -->
+		<!-- ErrorCode: not set yet -->
+		<!-- unblock the following block when a proper checking logic is added -->
+		<!-- 
+		<Group>
+			<Name>name</Name>
+			<metadata></metadata>
+		</Group>
+		<Group>
+			<metadata/>
+		</Group>
+		-->
+		
+		<!-- the first child node of metadata should be a TextNode -->
+		<!-- ErrorCode: not set yet -->
+		<Group>
+			<metadata><sth/></metadata>
+		</Group>
+		
+		<!-- the value of the first TextNode of metadata should be available in the list allMetadataTypes -->
+		<!-- ErrorCode: not set yet -->
+		<!-- test the null is on L799 in Prefs.java -->
+		<Group>
+			<metadata>mdt</metadata>
+		</Group>
+		
+		<!-- the group node should not be empty -->
+		<!-- ErrorCode: not set yet -->
+		<!-- unblock the following block when a proper checking logic is added -->
+		<!-- 
+		<Group>
+			<group></group>
+		</Group>
+		<Group>
+			<group/>
+		</Group>
+		-->
+		
+		<!-- the first child node of group should be a TextNode -->
+		<!-- ErrorCode: not set yet -->
+		<Group>
+			<group><sth/></group>
+		</Group>
+		
+		<!-- the language node should not be empty -->
+		<!-- ErrorCode: p001b -->
+		<Group>
+			<language name=""></language>
+		</Group>
+		<Group>
+			<language name=""/>
+		</Group>
+		
+		<!-- the first child node of language should be a TextNode -->
+		<!-- ErrorCode: p001 -->
+		<Group>
+			<language name=""><sth/>deutsch</language>
+		</Group>
+		
+	</GroupTest>
+	
+
+</Preferences>
+
+
+
+
+
+
+
+
+

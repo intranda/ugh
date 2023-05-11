@@ -298,28 +298,6 @@ public class Metadata implements Serializable {
 
     /***************************************************************************
      * <p>
-     * Returns the value of the updated-flag.
-     * </p>
-     * 
-     * @return TRUE if it was updated.
-     **************************************************************************/
-    public boolean wasUpdated() {
-        return this.updated;
-    }
-
-    /***************************************************************************
-     * <p>
-     * Sets the updated flag.
-     * </p>
-     * 
-     * @param in
-     **************************************************************************/
-    public void wasUpdated(boolean in) {
-        this.updated = in;
-    }
-
-    /***************************************************************************
-     * <p>
      * Deprecated method for setValueQualifier().
      * </p>
      * 

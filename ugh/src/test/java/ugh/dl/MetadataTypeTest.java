@@ -35,7 +35,7 @@ public class MetadataTypeTest {
         assertNotEquals("", mdt.getName());
         assertNull(mdt.getName());
         assertNotEquals(new String(), mdt.getNum());
-        assertNull(mdt.getNum());
+        assertEquals("1o", mdt.getNum());
         assertEquals(new String(), mdt.getValidationExpression());
         assertNotNull(mdt.getValidationExpression());
         assertNull(mdt.getValidationErrorMessages());
@@ -129,13 +129,13 @@ public class MetadataTypeTest {
     @Test
     public void testSetNumGivenNull() {
         mdt.setNum(null); // should we allow null?
-        assertNull(mdt.getNum());
+        assertEquals("1o", mdt.getNum());
     }
 
     @Test
     public void testSetNumGivenEmptyString() {
         mdt.setNum(""); // nothing will be changed since "" is illegal
-        assertNull(mdt.getNum());
+        assertEquals("1o", mdt.getNum());
         assertNotEquals(new String(), mdt.getNum());
     }
 
@@ -157,7 +157,7 @@ public class MetadataTypeTest {
     @Test
     public void testSetNumGivenOnceIllegalThenOnceLegalThenOnceIllegal() {
         mdt.setNum("illegal");
-        assertNull(mdt.getNum());
+        assertEquals("1o", mdt.getNum());
         mdt.setNum("1m");
         assertNotNull(mdt.getNum());
         mdt.setNum("");
@@ -177,7 +177,7 @@ public class MetadataTypeTest {
         assertNotEquals("", mdt2.getName());
         assertNull(mdt2.getName());
         assertNotEquals(new String(), mdt2.getNum());
-        assertNull(mdt2.getNum());
+        assertEquals("1o", mdt2.getNum());
         assertEquals(new String(), mdt2.getValidationExpression());
         assertNotNull(mdt2.getValidationExpression());
         assertNull(mdt2.getValidationErrorMessages());

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Preferences>
+	<DocStrctTypeTest>
+		<DocStrctType>
+			<Name>name</Name>
+			<language name="en">name</language>
+			<language name="de">Name</language>
+			<metadata>ExistingMetadata</metadata>
+			<metadata num="+">ExistingMetadata2</metadata>
+			<group>UnusedGroup</group>
+			<group num="1m">UnusedGroup2</group>
+			<allowedchildtype>child</allowedchildtype>
+		</DocStrctType>
+	</DocStrctTypeTest>
+
+	<MetadataTypeTest>
+		<MetadataType type="person" normdata="true">
+			<Name>person</Name>
+			<language name="en">person</language>
+			<langauge name="de">Person</langauge>
+		</MetadataType>
+		<MetadataType type="identifier" normdata="false">
+			<Name>id</Name>
+			<language name="en">id</language>
+			<language name="de">Id</language>
+		</MetadataType>
+		<MetadataType type="corporate">
+			<Name>corporate</Name>
+			<language name="en">corporate</language>
+			<language name="de">Corporate</language>
+		</MetadataType>
+	</MetadataTypeTest>
+	
+	<GroupTest>
+		<Group>
+			<Name>group</Name>
+			<language name="en">group</language>
+			<language name="de">Gruppe</language>
+			<metadata>ExistingMetadata</metadata>
+			<metadata num="+">ExistingMetadata2</metadata>
+			<group num="+">UnusedGroup</group>
+		</Group>
+	</GroupTest>
+	
+</Preferences>
+
+
+
+
+
+
+
+
+

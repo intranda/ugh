@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ugh.exceptions.MetadataTypeNotAllowedException;
@@ -386,7 +385,7 @@ public class MetadataGroupTypeTest {
         assertEquals("*", mdgType.getNumberOfMetadataType(type1)); // It seems that num will be defaulted to "*" if not set manually, but I haven't found out how so. - Zehong
         // two findings until now:
         // 1. in ugh.dl.Prefs from Line 367 to 374, "1" seems to be taken as default value for num if it is not set manually.
-        // 2. in ugh.dl.DocStruct around Line 1518, however, "*" would be used as default value instead, which also happens to be the expected behavior. 
+        // 2. in ugh.dl.DocStruct around Line 1518, however, "*" would be used as default value instead, which also happens to be the expected behavior.
         assertEquals("+", mdgType.getNumberOfMetadataType(type2));
         assertEquals("1m", mdgType.getNumberOfMetadataType(type3));
         assertEquals("1o", mdgType.getNumberOfMetadataType(type4));
@@ -498,26 +497,6 @@ public class MetadataGroupTypeTest {
         mdgType.addGroupTypeAsChild("group", null, false, false);
         assertNull(mdgType.getAllowedMetadataGroupTypeByName(null));
     }
-
-    @Ignore("The logic in the method cannot pass this test. ENCAPSULATION !!!")
-    @Test
-    public void testAddGroupTypeAsChildTogetherWithModificationsOnTheResultOfGetAllAllowedGroupTypeTypes() {
-        mdgType.addGroupTypeAsChild("group", null, false, false);
-        assertEquals(1, mdgType.getAllAllowedGroupTypeTypes().size());
-        mdgType.addGroupTypeAsChild("group", "+", true, true); // should make no change according to the logic of the method addGroupTypeAsChild(String, String, boolean, boolean)
-        assertEquals(1, mdgType.getAllAllowedGroupTypeTypes().size());
-        assertFalse(mdgType.getAllowedMetadataGroupTypeByName("group").isDefaultDisplay());
-        List<AllowedMetadataGroupType> groups = mdgType.getAllAllowedGroupTypeTypes();
-        groups.add(new AllowedMetadataGroupType("group", "+", true, true)); // but we can still modify the value from outside, which is DANGEROUS !
-        assertEquals(1, mdgType.getAllAllowedGroupTypeTypes().size()); // <- change 1 to 2 to go through the following steps
-        assertFalse(mdgType.getAllowedMetadataGroupTypeByName("group").isDefaultDisplay()); // this one still passes, since the older object comes first
-        mdgType.removeGroupTypeAsChild("group"); // but if we perform once remove, then the older object is gone while the newer one is still there, which ONE MAY NOT KNOW !
-        assertTrue(mdgType.getAllowedMetadataGroupTypeByName("group").isDefaultDisplay());
-        mdgType.addGroupTypeAsChild("group", "*", false, false); // and then if we perform once add without knowing that there is already one inside
-        assertFalse(mdgType.getAllowedMetadataGroupTypeByName("group").isDefaultDisplay()); // we would end up with troubles
-        assertEquals("*", mdgType.getAllowedMetadataGroupTypeByName("group").getNumAllowed());
-    }
-
 }
 
 

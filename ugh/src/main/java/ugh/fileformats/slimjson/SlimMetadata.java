@@ -35,7 +35,7 @@ public class SlimMetadata {
         SlimMetadata sm = new SlimMetadata();
         return fromMetadata(sm, meta, sdd);
     }
-    
+
     protected static SlimMetadata fromMetadata(SlimMetadata sm, Metadata meta, SlimDigitalDocument sdd) {
         sm.digitalDocument = sdd;
         sdd.addMetadataType(meta.getType());
@@ -53,12 +53,11 @@ public class SlimMetadata {
         sm.authorityID = meta.getAuthorityID();
         sm.authorityValue = meta.getAuthorityValue();
 
-        sm.updated = meta.wasUpdated();
         return sm;
     }
 
     public Metadata toMetadata(DigitalDocument dd) {
-        try {            
+        try {
             Metadata sm = new Metadata(digitalDocument.getMetadataTypeMap().get(this.mdTypeId));
             return toMetadata(sm, dd);
         } catch (MetadataTypeNotAllowedException e) {
@@ -66,24 +65,22 @@ public class SlimMetadata {
             return null;
         }
     }
-        
-        
+
+
     protected Metadata toMetadata(Metadata sm, DigitalDocument dd) {
-            DocStruct ds = digitalDocument.getOrigDsMap().get(this.myDocStructId);
-            if (ds == null) {
-                ds = digitalDocument.getDsMap().get(this.myDocStructId).toDocStruct(dd);
-            }
-            sm.setParent(ds);
+        DocStruct ds = digitalDocument.getOrigDsMap().get(this.myDocStructId);
+        if (ds == null) {
+            ds = digitalDocument.getDsMap().get(this.myDocStructId).toDocStruct(dd);
+        }
+        sm.setParent(ds);
 
-            sm.setValue(this.metadataValue);
-            sm.setValueQualifier(this.MetadataVQ, this.MetadataVQType);
+        sm.setValue(this.metadataValue);
+        sm.setValueQualifier(this.MetadataVQ, this.MetadataVQType);
 
-            sm.setAuthorityID(this.authorityID);
-            sm.setAuthorityURI(this.authorityURI);
-            sm.setAuthorityValue(this.authorityValue);
+        sm.setAuthorityID(this.authorityID);
+        sm.setAuthorityURI(this.authorityURI);
+        sm.setAuthorityValue(this.authorityValue);
 
-            sm.wasUpdated(this.updated);
-            return sm;
-        
+        return sm;
     }
 }
