@@ -47,324 +47,320 @@ import lombok.Setter;
 public class MatchingMetadataObject {
 
     // Internal name and some skipped boolean.
-    private String	internalName			= null;
-    private boolean	skipped					= false;
+    private String internalName = null;
+    private boolean skipped = false;
 
     // RegExp value replacing.
-    private String	valueCondition			= null;
-    private String	valueRegExp				= null;
-    private String  valueReplacement        = null;
+    private String valueCondition = null;
+    private String valueRegExp = null;
+    private String valueReplacement = null;
 
     // Role of a person.
-    private String	role					= null;
+    private String role = null;
 
     // Variables used for writing and reading MODS.
-    private String	readxQuery				= null;
-    private String	writexQuery				= null;
-    private String	writemodsName			= null;
+    private String readxQuery = null;
+    private String writexQuery = null;
+    private String writemodsName = null;
 
     // Additional XQueries are only used for persons.
-    private String	firstnameXQuery			= null;
-    private String	lastnameXQuery			= null;
-    private String	affiliationXQuery		= null;
-    private String	identifierXQuery		= null;
-    private String	identifierTypeXQuery	= null;
-    private String	authorityIDXquery   	= null;
-    private String  authorityURIXquery       = null;
-    private String  authorityValueXquery    = null;
-    private String	displayNameXQuery		= null;
-    private String	persontypeXQuery		= null;
+    private String firstnameXQuery = null;
+    private String lastnameXQuery = null;
+    private String affiliationXQuery = null;
+    private String identifierXQuery = null;
+    private String identifierTypeXQuery = null;
+    private String authorityIDXquery = null;
+    private String authorityURIXquery = null;
+    private String authorityValueXquery = null;
+    private String displayNameXQuery = null;
+    private String persontypeXQuery = null;
 
     // All these are official MODS attributes used for reading.
-    private String	readmodsName			= null;
-    private String	modstype				= null;
-    private String	modsencoding			= null;
-    private String	modsauthority			= null;
-    private String	modsID					= null;
-    private String	modstransliteration		= null;
+    private String readmodsName = null;
+    private String modstype = null;
+    private String modsencoding = null;
+    private String modsauthority = null;
+    private String modsID = null;
+    private String modstransliteration = null;
     //	private String	modsscript				= null;
-    private String	modslang				= null;
-    private String	modsxmllang				= null;
+    private String modslang = null;
+    private String modsxmllang = null;
 
     // Used for grouping of MODS subtags.
-    private String	modsGrouping			= null;
+    private String modsGrouping = null;
 
     private Map<String, Map<String, String>> metadataGroupXQueries = new LinkedHashMap<>();
 
     private String database = null;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private String mainNameXQuery = null;
-    @Getter @Setter
+    @Getter
+    @Setter
     private String subNameXQuery = null;
-    @Getter @Setter
+    @Getter
+    @Setter
     private String partNameXQuery = null;
-
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    protected String getReadModsName() {
+    public String getReadModsName() {
         return this.readmodsName;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    protected String getWriteModsName() {
+    public String getWriteModsName() {
         return this.writemodsName;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    protected String getInternalName() {
+    public String getInternalName() {
         return this.internalName;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    protected String getMODSType() {
+    public String getMODSType() {
         return this.modstype;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    protected String getMODSEncoding() {
+    public String getMODSEncoding() {
         return this.modsencoding;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    protected String getMODSAuthority() {
+    public String getMODSAuthority() {
         return this.modsauthority;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    protected String getMODSID() {
+    public String getMODSID() {
         return this.modsID;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    protected String getMODSTransliteration() {
+    public String getMODSTransliteration() {
         return this.modstransliteration;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    protected String getMODSScript() {
+    public String getMODSScript() {
         return this.modstransliteration;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    protected String getMODSLang() {
+    public String getMODSLang() {
         return this.modslang;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    protected String getMODSXMLLang() {
+    public String getMODSXMLLang() {
         return this.modsxmllang;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    protected boolean isSkipped() {
+    public boolean isSkipped() {
         return this.skipped;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    protected String getRole() {
+    public String getRole() {
         return this.role;
     }
 
     /***************************************************************************
      * @return Returns the isSortingtitle.
      **************************************************************************/
-    protected void setReadModsName(String in) {
+    public void setReadModsName(String in) {
         this.readmodsName = in;
     }
 
     /***************************************************************************
      * @param in
      **************************************************************************/
-    protected void setWriteModsName(String in) {
+    public void setWriteModsName(String in) {
         this.writemodsName = in;
     }
 
     /***************************************************************************
      * @param in
      **************************************************************************/
-    protected void setInternalName(String in) {
+    public void setInternalName(String in) {
         this.internalName = in;
     }
 
     /***************************************************************************
      * @param in
      **************************************************************************/
-    protected void setMODSType(String in) {
+    public void setMODSType(String in) {
         this.modstype = in;
     }
 
     /***************************************************************************
      * @param in
      **************************************************************************/
-    protected void setMODSEncoding(String in) {
+    public void setMODSEncoding(String in) {
         this.modsencoding = in;
     }
 
     /***************************************************************************
      * @param in
      **************************************************************************/
-    protected void setMODSAuthority(String in) {
+    public void setMODSAuthority(String in) {
         this.modsauthority = in;
     }
 
     /***************************************************************************
      * @param in
      **************************************************************************/
-    protected void setMODSID(String in) {
+    public void setMODSID(String in) {
         this.modsID = in;
     }
 
     /***************************************************************************
      * @param in
      **************************************************************************/
-    protected void setMODSTransliteration(String in) {
+    public void setMODSTransliteration(String in) {
         this.modstransliteration = in;
     }
 
     /***************************************************************************
      * @param in
      **************************************************************************/
-    protected void setMODSScript(String in) {
+    public void setMODSScript(String in) {
         this.modstransliteration = in;
     }
 
     /***************************************************************************
      * @param in
      **************************************************************************/
-    protected void setMODSLang(String in) {
+    public void setMODSLang(String in) {
         this.modslang = in;
     }
 
     /***************************************************************************
      * @param in
      **************************************************************************/
-    protected void setMODSXMLLang(String in) {
+    public void setMODSXMLLang(String in) {
         this.modsxmllang = in;
     }
 
     /***************************************************************************
      * @param in
      **************************************************************************/
-    protected void isSkipped(boolean in) {
+    public void isSkipped(boolean in) {
         this.skipped = in;
     }
 
     /***************************************************************************
      * @param in
      **************************************************************************/
-    protected void setRole(String in) {
+    public void setRole(String in) {
         this.role = in;
     }
 
     /***************************************************************************
      * @return the firstnameXQuery
      **************************************************************************/
-    protected String getFirstnameXQuery() {
+    public String getFirstnameXQuery() {
         return this.firstnameXQuery;
     }
 
     /***************************************************************************
-     * @param firstnameXQuery
-     *            the firstnameXQuery to set
+     * @param firstnameXQuery the firstnameXQuery to set
      **************************************************************************/
-    protected void setFirstnameXQuery(String firstnameXQuery) {
+    public void setFirstnameXQuery(String firstnameXQuery) {
         this.firstnameXQuery = firstnameXQuery;
     }
 
     /***************************************************************************
      * @return the lastnameXQuery
      **************************************************************************/
-    protected String getLastnameXQuery() {
+    public String getLastnameXQuery() {
         return this.lastnameXQuery;
     }
 
     /***************************************************************************
-     * @param lastnameXQuery
-     *            the lastnameXQuery to set
+     * @param lastnameXQuery the lastnameXQuery to set
      **************************************************************************/
-    protected void setLastnameXQuery(String lastnameXQuery) {
+    public void setLastnameXQuery(String lastnameXQuery) {
         this.lastnameXQuery = lastnameXQuery;
     }
 
     /***************************************************************************
      * @return the affiliationXQuery
      **************************************************************************/
-    protected String getAffiliationXQuery() {
+    public String getAffiliationXQuery() {
         return this.affiliationXQuery;
     }
 
     /***************************************************************************
-     * @param affiliationXQuery
-     *            the affiliationXQuery to set
+     * @param affiliationXQuery the affiliationXQuery to set
      **************************************************************************/
-    protected void setAffiliationXQuery(String affiliationXQuery) {
+    public void setAffiliationXQuery(String affiliationXQuery) {
         this.affiliationXQuery = affiliationXQuery;
     }
 
     /***************************************************************************
      * @return the persontypeXQuery
      **************************************************************************/
-    protected String getPersontypeXQuery() {
+    public String getPersontypeXQuery() {
         return this.persontypeXQuery;
     }
 
     /***************************************************************************
-     * @param persontypeXQuery
-     *            the persontypeXQuery to set
+     * @param persontypeXQuery the persontypeXQuery to set
      **************************************************************************/
-    protected void setPersontypeXQuery(String persontypeXQuery) {
+    public void setPersontypeXQuery(String persontypeXQuery) {
         this.persontypeXQuery = persontypeXQuery;
     }
 
     /***************************************************************************
      * @return the xQuery
      **************************************************************************/
-    protected String getReadXQuery() {
+    public String getReadXQuery() {
         return this.readxQuery;
     }
 
     /***************************************************************************
-     * @param query
-     *            the xQuery to set
+     * @param query the xQuery to set
      **************************************************************************/
-    protected void setReadXQuery(String query) {
+    public void setReadXQuery(String query) {
         this.readxQuery = query;
     }
 
     /***************************************************************************
-     * Returns the write XQuery only, if available; otherwise the read XQuery is
-     * returned
+     * Returns the write XQuery only, if available; otherwise the read XQuery is returned
      * 
      * @return the writexQuery
      **************************************************************************/
-    protected String getWriteXPath() {
+    public String getWriteXPath() {
         if (this.writexQuery == null) {
             return this.readxQuery;
         }
@@ -372,125 +368,117 @@ public class MatchingMetadataObject {
     }
 
     /***************************************************************************
-     * @param query
-     *            the xQuery to set
+     * @param query the xQuery to set
      **************************************************************************/
-    protected void setWriteXQuery(String query) {
+    public void setWriteXQuery(String query) {
         this.writexQuery = query;
     }
 
     /***************************************************************************
      * @return the authorityFileIDXquery
      **************************************************************************/
-    protected String getAuthorityIDXquery() {
+    public String getAuthorityIDXquery() {
         return this.authorityIDXquery;
     }
 
     /***************************************************************************
-     * @param authorityFileIDXquery
-     *            the authorityFileIDXquery to set
+     * @param authorityFileIDXquery the authorityFileIDXquery to set
      **************************************************************************/
-    protected void setAuthorityIDXquery(String authorityIDXquery) {
+    public void setAuthorityIDXquery(String authorityIDXquery) {
         this.authorityIDXquery = authorityIDXquery;
     }
 
-    protected String getAuthorityURIXquery() {
+    public String getAuthorityURIXquery() {
         return this.authorityURIXquery;
     }
 
-    protected void setAuthorityURIXquery(String authorityURIXquery) {
+    public void setAuthorityURIXquery(String authorityURIXquery) {
         this.authorityURIXquery = authorityURIXquery;
     }
 
-    protected String getAuthorityValueXquery() {
+    public String getAuthorityValueXquery() {
         return this.authorityValueXquery;
     }
 
-    protected void setAuthorityValueXquery(String authorityValueXquery) {
+    public void setAuthorityValueXquery(String authorityValueXquery) {
         this.authorityValueXquery = authorityValueXquery;
     }
 
     /***************************************************************************
      * @return the displayNameXQuery
      **************************************************************************/
-    protected String getDisplayNameXQuery() {
+    public String getDisplayNameXQuery() {
         return this.displayNameXQuery;
     }
 
     /***************************************************************************
-     * @param displayNameXQuery
-     *            the displayNameXQuery to set
+     * @param displayNameXQuery the displayNameXQuery to set
      **************************************************************************/
-    protected void setDisplayNameXQuery(String displayNameXQuery) {
+    public void setDisplayNameXQuery(String displayNameXQuery) {
         this.displayNameXQuery = displayNameXQuery;
     }
 
     /***************************************************************************
      * @return the identifierTypeXQuery
      **************************************************************************/
-    protected String getIdentifierTypeXQuery() {
+    public String getIdentifierTypeXQuery() {
         return this.identifierTypeXQuery;
     }
 
     /***************************************************************************
-     * @param identifierTypeXQuery
-     *            the identifierTypeXQuery to set
+     * @param identifierTypeXQuery the identifierTypeXQuery to set
      **************************************************************************/
-    protected void setIdentifierTypeXQuery(String identifierTypeXQuery) {
+    public void setIdentifierTypeXQuery(String identifierTypeXQuery) {
         this.identifierTypeXQuery = identifierTypeXQuery;
     }
 
     /***************************************************************************
      * @return the identifierXQuery
      **************************************************************************/
-    protected String getIdentifierXQuery() {
+    public String getIdentifierXQuery() {
         return this.identifierXQuery;
     }
 
-    protected void setDatabaseXQuery(String databaseXQuery) {
+    public void setDatabaseXQuery(String databaseXQuery) {
         this.database = databaseXQuery;
     }
 
-    protected String getDatabaseXQuery() {
+    public String getDatabaseXQuery() {
         return database;
     }
 
-
     /***************************************************************************
-     * @param identifierXQuery
-     *            the identifierXQuery to set
+     * @param identifierXQuery the identifierXQuery to set
      **************************************************************************/
-    protected void setIdentifierXQuery(String identifierXQuery) {
+    public void setIdentifierXQuery(String identifierXQuery) {
         this.identifierXQuery = identifierXQuery;
     }
 
     /***************************************************************************
      * @return the valueCondition
      **************************************************************************/
-    protected String getValueCondition() {
+    public String getValueCondition() {
         return this.valueCondition;
     }
 
     /***************************************************************************
-     * @param valueCondition
-     *            the valueCondition to set
+     * @param valueCondition the valueCondition to set
      **************************************************************************/
-    protected void setValueCondition(String valueCondition) {
+    public void setValueCondition(String valueCondition) {
         this.valueCondition = valueCondition;
     }
 
     /***************************************************************************
      * @return the valueRegExp
      **************************************************************************/
-    protected String getValueRegExp() {
+    public String getValueRegExp() {
         return this.valueRegExp;
     }
 
     /***************************************************************************
-     * @param valueCondition
-     *            the valueCondition to set
+     * @param valueCondition the valueCondition to set
      **************************************************************************/
-    protected void setValueRegExp(String valueRegExp) {
+    public void setValueRegExp(String valueRegExp) {
         this.valueRegExp = valueRegExp;
     }
 
@@ -505,19 +493,16 @@ public class MatchingMetadataObject {
     /**************************************************************************
      * @return
      **************************************************************************/
-    protected String getModsGrouping() {
+    public String getModsGrouping() {
         return this.modsGrouping;
     }
 
     /**************************************************************************
      * @param modsGrouping
      **************************************************************************/
-    protected void setModsGrouping(String modsGrouping) {
+    public void setModsGrouping(String modsGrouping) {
         this.modsGrouping = modsGrouping;
     }
-
-
-
 
     public Map<String, Map<String, String>> getMetadataGroupXQueries() {
         return metadataGroupXQueries;
@@ -535,7 +520,7 @@ public class MatchingMetadataObject {
      * @param checkObject
      * @return
      **************************************************************************/
-    protected boolean equals(MatchingMetadataObject checkObject) {
+    public boolean equals(MatchingMetadataObject checkObject) {
 
         // Check ReadModsName.
         if ((checkObject.getReadModsName() != null)
