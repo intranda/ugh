@@ -1105,7 +1105,7 @@ public class DigitalDocument implements Serializable {
      */
     public void addTechMd(Node techMdNode) {
         if (this.amdSec == null) {
-            amdSec = new AmdSec(new ArrayList<Md>());
+            amdSec = new AmdSec(new ArrayList<>());
         }
         Md techMd = new Md(techMdNode);
         this.amdSec.addTechMd(techMd);
@@ -1116,7 +1116,7 @@ public class DigitalDocument implements Serializable {
      */
     public void addTechMd(Md techMd) {
         if (this.amdSec == null) {
-            amdSec = new AmdSec(new ArrayList<Md>());
+            amdSec = new AmdSec(new ArrayList<>());
         }
         this.amdSec.addTechMd(techMd);
     }
@@ -1159,7 +1159,7 @@ public class DigitalDocument implements Serializable {
     }
 
     public void setAmdSec(String id) {
-        this.amdSec = new AmdSec(new ArrayList<Md>());
+        this.amdSec = new AmdSec(new ArrayList<>());
         this.amdSec.setId(id);
     }
 
@@ -1258,7 +1258,7 @@ public class DigitalDocument implements Serializable {
         if (StringUtils.isBlank(mimeType) || "application/octet-stream".equals(mimeType)) {
             String fileExtension = path.getFileName().toString();
             if (!fileExtension.contains(".")) {
-                return mimeType;
+                return "application/octet-stream";
             }
             fileExtension = fileExtension.substring(fileExtension.lastIndexOf(".") + 1).toLowerCase(); // .tar.gz will not work
             switch (fileExtension) {
