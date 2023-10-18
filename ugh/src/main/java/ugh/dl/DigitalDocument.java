@@ -42,7 +42,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -344,7 +343,7 @@ public class DigitalDocument implements Serializable {
      **************************************************************************/
     private String printChildDocStruct(DocStruct inDocStruct, int hierarchy) {
 
-        String result = "";
+        StringBuilder result = new StringBuilder();
 
         StringBuffer hierarchyBuffer = new StringBuffer();
         for (int i = 0; i < hierarchy; i++) {
@@ -361,16 +360,16 @@ public class DigitalDocument implements Serializable {
         // Get and print DocStruct type.
         myType = inDocStruct.getType();
         if (myType != null) {
-            result += hierarchyBuffer + LINE + "\n";
-            result += hierarchyBuffer + "DocStruct '" + myType.getName() + "'" + "\n";
-            result += hierarchyBuffer + LINE + "\n";
+            result.append(hierarchyBuffer).append(LINE).append("\n");
+            result.append(hierarchyBuffer).append("DocStruct '").append(myType.getName()).append("'").append("\n");
+            result.append(hierarchyBuffer).append(LINE).append("\n");
         }
 
         // Get and print metadata.
         List<Metadata> allMD = inDocStruct.getAllMetadata();
         if (allMD != null) {
             for (Metadata currentMD : allMD) {
-                result += hierarchyBuffer + currentMD.toString();
+                result.append(hierarchyBuffer).append(currentMD.toString());
             }
         }
 
@@ -378,7 +377,7 @@ public class DigitalDocument implements Serializable {
         List<MetadataGroup> allGroups = inDocStruct.getAllMetadataGroups();
         if (allGroups != null) {
             for (MetadataGroup currentGroup : allGroups) {
-                result += hierarchyBuffer + currentGroup.toString();
+                result.append(hierarchyBuffer).append(currentGroup.toString());
             }
         }
 
@@ -386,7 +385,7 @@ public class DigitalDocument implements Serializable {
         List<Person> allPS = inDocStruct.getAllPersons();
         if (allPS != null) {
             for (Person currentPS : allPS) {
-                result += hierarchyBuffer + currentPS.toString();
+                result.append(hierarchyBuffer).append(currentPS.toString());
             }
         }
 
@@ -394,7 +393,7 @@ public class DigitalDocument implements Serializable {
         List<ContentFile> allCF = inDocStruct.getAllContentFiles();
         if (allCF != null) {
             for (ContentFile currentCF : allCF) {
-                result += hierarchyBuffer + currentCF.toString();
+                result.append(hierarchyBuffer).append(currentCF.toString());
             }
         }
 
@@ -402,11 +401,11 @@ public class DigitalDocument implements Serializable {
         List<DocStruct> allChildren = inDocStruct.getAllChildren();
         if (allChildren != null) {
             for (DocStruct testChild : allChildren) {
-                result += printChildDocStruct(testChild, hierarchy + 1);
+                result.append(printChildDocStruct(testChild, hierarchy + 1));
             }
         }
 
-        return result;
+        return result.toString();
     }
 
     /***************************************************************************
@@ -459,11 +458,7 @@ public class DigitalDocument implements Serializable {
             return null;
         }
 
-        Iterator<DocStruct> it = children.iterator();
-
-        while (it.hasNext()) {
-            DocStruct child = it.next();
-
+        for (DocStruct child : children) {
             if (child.getType().getName().equals(inTypeName)) {
                 selectedChildren.add(child);
             }
@@ -772,7 +767,7 @@ public class DigitalDocument implements Serializable {
             // and add a content file each, if none is existing.
             for (DocStruct ds : physicalDocStruct.getAllChildren()) {
                 for (Metadata m : ds.getAllMetadata()) {
-                    if (m.getType().getName().equals("physPageNumber")) {
+                    if ("physPageNumber".equals(m.getType().getName())) {
                         createContentFile(ds, m.getValue());
                         newFileSet.addFile(ds.getAllContentFiles().get(0));
                     }
@@ -805,7 +800,7 @@ public class DigitalDocument implements Serializable {
         List<Metadata> metadataList = theStruct.getAllMetadata();
         if (metadataList != null) {
             for (Metadata md : metadataList) {
-                if (md.getType().getName().equals("physPageNumber")) {
+                if ("physPageNumber".equals(md.getType().getName())) {
                     // Create new content file.
                     createContentFile(theStruct, md.getValue());
                 }
@@ -842,9 +837,9 @@ public class DigitalDocument implements Serializable {
             // Set the path to the images.
             String pif = "";
             for (Metadata md : tp.getAllMetadata()) {
-                if (md.getType().getName().equals("pathimagefiles")) {
+                if ("pathimagefiles".equals(md.getType().getName())) {
                     pif = md.getValue();
-                } else if (md.getType().getName().equals("_representative")) {
+                } else if ("_representative".equals(md.getType().getName())) {
                     representative = md.getValue();
                 }
             }
@@ -857,7 +852,7 @@ public class DigitalDocument implements Serializable {
                     if (PhysicalElement.checkPhysicalType(ds.getType().getName())) {
                         // Iterate over all metadata.
                         for (Metadata md : ds.getAllMetadata()) {
-                            if (md.getType().getName().equals("physPageNumber")) {
+                            if ("physPageNumber".equals(md.getType().getName())) {
                                 cf.setLocation(pif + "/" + new DecimalFormat("00000000").format(Integer.parseInt(md.getValue())) + ".tif");
                                 cf.setMimetype("image/tiff");
                                 if (!representative.isEmpty() && representative.equals(md.getValue())) {
@@ -917,9 +912,9 @@ public class DigitalDocument implements Serializable {
             // Set the path to the images.
             String pif = "";
             for (Metadata md : tp.getAllMetadata()) {
-                if (md.getType().getName().equals("pathimagefiles")) {
+                if ("pathimagefiles".equals(md.getType().getName())) {
                     pif = md.getValue();
-                } else if (md.getType().getName().equals("_representative")) {
+                } else if ("_representative".equals(md.getType().getName())) {
                     representative = md.getValue();
                 }
             }
@@ -931,7 +926,7 @@ public class DigitalDocument implements Serializable {
                     if (PhysicalElement.checkPhysicalType(ds.getType().getName())) {
                         // Iterate over all metadata.
                         for (Metadata md : ds.getAllMetadata()) {
-                            if (md.getType().getName().equals("physPageNumber")) {
+                            if ("physPageNumber".equals(md.getType().getName())) {
 
                                 if (!representative.isEmpty() && representative.equals(md.getValue())) {
                                     cf.setRepresentative(true);
@@ -978,7 +973,7 @@ public class DigitalDocument implements Serializable {
         String pathToImageFiles = "";
         if (this.getPhysicalDocStruct() != null && this.getPhysicalDocStruct().getAllMetadata() != null) {
             for (Metadata md : this.getPhysicalDocStruct().getAllMetadata()) {
-                if (md.getType().getName().equals("pathimagefiles")) {
+                if ("pathimagefiles".equals(md.getType().getName())) {
                     pathToImageFiles = md.getValue();
                     break;
                 }
@@ -1333,7 +1328,7 @@ public class DigitalDocument implements Serializable {
                     break;
                 default:
                     // use a default value, if file extension is not mapped
-                    mimeType = "image/tiff";
+                    mimeType = "application/octet-stream";
             }
 
         }
