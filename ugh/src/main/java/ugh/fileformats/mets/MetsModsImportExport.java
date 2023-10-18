@@ -1958,6 +1958,17 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             }
         }
 
+        if (StringUtils.isNotBlank(thePerson.getAuthorityID()) && StringUtils.isNotBlank(thePerson.getAuthorityURI())
+                && StringUtils.isNotBlank(thePerson.getAuthorityValue())) {
+            if (thePerson.getAuthorityValue().startsWith("http")) {
+                ((Element) createdNode).setAttribute("valueURI", thePerson.getAuthorityValue());
+            } else {
+                ((Element) createdNode).setAttribute("authority", thePerson.getAuthorityID());
+                ((Element) createdNode).setAttribute("authorityURI", thePerson.getAuthorityURI());
+                ((Element) createdNode).setAttribute("valueURI", thePerson.getAuthorityURI() + thePerson.getAuthorityValue());
+            }
+        }
+
         if (!thePerson.getAuthorityUriMap().isEmpty()) {
             for (Entry<String, String> entry : thePerson.getAuthorityUriMap().entrySet()) {
                 xquery = "./mods:nameIdentifier[@name=" + entry.getKey() + "]";
