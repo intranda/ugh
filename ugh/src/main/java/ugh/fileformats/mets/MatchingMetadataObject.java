@@ -53,7 +53,7 @@ public class MatchingMetadataObject {
     // RegExp value replacing.
     private String valueCondition = null;
     private String valueRegExp = null;
-    private String valueReplacement = null;
+    //    private String valueReplacement = null;
 
     // Role of a person.
     private String role = null;
@@ -480,14 +480,6 @@ public class MatchingMetadataObject {
      **************************************************************************/
     public void setValueRegExp(String valueRegExp) {
         this.valueRegExp = valueRegExp;
-    }
-
-    public String getValueReplacement() {
-        return valueReplacement;
-    }
-
-    public void setValueReplacement(String valueReplacement) {
-        this.valueReplacement = valueReplacement;
     }
 
     /**************************************************************************

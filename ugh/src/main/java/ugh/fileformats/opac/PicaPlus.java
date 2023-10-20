@@ -28,6 +28,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -73,6 +74,7 @@ import ugh.exceptions.ReadException;
 import ugh.exceptions.TypeNotAllowedAsChildException;
 import ugh.exceptions.TypeNotAllowedForParentException;
 import ugh.exceptions.WriteException;
+import ugh.fileformats.mets.MetsModsImportExport;
 
 /*******************************************************************************
  * <p>
@@ -329,13 +331,6 @@ public class PicaPlus implements ugh.dl.Fileformat {
                     val = "";
                 }
                 mmo.setValueRegExp(val);
-            }
-            if (n.getNodeType() == ELEMENT_NODE && PREFS_VALUEREPLACEMENT_STRING.equalsIgnoreCase(n.getNodeName())) {
-                String val = readTextNode(n);
-                if (val == null) {
-                    val = "";
-                }
-                mmo.setValueRegExReplacement(val);
             }
         }
 
@@ -1029,8 +1024,9 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 // Check regular expression from the prefs. If it exist, do
                 // process.
 
-                if (content != null && mmo != null && mmo.getValueRegExp() != null && !"".equals(mmo.getValueRegExp())) {
-                    content = content.replaceAll(mmo.getValueRegExp(), mmo.getValueRegExReplacement());
+                if (content != null && mmo != null && StringUtils.isNotBlank(mmo.getValueRegExp())) {
+                    List<String> parts = MetsModsImportExport.splitRegularExpression(mmo.getValueRegExp());
+                    content = content.replaceAll(parts.get(0), parts.get(1));
                 }
 
                 // Now we have the MMO; check, if mmo has a subfield or not; if
@@ -1485,7 +1481,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
         private String picaplusGroupname = null;
         private String valueCondition = null;
         private String valueRegExp = null;
-        private String valueRegExReplacement = null;
+        //        private String valueRegExReplacement = null;
 
         // These are only important, if MMO matches a person.
         private boolean isFirstname = false;

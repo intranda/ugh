@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -1696,8 +1697,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
 
         // Check and process regular expression from the prefs.
 
-        if (theMMO != null && theMMO.getValueRegExp() != null && !"".equals(theMMO.getValueRegExp())) {
-            newMetadataValue = newMetadataValue.replaceAll(theMMO.getValueRegExp(), theMMO.getValueReplacement());
+        if (theMMO != null && StringUtils.isNotBlank(theMMO.getValueRegExp())) {
+            List<String> params = splitRegularExpression(theMMO.getValueRegExp());
+            newMetadataValue = newMetadataValue.replaceAll(params.get(0), params.get(1));
             log.info("Regular expression '" + theMMO.getValueRegExp() + "' changed value of Metadata '" + theMMO.getInternalName() + "' from '"
                     + theMetadata.getValue() + "' to '" + newMetadataValue + "'");
         }
@@ -2371,15 +2373,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                         throw new PreferencesException(message);
                     }
                     mmo.setValueRegExp(internalName.trim());
-                }
-
-                if (METS_PREFS_VALUEREPLACEMENT_STRING.equals(currentNode.getNodeName())) {
-                    internalName = getTextNodeValue(currentNode);
-                    if (internalName != null) {
-                        mmo.setValueReplacement(internalName);
-                    } else {
-                        mmo.setValueReplacement("");
-                    }
                 }
 
                 // Get MODS XPATH settings.
@@ -3135,5 +3128,33 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
     @Override
     public void setCreateUUIDs(boolean createUUIDs) {
         this.createUUIDs = createUUIDs;
+    }
+
+    public static List<String> splitRegularExpression(final String regex) {
+        List<String> values = new ArrayList<>();
+        if (StringUtils.isBlank(regex)) {
+            return values;
+        }
+        if (!regex.contains("/")) {
+            values.add(regex);
+            return values;
+        }
+
+        // remove optional s/../../ and /../../g
+        String expression = regex.substring(regex.indexOf("/"), regex.lastIndexOf("/") + 1);
+        // split regex at the "/" symbol, if it was not escaped by "\/"
+        String[] parts = expression.split("(?<!\\\\)\\/"); // slash that is not preceded by a backslash
+        String searchValue = parts[1];
+        values.add(searchValue);
+        if (parts.length > 2) {
+            String replacement = parts[2];
+            values.add(replacement);
+        }
+        // handle empty replacement value
+        else if (expression.endsWith("//")) {
+            values.add("");
+        }
+
+        return values;
     }
 }
