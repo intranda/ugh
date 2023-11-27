@@ -607,15 +607,15 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
 
                     notMappedMetadataAndPersons.remove(currentMd);
                 } else // Create the node according to the prefs' METS/MODS
-                    // section's XQuery.
-                    if (xquery != null) {
-                        // Write other metadata into MODS the section.
-                        writeSingleModsMetadata(xquery, mmo, currentMd, dommodsnode, domDoc);
+                       // section's XQuery.
+                if (xquery != null) {
+                    // Write other metadata into MODS the section.
+                    writeSingleModsMetadata(xquery, mmo, currentMd, dommodsnode, domDoc);
 
-                        // The node was sucessfully written! Remove the
-                        // metadata object from the notMappedMetadata list.
-                        notMappedMetadataAndPersons.remove(currentMd);
-                    }
+                    // The node was sucessfully written! Remove the
+                    // metadata object from the notMappedMetadata list.
+                    notMappedMetadataAndPersons.remove(currentMd);
+                }
             }
             // handle groups
 
@@ -1346,11 +1346,11 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 div.setAttribute(METS_ADMID_STRING, amdid);
             }
         } else // Set the ADMID, depends if the current element is an anchor or not.
-            if ((isAnchorFile && inStruct.getType().isAnchor())
-                    || (!isAnchorFile && inStruct.getParent() != null && inStruct.getParent().getType().isAnchor())
-                    || (!isAnchorFile && !inStruct.getType().isAnchor() && inStruct.getParent() == null)) {
-                div.setAttribute(METS_ADMID_STRING, AMD_PREFIX);
-            }
+        if ((isAnchorFile && inStruct.getType().isAnchor())
+                || (!isAnchorFile && inStruct.getParent() != null && inStruct.getParent().getType().isAnchor())
+                || (!isAnchorFile && !inStruct.getType().isAnchor() && inStruct.getParent() == null)) {
+            div.setAttribute(METS_ADMID_STRING, AMD_PREFIX);
+        }
 
         // Create MPTR element.
         Element mptr = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_MPTR_STRING);
@@ -1684,11 +1684,11 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         // match, continue with the next mmo.
 
         if (theMMO != null && theMMO.getValueCondition() != null && !"".equals(theMMO.getValueCondition())) {
-            Pattern pattern = Pattern.compile(theMMO.getValueCondition());
+            Pattern pattern = Pattern.compile(splitRegularExpression(theMMO.getValueCondition()).get(0));
             Matcher matcher = pattern.matcher(theMetadata.getValue());
             if (!matcher.find()) {
                 log.info("Condition '" + theMMO.getValueCondition() + "' for Metadata '" + theMMO.getInternalName() + " (" + theMetadata.getValue()
-                + ")" + "' does not match, no node was created...");
+                        + ")" + "' does not match, no node was created...");
                 return;
 
             }
@@ -1860,7 +1860,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         }
 
         log.trace("Value '" + theMetadata.getValue() + "' (" + theMetadata.getType().getName() + ") added to node >>" + createdNode.getNodeName()
-        + "<<");
+                + "<<");
     }
 
     private void writeSingleGroupPerson(Person thePerson, Map<String, String> xpathMap, Node theDomModsNode, Document theDomDoc)
@@ -2839,11 +2839,11 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             String searchValue = parts[0];
             String replacement = "";
             // replace with empty string, if no replacement string exists
-            if (parts.length>1) {
+            if (parts.length > 1) {
                 replacement = parts[1];
             }
             // Substitute things, if any $REGEXP() is existing.
-            theString = theString.replaceAll(searchValue,replacement);
+            theString = theString.replaceAll(searchValue, replacement);
         }
 
         return theString;
