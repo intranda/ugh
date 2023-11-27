@@ -57,6 +57,17 @@ public class MetsModsImportExportTest {
         assertEquals(2, parts.size());
         assertEquals("search", parts.get(0));
         assertEquals("", parts.get(1));
+
+        // search value special characters
+        regex = "/^CC BY-SA$/";
+        parts = MetsModsImportExport.splitRegularExpression(regex);
+        assertEquals(1, parts.size());
+        assertEquals("^CC BY-SA$", parts.get(0));
+
+        regex = "^CC BY-SA$";
+        parts = MetsModsImportExport.splitRegularExpression(regex);
+        assertEquals(1, parts.size());
+        assertEquals("^CC BY-SA$", parts.get(0));
     }
 
 }
