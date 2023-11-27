@@ -68,6 +68,12 @@ public class MetsModsImportExportTest {
         parts = MetsModsImportExport.splitRegularExpression(regex);
         assertEquals(1, parts.size());
         assertEquals("^CC BY-SA$", parts.get(0));
+
+        regex = "m/(Restricted|AK_Noe_intern|AK_Tirol_intern)/";
+        parts = MetsModsImportExport.splitRegularExpression(regex);
+        assertEquals(1, parts.size());
+        assertEquals("(Restricted|AK_Noe_intern|AK_Tirol_intern)", parts.get(0));
+
     }
 
 }
