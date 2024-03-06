@@ -341,7 +341,6 @@ public class MetadataTypeTest {
     @Test
     public void testEqualsGivenTwoBrandNewMDTs() {
         MetadataType mdt2 = new MetadataType();
-        assertNotEquals(mdt, mdt2); // mdt and mdt2 are different objects
         assertNotSame(mdt, mdt2); // in the sense that they are located differently
         assertTrue(mdt2.equals(mdt)); // but according to our rewritten equals(MetadataType) method, they are equal
     }
@@ -415,4 +414,3 @@ public class MetadataTypeTest {
     }
 
 }
-

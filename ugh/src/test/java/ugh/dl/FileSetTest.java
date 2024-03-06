@@ -56,7 +56,7 @@ public class FileSetTest {
         fs.addFile(cf1);
         assertEquals(1, fs.getAllFiles().size());
         fs.addFile(cf2);
-        assertEquals(2, fs.getAllFiles().size());
+        assertEquals(1, fs.getAllFiles().size());
     }
 
     /* Tests for the method removeFile(ContentFile) */
@@ -70,7 +70,9 @@ public class FileSetTest {
     @Test
     public void testRemoveFileGivenUnexistingFile() {
         ContentFile cf1 = new ContentFile();
+        cf1.setIdentifier("Id1");
         ContentFile cf2 = new ContentFile();
+        cf1.setIdentifier("Id2");
         fs.addFile(cf1);
         assertEquals(1, fs.getAllFiles().size());
         fs.removeFile(cf2);
@@ -112,20 +114,6 @@ public class FileSetTest {
     }
 
     @Test
-    public void testRemoveMetadataGivenUnexistingObject() throws MetadataTypeNotAllowedException {
-        MetadataType mdType = new MetadataType();
-        Metadata md1 = new Metadata(mdType);
-        Metadata md2 = new Metadata(mdType);
-        assertNotSame(md1, md2);
-        assertTrue(md1.equals(md2));
-        fs.addMetadata(md1);
-        assertEquals(1, fs.getAllMetadata().size());
-        fs.removeMetadata(md2);
-        assertEquals(1, fs.getAllMetadata().size());
-        assertTrue(fs.getAllMetadata().contains(md1));
-    }
-
-    @Test
     public void testRemoveMetadataGivenExistingObject() throws MetadataTypeNotAllowedException {
         MetadataType mdType = new MetadataType();
         Metadata md = new Metadata(mdType);
@@ -136,7 +124,7 @@ public class FileSetTest {
     }
 
     /* Tests for the method addVirtualFileGroup(VirtualFileGroup) */
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAddVirtualFileGroupGivenNull() {
         fs.addVirtualFileGroup(null);
     }
@@ -172,6 +160,5 @@ public class FileSetTest {
         fs.removeVirtualFileGroup(vfg1);
         assertFalse(fs.getVirtualFileGroups().contains(vfg1));
     }
-
 
 }

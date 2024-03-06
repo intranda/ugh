@@ -2,7 +2,6 @@ package ugh.dl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
@@ -194,12 +193,11 @@ public class VirtualFileGroupTest {
         ContentFile cf1 = new ContentFile();
         ContentFile cf2 = new ContentFile();
         assertTrue(cf1.equals(cf2));
-        assertNotEquals(cf1, cf2);
         vfg.addContentFile(cf1);
         assertNotSame(vfg.ALL_FILES, vfg.getContentFiles());
         assertEquals(1, vfg.getContentFiles().size());
         vfg.removeContentFile(cf2);
-        assertEquals(1, vfg.getContentFiles().size()); // the method will remove exactly the same object in the sense of address, i.e. == is used to compare instead of equals()
+        assertEquals(0, vfg.getContentFiles().size());
     }
 
     @Test
@@ -240,8 +238,7 @@ public class VirtualFileGroupTest {
         assertTrue(vfg.contains(cf1));
         assertTrue(vfg.contains(cf2));
         vfg.removeContentFiles(files23);
-        assertEquals(1, vfg.getContentFiles().size());
-        assertTrue(vfg.contains(cf1));
+        assertEquals(0, vfg.getContentFiles().size());
         assertFalse(vfg.contains(cf2));
     }
 
@@ -272,5 +269,3 @@ public class VirtualFileGroupTest {
     }
 
 }
-
-

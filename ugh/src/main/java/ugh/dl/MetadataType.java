@@ -136,7 +136,7 @@ public class MetadataType implements Serializable, PrefsType {
      * @param in
      **************************************************************************/
     public void setNum(String in) {
-        if (StringUtils.isBlank(in) || (!in.equals("1m") && !in.equals("1o") && !in.equals("+") && !in.equals("*"))) {
+        if (StringUtils.isBlank(in) || (!"1m".equals(in) && !"1o".equals(in) && !"+".equals(in) && !"*".equals(in))) {
             // Unknown syntax.
             return;
         } else {
@@ -352,7 +352,12 @@ public class MetadataType implements Serializable, PrefsType {
      * @param MetadataType metadataType
      * @return TRUE if isPerson, isIdentifier and name is the same.
      **************************************************************************/
-    public boolean equals(MetadataType metadataType) {
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) {
+            return false;
+        }
+        MetadataType metadataType = (MetadataType) other;
 
         try {
             if (!((this.getName() == null && metadataType.getName() == null) || this.getName().equals(metadataType.getName()))) {

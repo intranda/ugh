@@ -58,7 +58,9 @@ public class SlimFileSetTest {
         FileSet fileSet = new FileSet();
         // add some files
         ContentFile cf1 = new ContentFile();
+        cf1.setIdentifier("1");
         ContentFile cf2 = new ContentFile();
+        cf1.setIdentifier("2");
         fileSet.addFile(cf1);
         fileSet.addFile(cf2);
         // add some VirtualFileGroup objects

@@ -525,7 +525,7 @@ public class DigitalDocument implements Serializable {
         };
         xStream.allowTypes(new Class[] { DigitalDocument.class, Metadata.class, Person.class, MetadataGroup.class, Corporate.class, DocStruct.class,
                 MetadataTypeForDocStructType.class, MetadataGroupForDocStructType.class, Reference.class, ContentFileReference.class,
-                AllowedMetadataGroupType.class, ContentFile.class });
+                AllowedMetadataGroupType.class, ContentFile.class, NamePart.class });
 
         DigitalDocument digDoc = (DigitalDocument) xStream.fromXML(infile);
 

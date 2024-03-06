@@ -28,17 +28,13 @@ import java.util.List;
 
 /*******************************************************************************
  * <p>
- * A <code>FileSet</code> contains all ContentFiles which belong to a
- * DigitalDocument. The class provides methods to add or remove ContentFile
- * objects. Each ContentFile object can only be added once. The
- * <code>FileSet</code> also.
+ * A <code>FileSet</code> contains all ContentFiles which belong to a DigitalDocument. The class provides methods to add or remove ContentFile
+ * objects. Each ContentFile object can only be added once. The <code>FileSet</code> also.
  * </p>
  * 
  * <p>
- * Beside grouping ContentFiles a FileSet can store Metadata. This Metadata is
- * valid for the all ContentFiles. In opposite to the DocStruct objects, there
- * is no validation when adding Metadata objects to a FileSet. A FileSet can
- * contain any and as many metadata as possible.
+ * Beside grouping ContentFiles a FileSet can store Metadata. This Metadata is valid for the all ContentFiles. In opposite to the DocStruct objects,
+ * there is no validation when adding Metadata objects to a FileSet. A FileSet can contain any and as many metadata as possible.
  * </p>
  * 
  * @author Markus Enders
@@ -48,8 +44,7 @@ import java.util.List;
  * 
  *      CHANGELOG
  * 
- *      22.01.2010 --- Funk --- Nice check removed: this == null :-D ---
- *      findbugs improvement.
+ *      22.01.2010 --- Funk --- Nice check removed: this == null :-D --- findbugs improvement.
  * 
  *      09.12.2009 --- Funk --- addFile() now checks if file already exist.
  * 
@@ -65,30 +60,29 @@ import java.util.List;
 
 public class FileSet implements Serializable {
 
-    private static final long		serialVersionUID	= 6605222755528016675L;
+    private static final long serialVersionUID = 6605222755528016675L;
 
-    private static final String		LINE				= "--------------------"
+    private static final String LINE = "--------------------"
             + "--------------------"
             + "--------------------"
             + "--------------------";
 
     // Containing all Images/Files belonging to a digital object.
-    private List<ContentFile>		allImages;
+    private List<ContentFile> allImages;
 
     // Metadata for the image/fileset.
-    private List<Metadata>			allMetadata;
+    private List<Metadata> allMetadata;
 
     // If metadata is removed; it will be added to this list; for undo
     // functions, or something else lateron.
-    private List<Metadata>			removedMetadata;
+    private List<Metadata> removedMetadata;
 
     // Contains all virtual fileg groups needed for the zvdd/DFG-viewer METS.
-    private List<VirtualFileGroup>	virtualFileGroups;
+    private List<VirtualFileGroup> virtualFileGroups;
 
     /***************************************************************************
      * <p>
-     * Constructor. Creates all lists which store all objects for Images,
-     * Metadata, removed Metadata, and virtual file groups.
+     * Constructor. Creates all lists which store all objects for Images, Metadata, removed Metadata, and virtual file groups.
      * </p>
      **************************************************************************/
     public FileSet() {
@@ -107,7 +101,7 @@ public class FileSet implements Serializable {
      * @return always true
      **************************************************************************/
     public boolean addFile(ContentFile inImage) {
-        // This method should be void actually, but out of some historical reasons, it is boolean... 
+        // This method should be void actually, but out of some historical reasons, it is boolean...#
 
         // Only add the file, if it is not null and it is not in the list yet.
         if (inImage != null && !this.allImages.contains(inImage)) {
@@ -119,12 +113,10 @@ public class FileSet implements Serializable {
 
     /***************************************************************************
      * <p>
-     * Removes a ContentFile from the FileSet. If the ContentFile doesn't belong
-     * to the FileSet an exception is thrown.
+     * Removes a ContentFile from the FileSet. If the ContentFile doesn't belong to the FileSet an exception is thrown.
      * </p>
      * 
-     * @param inImage
-     *            ContentFile to be removed
+     * @param inImage ContentFile to be removed
      * @return always true
      **************************************************************************/
     public boolean removeFile(ContentFile inImage) {
@@ -137,7 +129,7 @@ public class FileSet implements Serializable {
      * @return
      **************************************************************************/
     public boolean addMetadata(Metadata inMD) {
-        // This method should be void actually, but out of some historical reasons, it is boolean... 
+        // This method should be void actually, but out of some historical reasons, it is boolean...
 
         if (inMD != null) {
             this.allMetadata.add(inMD);
@@ -209,25 +201,25 @@ public class FileSet implements Serializable {
     @Override
     public String toString() {
 
-        String result = LINE + "\nFileSet\n" + LINE + "\n";
+        StringBuilder result = new StringBuilder(LINE).append("\nFileSet\n").append(LINE).append("\n");
 
         // Add FileSet.
         if (this.getAllFiles() == null || this.getAllFiles().isEmpty()) {
-            result += "NO FILES" + "\n";
+            result.append("NO FILES").append("\n");
         } else {
             StringBuffer resultBuffer = new StringBuffer();
             for (ContentFile currentCF : this.getAllFiles()) {
                 resultBuffer.append("ContentFile (" + currentCF.toString() + "\n");
             }
-            result += resultBuffer;
+            result.append(resultBuffer);
         }
 
         // Add VirtualFileGroups.
-        result += LINE + "\nVirtualFileGroups\n" + LINE + "\n";
+        result.append(LINE).append("\nVirtualFileGroups\n").append(LINE).append("\n");
 
         if (this.getVirtualFileGroups() == null
                 || this.getVirtualFileGroups().isEmpty()) {
-            result += "NONE\n";
+            result.append("NONE\n");
         } else {
             StringBuffer resultBuffer = new StringBuffer();
             for (VirtualFileGroup vfg : this.getVirtualFileGroups()) {
@@ -237,10 +229,10 @@ public class FileSet implements Serializable {
                         + vfg.getIdSuffix() + ", PATH: " + vfg.getPathToFiles()
                         + "\n");
             }
-            result += resultBuffer;
+            result.append(resultBuffer);
         }
 
-        return result;
+        return result.toString();
     }
 
 }

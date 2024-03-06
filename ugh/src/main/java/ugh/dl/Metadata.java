@@ -25,6 +25,7 @@ package ugh.dl;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -387,17 +388,43 @@ public class Metadata implements Serializable {
     @Override
     public String toString() {
 
-        String result = "";
+        StringBuilder result = new StringBuilder();
 
         if (this.getType() != null) {
             // Get metadata type and value.
-            result += "Metadata (" + this.getType().getName() + "): " + (this.getValue() != null ? "\"" + this.getValue() + "\"" : "NULL") + "\n";
+            result.append("Metadata (")
+                    .append(this.getType().getName())
+                    .append("): ")
+                    .append(this.getValue() != null ? "\"" + this.getValue() + "\"" : "NULL")
+                    .append("\n");
         } else {
             // Get metadata values without type.
-            result += "Metadata (WITHOUT TYPE!!): " + (this.getValue() != null ? "\"" + this.getValue() + "\"" : "NULL") + "\n";
+            result.append("Metadata (WITHOUT TYPE!!): ").append(this.getValue() != null ? "\"" + this.getValue() + "\"" : "NULL").append("\n");
         }
 
-        return result;
+        return result.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(MDType, MetadataVQ, MetadataVQType, authorityValue, metadataValue);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Metadata other = (Metadata) obj;
+        return Objects.equals(MDType, other.MDType) && Objects.equals(getValueQualifier(), other.getValueQualifier())
+                && Objects.equals(getValueQualifierType(), other.getValueQualifierType())
+                && Objects.equals(getValue(), other.getValue());
     }
 
     /***************************************************************************
@@ -409,50 +436,54 @@ public class Metadata implements Serializable {
      * @return TRUE if type and value are the same.
      * @param MetaData metadata
      **************************************************************************/
-    public boolean equals(Metadata metadata) {
-        if (metadata == null) {
-            return false;
-        }
-        if (this.getClass() != metadata.getClass()) {
-            return false;
-        }
-
-        log.debug("\r\n" + "metaData getClass()=" + this.getClass() + " ->id:" + this.getType().getName());
-
-        if (!(this.getType().equals(metadata.getType()))) {
-            return false;
-        }
-
-        // Processing Strings in a try block.
-        try {
-            log.debug("Values: md1/md2 " + this.getValue() + "/" + metadata.getValue());
-            if (!((this.getValue() == null && metadata.getValue() == null) || this.getValue().equals(metadata.getValue()))) {
-                log.debug("false returned");
-                return false;
-            }
-
-            if (!((this.getValueQualifier() == null && metadata.getValueQualifier() == null) || this.getValueQualifier()
-                    .equals(
-                            metadata.getValueQualifier()))) {
-                log.debug("false returned");
-                return false;
-            }
-
-            if (!((this.getValueQualifierType() == null && metadata.getValueQualifierType() == null) || this.getValueQualifierType()
-                    .equals(
-                            metadata.getValueQualifierType()))) {
-                log.debug("false returned");
-                return false;
-            }
-        }
-        // TODO Teldemokles says: "Do never catch a NullPointerException"!
-        catch (NullPointerException npe) {
-            log.debug("NPE thrown and caught");
-            return false;
-        }
-
-        log.debug("true returned");
-        return true;
-    }
+    //    @Override
+    //    public boolean equals(Object other) {
+    //
+    //        Metadata metadata = (Metadata) other;
+    //
+    //        if (metadata == null) {
+    //            return false;
+    //        }
+    //        if (this.getClass() != metadata.getClass()) {
+    //            return false;
+    //        }
+    //
+    //        log.debug("\r\n" + "metaData getClass()=" + this.getClass() + " ->id:" + this.getType().getName());
+    //
+    //        if (!(this.getType().equals(metadata.getType()))) {
+    //            return false;
+    //        }
+    //
+    //        // Processing Strings in a try block.
+    //        try {
+    //            log.debug("Values: md1/md2 " + this.getValue() + "/" + metadata.getValue());
+    //            if (!((this.getValue() == null && metadata.getValue() == null) || this.getValue().equals(metadata.getValue()))) {
+    //                log.debug("false returned");
+    //                return false;
+    //            }
+    //
+    //            if (!((this.getValueQualifier() == null && metadata.getValueQualifier() == null) || this.getValueQualifier()
+    //                    .equals(
+    //                            metadata.getValueQualifier()))) {
+    //                log.debug("false returned");
+    //                return false;
+    //            }
+    //
+    //            if (!((this.getValueQualifierType() == null && metadata.getValueQualifierType() == null) || this.getValueQualifierType()
+    //                    .equals(
+    //                            metadata.getValueQualifierType()))) {
+    //                log.debug("false returned");
+    //                return false;
+    //            }
+    //        }
+    //        // TODO Teldemokles says: "Do never catch a NullPointerException"!
+    //        catch (NullPointerException npe) {
+    //            log.debug("NPE thrown and caught");
+    //            return false;
+    //        }
+    //
+    //        log.debug("true returned");
+    //        return true;
+    //    }
 
 }
