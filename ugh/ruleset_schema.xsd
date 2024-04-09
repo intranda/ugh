@@ -47,7 +47,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="Name" />
-        <xs:element maxOccurs="unbounded" ref="language" />
+        <xs:element maxOccurs="unbounded" ref="language" minOccurs="0"/>
         <xs:choice maxOccurs="unbounded">
           <xs:element minOccurs="0" maxOccurs="unbounded" ref="allowedchildtype" />
           <xs:element minOccurs="0" maxOccurs="unbounded" ref="metadata" />
@@ -76,6 +76,7 @@
         <xs:element ref="Marc" />
         <xs:element ref="METS" />
         <xs:element ref="LIDO" />
+        <xs:element ref="Json" />
       </xs:choice>
     </xs:complexType>
   </xs:element>
@@ -144,7 +145,36 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="Json">
+    <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+            <xs:element maxOccurs="unbounded" name="Metadata">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1" />
+                        <xs:element name="field" type="xs:string" minOccurs="1" maxOccurs="1" />
+                        <xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1" />
+                        <xs:element name="identifierField" type="xs:string" minOccurs="0" maxOccurs="1" />
+                        <xs:element name="conditionValue" type="xs:string" minOccurs="0" maxOccurs="1" />
+                        <xs:element name="fieldReplacement" type="xs:string" minOccurs="0" maxOccurs="1" />
+                        <xs:element name="defaultValue" type="xs:string" minOccurs="0" maxOccurs="1" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
 
+            <xs:element maxOccurs="unbounded" name="DocStruct">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1" />
+                        <xs:element name="field" type="xs:string" minOccurs="1" maxOccurs="1" />
+                        <xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1" />
+                        <xs:element name="value" type="xs:string" minOccurs="0" maxOccurs="1" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="PicaPlus">
     <xs:complexType>
       <xs:choice maxOccurs="unbounded">
@@ -158,6 +188,15 @@
           </xs:complexType>
         </xs:element>
         <xs:element maxOccurs="unbounded" name="Person">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="Name" />
+              <xs:element ref="picaMainTag" />
+              <xs:element maxOccurs="unbounded" ref="picaSubTag" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="Corporate">
           <xs:complexType>
             <xs:sequence>
               <xs:element ref="Name" />
@@ -328,6 +367,8 @@
             <xs:sequence>
               <xs:element ref="InternalName" />
               <xs:element ref="WriteXPath" />
+              <xs:choice minOccurs="1" maxOccurs="unbounded">
+
               <xs:element maxOccurs="unbounded" name="Metadata">
                 <xs:complexType>
                   <xs:sequence>
@@ -337,24 +378,40 @@
                       <xs:element ref="ValueRegExp" />
                       <xs:element ref="WriteXPath" />
                     </xs:choice>
-                    <xs:sequence minOccurs="0">
-                      <xs:element ref="FirstnameXPath" />
-                      <xs:element ref="LastnameXPath" />
-                      <xs:element ref="DisplayNameXPath" />
-                    </xs:sequence>
-                    <xs:choice minOccurs="0">
-                      <xs:element ref="IdentifierXPath" />
-                      <xs:sequence>
-                        <xs:element ref="MainNameXPath" />
-                        <xs:element ref="SubNameXPath" />
-                        <xs:element ref="PartNameXPath" />
-                      </xs:sequence>
-                    </xs:choice>
                   </xs:sequence>
                 </xs:complexType>
-
               </xs:element>
-            </xs:sequence>
+           
+            
+             <xs:element maxOccurs="unbounded" name="Person">
+                <xs:complexType>
+                    <xs:sequence>
+                       <xs:element ref="InternalName" />
+                       <xs:element ref="WriteXPath" />
+                       <xs:element ref="IdentifierXPath" minOccurs="0"/>                       
+                       <xs:element ref="FirstnameXPath" minOccurs="0"/>
+                       <xs:element ref="LastnameXPath" minOccurs="0"/>
+                       <xs:element ref="DisplayNameXPath" minOccurs="0" />
+                    </xs:sequence>
+                </xs:complexType>            
+            </xs:element>
+            <xs:element maxOccurs="unbounded" name="Corporate">
+                <xs:complexType>
+                    <xs:sequence>
+                       <xs:element ref="InternalName" />
+                       <xs:element ref="WriteXPath" />
+                       <xs:element ref="IdentifierXPath" minOccurs="0"/>
+                       <xs:element ref="MainNameXPath" />
+                       <xs:element ref="SubNameXPath" minOccurs="0" maxOccurs="unbounded"/>
+                       <xs:element ref="PartNameXPath" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>                        
+            
+            </xs:element>
+            
+
+              </xs:choice>
+               </xs:sequence>
           </xs:complexType>
 
         </xs:element>
@@ -428,7 +485,7 @@
         <xs:element ref="fieldMainTag" />
         <xs:sequence minOccurs="0">
           <xs:element ref="fieldMainName" />
-          <xs:element ref="fieldSubName" />
+          <xs:element ref="fieldSubName" maxOccurs="unbounded"/>
           <xs:element maxOccurs="unbounded" ref="fieldPartName" />
         </xs:sequence>
         <xs:choice minOccurs="0">
