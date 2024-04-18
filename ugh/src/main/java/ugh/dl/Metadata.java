@@ -216,7 +216,12 @@ public class Metadata implements Serializable {
      * @param value value of the record in the authority file
      * 
      **************************************************************************/
+    @Deprecated
     public void setAutorityFile(String authorityID, String authorityURI, String authorityValue) {
+        setAuthorityFile(authorityID, authorityURI, authorityValue);
+    }
+
+    public void setAuthorityFile(String authorityID, String authorityURI, String authorityValue) {
         this.authorityID = authorityID;
         this.authorityURI = authorityURI;
         this.authorityValue = authorityValue;

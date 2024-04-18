@@ -109,6 +109,9 @@
                         <xs:element ref="WriteXPath" />
                         <xs:element ref="XPath" />
                         <xs:element ref="exportEmptyNode" />
+                <xs:element name="authorityName" maxOccurs="1" />
+                <xs:element name="authorityUri" maxOccurs="1" />
+                <xs:element name="authorityValue" maxOccurs="1" />                        
                       </xs:choice>
                       <xs:attribute name="type" type="xs:NCName" />
                     </xs:complexType>
@@ -125,6 +128,9 @@
                 <xs:element ref="WriteXPath" />
                 <xs:element ref="XPath" />
                 <xs:element ref="exportEmptyNode" />
+                <xs:element name="authorityName" maxOccurs="1" />
+                <xs:element name="authorityUri" maxOccurs="1" />
+                <xs:element name="authorityValue" maxOccurs="1" />
               </xs:choice>
               <xs:attribute name="type" type="xs:NCName" />
             </xs:complexType>
@@ -458,7 +464,7 @@
     <xs:complexType>
       <xs:simpleContent>
         <xs:extension base="xs:NCName">
-          <xs:attribute name="DefaultDisplay" use="required" type="xs:boolean" />
+          <xs:attribute name="DefaultDisplay" type="xs:boolean" />
           <xs:attribute name="num" use="required" />
         </xs:extension>
       </xs:simpleContent>
