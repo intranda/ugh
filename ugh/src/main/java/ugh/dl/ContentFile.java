@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -244,91 +243,8 @@ public class ContentFile implements Serializable {
         return "ContentFile (ID: " + this.getIdentifier() + "): '" + this.getLocation() + "' (" + this.getMimetype() + ")" + "\n";
     }
 
-    /***************************************************************************
-     * <p>
-     * Overloaded equals method compares this ContentFile with parameter contentFile.
-     * </p>
-     * 
-     * @author Wulf Riebensahm
-     * @return TRUE if type and value are the same.
-     * @param ContentFile contentFile
-     **************************************************************************/
-    //    @Override
-    //    public boolean equals(Object o) {
-    //        ContentFile contentFile = (ContentFile) o;
-    //        // Compare theses class variables. processing Strings in a try block.
-    //        try {
-    //            if (!((this.getMimetype() == null && contentFile.getMimetype() == null) || this.getMimetype().equals(contentFile.getMimetype()))) {
-    //                return false;
-    //            }
-    //
-    //            if (!((this.getLocation() == null && contentFile.getLocation() == null) || this.getLocation().equals(contentFile.getLocation()))) {
-    //                return false;
-    //            }
-    //
-    //            if (!((this.getIdentifier() == null && contentFile.getIdentifier() == null)
-    //                    || this.getIdentifier().equals(contentFile.getIdentifier()))) {
-    //                return false;
-    //            }
-    //        } catch (NullPointerException npe) {
-    //            return false;
-    //        }
-    //
-    //        // Cchecking if same number of metadata exists.
-    //        if (this.getAllMetadata() == null && contentFile.getAllMetadata() == null) {
-    //            return true;
-    //        }
-    //        if ((this.getAllMetadata() == null && contentFile.getAllMetadata() != null)
-    //                || (this.getAllMetadata() != null && contentFile.getAllMetadata() == null)) {
-    //            return false;
-    //        }
-    //
-    //        if (this.getAllMetadata().size() != contentFile.getAllMetadata().size()) {
-    //            return false;
-    //        }
-    //
-    //        // In detail check comparing metadata. Iterating through metadata and
-    //        // trying to find a match, if a match is found each time.
-    //        boolean flagFound;
-    //        for (Metadata md1 : this.getAllMetadata()) {
-    //            flagFound = false;
-    //            for (Metadata md2 : contentFile.getAllMetadata()) {
-    //                if (md1.equals(md2)) {
-    //                    flagFound = true;
-    //                    break;
-    //                }
-    //            }
-    //            if (!flagFound) {
-    //                return false;
-    //            }
-    //        }
-    //
-    //        return true;
-    //    }
-
     public List<Md> getTechMds() {
         return techMdList;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(Location, MimeType, allMetadata, identifier);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        ContentFile other = (ContentFile) obj;
-        return Objects.equals(Location, other.Location) && Objects.equals(MimeType, other.MimeType) && Objects.equals(allMetadata, other.allMetadata)
-                && Objects.equals(identifier, other.identifier);
     }
 
     public void addTechMd(Md techMd) {
