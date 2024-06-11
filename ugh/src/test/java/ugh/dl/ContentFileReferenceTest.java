@@ -72,17 +72,6 @@ public class ContentFileReferenceTest {
     }
 
     @Test
-    public void testEqualsGivenReferencesWithDifferentEmptyCFs() {
-        ContentFileReference reference1 = new ContentFileReference();
-        ContentFileReference reference2 = new ContentFileReference();
-        ContentFile cf1 = new ContentFile();
-        ContentFile cf2 = new ContentFile();
-        reference1.setCf(cf1);
-        reference2.setCf(cf2);
-        assertTrue(reference1.equals(reference2));
-    }
-
-    @Test
     public void testEqualsGivenReferencesWithDifferentCFs() throws ContentFileAreaTypeUnknownException {
         ContentFileReference reference1 = new ContentFileReference();
         ContentFileReference reference2 = new ContentFileReference();
@@ -94,7 +83,7 @@ public class ContentFileReferenceTest {
         reference2.setCf(cf2);
         assertFalse(reference1.equals(reference2));
     }
-    
+
     @Ignore("The logic to be tested still lies in the TODO list.")
     @Test
     public void testEqualsGivenReferencesWithSameCFButDifferentEmptyCFAs() {

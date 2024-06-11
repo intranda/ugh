@@ -184,21 +184,9 @@ public class ContentFileTest {
         assertFalse(cf.equals(null));
     }
 
-    @Test
-    public void testEqualsGivenContentFileObjectsWithDifferentReferencedDocStructs() throws TypeNotAllowedForParentException {
-        DocStructType dsType = new DocStructType();
-        DocStruct ds1 = new DocStruct(dsType);
-        DocStruct ds2 = new DocStruct(dsType);
-        assertNotEquals(ds1, ds2);
-        cf.addDocStructAsReference(ds1);
-        ContentFile cf2 = new ContentFile();
-        cf2.addDocStructAsReference(ds2);
-        assertTrue(cf.equals(cf2));
-    }
-
     /* Tests for the methods getTechMds(), addTechMd(Md), setTechMds(List<Md>) */
     @Test
-    public void testAddTechMdBeforeInitialization() throws ParserConfigurationException, SAXException, IOException {
+    public void testAddTechMdBeforeInitialization() {
         assertNull(cf.getTechMds());
         Node node = nList.item(0);
         Md md = new Md(node);

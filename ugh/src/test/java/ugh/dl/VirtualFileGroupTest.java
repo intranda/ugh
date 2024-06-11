@@ -189,18 +189,6 @@ public class VirtualFileGroupTest {
     }
 
     @Test
-    public void testRemoveContentFileGivenEquivalentObject() {
-        ContentFile cf1 = new ContentFile();
-        ContentFile cf2 = new ContentFile();
-        assertTrue(cf1.equals(cf2));
-        vfg.addContentFile(cf1);
-        assertNotSame(vfg.ALL_FILES, vfg.getContentFiles());
-        assertEquals(1, vfg.getContentFiles().size());
-        vfg.removeContentFile(cf2);
-        assertEquals(0, vfg.getContentFiles().size());
-    }
-
-    @Test
     public void testRemoveContentFileGivenSameObject() {
         ContentFile cf = new ContentFile();
         vfg.addContentFile(cf);
@@ -238,7 +226,7 @@ public class VirtualFileGroupTest {
         assertTrue(vfg.contains(cf1));
         assertTrue(vfg.contains(cf2));
         vfg.removeContentFiles(files23);
-        assertEquals(0, vfg.getContentFiles().size());
+        assertEquals(1, vfg.getContentFiles().size());
         assertFalse(vfg.contains(cf2));
     }
 

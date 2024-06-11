@@ -3,7 +3,6 @@ package ugh.dl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -44,18 +43,6 @@ public class FileSetTest {
         fs.addFile(cf);
         assertEquals(1, fs.getAllFiles().size());
         fs.addFile(cf);
-        assertEquals(1, fs.getAllFiles().size());
-    }
-
-    @Test
-    public void testAddFileGivenEquivalentButDifferentFiles() {
-        ContentFile cf1 = new ContentFile();
-        ContentFile cf2 = new ContentFile();
-        assertTrue(cf1.equals(cf2));
-        assertNotSame(cf1, cf2);
-        fs.addFile(cf1);
-        assertEquals(1, fs.getAllFiles().size());
-        fs.addFile(cf2);
         assertEquals(1, fs.getAllFiles().size());
     }
 

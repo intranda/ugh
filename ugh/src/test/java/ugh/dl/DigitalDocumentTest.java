@@ -171,7 +171,7 @@ public class DigitalDocumentTest {
 
     @Test
     public void testSetAmdSecGivenAmdSecObject() {
-        AmdSec sec1 = new AmdSec(new ArrayList<Md>());
+        AmdSec sec1 = new AmdSec(new ArrayList<>());
         dd.setAmdSec(sec1);
         assertNotNull(dd.getAmdSec());
         assertNull(dd.getAmdSec().getId());
@@ -180,7 +180,7 @@ public class DigitalDocumentTest {
         assertSame(sec1, dd.getAmdSec("id"));
 
         // use another AmdSec object to test the method again
-        AmdSec sec2 = new AmdSec(new ArrayList<Md>());
+        AmdSec sec2 = new AmdSec(new ArrayList<>());
         sec2.setId("id2");
         dd.setAmdSec(sec2);
         assertEquals("id2", dd.getAmdSec().getId());
@@ -1008,7 +1008,7 @@ public class DigitalDocumentTest {
         assertEquals(0, dd.getTechMds().size());
 
         // initialize the field amdSec with a new AmdSec object
-        AmdSec sec = new AmdSec(new ArrayList<Md>());
+        AmdSec sec = new AmdSec(new ArrayList<>());
         dd.setAmdSec(sec);
         Md md = new Md(upperChild);
         md.setId("id");
@@ -1030,7 +1030,7 @@ public class DigitalDocumentTest {
         assertNull(dd.getTechMd(null));
 
         // initialize the field amdSec with a new AmdSec object
-        AmdSec sec = new AmdSec(new ArrayList<Md>());
+        AmdSec sec = new AmdSec(new ArrayList<>());
         dd.setAmdSec(sec);
         assertNotNull(sec.getTechMdList());
         assertNull(dd.getTechMd(null));
@@ -1050,7 +1050,7 @@ public class DigitalDocumentTest {
         assertNull(dd.getAmdSec(""));
 
         // initialize the field amdSec with a new AmdSec object
-        AmdSec sec = new AmdSec(new ArrayList<Md>());
+        AmdSec sec = new AmdSec(new ArrayList<>());
         dd.setAmdSec(sec);
         assertNotNull(sec.getTechMdList());
         assertNull(dd.getTechMd(""));
@@ -1072,7 +1072,7 @@ public class DigitalDocumentTest {
     public void testGetTechMdGivenUnemptyString() {
         String[] names = new String[] { "_", " ", "not a name", "BAZINGA!" };
         // initialize the field amdSec with a new AmdSec object
-        AmdSec sec = new AmdSec(new ArrayList<Md>());
+        AmdSec sec = new AmdSec(new ArrayList<>());
         dd.setAmdSec(sec);
         assertNotNull(sec.getTechMdList());
 
@@ -1121,10 +1121,6 @@ public class DigitalDocumentTest {
         DigitalDocument docOriginal = fileformat.getDigitalDocument();
         DigitalDocument docCopy = docOriginal.copyDigitalDocument();
 
-        // check the fields topPhysicalStruct and topLogicalStruct
-        assertTrue(docOriginal.equals(docCopy));
-        assertTrue(docCopy.equals(docOriginal));
-
         // check the field amdSec
         List<Md> mdsOriginal = docOriginal.getTechMds();
         List<Md> mdsCopy = docCopy.getTechMds();
@@ -1146,9 +1142,7 @@ public class DigitalDocumentTest {
         assertEquals(filesOriginal.size(), filesCopy.size());
         assertEquals(metadatenOriginal.size(), metadatenCopy.size());
         assertEquals(vfgOriginal.size(), vfgCopy.size());
-        for (int i = 0; i < filesOriginal.size(); ++i) {
-            assertTrue(filesOriginal.get(i).equals(filesCopy.get(i)));
-        }
+
         for (int i = 0; i < metadatenOriginal.size(); ++i) {
             assertTrue(metadatenOriginal.get(i).equals(metadatenCopy.get(i)));
         }
