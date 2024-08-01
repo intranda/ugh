@@ -335,27 +335,27 @@ public class MetadataTypeTest {
     /* Tests for the method equals(MetadataType) */
     @Test
     public void testEqualsToItself() {
-        assertTrue(mdt.equals(mdt));
+        assertEquals(mdt, mdt);
     }
 
     @Test
     public void testEqualsGivenTwoBrandNewMDTs() {
         MetadataType mdt2 = new MetadataType();
         assertNotSame(mdt, mdt2); // in the sense that they are located differently
-        assertTrue(mdt2.equals(mdt)); // but according to our rewritten equals(MetadataType) method, they are equal
+        assertEquals(mdt2, mdt); // but according to our rewritten equals(MetadataType) method, they are equal
     }
 
     @Test
     public void testEqualsGivenOneNull() {
-        assertFalse(mdt.equals(null));
+        assertNotEquals(mdt, null);
     }
 
     @Test
     public void testEqualsGivenOneWithNameNull() {
         MetadataType mdt2 = new MetadataType();
         mdt2.setName("some name");
-        assertFalse(mdt2.equals(mdt));
-        assertFalse(mdt.equals(mdt2));
+        assertNotEquals(mdt2, mdt);
+        assertNotEquals(mdt, mdt2);
     }
 
     @Test
@@ -363,8 +363,8 @@ public class MetadataTypeTest {
         MetadataType mdt2 = new MetadataType();
         mdt2.setName("");
         mdt.setName(new String());
-        assertTrue(mdt2.equals(mdt));
-        assertTrue(mdt.equals(mdt2));
+        assertEquals(mdt2, mdt);
+        assertEquals(mdt, mdt2);
     }
 
     @Test
@@ -372,21 +372,21 @@ public class MetadataTypeTest {
         MetadataType mdt2 = new MetadataType();
         mdt2.setName("name2");
         mdt.setName("name1");
-        assertFalse(mdt.equals(mdt2));
+        assertNotEquals(mdt, mdt2);
     }
 
     @Test
     public void testEqualsGivenDifferentIsPerson() {
         MetadataType mdt2 = new MetadataType();
         mdt2.setIsPerson(true);
-        assertFalse(mdt.equals(mdt2));
+        assertNotEquals(mdt, mdt2);
     }
 
     @Test
     public void testEqualsGivenDifferentIsIdentifier() {
         MetadataType mdt2 = new MetadataType();
         mdt2.setIdentifier(true);
-        assertFalse(mdt.equals(mdt2));
+        assertNotEquals(mdt, mdt2);
     }
 
     @Test
@@ -398,19 +398,19 @@ public class MetadataTypeTest {
         mdt.setIsPerson(true);
         mdt2.setIdentifier(true);
         mdt.setIdentifier(true);
-        assertTrue(mdt.equals(mdt2));
+        assertEquals(mdt, mdt2);
     }
 
     @Test
     public void testEqualsTogetherWithCopy() {
         MetadataType mdt2 = mdt.copy();
-        assertTrue(mdt.equals(mdt2));
+        assertEquals(mdt, mdt2);
         mdt.setIdentifier(true);
-        assertFalse(mdt.equals(mdt2));
+        assertNotEquals(mdt, mdt2);
         mdt2.setIdentifier(true);
-        assertTrue(mdt2.equals(mdt));
+        assertEquals(mdt2, mdt);
         mdt2.setCorporate(true); // the value of isCorporate plays no role in the comparison
-        assertTrue(mdt2.equals(mdt));
+        assertEquals(mdt2, mdt);
     }
 
 }

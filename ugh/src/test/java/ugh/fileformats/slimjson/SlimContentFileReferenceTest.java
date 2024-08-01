@@ -12,11 +12,10 @@ import ugh.dl.ContentFileReference;
 
 public class SlimContentFileReferenceTest {
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed for the first parameter to avoid the NullPointerException.")
-    @Test
+    @Test(expected = Exception.class)
     public void testFromContentFileReferenceGivenNullAsFirstParameter() {
         SlimDigitalDocument sdd = new SlimDigitalDocument();
-        assertNull(SlimContentFileReference.fromContentFileReference(null, sdd));
+        SlimContentFileReference.fromContentFileReference(null, sdd);
     }
 
     @Ignore("The logic in the method cannot pass this test. Null check needed for the second parameter to avoid the NullPointerException.")

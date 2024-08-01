@@ -1,10 +1,9 @@
 package ugh.dl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.nio.charset.Charset;
 import java.util.Random;
@@ -56,7 +55,7 @@ public class NamePartTest {
             values[i] = generatedString.toUpperCase();
             valuesHashCodes[i] = values[i].hashCode();
         }
-        
+
         // type == null
         for (int i = 0; i < sampleNum; ++i) {
             namePart = new NamePart(null, values[i]);
@@ -80,62 +79,63 @@ public class NamePartTest {
     @Test
     public void testEqualsToItself() {
         namePart = new NamePart();
-        assertTrue(namePart.equals(namePart));
+        assertEquals(namePart, namePart);
     }
 
     @Test
     public void testEqualsGivenNull() {
         namePart = new NamePart();
-        assertFalse(namePart.equals(null));
+        assertNotEquals(namePart, null);
     }
 
     @Test
     public void testEqualsGivenOtherObjectClass() {
         namePart = new NamePart();
         NamePart2 namePart2 = new NamePart2();
-        assertFalse(namePart.equals(namePart2));
-        assertFalse(namePart.equals((NamePart) namePart2));
+        assertNotEquals(namePart, namePart2);
+        assertNotEquals(namePart, namePart2);
     }
 
     @Test
     public void testEqualsGivenUninitalizedObjects() {
         namePart = new NamePart();
         NamePart anotherPart = new NamePart(null, null);
-        assertTrue(namePart.equals(anotherPart));
+        assertEquals(namePart, anotherPart);
     }
 
     @Test
     public void testEqualsGivenOneInitializedEmptyObject() {
         namePart = new NamePart("", new String());
         NamePart anotherPart = new NamePart();
-        assertFalse(namePart.equals(anotherPart));
-        assertFalse(anotherPart.equals(namePart));
+        assertNotEquals(namePart, anotherPart);
+        assertNotEquals(anotherPart, namePart);
     }
 
     @Test
     public void testEqualsGivenOneInitializedObject() {
         namePart = new NamePart("type", "value");
         NamePart anotherPart = new NamePart();
-        assertFalse(namePart.equals(anotherPart));
-        assertFalse(anotherPart.equals(namePart));
+        assertNotEquals(namePart, anotherPart);
+        assertNotEquals(anotherPart, namePart);
         anotherPart.setType("type");
         anotherPart.setValue("value");
-        assertTrue(namePart.equals(anotherPart));
-        assertTrue(anotherPart.equals(namePart));
+        assertEquals(namePart, anotherPart);
+        assertEquals(anotherPart, namePart);
     }
 
     @Test
     public void testEqualsGivenObjectifiedParameter() {
         namePart = new NamePart("type", "value");
         NamePart anotherPart = new NamePart("type", "value");
-        Object anotherObject = (Object) anotherPart;
-        assertTrue(namePart.equals(anotherObject));
-        assertTrue(anotherObject.equals(namePart));
+        Object anotherObject = anotherPart;
+        assertEquals(namePart, anotherObject);
+        assertEquals(anotherObject, namePart);
     }
 
     private class NamePart2 extends NamePart {
+
+        private static final long serialVersionUID = -861371056416644295L;
         // intentionally left blank, since we just need its class name for testing the method equals(Object)
     }
-
 
 }

@@ -2,6 +2,7 @@ package ugh.dl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
@@ -52,9 +53,9 @@ public class MetadataTest {
         MetadataType type2 = new MetadataType();
         md2.setType(type2);
         assertNotSame(type, type2);
-        assertTrue(type.equals(type2));
+        assertEquals(type, type2);
         assertNotSame(md.getType(), md2.getType());
-        assertTrue(md.getType().equals(md2.getType()));
+        assertEquals(md.getType(), md2.getType());
     }
 
     @Test
@@ -68,7 +69,7 @@ public class MetadataTest {
         md.setAuthorityURI(uri);
         md.setAuthorityValue(value);
         // set authorityID, authorityURI, authorityValue of md2 using the method setAuthorityFile(String, String, String)
-        md2.setAutorityFile(id, uri, value);
+        md2.setAuthorityFile(id, uri, value);
         assertTrue(md.getAuthorityID() == md2.getAuthorityID()
                 && md.getAuthorityURI() == md2.getAuthorityURI()
                 && md.getAuthorityValue() == md2.getAuthorityValue());
@@ -196,27 +197,27 @@ public class MetadataTest {
     /* Tests for the method equals(Metadata) */
     @Test
     public void testEqualsToItself() {
-        assertTrue(md.equals(md));
+        assertEquals(md, md);
     }
 
     @Test
     public void testEqualsGivenNull() {
-        assertFalse(md.equals(null));
+        assertNotEquals(md, null);
     }
 
     @Test
     public void testEqualsGivenTwoMetadataObjectsCreatedFromTheSameMetadataTypeObject() throws MetadataTypeNotAllowedException {
-        assertTrue(md.equals(new Metadata(type)));
+        assertEquals(md, new Metadata(type));
     }
 
     @Test
     public void testEqualsGivenTwoMetadataObjectsCreatedFromTwoDefaultMetadataTypeObjects() throws MetadataTypeNotAllowedException {
-        assertTrue(md.equals(new Metadata(new MetadataType())));
+        assertEquals(md, new Metadata(new MetadataType()));
     }
 
     @Test
     public void testEqualsGivenTwoMetadataObjectsCreatedFromTwoUnmodifiedCopiesOfTheSameMetadataTypeObject() throws MetadataTypeNotAllowedException {
-        assertTrue(md.equals(new Metadata(type.copy())));
+        assertEquals(md, new Metadata(type.copy()));
     }
 
     @Test
@@ -224,7 +225,7 @@ public class MetadataTest {
         MetadataType typeCopy = type.copy();
         typeCopy.setName("");
         Metadata md2 = new Metadata(typeCopy);
-        assertFalse(md.equals(md2));
+        assertNotEquals(md, md2);
     }
 
     @Test
@@ -232,7 +233,7 @@ public class MetadataTest {
             throws MetadataTypeNotAllowedException {
         Metadata md2 = new Metadata(type.copy());
         md2.getType().setName("");
-        assertFalse(md.equals(md2));
+        assertNotEquals(md, md2);
     }
 
     @Test
@@ -244,9 +245,9 @@ public class MetadataTest {
         type2.setCorporate(true);
         assertTrue(type2.isCorporate());
         Metadata md2 = new Metadata(type2);
-        assertTrue(type.equals(type2));
+        assertEquals(type, type2);
         assertNotSame(type.isCorporate(), type2.isCorporate());
-        assertTrue(md.equals(md2));
+        assertEquals(md, md2);
     }
 
     @Test
@@ -267,12 +268,12 @@ public class MetadataTest {
         assertEquals(md.getValueQualifier(), md2.getValueQualifier());
         assertEquals(md.getValueQualifierType(), md2.getValueQualifierType());
         // assure that they are however somehow different
-        md.setAutorityFile("id1", "uri1", "value1");
-        md2.setAutorityFile("id2", "uri2", "value2");
+        md.setAuthorityFile("id1", "uri1", "value1");
+        md2.setAuthorityFile("id2", "uri2", "value2");
         md.setValidationErrorPresent(false);
         md2.setValidationErrorPresent(true);
         // then we do the comparison
-        assertTrue(md.equals(md2));
+        assertEquals(md, md2);
     }
 
     @Test
@@ -284,8 +285,8 @@ public class MetadataTest {
         Corporate c = new Corporate(type);
         Metadata mdc = c;
         assertNotSame(mdp.getClass(), mdc.getClass());
-        assertFalse(md.equals(mdp));
-        assertFalse(mdp.equals(mdc));
+        assertNotEquals(md, mdp);
+        assertNotEquals(mdp, mdc);
     }
 
 }

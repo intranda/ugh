@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +89,7 @@ public class Prefs implements Serializable {
     private List<DocStructType> allDocStrctTypes;
     private List<MetadataType> allMetadataTypes;
     private List<MetadataGroupType> allMetadataGroupTypes;
-    private Map<String, Node> allFormats;
+    private transient Map<String, Node> allFormats;
 
     public static final short ELEMENT_NODE = 1;
 
@@ -103,7 +102,7 @@ public class Prefs implements Serializable {
         this.allDocStrctTypes = new LinkedList<>();
         this.allMetadataTypes = new LinkedList<>();
         this.allMetadataGroupTypes = new LinkedList<>();
-        this.allFormats = new Hashtable<>();
+        this.allFormats = new HashMap<>();
     }
 
     /***************************************************************************

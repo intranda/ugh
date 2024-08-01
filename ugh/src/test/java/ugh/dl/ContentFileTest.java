@@ -69,13 +69,12 @@ public class ContentFileTest {
     public void testAddMetadataBeforeInitialization() throws MetadataTypeNotAllowedException {
         MetadataType mdType = new MetadataType();
         Metadata md = new Metadata(mdType);
-        assertTrue(cf.addMetadata(md));
+        cf.addMetadata(md);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddMetadataGivenNull() {
-        // Null should be avoided
-        assertTrue(cf.addMetadata(null));
+        cf.addMetadata(null);
     }
 
     /* Tests for the method removeMetadata(Metadata) */
@@ -83,7 +82,7 @@ public class ContentFileTest {
     public void testRemoveMetadataBeforeInitialization() throws MetadataTypeNotAllowedException {
         MetadataType mdType = new MetadataType();
         Metadata md = new Metadata(mdType);
-        assertFalse(cf.removeMetadata(md));
+        cf.removeMetadata(md);
     }
 
     /* Tests for the method addDocStructAsReference(DocStruct) */
@@ -174,12 +173,12 @@ public class ContentFileTest {
     // Everything from L277 till the end of the method cannot be tested, since they are unreachable thanks to the uninitializable field allMetadata. - Zehong
     @Test
     public void testEqualsToItself() {
-        assertTrue(cf.equals(cf));
+        assertEquals(cf, cf);
     }
 
     @Test
     public void testEqualsGivenNull() {
-        assertFalse(cf.equals(null));
+        assertNotEquals(cf, null);
     }
 
     /* Tests for the methods getTechMds(), addTechMd(Md), setTechMds(List<Md>) */

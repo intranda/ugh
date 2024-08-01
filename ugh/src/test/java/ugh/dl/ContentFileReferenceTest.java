@@ -1,15 +1,11 @@
 package ugh.dl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import ugh.exceptions.ContentFileAreaTypeUnknownException;
 
 public class ContentFileReferenceTest {
     private ContentFileReference reference;
@@ -37,24 +33,24 @@ public class ContentFileReferenceTest {
 
     @Test
     public void testEqualsGivenOneNull() {
-        assertFalse(reference.equals(null));
+        assertNotEquals(reference, null);
     }
 
     @Test
     public void testEqualsToItself() {
-        ContentFileReference reference = new ContentFileReference();
+        ContentFileReference ref = new ContentFileReference();
         ContentFile cf = new ContentFile();
-        reference.setCf(cf);
-        assertTrue(reference.equals(reference));
+        ref.setCf(cf);
+        assertEquals(ref, ref);
     }
 
     @Test
     public void testEqualsToItselfWithoutInitialization() {
-        assertTrue(reference.equals(reference));
+        assertEquals(reference, reference);
     }
 
     @Test
-    public void testEqualsGivenReferencesWithDifferentCFs() throws ContentFileAreaTypeUnknownException {
+    public void testEqualsGivenReferencesWithDifferentCFs() {
         ContentFileReference reference1 = new ContentFileReference();
         ContentFileReference reference2 = new ContentFileReference();
         ContentFile cf1 = new ContentFile();
@@ -63,39 +59,7 @@ public class ContentFileReferenceTest {
         cf2.setLocation("location2");
         reference1.setCf(cf1);
         reference2.setCf(cf2);
-        assertFalse(reference1.equals(reference2));
-    }
-
-    @Ignore("The logic to be tested still lies in the TODO list.")
-    @Test
-    public void testEqualsGivenReferencesWithSameCFButDifferentEmptyCFAs() {
-        ContentFileReference reference1 = new ContentFileReference();
-        ContentFileReference reference2 = new ContentFileReference();
-        ContentFile cf = new ContentFile();
-        reference1.setCf(cf);
-        reference2.setCf(cf);
-        ContentFileArea cfa1 = new ContentFileArea();
-        ContentFileArea cfa2 = new ContentFileArea();
-        reference1.setCfa(cfa1);
-        reference2.setCfa(cfa2);
-        assertTrue(reference1.equals(reference2));
-    }
-
-    @Ignore("The logic to be tested still lies in the TODO list.")
-    @Test
-    public void testEqualsGivenReferencesWithSameCFButDifferentCFAs() {
-        ContentFileReference reference1 = new ContentFileReference();
-        ContentFileReference reference2 = new ContentFileReference();
-        ContentFile cf = new ContentFile();
-        reference1.setCf(cf);
-        reference2.setCf(cf);
-        ContentFileArea cfa1 = new ContentFileArea();
-        ContentFileArea cfa2 = new ContentFileArea();
-        cfa1.setFrom("from1");
-        cfa2.setFrom("from2");
-        reference1.setCfa(cfa1);
-        reference2.setCfa(cfa2);
-        assertFalse(reference1.equals(reference2));
+        assertNotEquals(reference1, reference2);
     }
 
 }

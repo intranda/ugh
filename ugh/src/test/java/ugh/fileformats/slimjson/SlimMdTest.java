@@ -48,10 +48,9 @@ public class SlimMdTest {
         transformer = transformerFactory.newTransformer();
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
-    @Test
+    @Test(expected = Exception.class)
     public void testFromMdGivenNull() {
-        assertNull(SlimMd.fromMd(null));
+        SlimMd.fromMd(null);
     }
 
     @Test

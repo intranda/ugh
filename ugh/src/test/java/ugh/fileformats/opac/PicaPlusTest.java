@@ -21,7 +21,6 @@ import ugh.dl.Prefs;
 
 public class PicaPlusTest {
 
-
     @Test
     public void testReadPrefs() throws Exception {
         Prefs prefs = new Prefs();
@@ -29,7 +28,7 @@ public class PicaPlusTest {
         prefs.loadPrefs("src/test/resources/ruleset.xml");
 
         PicaPlus fixture = new PicaPlus(prefs);
-        assertNotNull (fixture);
+        assertNotNull(fixture);
     }
 
     @Test
@@ -39,7 +38,7 @@ public class PicaPlusTest {
         prefs.loadPrefs("src/test/resources/ruleset.xml");
 
         PicaPlus fixture = new PicaPlus(prefs);
-        assertNotNull (fixture);
+        assertNotNull(fixture);
         File fXmlFile = new File("src/test/resources/pica.xml");
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -52,14 +51,14 @@ public class PicaPlusTest {
         DocStruct logical = digDoc.getLogicalDocStruct();
         assertEquals("Monograph", logical.getType().getName());
 
-        Metadata m = logical.getAllMetadata().get(0);;
+        Metadata m = logical.getAllMetadata().get(0);
         Corporate c = logical.getAllCorporates().get(0);
         Person p = logical.getAllPersons().get(0);
 
         assertEquals("CatalogIDDigital", m.getType().getName());
         assertEquals("1733284826", m.getValue());
 
-        assertEquals("Corporation",c.getType().getName());
+        assertEquals("Corporation", c.getType().getName());
         assertEquals("Georg-August-Universität Göttingen", c.getMainName());
         assertEquals("Grad-verleihende Institution", c.getSubNames().get(0).getValue());
         assertEquals("Göttingen; 2014", c.getPartName());
@@ -78,7 +77,7 @@ public class PicaPlusTest {
         prefs.loadPrefs("src/test/resources/ruleset.xml");
 
         PicaPlus fixture = new PicaPlus(prefs);
-        assertNotNull (fixture);
+        assertNotNull(fixture);
         fixture.read("src/test/resources/pica.xml");
 
         DigitalDocument digDoc = fixture.getDigitalDocument();
@@ -86,14 +85,14 @@ public class PicaPlusTest {
         DocStruct logical = digDoc.getLogicalDocStruct();
         assertEquals("Monograph", logical.getType().getName());
 
-        Metadata m = logical.getAllMetadata().get(0);;
+        Metadata m = logical.getAllMetadata().get(0);
         Corporate c = logical.getAllCorporates().get(0);
         Person p = logical.getAllPersons().get(0);
 
         assertEquals("CatalogIDDigital", m.getType().getName());
         assertEquals("1733284826", m.getValue());
 
-        assertEquals("Corporation",c.getType().getName());
+        assertEquals("Corporation", c.getType().getName());
         assertEquals("Georg-August-Universität Göttingen", c.getMainName());
         assertEquals("Grad-verleihende Institution", c.getSubNames().get(0).getValue());
         assertEquals("Göttingen; 2014", c.getPartName());

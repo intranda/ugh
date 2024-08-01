@@ -76,7 +76,7 @@ public class DocStructType implements Serializable, PrefsType {
     private boolean topmost = false;
 
     // Map containing name of this DocStrctType for the appropriate languages.
-    protected Map<String, String> allLanguages;
+    protected transient Map<String, String> allLanguages;
 
     // List containing all Metadatatypes (MetadataTypeForDocStructType
     // instances). PLEASE NOTE: Some tricky inheriting od something else things

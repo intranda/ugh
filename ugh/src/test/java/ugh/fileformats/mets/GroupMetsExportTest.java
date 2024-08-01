@@ -49,8 +49,6 @@ public class GroupMetsExportTest {
         exportFolder.mkdirs();
     }
 
-
-
     @Test
     public void testGroupInGroup() throws Exception {
 
@@ -59,7 +57,7 @@ public class GroupMetsExportTest {
 
         Metadata metadata = new Metadata(prefs.getMetadataTypeByName("PlaceOfPublication"));
         metadata.setValue("Place");
-        metadata.setAutorityFile("111", "url", "http://example.com/111");
+        metadata.setAuthorityFile("111", "url", "http://example.com/111");
         publisherGroup.addMetadata(metadata);
         Metadata metadata2 = new Metadata(prefs.getMetadataTypeByName("PublicationYear"));
         metadata2.setValue("666");
@@ -77,11 +75,9 @@ public class GroupMetsExportTest {
         Metadata country = new Metadata(prefs.getMetadataTypeByName("Country"));
         country.setValue("country");
         other.addMetadata(country);
-        Metadata Province = new Metadata(prefs.getMetadataTypeByName("Province"));
-        Province.setValue("Province");
-        other.addMetadata(Province);
-
-
+        Metadata province = new Metadata(prefs.getMetadataTypeByName("Province"));
+        province.setValue("Province");
+        other.addMetadata(province);
 
         fileformat.getDigitalDocument().getLogicalDocStruct().addMetadataGroup(publisherGroup);
 

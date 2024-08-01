@@ -1,7 +1,7 @@
 package ugh.dl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 
@@ -40,32 +40,32 @@ public class ContentFileAreaTest {
     @Test
     public void testEqualsGivenOneNullType() throws ContentFileAreaTypeUnknownException {
         anotherArea.setType("xmlid");
-        assertFalse(testArea.equals(anotherArea));
-        assertFalse(anotherArea.equals(testArea));
+        assertNotEquals(testArea, anotherArea);
+        assertNotEquals(anotherArea, testArea);
     }
 
     @Test
     public void testEqualsGivenOneNullFrom() {
         anotherArea.setFrom("from");
-        assertFalse(testArea.equals(anotherArea));
+        assertNotEquals(testArea, anotherArea);
     }
 
     @Test
     public void testEqualsGivenOneEmptyFrom() {
         anotherArea.setFrom("");
-        assertFalse(anotherArea.equals(testArea));
+        assertNotEquals(anotherArea, testArea);
     }
 
     @Test
     public void testEqualsGivenOneNullTo() {
         anotherArea.setTo("to");
-        assertFalse(anotherArea.equals(testArea));
+        assertNotEquals(anotherArea, testArea);
     }
 
     @Test
     public void testEqualsGivenOneEmptyTo() {
         anotherArea.setTo(new String());
-        assertFalse(testArea.equals(anotherArea));
+        assertNotEquals(testArea, anotherArea);
     }
 
 }

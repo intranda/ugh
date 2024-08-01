@@ -673,6 +673,7 @@ public class DocStructTest {
         assertEquals(1, ds.getDefaultDisplayMetadataGroupTypes().size());
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void testDisplayMetadataGroupTypes() throws Exception {
         DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
@@ -687,6 +688,7 @@ public class DocStructTest {
         assertEquals(11, ds.getDefaultDisplayMetadataTypes().size());
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void testGetDisplayMetadataTypes() throws Exception {
         DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
@@ -743,7 +745,6 @@ public class DocStructTest {
         assertEquals(1, ds.getPossibleMetadataGroupTypes().size());
     }
 
-
     @Test
     public void testGetAddableMetadataTypes() throws Exception {
         DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
@@ -766,13 +767,13 @@ public class DocStructTest {
     @Test
     public void testAddChild() throws Exception {
         DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
-        assertFalse (ds.addChild(null));
+        assertFalse(ds.addChild(null));
 
         DocStruct sub = new DocStruct(prefs.getDocStrctTypeByName("Chapter"));
         assertTrue(ds.addChild(sub));
     }
 
-    @Test (expected = TypeNotAllowedAsChildException.class)
+    @Test(expected = TypeNotAllowedAsChildException.class)
     public void testAddChildException() throws Exception {
         DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
         ds.addChild(ds);
@@ -798,14 +799,12 @@ public class DocStructTest {
         assertEquals("Chapter", ds.getAllChildren().get(0).getType().getName());
         assertEquals("Cover", ds.getAllChildren().get(1).getType().getName());
 
-        assertFalse( ds.moveChild(sub2, -1));
-        assertTrue( ds.moveChild(sub2, 0));
+        assertFalse(ds.moveChild(sub2, -1));
+        assertTrue(ds.moveChild(sub2, 0));
 
         assertEquals("Cover", ds.getAllChildren().get(0).getType().getName());
         assertEquals("Chapter", ds.getAllChildren().get(1).getType().getName());
     }
-
-
 
     // TODO continue with line 2312
 }

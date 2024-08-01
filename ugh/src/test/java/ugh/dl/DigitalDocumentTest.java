@@ -11,24 +11,17 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -42,7 +35,6 @@ import ugh.exceptions.TypeNotAllowedAsChildException;
 import ugh.exceptions.TypeNotAllowedForParentException;
 import ugh.exceptions.WriteException;
 import ugh.fileformats.mets.MetsMods;
-import ugh.fileformats.mets.XStream;
 
 public class DigitalDocumentTest {
     private DigitalDocument dd;
@@ -90,7 +82,7 @@ public class DigitalDocumentTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testSetLogicalDocStructGivenNull() throws TypeNotAllowedForParentException {
+    public void testSetLogicalDocStructGivenNull() {
         dd.setLogicalDocStruct(null);
     }
 
@@ -113,7 +105,7 @@ public class DigitalDocumentTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testSetPhysicalDocStructGivenNull() throws TypeNotAllowedForParentException {
+    public void testSetPhysicalDocStructGivenNull() {
         dd.setPhysicalDocStruct(null);
     }
 
@@ -314,10 +306,10 @@ public class DigitalDocumentTest {
 
     @Test
     public void testGetAllDocStructsByTypeGivenFileformat() throws PreferencesException {
-        DigitalDocument doc = fileformat.getDigitalDocument();
-        assertEquals(2, doc.getAllDocStructsByType("area").size());
+        DigitalDocument document = fileformat.getDigitalDocument();
+        assertEquals(2, document.getAllDocStructsByType("area").size());
         for (String name : new String[] { "", " ", "_", "div", "not a name", "BAZINGA!" }) {
-            assertTrue(doc.getAllDocStructsByType(name).isEmpty());
+            assertTrue(document.getAllDocStructsByType(name).isEmpty());
         }
     }
 
@@ -332,16 +324,6 @@ public class DigitalDocumentTest {
     @Test(expected = FileNotFoundException.class)
     public void testReadXStreamXmlGivenUnexistingFile() throws FileNotFoundException, UnsupportedEncodingException {
         dd.readXStreamXml("src/test/resources/unexisting.xml", prefs);
-    }
-
-    public void generateXStreamXml() throws Exception {
-        // prepare FileSet containing a list of VirtualFileGroups
-        MetsMods mm = new MetsMods(prefs);
-        mm.read("src/test/resources/meta.xml");
-
-        XStream xstream = new XStream(prefs);
-        xstream.setDigitalDocument(mm.getDigitalDocument());
-        xstream.write("src/test/resources/digitalDocumentTest.xml");
     }
 
     /* Tests for the methods:
@@ -699,57 +681,6 @@ public class DigitalDocumentTest {
         assertEquals(oldMimeType, dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles().get(0).getMimetype());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Since the length of the input list matters, it should also be somehow checked.")
-    @Test
-    // TODO add check to overrideContentFiles if new image name list has the same size as the existing page list
-    public void testOverrideContentFilesGivenUnemptyDigitalDocumentAndUnemptyStringListWithSmallerSize()
-            throws TypeNotAllowedAsChildException, MetadataTypeNotAllowedException, TypeNotAllowedForParentException {
-        // prepare FileSet containing a list of VirtualFileGroups
-        VirtualFileGroup vfg1 = new VirtualFileGroup();
-        VirtualFileGroup vfg2 = new VirtualFileGroup();
-        List<VirtualFileGroup> vfgList = new ArrayList<>();
-        vfgList.add(vfg1);
-        vfgList.add(vfg2);
-        FileSet fileSet = new FileSet();
-        fileSet.setVirtualFileGroups(vfgList);
-
-        // add a Metadata object and a ContentFile object to show the changes of FileSet during the application of this method
-        fileSet.addMetadata(new Metadata(new MetadataType()));
-        fileSet.addFile(new ContentFile());
-
-        dd.setFileSet(fileSet);
-        assertNotNull(dd.getFileSet());
-        assertNotNull(dd.getFileSet().getVirtualFileGroups());
-        assertEquals(2, dd.getFileSet().getVirtualFileGroups().size());
-        assertNotNull(dd.getFileSet().getAllMetadata());
-        assertEquals(1, dd.getFileSet().getAllMetadata().size());
-        assertNotNull(dd.getFileSet().getAllFiles());
-        assertEquals(1, dd.getFileSet().getAllFiles().size());
-
-        // prepare contents
-        DocStruct tp = preparePhysicalDocStruct();
-        dd.setPhysicalDocStruct(tp);
-        dd.addAllContentFiles();
-
-        String oldLocation = dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles().get(0).getLocation();
-        String oldMimeType = dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles().get(0).getMimetype();
-
-        // tests
-        List<String> images = Arrays.asList("11", "12"); // <<<--- HERE IS THE PROBLEM, too short for our page valued "3"
-        dd.overrideContentFiles(images);
-        // the field virtualFileGroups should not be affected
-        assertEquals(2, dd.getFileSet().getVirtualFileGroups().size());
-        assertSame(vfgList, dd.getFileSet().getVirtualFileGroups());
-        // the fields allMetadata and allImages should be reset
-        assertEquals(0, dd.getFileSet().getAllMetadata().size());
-        assertEquals(0, dd.getFileSet().getAllFiles().size());
-
-        // location should be changed
-        assertNotEquals(oldLocation, dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles().get(0).getLocation());
-        // mimetype should remain the same
-        assertEquals(oldMimeType, dd.getPhysicalDocStruct().getAllChildren().get(0).getAllContentFiles().get(0).getMimetype());
-    }
-
     /* Tests for the methods:
      * 1. equals(DigitalDocument)
      * 2. quickPairCheck(Object, Object)
@@ -759,7 +690,7 @@ public class DigitalDocumentTest {
     @Test
     public void testEqualsAgainstItself() throws TypeNotAllowedForParentException {
         // given initial settings
-        assertTrue(dd.equals(dd));
+        assertEquals(dd, dd);
 
         // initialize the field topPhysicalStruct and test the method again
         DocStructType phyType = new DocStructType();
@@ -767,14 +698,14 @@ public class DigitalDocumentTest {
         phyType.setName("phy");
         DocStruct phyDS = new DocStruct(phyType);
         dd.setPhysicalDocStruct(phyDS);
-        assertTrue(dd.equals(dd));
+        assertEquals(dd, dd);
 
         // initialize the field topLogicalStruct and test the method again
         DocStructType logType = new DocStructType();
         logType.setName("log");
         DocStruct logDS = new DocStruct(logType);
         dd.setLogicalDocStruct(logDS);
-        assertTrue(dd.equals(dd));
+        assertEquals(dd, dd);
     }
 
     /* Tests for the methods:
@@ -960,10 +891,10 @@ public class DigitalDocumentTest {
         dd.addTechMd(md2);
         assertEquals(2, dd.getTechMds().size());
         // make a copy of dd and check its contents
-        DigitalDocument doc = dd.copyDigitalDocument();
-        assertEquals(2, doc.getTechMds().size());
-        assertSame(md1, doc.getTechMds().get(0));
-        assertSame(md2, doc.getTechMds().get(1));
+        DigitalDocument document = dd.copyDigitalDocument();
+        assertEquals(2, document.getTechMds().size());
+        assertSame(md1, document.getTechMds().get(0));
+        assertSame(md2, document.getTechMds().get(1));
     }
 
     @Test
@@ -994,7 +925,7 @@ public class DigitalDocumentTest {
         assertEquals(vfgOriginal.size(), vfgCopy.size());
 
         for (int i = 0; i < metadatenOriginal.size(); ++i) {
-            assertTrue(metadatenOriginal.get(i).equals(metadatenCopy.get(i)));
+            assertEquals(metadatenOriginal.get(i), metadatenCopy.get(i));
         }
         for (int i = 0; i < vfgOriginal.size(); ++i) {
             assertEquals(vfgOriginal.get(i), vfgCopy.get(i));
@@ -1010,57 +941,6 @@ public class DigitalDocumentTest {
     @Test
     public void testDetectMimeTypeGivenDirectoryPath() {
         assertEquals("", DigitalDocument.detectMimeType(Paths.get("/", "tmp")));
-    }
-
-    @Ignore("Check the comments below.")
-    @Test
-    public void testDetectMimeTypeGivenUnexistingPath() throws IOException {
-        // prepare a map containing some known formats
-        Map<String, String> typeMap = new HashMap<>();
-        for (String s : new String[] { "jpg", "jpeg", "jpe" }) {
-            typeMap.put(s, "image/jpeg");
-        }
-        for (String s : new String[] { "tiff", "tif" }) {
-            typeMap.put(s, "image/tiff");
-        }
-        for (String s : new String[] { "jp2", "png", "gif" }) {
-            typeMap.put(s, "image/" + s);
-        }
-        for (String s : new String[] { "pdf", "xml" }) {
-            typeMap.put(s, "application/" + s);
-        }
-        typeMap.put("mp3", "audio/mpeg");
-        typeMap.put("wav", "audio/wav");
-        for (String s : new String[] { "mpeg", "mpg", "mpe" }) {
-            typeMap.put(s, "video/mpeg");
-        }
-        for (String s : new String[] { "mp4", "mxf", "ogg", "webm" }) {
-            typeMap.put(s, "video/" + s);
-        }
-        typeMap.put("mov", "video/quicktime");
-        typeMap.put("avi", "video/x-msvideo");
-        typeMap.put("txt", "text/plain");
-        for (String s : new String[] { "x3d", "x3dv", "x3db" }) {
-            typeMap.put(s, "model/x3d+XXX");
-        }
-        for (String s : new String[] { "obj", "ply", "stl", "fbx", "gltf", "glb" }) {
-            typeMap.put(s, "object/" + s);
-        }
-
-        for (String key : typeMap.keySet()) {
-            Path path = Paths.get("/tmp/", "test." + key);
-            System.out.println(key + " : " + typeMap.get(key));
-            System.out.println(Files.probeContentType(path));
-            System.out.println(URLConnection.guessContentTypeFromName(path.getFileName().toString()));
-            System.out.println(DigitalDocument.detectMimeType(path));
-            System.out.println("=======");
-        }
-
-        /* ======= Problems found [ via Ubuntu 21.10 ] ======= */
-        // ogg: Files.probeContentType -> "audio/ogg", URLConnection.guessContentTypeFromName -> "audio/ogg"
-        // mxf: Files.probeContentType -> "application/mxf"
-        // wav: Files.probeContentType -> "audio/x-wav", URLConnection.guessContentTypeFromName -> "audio/x-wav"
-        // items desired to be mapped to "object/..." are actually mapped to "model/..." by Files.probeContentType
     }
 
 }

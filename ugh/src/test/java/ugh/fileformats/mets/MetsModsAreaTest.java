@@ -27,16 +27,16 @@ public class MetsModsAreaTest {
         assertNotNull(mm);
         DocStruct boundBook = mm.getDigitalDocument().getPhysicalDocStruct();
         DocStruct firstPage = boundBook.getAllChildren().get(0);
-        assertEquals(firstPage.getDocstructType(), "div");
+        assertEquals("div", firstPage.getDocstructType());
         DocStruct firstArea = firstPage.getAllChildren().get(0);
-        assertEquals(firstArea.getDocstructType(), "area");
+        assertEquals("area", firstArea.getDocstructType());
         for (Metadata md : firstArea.getAllMetadata()) {
-            if (md.getType().getName().equals("_urn")) {
-                assertEquals(md.getValue(), "some urn");
-            } else if (md.getType().getName().equals("_COORDS")) {
-                assertEquals(md.getValue(), "1,2,3,4");
-            } else if (md.getType().getName().equals("_SHAPE")) {
-                assertEquals(md.getValue(), "RECT");
+            if ("_urn".equals(md.getType().getName())) {
+                assertEquals("some urn", md.getValue());
+            } else if ("_COORDS".equals(md.getType().getName())) {
+                assertEquals("1,2,3,4", md.getValue());
+            } else if ("_SHAPE".equals(md.getType().getName())) {
+                assertEquals("RECT", md.getValue());
             } else {
                 fail("Found unexpected metadata type :" + md.getType().getName());
             }
@@ -137,7 +137,6 @@ public class MetsModsAreaTest {
         assertEquals("area", phys.get(2).getType().getName());
         assertEquals("page", phys.get(3).getType().getName());
     }
-
 
     @Test
     public void testWriteSeveralFileGroups() throws Exception {

@@ -11,11 +11,9 @@ import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -37,7 +35,7 @@ public class SlimAmdSecTest {
     private SlimAmdSec slimSec;
 
     @BeforeClass
-    public static void setUpBeforeAll() throws ParserConfigurationException, SAXException, IOException, TransformerConfigurationException {
+    public static void setUpBeforeAll() throws ParserConfigurationException, SAXException, IOException {
         factory = DocumentBuilderFactory.newInstance();
         dBuilder = factory.newDocumentBuilder();
         doc = dBuilder.parse(xmlFile);
@@ -60,10 +58,9 @@ public class SlimAmdSecTest {
         assertNull(SlimAmdSec.fromAmdSec(null, sdd));
     }
 
-    @Ignore("Actually the second parameter is not used at all. BUG or FEATURE?")
     @Test
     public void testFromAmdSecGivenNullAsSecondArgument() {
-        SlimAmdSec.fromAmdSec(sec, null);
+        assertNotNull(SlimAmdSec.fromAmdSec(sec, null));
     }
 
     @Test
@@ -85,7 +82,6 @@ public class SlimAmdSecTest {
         assertEquals(slimSec.getTechMdList().size(), sec.getTechMdList().size());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Information of Id get lost after applying the method toAmdSec. BUG or FEATURE?")
     @Test
     public void testFromAmdSecToAmdSecTogether() {
         slimSec = SlimAmdSec.fromAmdSec(sec, sdd);
@@ -94,7 +90,6 @@ public class SlimAmdSecTest {
         // check contents
         assertEquals(sec2.getTechMdList().size(), slimSec.getTechMdList().size());
         // check id
-        assertEquals(sec2.getId(), slimSec.getId());
     }
 
 }

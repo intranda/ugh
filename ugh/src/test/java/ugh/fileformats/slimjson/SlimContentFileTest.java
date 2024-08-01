@@ -47,6 +47,7 @@ public class SlimContentFileTest {
         assertEquals(cf.getIdentifier(), scf.getIdentifier());
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void testFromContentFileGivenContentFileWithId() {
         String id = "cf-id";
@@ -67,12 +68,6 @@ public class SlimContentFileTest {
         for (int i = 0; i < cf.getReferencedDocStructs().size(); ++i) {
             assertEquals(cf.getReferencedDocStructs().get(i).getIdentifier(), scf.getReferencedDocStructs().get(i));
         }
-    }
-
-    @Ignore("The parameter is not used at all. WHY?")
-    @Test
-    public void testToContentFileGivenNull() {
-
     }
 
     @Test

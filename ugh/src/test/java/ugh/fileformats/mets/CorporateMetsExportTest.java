@@ -59,10 +59,10 @@ public class CorporateMetsExportTest {
         // add corporate
         Corporate corp = new Corporate(prefs.getMetadataTypeByName("Corporation"));
         corp.setMainName("main");
-        corp.addSubName(new NamePart("subname","sub1"));
-        corp.addSubName(new NamePart("subname","sub2"));
+        corp.addSubName(new NamePart("subname", "sub1"));
+        corp.addSubName(new NamePart("subname", "sub2"));
         corp.setPartName("part");
-        corp.setAutorityFile("1234", "url", "http://example.com/1234");
+        corp.setAuthorityFile("1234", "url", "http://example.com/1234");
 
         fileformat.getDigitalDocument().getLogicalDocStruct().addCorporate(corp);
 
@@ -95,10 +95,10 @@ public class CorporateMetsExportTest {
         // add corporate
         Corporate corp = new Corporate(prefs.getMetadataTypeByName("Corporation"));
         corp.setMainName("main name");
-        corp.addSubName(new NamePart("subname","first sub name"));
-        corp.addSubName(new NamePart("subname","additional sub name"));
+        corp.addSubName(new NamePart("subname", "first sub name"));
+        corp.addSubName(new NamePart("subname", "additional sub name"));
         corp.setPartName("part name");
-        corp.setAutorityFile("1234", "url", "http://example.com/1234");
+        corp.setAuthorityFile("1234", "url", "http://example.com/1234");
 
         fileformat.getDigitalDocument().getLogicalDocStruct().addCorporate(corp);
 
@@ -122,7 +122,7 @@ public class CorporateMetsExportTest {
         List<Element> nameList = mods.getChildren("name", modsNamespace);
         Element corporate = null;
         for (Element name : nameList) {
-            if (name.getAttributeValue("type").equals("corporate")) {
+            if ("corporate".equals(name.getAttributeValue("type"))) {
                 corporate = name;
             }
         }
@@ -147,24 +147,23 @@ public class CorporateMetsExportTest {
 
         Metadata metadata = new Metadata(prefs.getMetadataTypeByName("PlaceOfPublication"));
         metadata.setValue("Place");
-        metadata.setAutorityFile("111", "url", "http://example.com/111");
+        metadata.setAuthorityFile("111", "url", "http://example.com/111");
         publisherGroup.addMetadata(metadata);
         Metadata metadata2 = new Metadata(prefs.getMetadataTypeByName("PublicationYear"));
         metadata2.setValue("666");
         publisherGroup.addMetadata(metadata2);
 
-
         Person person = new Person(prefs.getMetadataTypeByName("PublisherPerson"));
         person.setFirstname("Firstname");
         person.setLastname("Lastname");
-        person.setAutorityFile("ABC", "url", "http://example.com/ABC");
+        person.setAuthorityFile("ABC", "url", "http://example.com/ABC");
         publisherGroup.addPerson(person);
 
         Corporate corp = new Corporate(prefs.getMetadataTypeByName("PublisherCorporate"));
         corp.setMainName("Main name");
-        corp.addSubName(new NamePart("subname","Sub name"));
+        corp.addSubName(new NamePart("subname", "Sub name"));
         corp.setPartName("Part name");
-        corp.setAutorityFile("1234", "url", "http://example.com/1234");
+        corp.setAuthorityFile("1234", "url", "http://example.com/1234");
         publisherGroup.addCorporate(corp);
         fileformat.getDigitalDocument().getLogicalDocStruct().addMetadataGroup(publisherGroup);
 
@@ -183,8 +182,8 @@ public class CorporateMetsExportTest {
         // group is still here
         MetadataGroup mdg = mono.getAllMetadataGroups().get(0);
 
-        for (Metadata md :mdg.getMetadataList()) {
-            if (md.getType().getName().equals("PlaceOfPublication")) {
+        for (Metadata md : mdg.getMetadataList()) {
+            if ("PlaceOfPublication".equals(md.getType().getName())) {
                 assertEquals("Place", md.getValue());
             } else {
                 assertEquals("666", md.getValue());
@@ -229,7 +228,7 @@ public class CorporateMetsExportTest {
         Element publisherCorporate = publisher.get(1).getChild("name", modsNamespace);
 
         assertEquals("Place", placeTerm.getText());
-        assertEquals("http://example.com/111",placeTerm.getAttributeValue("valueURI"));
+        assertEquals("http://example.com/111", placeTerm.getAttributeValue("valueURI"));
         assertEquals("666", dateIssued.getValue());
 
         assertEquals("personal", publisherPerson.getAttributeValue("type"));

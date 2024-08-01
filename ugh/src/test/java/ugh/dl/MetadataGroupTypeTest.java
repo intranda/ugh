@@ -2,10 +2,12 @@ package ugh.dl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,7 +91,6 @@ public class MetadataGroupTypeTest {
     /* Tests for the method addMetadataType(MetadataType, String, boolean, boolean) */
     @Test(expected = IllegalArgumentException.class)
     public void testAddMetadataTypeGivenNullAsFirstArgument() {
-        assertEquals(0, mdgType.getMetadataTypeList().size());
         mdgType.addMetadataType(null, null, false, false);
     }
 
@@ -129,7 +130,7 @@ public class MetadataGroupTypeTest {
         hash2.put("de", "Deutsch");
         type1.setAllLanguages(hash1);
         type2.setAllLanguages(hash2);
-        assertTrue(type1.equals(type2));
+        assertEquals(type1, type2);
         assertEquals(0, mdgType.getMetadataTypeList().size());
         mdgType.addMetadataType(type1, null, false, false);
         assertEquals(1, mdgType.getMetadataTypeList().size());
@@ -191,7 +192,7 @@ public class MetadataGroupTypeTest {
         assertEquals(1, mdgType.getMetadataTypeList().size());
         MetadataType type = new MetadataType();
         type.setName("type");
-        assertFalse(type.equals(typeAdded));
+        assertNotEquals(type, typeAdded);
         mdgType.removeMetadataType(type);
         assertEquals(1, mdgType.getMetadataTypeList().size());
     }
@@ -217,7 +218,7 @@ public class MetadataGroupTypeTest {
         MetadataType typeSimilar = new MetadataType();
         typeSimilar.setName("name");
         typeSimilar.setAllowNameParts(false);
-        assertTrue(typeAdded.equals(typeSimilar));
+        assertEquals(typeAdded, typeSimilar);
         assertEquals(0, mdgType.getMetadataTypeList().size());
         mdgType.addMetadataType(typeAdded, null, false, false);
         assertEquals(1, mdgType.getMetadataTypeList().size());
@@ -228,34 +229,36 @@ public class MetadataGroupTypeTest {
     /* Tests for the method equals(Object) */
     @Test
     public void testEqualsToItself() {
-        assertTrue(mdgType == mdgType);
-        assertTrue(mdgType.equals(mdgType));
+        assertSame(mdgType, mdgType);
+        assertEquals(mdgType, mdgType);
     }
 
     @Test
     public void testEqualsGivenNull() {
         mdgType.setName("");
-        assertFalse(mdgType.equals(null));
+        assertNotEquals(mdgType, null);
     }
 
     @Test
     public void testEqualsToItsCopy() {
         mdgType.setName("name");
         MetadataGroupType mdgTypeCopy = mdgType.copy();
-        assertFalse(mdgType == mdgTypeCopy);
-        assertTrue(mdgType.equals(mdgTypeCopy));
+        assertNotSame(mdgType, mdgTypeCopy);
+        assertEquals(mdgType, mdgTypeCopy);
     }
 
     @Test
     public void testEqualsGivenExtendedObject() {
         mdgType.setName("name");
         ExtendedMetadataGroupType extendedType = new ExtendedMetadataGroupType("name");
-        assertTrue(mdgType.equals(extendedType));
-        assertTrue(extendedType.equals(mdgType));
+        assertEquals(mdgType, extendedType);
+        assertEquals(extendedType, mdgType);
     }
 
     // class needed for the test case above
     private class ExtendedMetadataGroupType extends MetadataGroupType {
+        private static final long serialVersionUID = 630033786970054284L;
+
         public ExtendedMetadataGroupType(String name) {
             super();
             super.setName(name);
@@ -400,16 +403,16 @@ public class MetadataGroupTypeTest {
         prefs.loadPrefs("src/test/resources/ruleset.xml");
         mdgType = prefs.getMetadataGroupTypeByName("PublisherGroup");
         MetadataGroupType mdgType2 = mdgType.copy();
-        assertFalse(mdgType2 == mdgType);
-        assertTrue(mdgType2.equals(mdgType));
+        assertNotSame(mdgType2, mdgType);
+        assertEquals(mdgType2, mdgType);
         assertEquals(mdgType2.getNum(), mdgType.getNum());
         assertEquals(mdgType2.getName(), mdgType.getName());
         assertEquals(mdgType2.getAllLanguages(), mdgType.getAllLanguages());
-        assertTrue(mdgType2.getAllLanguages() == mdgType.getAllLanguages()); // The copy and the original share the same HashMap allLanguages
-        assertFalse(mdgType2.getAllAllowedGroupTypeTypes() == mdgType.getAllAllowedGroupTypeTypes());
-        assertFalse(mdgType2.getMetadataTypeList() == mdgType.getMetadataTypeList());
-        assertTrue(mdgType2.getAllAllowedGroupTypeTypes().size() == mdgType.getAllAllowedGroupTypeTypes().size());
-        assertTrue(mdgType2.getMetadataTypeList().size() == mdgType.getMetadataTypeList().size());
+        assertSame(mdgType2.getAllLanguages(), mdgType.getAllLanguages()); // The copy and the original share the same HashMap allLanguages
+        assertNotSame(mdgType2.getAllAllowedGroupTypeTypes(), mdgType.getAllAllowedGroupTypeTypes());
+        assertNotSame(mdgType2.getMetadataTypeList(), mdgType.getMetadataTypeList());
+        assertEquals(mdgType2.getAllAllowedGroupTypeTypes().size(), mdgType.getAllAllowedGroupTypeTypes().size());
+        assertEquals(mdgType2.getMetadataTypeList().size(), mdgType.getMetadataTypeList().size());
         Iterator<AllowedMetadataGroupType> allGroupsIterator2 = mdgType2.getAllAllowedGroupTypeTypes().iterator();
         for (AllowedMetadataGroupType type1 : mdgType.getAllAllowedGroupTypeTypes()) {
             AllowedMetadataGroupType type2 = allGroupsIterator2.next();
@@ -420,7 +423,7 @@ public class MetadataGroupTypeTest {
         }
         Iterator<MetadataType> mdTypeListIterator2 = mdgType2.getMetadataTypeList().iterator();
         for (MetadataType element : mdgType.getMetadataTypeList()) {
-            assertTrue(element.equals(mdTypeListIterator2.next()));
+            assertEquals(element, mdTypeListIterator2.next());
         }
     }
 
