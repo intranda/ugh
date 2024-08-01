@@ -96,7 +96,7 @@ public class SlimMdTest {
             assertNotNull(smd.getId());
             smd.setType("type");
 
-            Md md2 = smd.ToMd();
+            Md md2 = smd.toMd();
             // check id and type
             assertEquals(smd.getId(), md2.getId());
             assertEquals(smd.getType(), md2.getType());

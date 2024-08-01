@@ -31,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 import ugh.exceptions.MetadataTypeNotAllowedException;
 
 /*******************************************************************************
@@ -67,20 +66,19 @@ import ugh.exceptions.MetadataTypeNotAllowedException;
  * 
  ******************************************************************************/
 
-@Log4j2
 public class Metadata implements Serializable {
 
     private static final long serialVersionUID = -2535548431060378914L;
 
-    protected MetadataType MDType;
+    protected MetadataType MDType; // NOSONAR must be upper case, otherwise XStream documents cannot be read
     // Document structure or group to which this metadata type belongs to.
     @Getter
     @Setter
-    protected HoldingElement parent;
+    protected transient HoldingElement parent;
 
     private String metadataValue;
-    private String MetadataVQ;
-    private String MetadataVQType;
+    private String metadataVQ;
+    private String metadataVQType;
 
     // Contains the native object; e.g. the element of a DOM tree
     @Deprecated
@@ -91,8 +89,6 @@ public class Metadata implements Serializable {
     private String authorityID;
 
     private String authorityValue;
-
-    private boolean updated = false;
 
     private Map<String, String> authorityUriMap = new HashMap<>();
 
@@ -127,30 +123,6 @@ public class Metadata implements Serializable {
 
         this.MDType = theType;
     }
-
-    //    /***************************************************************************
-    //     * <p>
-    //     * Sets the Document structure entity to which this object belongs to.
-    //     * </p>
-    //     *
-    //     * @param inDoc
-    //     **************************************************************************/
-    //    public void setDocStruct(DocStruct inDoc) {
-    //        this.myDocStruct = inDoc;
-    //    }
-    //
-    //    /***************************************************************************
-    //     * <p>
-    //     * Returns the DocStruct instance, to which this metadata object belongs. This is extremly helpful, if only the metadata instance is stored in a
-    //     * list; the reference to the associated DocStrct instance is always kept.
-    //     * </p>
-    //     *
-    //     * @return DocStruct instance.
-    //     **************************************************************************/
-    //    @JsonIgnore
-    //    public DocStruct getDocStruct() {
-    //        return this.myDocStruct;
-    //    }
 
     /***************************************************************************
      * <p>
@@ -194,14 +166,11 @@ public class Metadata implements Serializable {
      * value of the type String, all other types (integer, long etc.) must be converted to a string before.
      * </p>
      * 
-     * TODO For future versions: Check, if the value is of the correct type?
      * 
      * @param inValue The value as String.
      **************************************************************************/
     public void setValue(String inValue) {
-        // When the same value is set again, should we change the `updated` flag? - Zehong
         this.metadataValue = inValue;
-        this.updated = true;
     }
 
     /***************************************************************************
@@ -334,8 +303,8 @@ public class Metadata implements Serializable {
             return;
         }
 
-        this.MetadataVQ = inVQ;
-        this.MetadataVQType = inVQType;
+        this.metadataVQ = inVQ;
+        this.metadataVQType = inVQType;
 
     }
 
@@ -347,7 +316,7 @@ public class Metadata implements Serializable {
      * @return Value of ValueQualifier as String.
      **************************************************************************/
     public String getValueQualifier() {
-        return this.MetadataVQ;
+        return this.metadataVQ;
     }
 
     /***************************************************************************
@@ -358,7 +327,7 @@ public class Metadata implements Serializable {
      * @return Type of ValueQualifier as string.
      **************************************************************************/
     public String getValueQualifierType() {
-        return this.MetadataVQType;
+        return this.metadataVQType;
     }
 
     /***************************************************************************
@@ -412,7 +381,7 @@ public class Metadata implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(MDType, MetadataVQ, MetadataVQType, authorityValue, metadataValue);
+        return Objects.hash(MDType, metadataVQ, metadataVQType, authorityValue, metadataValue);
     }
 
     @Override
@@ -431,64 +400,4 @@ public class Metadata implements Serializable {
                 && Objects.equals(getValueQualifierType(), other.getValueQualifierType())
                 && Objects.equals(getValue(), other.getValue());
     }
-
-    /***************************************************************************
-     * <p>
-     * Overwritten method compares this MetaData with parameter metadata.
-     * </p>
-     * 
-     * @author Wulf Riebensahm
-     * @return TRUE if type and value are the same.
-     * @param MetaData metadata
-     **************************************************************************/
-    //    @Override
-    //    public boolean equals(Object other) {
-    //
-    //        Metadata metadata = (Metadata) other;
-    //
-    //        if (metadata == null) {
-    //            return false;
-    //        }
-    //        if (this.getClass() != metadata.getClass()) {
-    //            return false;
-    //        }
-    //
-    //        log.debug("\r\n" + "metaData getClass()=" + this.getClass() + " ->id:" + this.getType().getName());
-    //
-    //        if (!(this.getType().equals(metadata.getType()))) {
-    //            return false;
-    //        }
-    //
-    //        // Processing Strings in a try block.
-    //        try {
-    //            log.debug("Values: md1/md2 " + this.getValue() + "/" + metadata.getValue());
-    //            if (!((this.getValue() == null && metadata.getValue() == null) || this.getValue().equals(metadata.getValue()))) {
-    //                log.debug("false returned");
-    //                return false;
-    //            }
-    //
-    //            if (!((this.getValueQualifier() == null && metadata.getValueQualifier() == null) || this.getValueQualifier()
-    //                    .equals(
-    //                            metadata.getValueQualifier()))) {
-    //                log.debug("false returned");
-    //                return false;
-    //            }
-    //
-    //            if (!((this.getValueQualifierType() == null && metadata.getValueQualifierType() == null) || this.getValueQualifierType()
-    //                    .equals(
-    //                            metadata.getValueQualifierType()))) {
-    //                log.debug("false returned");
-    //                return false;
-    //            }
-    //        }
-    //        // TODO Teldemokles says: "Do never catch a NullPointerException"!
-    //        catch (NullPointerException npe) {
-    //            log.debug("NPE thrown and caught");
-    //            return false;
-    //        }
-    //
-    //        log.debug("true returned");
-    //        return true;
-    //    }
-
 }

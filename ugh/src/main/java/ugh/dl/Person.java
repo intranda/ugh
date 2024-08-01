@@ -24,6 +24,7 @@ package ugh.dl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -193,38 +194,6 @@ public class Person extends Metadata {
         return this.affiliation;
     }
 
-    //	/***************************************************************************
-    //	 * @param in
-    //	 * @return
-    //	 **************************************************************************/
-    //	public void setIdentifier(String in) {
-    //		this.identifier = in;
-    //		return true;
-    //	}
-    //
-    //	/***************************************************************************
-    //	 * @return
-    //	 **************************************************************************/
-    //	public String getIdentifier() {
-    //		return this.identifier;
-    //	}
-    //
-    //	/***************************************************************************
-    //	 * @param in
-    //	 * @return
-    //	 **************************************************************************/
-    //	public void setIdentifierType(String in) {
-    //		this.identifierType = in;
-    //		return true;
-    //	}
-    //
-    //	/***************************************************************************
-    //	 * @return
-    //	 **************************************************************************/
-    //	public String getIdentifierType() {
-    //		return this.identifierType;
-    //	}
-
     /***************************************************************************
      * @param in
      **************************************************************************/
@@ -288,7 +257,6 @@ public class Person extends Metadata {
         this.displayname = displayname;
     }
 
-
     /*
      * (non-Javadoc)
      * 
@@ -297,119 +265,58 @@ public class Person extends Metadata {
     @Override
     public String toString() {
 
-        String result = "";
+        StringBuilder result = new StringBuilder();
 
         // MetadataType is needed. Furthermore there should be at least one name part available.
         if (this.getType() != null && (StringUtils.isNotBlank(this.getFirstname()) || StringUtils.isNotBlank(this.getLastname()))) {
             // Get person type and value.
-            result += "Person ("
-                    + this.getType().getName()
-                    + "): "
-                    + (this.getLastname() == null ? "NULL" : "\""
+            result.append("Person (")
+                    .append(this.getType().getName())
+                    .append("): ")
+                    .append(this.getLastname() == null ? "NULL" : "\""
                             + this.getLastname() + "\"")
-                    + ", "
-                    + (this.getFirstname() == null ? "NULL" : "\""
-                            + this.getFirstname() + "\"") + "\n";
-        } else if (this.getType() == null) { 
+                    .append(", ")
+                    .append(this.getFirstname() == null ? "NULL" : "\""
+                            + this.getFirstname() + "\"")
+                    .append("\n");
+        } else if (this.getType() == null) {
             // But if the MetadataType is null, then there would be no limits at all on both name parts. Feature OR Bug? - Zehong
-            result += "Person (WITHOUT TYPE!!): "
-                    + (this.getLastname() == null ? "NULL" : "\""
+            result.append("Person (WITHOUT TYPE!!): ")
+                    .append(this.getLastname() == null ? "NULL" : "\""
                             + this.getLastname() + "\"")
-                    + ", "
-                    + (this.getFirstname() == null ? "NULL" : "\""
-                            + this.getFirstname() + "\"") + "\n";
+                    .append(", ")
+                    .append(this.getFirstname() == null ? "NULL" : "\""
+                            + this.getFirstname() + "\"")
+                    .append("\n");
         }
 
+        return result.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + Objects.hash(additionalNameParts, affiliation, displayname, firstname, institution, lastname, persontype, role);
         return result;
     }
 
-    /***************************************************************************
-     * <p>
-     * Compares this Person with parameter person.
-     * </p>
-     * 
-     * @return TRUE if ...
-     * @param Person person
-     **************************************************************************/
-    public boolean equals(Person person) {
-
-        // First check null
-        if (person == null) {
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
             return false;
         }
-
-        // Then check the underlying Metadata Object.
-        if (!super.equals(person)) {
+        if (getClass() != obj.getClass()) {
             return false;
         }
-
-        // Ccompare all attributes of person: If attribute of this is null,
-        // while respective attribute of person is not null a nullpointer
-        // exception is thrown indicating that compared objects are different.
-        try {
-            if (!((this.getFirstname() == null && person.getFirstname() == null) || this
-                    .getFirstname().equals(person.getFirstname()))) {
-                return false;
-            }
-
-            if (!((this.getLastname() == null && person.getLastname() == null) || this
-                    .getLastname().equals(person.getLastname()))) {
-                return false;
-            }
-
-            if (!((this.getAffiliation() == null && person.getAffiliation() == null) || this
-                    .getAffiliation().equals(person.getAffiliation()))) {
-                return false;
-            }
-
-            if (!((this.getDisplayname() == null && person.getDisplayname() == null) || this
-                    .getDisplayname().equals(person.getDisplayname()))) {
-                return false;
-            }
-
-            if (!((this.getPersontype() == null && person.getPersontype() == null) || this
-                    .getPersontype().equals(person.getPersontype()))) {
-                return false;
-            }
-
-            if (!((this.getInstitution() == null && person.getInstitution() == null) || this
-                    .getInstitution().equals(person.getInstitution()))) {
-                return false;
-            }
-
-            if (!((this.getRole() == null && person.getRole() == null) || this
-                    .getRole().equals(person.getRole()))) {
-                return false;
-            }
-
-            if (!((this.getAuthorityValue() == null && person.getAuthorityValue() == null) || this
-                    .getAuthorityValue().equals(person.getAuthorityValue()))) {
-                return false;
-            }
-
-            if (!((this.getAuthorityURI() == null && person.getAuthorityURI() == null) || this
-                    .getAuthorityURI().equals(person.getAuthorityURI()))) {
-                return false;
-            }
-
-            if (!((this.getAuthorityID() == null && person
-                    .getAuthorityID() == null) || this.getAuthorityID()
-                    .equals(person.getAuthorityID()))) {
-                return false;
-            }
-
-            if (!((this.getPersontype() == null && person.getPersontype() == null) || this
-                    .getPersontype().equals(person.getPersontype()))) {
-                return false;
-            }
-
-        }
-        // TODO Teldemokles says: "Do never catch a NullPointerException"!
-        catch (NullPointerException npe) {
-            return false;
-        }
-
-        return true;
+        Person other = (Person) obj;
+        return Objects.equals(additionalNameParts, other.additionalNameParts) && Objects.equals(affiliation, other.affiliation)
+                && Objects.equals(displayname, other.displayname) && Objects.equals(firstname, other.firstname)
+                && Objects.equals(institution, other.institution) && Objects.equals(lastname, other.lastname)
+                && Objects.equals(persontype, other.persontype) && Objects.equals(role, other.role);
     }
 
     public List<NamePart> getAdditionalNameParts() {

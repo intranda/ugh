@@ -1,4 +1,5 @@
 package ugh.dl;
+
 /*******************************************************************************
  * ugh.dl / MD.java
  * 
@@ -25,43 +26,43 @@ import java.io.Serializable;
 
 import org.w3c.dom.Node;
 
-public class Md implements Serializable{
+public class Md implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6784880447020540980L;
-	private Node content;
-	private String id;
-	private String type;
-	
-	public Md(Node content) {
-		super();
-		this.content = content;
-	}
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6784880447020540980L;
+    private transient Node content;
+    private String id;
+    private String type;
 
-	public Node getContent() {
-		return content;
-	}
+    public Md(Node content) {
+        super();
+        this.content = content;
+    }
 
-	public void setContent(Node content) {
-		this.content = content;
-	}
+    public Node getContent() {
+        return content;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public void setContent(Node content) {
+        this.content = content;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
-	
-	public String getType() {
-		return type;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
-	
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
 }

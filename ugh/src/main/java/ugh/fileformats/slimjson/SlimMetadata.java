@@ -15,15 +15,15 @@ import ugh.exceptions.MetadataTypeNotAllowedException;
 @Log4j2
 public class SlimMetadata {
     @JsonIgnore
-    private transient SlimDigitalDocument digitalDocument;
+    private SlimDigitalDocument digitalDocument;
 
     private String mdTypeId;
     // Document structure to which this metadata type belongs to.
     private String myDocStructId;
 
     private String metadataValue;
-    private String MetadataVQ;
-    private String MetadataVQType;
+    private String metadataVQ;
+    private String metadataVQType;
 
     private String authorityURI;
     private String authorityID;
@@ -46,8 +46,8 @@ public class SlimMetadata {
         sm.myDocStructId = meta.getParent().getIdentifier();
 
         sm.metadataValue = meta.getValue();
-        sm.MetadataVQ = meta.getValueQualifier();
-        sm.MetadataVQType = meta.getValueQualifierType();
+        sm.metadataVQ = meta.getValueQualifier();
+        sm.metadataVQType = meta.getValueQualifierType();
 
         sm.authorityURI = meta.getAuthorityURI();
         sm.authorityID = meta.getAuthorityID();
@@ -66,7 +66,6 @@ public class SlimMetadata {
         }
     }
 
-
     protected Metadata toMetadata(Metadata sm, DigitalDocument dd) {
         DocStruct ds = digitalDocument.getOrigDsMap().get(this.myDocStructId);
         if (ds == null) {
@@ -75,7 +74,7 @@ public class SlimMetadata {
         sm.setParent(ds);
 
         sm.setValue(this.metadataValue);
-        sm.setValueQualifier(this.MetadataVQ, this.MetadataVQType);
+        sm.setValueQualifier(this.metadataVQ, this.metadataVQType);
 
         sm.setAuthorityID(this.authorityID);
         sm.setAuthorityURI(this.authorityURI);

@@ -10,7 +10,7 @@ import ugh.dl.Reference;
 @Data
 public class SlimReference {
     @JsonIgnore
-    private transient SlimDigitalDocument digitalDocument;
+    private SlimDigitalDocument digitalDocument;
 
     private String type;
     private String sourceDsId;

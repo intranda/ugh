@@ -2,6 +2,7 @@ package ugh.dl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /*******************************************************************************
  * ugh.dl / Corporate.java
@@ -116,4 +117,29 @@ public class Corporate extends Metadata {
             subNames.remove(name);
         }
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + Objects.hash(mainName, partName, role, subNames);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Corporate other = (Corporate) obj;
+        return Objects.equals(mainName, other.mainName) && Objects.equals(partName, other.partName) && Objects.equals(role, other.role)
+                && Objects.equals(subNames, other.subNames);
+    }
+
 }

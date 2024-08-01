@@ -24,8 +24,7 @@ package ugh.exceptions;
 
 /*******************************************************************************
  * <p>
- * Base class for all UGH Exceptions This should make it easier to capture all
- * EExceptions thrown by the UGH library
+ * Base class for all UGH Exceptions This should make it easier to capture all EExceptions thrown by the UGH library
  * </p>
  * 
  * @author cmahnke
@@ -34,35 +33,35 @@ package ugh.exceptions;
 
 public class UGHException extends Exception {
 
-	private static final long	serialVersionUID	= -2321019939574764131L;
+    private static final long serialVersionUID = -2321019939574764131L;
 
-	/***************************************************************************
-	 * Default constructor.
-	 **************************************************************************/
-	public UGHException() {
-		super();
-	}
+    /***************************************************************************
+     * Default constructor.
+     **************************************************************************/
+    public UGHException() {
+        super();
+    }
 
-	/***************************************************************************
-	 * @param inReason
-	 **************************************************************************/
-	public UGHException(String inReason) {
-		super(inReason);
-	}
+    /***************************************************************************
+     * @param inReason
+     **************************************************************************/
+    public UGHException(String inReason) {
+        super(inReason);
+    }
 
-	/***************************************************************************
-	 * @param e
-	 **************************************************************************/
-	public UGHException(Exception e) {
-		super(e);
-	}
+    /***************************************************************************
+     * @param e
+     **************************************************************************/
+    public UGHException(Exception e) {
+        super(e);
+    }
 
-	/***************************************************************************
-	 * @param inReason
-	 * @param e
-	 **************************************************************************/
-	public UGHException(String inReason, Exception e) {
-		super(inReason, e);
-	}
+    /***************************************************************************
+     * @param inReason
+     * @param e
+     **************************************************************************/
+    public UGHException(String inReason, Exception e) {
+        super(inReason, e);
+    }
 
 }

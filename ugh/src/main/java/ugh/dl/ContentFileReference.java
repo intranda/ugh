@@ -52,27 +52,4 @@ public class ContentFileReference implements Serializable {
     @Setter
     private ContentFile cf = null;
 
-    /***************************************************************************
-     * <p>
-     * Passing on to referred ContentFile.
-     * </p>
-     * 
-     * TODO Find out, if same ContentFileArea would be a requirement.
-     * 
-     * @author Wulf Riebensahm
-     * @param ContentFileReference contentFileReference
-     ***************************************************************************/
-    public boolean equals(ContentFileReference contentFileReference) {
-        // null check first
-        if (contentFileReference == null) {
-            return false;
-        }
-        // self check then
-        if (contentFileReference == this) {
-            return true;
-        }
-        // ContentFile check at last
-        return this.getCf().equals(contentFileReference.getCf());
-    }
-
 }

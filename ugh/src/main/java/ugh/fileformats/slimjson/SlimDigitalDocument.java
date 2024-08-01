@@ -16,11 +16,11 @@ import ugh.dl.Prefs;
 
 @Data
 public class SlimDigitalDocument {
-    //for conversion back 
+    //for conversion back
     @JsonIgnore
-    private transient Map<String, DocStruct> origDsMap = new HashMap<>();
+    private Map<String, DocStruct> origDsMap = new HashMap<>();
     @JsonIgnore
-    private transient Map<String, ContentFile> origContentFileMap = new HashMap<>();
+    private Map<String, ContentFile> origContentFileMap = new HashMap<>();
 
     private Map<String, SlimDocStruct> dsMap = new HashMap<>();
     private Map<String, DocStructType> dsTypeMap = new HashMap<>();
@@ -53,7 +53,7 @@ public class SlimDigitalDocument {
     }
 
     public DigitalDocument toDigitalDocument() {
-        //first, add all references back to this object 
+        //first, add all references back to this object
         allImages.setDigitalDocument(this);
         for (SlimDocStruct sds : dsMap.values()) {
             sds.setDigitalDocument(this);

@@ -42,9 +42,9 @@ public class AmdSec implements Serializable {
     private String id;
     @Getter
     @Setter
-    private ArrayList<Md> techMdList;
+    private List<Md> techMdList;
 
-    public AmdSec(ArrayList<Md> techMdList) {
+    public AmdSec(List<Md> techMdList) {
         super();
         this.techMdList = techMdList;
     }

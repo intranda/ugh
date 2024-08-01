@@ -34,7 +34,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import ugh.dl.DigitalDocument.ListPairCheck;
 import ugh.dl.DigitalDocument.PhysicalElement;
 import ugh.exceptions.ContentFileNotLinkedException;
 import ugh.exceptions.MetadataTypeNotAllowedException;
@@ -242,7 +241,7 @@ public class DigitalDocumentTest {
         // before initializing the fields topPhysicalStruct and topLogicalStruct
         assertNull(dd.getPhysicalDocStruct());
         assertNull(dd.getLogicalDocStruct());
-        assertNull(dd.getAllDocStructsByType(null));
+        assertTrue(dd.getAllDocStructsByType(null).isEmpty());
 
         // initialize both fields
         DocStructType phyType = new DocStructType();
@@ -258,7 +257,7 @@ public class DigitalDocumentTest {
         // test this method again
         assertNotNull(dd.getPhysicalDocStruct());
         assertNotNull(dd.getLogicalDocStruct());
-        assertNull(dd.getAllDocStructsByType(null));
+        assertTrue(dd.getAllDocStructsByType(null).isEmpty());
     }
 
     @Test
@@ -309,7 +308,7 @@ public class DigitalDocumentTest {
         assertEquals(3, dd.getAllDocStructsByType("log").size());
         assertEquals(2, dd.getAllDocStructsByType("sth").size());
         for (String name : new String[] { "", " ", "_", "not a name", "BAZINGA!" }) {
-            assertNull(dd.getAllDocStructsByType(name));
+            assertTrue(dd.getAllDocStructsByType(name).isEmpty());
         }
     }
 
@@ -318,7 +317,7 @@ public class DigitalDocumentTest {
         DigitalDocument doc = fileformat.getDigitalDocument();
         assertEquals(2, doc.getAllDocStructsByType("area").size());
         for (String name : new String[] { "", " ", "_", "div", "not a name", "BAZINGA!" }) {
-            assertNull(doc.getAllDocStructsByType(name));
+            assertTrue(doc.getAllDocStructsByType(name).isEmpty());
         }
     }
 
@@ -651,48 +650,6 @@ public class DigitalDocumentTest {
         assertEquals(0, dd.getFileSet().getAllFiles().size());
     }
 
-    @Ignore("The logic in the method cannot pass this test. Empty list should be handled to avoid the IndexOutOfBoundsException.")
-    @Test
-    // TODO add check to overrideContentFiles if new image name list has the same size as the existing page list
-    public void testOverrideContentFilesGivenUnemptyDigitalDocumentButEmptyStringList()
-            throws MetadataTypeNotAllowedException, TypeNotAllowedForParentException, TypeNotAllowedAsChildException {
-        // prepare FileSet containing a list of VirtualFileGroups
-        VirtualFileGroup vfg1 = new VirtualFileGroup();
-        VirtualFileGroup vfg2 = new VirtualFileGroup();
-        List<VirtualFileGroup> vfgList = new ArrayList<>();
-        vfgList.add(vfg1);
-        vfgList.add(vfg2);
-        FileSet fileSet = new FileSet();
-        fileSet.setVirtualFileGroups(vfgList);
-
-        // add a Metadata object and a ContentFile object to show the changes of FileSet during the application of this method
-        fileSet.addMetadata(new Metadata(new MetadataType()));
-        fileSet.addFile(new ContentFile());
-
-        dd.setFileSet(fileSet);
-        assertNotNull(dd.getFileSet());
-        assertNotNull(dd.getFileSet().getVirtualFileGroups());
-        assertEquals(2, dd.getFileSet().getVirtualFileGroups().size());
-        assertNotNull(dd.getFileSet().getAllMetadata());
-        assertEquals(1, dd.getFileSet().getAllMetadata().size());
-        assertNotNull(dd.getFileSet().getAllFiles());
-        assertEquals(1, dd.getFileSet().getAllFiles().size());
-
-        // prepare contents
-        DocStruct tp = preparePhysicalDocStruct();
-        dd.setPhysicalDocStruct(tp);
-
-        // tests
-        List<String> images = new ArrayList<>();
-        dd.overrideContentFiles(images);
-        // the field virtualFileGroups should not be affected
-        assertEquals(2, dd.getFileSet().getVirtualFileGroups().size());
-        assertSame(vfgList, dd.getFileSet().getVirtualFileGroups());
-        // the fields allMetadata and allImages should be reset
-        assertEquals(0, dd.getFileSet().getAllMetadata().size());
-        assertEquals(0, dd.getFileSet().getAllFiles().size());
-    }
-
     @Test
     public void testOverrideContentFilesGivenUnemptyDigitalDocumentAndUnemptyStringListWithMatchedSize()
             throws MetadataTypeNotAllowedException, TypeNotAllowedAsChildException, TypeNotAllowedForParentException {
@@ -818,103 +775,6 @@ public class DigitalDocumentTest {
         DocStruct logDS = new DocStruct(logType);
         dd.setLogicalDocStruct(logDS);
         assertTrue(dd.equals(dd));
-    }
-
-    @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
-    @Test
-    // TODO remove this method. It is not an overwrite of the object equals method and its not used anywhere
-    public void testEqualsAgainstNull() {
-        assertFalse(dd.equals(null));
-    }
-
-    @Test
-    public void testEqualsAgainstItsCopy() throws WriteException, TypeNotAllowedForParentException {
-        // given initial settings
-        DigitalDocument document = dd.copyDigitalDocument();
-        assertTrue(dd.equals(document));
-
-        // initialize the field topLogicalStruct and test again
-        DocStructType logType = new DocStructType();
-        logType.setName("log");
-        DocStruct logDS = new DocStruct(logType);
-        dd.setLogicalDocStruct(logDS);
-        document = dd.copyDigitalDocument();
-        assertTrue(dd.equals(document));
-
-        // initialize the field topPhysicalStruct and test again
-        DocStructType phyType = new DocStructType();
-        phyType.setName("phy");
-        DocStruct phyDS = new DocStruct(phyType);
-        dd.setPhysicalDocStruct(phyDS);
-        document = dd.copyDigitalDocument();
-        assertTrue(dd.equals(document));
-    }
-
-    @Test
-    public void testQuickPairCheckGivenBothNull() {
-        assertEquals(ListPairCheck.isEqual, dd.quickPairCheck(null, null));
-    }
-
-    @Test
-    public void testQuickPairCheckGivenOnlyOneNull() {
-        Object obj = new Object();
-        assertEquals(ListPairCheck.isNotEqual, dd.quickPairCheck(null, obj));
-        assertEquals(ListPairCheck.isNotEqual, dd.quickPairCheck(obj, null));
-    }
-
-    @Test
-    public void testQuickPairCheckGivenTheSameObject() {
-        Object obj = new Object();
-        assertEquals(ListPairCheck.needsFurtherChecking, dd.quickPairCheck(obj, obj));
-    }
-
-    @Test
-    public void testEqualsGivenDifferentDigitalDocumentObjects() throws TypeNotAllowedForParentException {
-        //          two DigitalDocument objects dd1 and dd2 are equal
-        // <=>  dd1.topPhysicalStruct and dd2.topPhysicalStruct are both null OR equal
-        //     && dd1.topLogicalStruct and dd2.topLogicalStruct are both null OR equal
-        DigitalDocument document = new DigitalDocument();
-        // before initialization of both fields topPhysicalStruct and topLogicalStruct
-        assertTrue(dd.equals(document));
-
-        // prepare DocStruct objects for further tests
-        DocStructType phyType1 = new DocStructType();
-        phyType1.setName("phy1");
-        DocStructType phyType2 = new DocStructType();
-        phyType2.setName("phy2");
-        DocStructType logType1 = new DocStructType();
-        logType1.setName("log1");
-        DocStructType logType2 = new DocStructType();
-        logType2.setName("log2");
-        DocStruct phyDS1 = new DocStruct(phyType1);
-        DocStruct phyDS2 = new DocStruct(phyType2);
-        DocStruct logDS1 = new DocStruct(logType1);
-        DocStruct logDS2 = new DocStruct(logType2);
-
-        // tests
-        dd.setPhysicalDocStruct(phyDS1);
-        assertFalse(dd.equals(document));
-        document.setPhysicalDocStruct(phyDS2);
-        assertFalse(dd.equals(document));
-        document.setPhysicalDocStruct(phyDS1);
-        assertTrue(dd.equals(document));
-        document.setLogicalDocStruct(logDS2);
-        assertFalse(document.equals(dd));
-        dd.setLogicalDocStruct(logDS1);
-        assertFalse(document.equals(dd));
-        dd.setLogicalDocStruct(logDS2);
-        assertTrue(document.equals(dd));
-
-        // differences in other fields should not affect the equivalence
-        dd.setAmdSec("id");
-        document.setAmdSec("id2");
-        assertFalse(dd.getAmdSec().getId().equals(document.getAmdSec().getId()));
-        assertTrue(dd.equals(document));
-
-        dd.setFileSet(new FileSet());
-        assertNotNull(dd.getFileSet());
-        assertNull(document.getFileSet());
-        assertTrue(dd.equals(document));
     }
 
     /* Tests for the methods:
@@ -1089,16 +949,6 @@ public class DigitalDocumentTest {
             assertNotNull(dd.getTechMd(name));
             assertSame(md, dd.getTechMd(name));
         }
-    }
-
-    /* Tests for the method copyDigitalDocument() */
-    @Test
-    public void testCopyBeforeInitializingTheFieldAmdSec() throws WriteException {
-        DigitalDocument doc = dd.copyDigitalDocument();
-        assertTrue(dd.equals(doc));
-        assertTrue(doc.equals(dd));
-        assertNull(dd.getAmdSec());
-        assertNull(doc.getAmdSec());
     }
 
     @Test

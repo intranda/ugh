@@ -3,7 +3,6 @@ package ugh.dl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -52,23 +51,6 @@ public class ContentFileReferenceTest {
     @Test
     public void testEqualsToItselfWithoutInitialization() {
         assertTrue(reference.equals(reference));
-    }
-
-    @Test
-    public void testEqualsGivenReferencesWithNullCF() {
-        ContentFileReference reference1 = new ContentFileReference();
-        ContentFileReference reference2 = new ContentFileReference();
-        assertThrows(NullPointerException.class, () -> reference1.equals(reference2));
-    }
-
-    @Test
-    public void testEqualsGivenReferencesWithSameEmptyCF() {
-        ContentFileReference reference1 = new ContentFileReference();
-        ContentFileReference reference2 = new ContentFileReference();
-        ContentFile cf = new ContentFile();
-        reference1.setCf(cf);
-        reference2.setCf(cf);
-        assertTrue(reference1.equals(reference2));
     }
 
     @Test

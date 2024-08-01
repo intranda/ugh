@@ -141,11 +141,9 @@ public class ContentFileTest {
         DocStructType dsType2 = new DocStructType();
         dsType2.setName("name");
         dsType2.setHasfileset(false);
-        assertTrue(dsType1.equals(dsType2));
         DocStruct ds1 = new DocStruct(dsType1);
         DocStruct ds2 = new DocStruct(dsType2);
         assertNotSame(ds1, ds2);
-        assertTrue(ds1.equals(ds2));
         assertTrue(cf.addDocStructAsReference(ds1));
         assertEquals(1, cf.getReferencedDocStructs().size());
         assertTrue(cf.removeDocStructAsReference(ds2));

@@ -71,9 +71,9 @@ public class ContentFile implements Serializable {
     private List<DocStruct> referencedDocStructs;
 
     // Location of the pyshical image; URL or filename.
-    private String Location;
+    private String location;
     // Is the MimeType of an Image stored as string.
-    private String MimeType;
+    private String mimeType;
 
     private String identifier;
 
@@ -128,7 +128,7 @@ public class ContentFile implements Serializable {
      * @param in
      **************************************************************************/
     public void setLocation(String in) {
-        this.Location = in;
+        this.location = in;
     }
 
     /***************************************************************************
@@ -139,14 +139,14 @@ public class ContentFile implements Serializable {
      * @return filename
      **************************************************************************/
     public String getLocation() {
-        return this.Location;
+        return this.location;
     }
 
     /**************************************************************************
      * @param in
      **************************************************************************/
     public void setMimetype(String in) {
-        this.MimeType = in;
+        this.mimeType = in;
     }
 
     /***************************************************************************
@@ -163,7 +163,7 @@ public class ContentFile implements Serializable {
      * @return
      **************************************************************************/
     public String getMimetype() {
-        return this.MimeType;
+        return this.mimeType;
     }
 
     /***************************************************************************
@@ -262,6 +262,7 @@ public class ContentFile implements Serializable {
         }
         // remove all nulls from the list
         while (this.techMdList.remove(null)) {
+            // nothing
         }
     }
 

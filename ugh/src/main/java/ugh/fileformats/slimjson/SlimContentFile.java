@@ -14,7 +14,7 @@ import ugh.dl.DocStruct;
 @Data
 public class SlimContentFile {
     @JsonIgnore
-    private transient SlimDigitalDocument digitalDocument;
+    private SlimDigitalDocument digitalDocument;
 
     private List<String> referencedDocStructs = new ArrayList<>();
     private String location;
@@ -53,13 +53,7 @@ public class SlimContentFile {
             cf.setLocation(location);
             cf.setMimetype(mimeType);
             cf.setIdentifier(identifier);
-            /*for (String dsId : referencedDocStructs) {
-                DocStruct ds = digitalDocument.getOrigDsMap().get(dsId);
-                if (ds == null) {
-                    ds = digitalDocument.getDsMap().get(dsId).toDocStruct(dd);
-                }
-                cf.addDocStructAsReference(ds);
-            }*/
+
             digitalDocument.getOrigContentFileMap().put(this.identifier, cf);
         }
         return cf;

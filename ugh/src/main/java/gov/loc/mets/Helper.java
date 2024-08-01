@@ -1,4 +1,5 @@
 package gov.loc.mets;
+
 /*******************************************************************************
  * gov.loc.mets / Helper.java
  * 
@@ -24,15 +25,16 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+
 import org.apache.xmlbeans.XmlAnyURI;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+
 import gov.loc.mets.DivType.Fptr;
 import gov.loc.mets.FileType.FLocat;
 import gov.loc.mets.MdSecType.MdWrap;
@@ -41,6 +43,7 @@ import gov.loc.mets.MetsType.FileSec;
 import gov.loc.mets.MetsType.FileSec.FileGrp;
 import gov.loc.mets.MetsType.StructLink;
 import gov.loc.mets.StructLinkType.SmLink;
+
 /*******************************************************************************
  * <p>
  * Helper class to parse and create METS files more easily.
@@ -61,17 +64,18 @@ public class Helper {
     /***************************************************************************
      * STATIC FINALS
      **************************************************************************/
-    private final static String version = "0.2-20091021";
+    private static final String VERSION = "0.2-20091021";
     // Define.
-    private final static int DIGIPROVMD = 1;
-    private final static int RIGHTSMD = 2;
-    private final static int TECHMD = 3;
-    private final static int SOURCEMD = 4;
+    private static final int DIGIPROVMD = 1;
+    private static final int RIGHTSMD = 2;
+    private static final int TECHMD = 3;
+    private static final int SOURCEMD = 4;
     /***************************************************************************
      * INSTANCE VARIABLES
      **************************************************************************/
     // The Mets wrapper element <mets>.
     private MetsType mets;
+
     /***************************************************************************
      * CONSTRUCTORS
      **************************************************************************/
@@ -85,6 +89,7 @@ public class Helper {
     public Helper(MetsType inMets) {
         this.mets = inMets;
     }
+
     /***************************************************************************
      * WHAT THE OBJECT DOES
      **************************************************************************/
@@ -96,10 +101,7 @@ public class Helper {
     public MdSecType addDmdSecType(DivType inDiv, String inContent) {
         LinkedList<String> l1 = null;
         MdSecType newDmdSecType = createDescriptiveMetadata(inContent);
-        // Happens, when inContent is XML compliant.
-        if (newDmdSecType == null) {
-            return null;
-        }
+
         // Get ID of newDmdSecType.
         String newID = newDmdSecType.getID();
         // Add this id to the inDiv.
@@ -114,6 +116,7 @@ public class Helper {
         inDiv.setDMDID(l1);
         return newDmdSecType;
     }
+
     /***************************************************************************
      * <p>
      * Creates a new DmdSec object for a given DivType. Cause the content is transmitted as a byte-array, it will be regarded as binary content.
@@ -143,6 +146,7 @@ public class Helper {
         inDiv.setDMDID(l1);
         return newDmdSecType;
     }
+
     /***************************************************************************
      * <p>
      * Creates a new DMDSec with xml compliant content. Identifier for the DMDSec is created automatically.
@@ -153,10 +157,10 @@ public class Helper {
      * @return
      **************************************************************************/
     private MdSecType createDescriptiveMetadata(String content) {
-        String dmdid_string = createNewXMLID("dmdsec");
+        String dmdidString = createNewXMLID("dmdsec");
         // Create descriptive metadata section.
         MdSecType dmdSec = this.mets.addNewDmdSec();
-        dmdSec.setID(dmdid_string);
+        dmdSec.setID(dmdidString);
         // Check, if inContent is XML compliant or not create an xmlData
         // section, if it is xml compliant, otherwise a binData section.
         // Create a new <MdWrap> element.
@@ -169,18 +173,10 @@ public class Helper {
         Document domdocument = xmlnode.getOwnerDocument();
         Node contentnode = domdocument.createTextNode(content);
         xmlnode.appendChild(contentnode);
-        // XmlObject xo = null;
-        // try {
-        // xo = XmlObject.Factory.parse(content);
-        // } catch (XmlException e) {
-        // e.printStackTrace();
-        // return null;
-        // }
-        // // XmlString implements the XmlObject interface; therefore it can be
-        // // added to the <XmlData> element XmlData object.
-        // xml.set(xo);
+
         return dmdSec;
     }
+
     /***************************************************************************
      * <p>
      * Creates a new DMDSec with binary content.
@@ -191,10 +187,10 @@ public class Helper {
      * @return
      **************************************************************************/
     private MdSecType createDescriptiveMetadata(byte[] content) {
-        String dmdid_string = createNewXMLID("dmdsec");
+        String dmdidString = createNewXMLID("dmdsec");
         // Create descriptive metadata section.
         MdSecType dmdSec = this.mets.addNewDmdSec();
-        dmdSec.setID(dmdid_string);
+        dmdSec.setID(dmdidString);
         // Check, if inContent is XML compliant or not create an xmlData
         // section, if it is xml compliant otherwise a binData section.
         // Create a new <MdWrap> element.
@@ -202,6 +198,7 @@ public class Helper {
         mdwrap.setBinData(content);
         return dmdSec;
     }
+
     /***************************************************************************
      * @param content
      * @param mdTypeValue
@@ -240,6 +237,7 @@ public class Helper {
         xmldata.set(content);
         return result;
     }
+
     /***************************************************************************
      * @param content
      * @param mdTypeValue
@@ -285,6 +283,7 @@ public class Helper {
         xmlnode.appendChild(contentnode);
         return result;
     }
+
     /***************************************************************************
      * @param content
      * @param mdTypeValue
@@ -322,6 +321,7 @@ public class Helper {
         mdwrap.setBinData(content);
         return result;
     }
+
     /***************************************************************************
      * <p>
      * Retrieves the appropriate descriptive metadata section of a given type. The type is stored in the TYPE-attribute. The comparison is case
@@ -340,9 +340,7 @@ public class Helper {
         if (allmdids == null) {
             return null;
         }
-        Iterator<String> it = allmdids.iterator();
-        while (it.hasNext()) {
-            String admid = it.next();
+        for (String admid : allmdids) {
             // Get section by ID verify the type of metadata.
             MdSecType dmdSec = getDmdSecByID(admid);
             // Get <mdWrap> element.
@@ -363,6 +361,7 @@ public class Helper {
         }
         return null;
     }
+
     /***************************************************************************
      * <p>
      * Retrieves a &lt;amdSec&gt; with a given ID; this ID is used to link from the appropriate <div> element to the attached metadata.
@@ -374,11 +373,11 @@ public class Helper {
     public AmdSecType getAmdSecByID(String id) {
         Object o = getAmdSecByID(id, false);
         if (o != null) {
-            AmdSecType result = (AmdSecType) o;
-            return result;
+            return (AmdSecType) o;
         }
         return null;
     }
+
     /***************************************************************************
      * <p>
      * Gets the descriptive metadata section defined by the ID.
@@ -391,7 +390,7 @@ public class Helper {
     public MdSecType getDmdSecByID(String id) {
         // Get all descriptive Metadata sections as an array.
         MdSecType[] mdsections = this.mets.getDmdSecArray();
-        //		List<MdSecType> mdsections = this.mets.getDmdSecList();
+
         if (mdsections != null) {
             for (MdSecType mdsec : mdsections) {
                 String sectionid = mdsec.getID();
@@ -400,18 +399,10 @@ public class Helper {
                 }
             }
         }
-        // Iterate over all sections.
-        //		for (int i = 0; i < mdsections.size(); i++) {
-        //			MdSecType mdsec = mdsections.get(i);
-        //			String sectionid = mdsec.getID();
-        //
-        //			if (sectionid.equals(id)) { // compare the id and the given id
-        //				return mdsec;
-        //			}
-        //		}
-        //
+
         return null;
     }
+
     /***************************************************************************
      * <p>
      * Retrieves the content of a descriptive/administrative metadata section; if the metadata is referenced by a <mdRef> element, the data is loaded
@@ -431,10 +422,10 @@ public class Helper {
             // Get the http URL/URI.
             XmlAnyURI uri = mdref.xgetHref();
             // Convert the URI to String.
-            String uri_String = uri.toString();
+            String uriString = uri.toString();
             // Make an HTTP request, the result of this request is returned as a
             // string.
-            result = makeHTTPRequest(uri_String);
+            result = makeHTTPRequest(uriString);
         }
         if (mdwrap != null) {
             // Get xml-data and convert it to String.
@@ -443,6 +434,7 @@ public class Helper {
         }
         return result;
     }
+
     /***************************************************************************
      * <p>
      * Retrieves all
@@ -460,7 +452,7 @@ public class Helper {
     public List<StructMapType> getStructMapByType(String type) {
         List<StructMapType> resultList = new LinkedList<>();
         StructMapType[] structmap = this.mets.getStructMapArray();
-        //		List<StructMapType> structmap = this.mets.getStructMapList();
+
         if (structmap != null) {
             for (StructMapType smt : structmap) {
                 if ((smt.getTYPE() != null) && (smt.getTYPE().equals(type))) {
@@ -468,17 +460,10 @@ public class Helper {
                 }
             }
         }
-        //		for (int i = 0; i < structmap.size(); i++) {
-        //			if ((structmap.get(i).getTYPE() != null)
-        //					&& (structmap.get(i).getTYPE().equals(type))) {
-        //				resultList.add(structmap.get(i));
-        //			}
-        //		}
-        if (resultList.size() == 0) {
-            return null;
-        }
+
         return resultList;
     }
+
     /***************************************************************************
      * <p>
      * Retrieves all
@@ -503,19 +488,10 @@ public class Helper {
                 }
             }
         }
-        //		List<StructMapType> structmap = this.mets.getStructMapList();
-        //
-        //		for (int i = 0; i < structmap.size(); i++) {
-        //			if ((structmap.get(i).getLABEL() != null)
-        //					&& (structmap.get(i).getLABEL().equals(label))) {
-        //				resultList.add(structmap.get(i));
-        //			}
-        //		}
-        if (resultList.size() == 0) {
-            return null;
-        }
+
         return resultList;
     }
+
     /***************************************************************************
      * <p>
      * Retrieves all
@@ -539,15 +515,10 @@ public class Helper {
                 }
             }
         }
-        //        List<StructMapType> structmap = this.mets.getStructMapList();
-        //
-        //        for (int i = 0; i < structmap.size(); i++) {
-        //            if ((structmap.get(i).getID() != null) && (structmap.get(i).getID().equals(id))) {
-        //                return structmap.get(i);
-        //            }
-        //        }
+
         return null;
     }
+
     /***************************************************************************
      * <p>
      * Retrieves a FileType object with the given ID.
@@ -558,7 +529,7 @@ public class Helper {
      **************************************************************************/
     public FileType getFileByID(String id) {
         FileSec filesec = this.mets.getFileSec();
-        //        List<FileGrp> filegroup = filesec.getFileGrpList();
+
         FileGrp[] filegroup = filesec.getFileGrpArray();
         if (filegroup != null) {
             for (FileGrp grp : filegroup) {
@@ -568,16 +539,10 @@ public class Helper {
                 }
             }
         }
-        //        // Iterate over all filegroups.
-        //        for (int i = 0; i < filegroup.size(); i++) {
-        //            FileType file = getFileByID(id, filegroup.get(i));
-        //
-        //            if (file != null) {
-        //                return file;
-        //            }
-        //        }
+
         return null;
     }
+
     /***************************************************************************
      * <p>
      * Retrieves all &lt;div&gt; elements, which are linked to a given &lt;div&gt; element in the structLink-section, no matter if the relationship
@@ -590,6 +555,7 @@ public class Helper {
     public List<SmLink> getAllLinkedDivs(DivType inDiv) {
         return getAllLinkedDivs(inDiv, true, true);
     }
+
     /***************************************************************************
      * <p>
      * Retrieves all &lt;div&gt; elements, which point to the given &lt;div&gt; element in the structLink section.
@@ -601,6 +567,7 @@ public class Helper {
     public List<SmLink> getAllLinkedFromDivs(DivType inDiv) {
         return getAllLinkedDivs(inDiv, false, true);
     }
+
     /***************************************************************************
      * <p>
      * Retrieves all &lt;div&gt; elements, which point from the given &lt;div&gt; element in the structLink section.
@@ -612,6 +579,7 @@ public class Helper {
     public List<SmLink> getAllLinkedToDivs(DivType inDiv) {
         return getAllLinkedDivs(inDiv, true, false);
     }
+
     /**************************************************************************
      * <p>
      * Gets a StructMap div type by the given div ID.
@@ -624,15 +592,11 @@ public class Helper {
     public DivType getStructMapDiv(String theId) {
         StructMapType[] structMapArray = this.mets.getStructMapArray();
         if (structMapArray != null) {
-            // Go through all StructMaps.
-            for (StructMapType smt : structMapArray) {
-                // Call the private method recursively for every first StructMap div
-                // (only one is allowed here!).
-                return getStructMapDiv(theId, smt.getDiv());
-            }
+            return getStructMapDiv(theId, structMapArray[0].getDiv());
         }
         return null;
     }
+
     /***************************************************************************
      * <p>
      * Creates a <file> object as the last object in a given <FileGrp>. The <file> object will have a new, unique ID attribute and a single <FLocat>
@@ -670,6 +634,7 @@ public class Helper {
         filepointer.setFILEID(fileidentifier);
         return ft;
     }
+
     /***************************************************************************
      * PRIVATE (AND PROTECTED) METHODS
      **************************************************************************/
@@ -701,6 +666,7 @@ public class Helper {
         }
         return null;
     }
+
     /***************************************************************************
      * @param type
      * @return
@@ -709,23 +675,24 @@ public class Helper {
         String xmlid = null;
         UUID uuid = UUID.randomUUID();
         String uuidstring = uuid.toString();
-        if (type.equals("amdsec")) {
+        if ("amdsec".equals(type)) {
             xmlid = "amd" + uuidstring;
-        } else if (type.equals("dmdsec")) {
+        } else if ("dmdsec".equals(type)) {
             xmlid = "dmd" + uuidstring;
-        } else if (type.equals("tech")) {
+        } else if ("tech".equals(type)) {
             xmlid = "tech" + uuidstring;
-        } else if (type.equals("digiprov")) {
+        } else if ("digiprov".equals(type)) {
             xmlid = "dipr" + uuidstring;
-        } else if (type.equals("rights")) {
+        } else if ("rights".equals(type)) {
             xmlid = "rgt" + uuidstring;
-        } else if (type.equals("source")) {
+        } else if ("source".equals(type)) {
             xmlid = "src" + uuidstring;
-        } else if (type.equals("file")) {
+        } else if ("file".equals(type)) {
             xmlid = "fl" + uuidstring;
         }
         return xmlid;
     }
+
     /**************************************************************************
      * <p>
      * Gets a StructMap div type by the given ID and a given div.
@@ -752,6 +719,7 @@ public class Helper {
         }
         return null;
     }
+
     /***************************************************************************
      * <p>
      * Makes a simple HTTP call to a URI; this method is used for internal purposes only. The content of the request is returned as a string.
@@ -770,11 +738,12 @@ public class Helper {
         urlConn = url.openConnection();
         // Get response data.
         DataInputStream input = new DataInputStream(urlConn.getInputStream());
-        while (null != ((str = input.readLine()))) {
+        while (null != (str = input.readLine())) {
             // Do nothing!
         }
         return str;
     }
+
     /***************************************************************************
      * <p>
      * Retrieves all &lt;div&gt; elements which are linked to a given &lt;div&gt; (inDiv) using the &lt;structLink&gt; section. Depending on the
@@ -794,14 +763,14 @@ public class Helper {
         if (divid == null) {
             // Has no ID attribute; can't neither source nor target of an smlink
             // element.
-            return null;
+            return result;
         }
         // Get structLink section.
         StructLink structlink = this.mets.getStructLink();
         SmLink[] links = structlink.getSmLinkArray();
-        //        List<SmLink> links = structlink.getSmLinkList();
+
         for (SmLink link : links) {
-            //        for (int i = 0; i < links.size(); i++) {
+
             boolean from = false;
             boolean to = false;
             if (checkfrom && link.getFrom() != null && link.getFrom().equals(divid)) {
@@ -827,12 +796,10 @@ public class Helper {
                 result.add(link);
             }
         }
-        // No hits, return null.
-        if (result.size() == 0) {
-            return null;
-        }
+
         return result;
     }
+
     /***************************************************************************
      * <p>
      * Retrieves a file by ID from a filegroup, including all sub filegroups.
@@ -844,11 +811,11 @@ public class Helper {
      **************************************************************************/
     private FileType getFileByID(String id, FileGrpType filegroup) {
         // Iterate over all files.
-        //        List<FileType> file = filegroup.getFileList();
+
         FileType[] file = filegroup.getFileArray();
         if (file != null) {
             for (FileType ft : file) {
-                //        for (int i = 0; i < file.size(); i++) {
+
                 if ((ft.getID() != null) && (ft.getID().equals(id))) {
                     // Found the type.
                     return ft;
@@ -858,7 +825,7 @@ public class Helper {
         // Nothing found, so get the list of all sub groups and iterate over
         // those subgroups.
         FileGrpType[] subfilegroup = filegroup.getFileGrpArray();
-        //        List<FileGrpType> subfilegroup = filegroup.getFileGrpList();
+
         if (subfilegroup != null) {
             for (FileGrpType fgt : subfilegroup) {
                 FileType singlefile = getFileByID(id, fgt);
@@ -868,16 +835,10 @@ public class Helper {
                 }
             }
         }
-        //        for (int x = 0; x < subfilegroup.size(); x++) {
-        //            FileType singlefile = getFileByID(id, subfilegroup.get(x));
-        //
-        //            if (singlefile != null) {
-        //                // File found in sub filegroup.
-        //                return singlefile;
-        //            }
-        //        }
+
         return null;
     }
+
     /***************************************************************************
      * <p>
      * Parses an &lt;AmdSec&gt; section and retrieves the appropriate subsection with the requested id.
@@ -893,35 +854,34 @@ public class Helper {
         MdSecType result = null;
         // Get all descriptive Metadata sections as an array.
         AmdSecType[] mdsections = this.mets.getAmdSecArray();
-        //        List<AmdSecType> mdsections = this.mets.getAmdSecList();
+
         // Iterate over all sections.
         if (mdsections != null) {
             for (AmdSecType mdsec : mdsections) {
-                //        for (int i = 0; i < mdsections.size(); i++) {
-                //            AmdSecType mdsec = mdsections.get(i);
+
                 String sectionid = mdsec.getID();
                 // Compare the id and the given ID.
                 if (sectionid.equals(id)) {
                     return mdsec;
                 }
                 if (checkSubSections) {
-                    MdSecType[] mdsec_rights = mdsec.getRightsMDArray();
-                    MdSecType[] mdsec_source = mdsec.getSourceMDArray();
-                    MdSecType[] mdsec_tech = mdsec.getTechMDArray();
-                    MdSecType[] mdsec_digiprov = mdsec.getDigiprovMDArray();
-                    result = getMdSecTypeByID(mdsec_rights, id);
+                    MdSecType[] mdsecRights = mdsec.getRightsMDArray();
+                    MdSecType[] mdsecSource = mdsec.getSourceMDArray();
+                    MdSecType[] mdsecTech = mdsec.getTechMDArray();
+                    MdSecType[] mdsecDigiprov = mdsec.getDigiprovMDArray();
+                    result = getMdSecTypeByID(mdsecRights, id);
                     if (result != null) {
                         return result;
                     }
-                    result = getMdSecTypeByID(mdsec_source, id);
+                    result = getMdSecTypeByID(mdsecSource, id);
                     if (result != null) {
                         return result;
                     }
-                    result = getMdSecTypeByID(mdsec_tech, id);
+                    result = getMdSecTypeByID(mdsecTech, id);
                     if (result != null) {
                         return result;
                     }
-                    result = getMdSecTypeByID(mdsec_digiprov, id);
+                    result = getMdSecTypeByID(mdsecDigiprov, id);
                     if (result != null) {
                         return result;
                     }
@@ -930,6 +890,7 @@ public class Helper {
         }
         return null;
     }
+
     /***************************************************************************
      * <p>
      * Creates an MdWrap element under the given MdSecType object of a certain type. The following values.
@@ -964,40 +925,40 @@ public class Helper {
     private MdWrap createMDWrap(MdSecType inMDSec, String mdTypeValue) {
         MdWrap mdwrap = inMDSec.addNewMdWrap();
         MdSecType.MdWrap.MDTYPE.Enum mdtype = null;
-        if (mdTypeValue.equalsIgnoreCase("dc")) {
+        if ("dc".equalsIgnoreCase(mdTypeValue)) {
             mdtype = MdSecType.MdWrap.MDTYPE.DC;
         }
-        if (mdTypeValue.equalsIgnoreCase("ddi")) {
+        if ("ddi".equalsIgnoreCase(mdTypeValue)) {
             mdtype = MdSecType.MdWrap.MDTYPE.DDI;
         }
-        if (mdTypeValue.equalsIgnoreCase("ead")) {
+        if ("ead".equalsIgnoreCase(mdTypeValue)) {
             mdtype = MdSecType.MdWrap.MDTYPE.EAD;
         }
-        if (mdTypeValue.equalsIgnoreCase("fgdc")) {
+        if ("fgdc".equalsIgnoreCase(mdTypeValue)) {
             mdtype = MdSecType.MdWrap.MDTYPE.FGDC;
         }
-        if (mdTypeValue.equalsIgnoreCase("lc_av")) {
+        if ("lc_av".equalsIgnoreCase(mdTypeValue)) {
             mdtype = MdSecType.MdWrap.MDTYPE.LC_AV;
         }
-        if (mdTypeValue.equalsIgnoreCase("lom")) {
+        if ("lom".equalsIgnoreCase(mdTypeValue)) {
             mdtype = MdSecType.MdWrap.MDTYPE.LOM;
         }
-        if (mdTypeValue.equalsIgnoreCase("marc")) {
+        if ("marc".equalsIgnoreCase(mdTypeValue)) {
             mdtype = MdSecType.MdWrap.MDTYPE.MARC;
         }
-        if (mdTypeValue.equalsIgnoreCase("mods")) {
+        if ("mods".equalsIgnoreCase(mdTypeValue)) {
             mdtype = MdSecType.MdWrap.MDTYPE.MODS;
         }
-        if (mdTypeValue.equalsIgnoreCase("nisoimg")) {
+        if ("nisoimg".equalsIgnoreCase(mdTypeValue)) {
             mdtype = MdSecType.MdWrap.MDTYPE.NISOIMG;
         }
-        if (mdTypeValue.equalsIgnoreCase("premis")) {
+        if ("premis".equalsIgnoreCase(mdTypeValue)) {
             mdtype = MdSecType.MdWrap.MDTYPE.PREMIS;
         }
-        if (mdTypeValue.equalsIgnoreCase("teihdr")) {
+        if ("teihdr".equalsIgnoreCase(mdTypeValue)) {
             mdtype = MdSecType.MdWrap.MDTYPE.TEIHDR;
         }
-        if (mdTypeValue.equalsIgnoreCase("vra")) {
+        if ("vra".equalsIgnoreCase(mdTypeValue)) {
             mdtype = MdSecType.MdWrap.MDTYPE.VRA;
         }
         if (mdtype == null) {
@@ -1010,6 +971,7 @@ public class Helper {
         }
         return mdwrap;
     }
+
     /***************************************************************************
      * GETTERS AND SETTERS
      **************************************************************************/
@@ -1017,7 +979,6 @@ public class Helper {
      * @return
      **************************************************************************/
     public String getVersion() {
-        return version;
+        return VERSION;
     }
 }
-

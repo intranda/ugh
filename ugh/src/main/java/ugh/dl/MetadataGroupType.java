@@ -26,10 +26,10 @@ package ugh.dl;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -42,19 +42,17 @@ public class MetadataGroupType implements Serializable, PrefsType {
 
     private List<MetadataTypeForDocStructType> metadataTypeList = new LinkedList<>();
 
-    //    private List<MetadataGroupForDocStructType> allMetadataGroups = new LinkedList<>();
-
     // Unique name of MetadataType.
     private String name;
 
     // Maximum number of occurences of this MetadataType for one DocStrct (can
     // be 1 (1), one or more (+) or as many as you want (*).
-    private String max_number;
+    private String maxNumber;
 
     // Hash containing all languages.
-    private HashMap<String, String> allLanguages;
+    private Map<String, String> allLanguages;
 
-    protected List<AllowedMetadataGroupType> allGroups = new LinkedList<>();
+    protected transient List<AllowedMetadataGroupType> allGroups = new LinkedList<>();
 
     public List<MetadataType> getMetadataTypeList() {
         // if null return null
@@ -65,9 +63,7 @@ public class MetadataGroupType implements Serializable, PrefsType {
         // otherwise make a copy of metadataTypeList
         List<MetadataType> out = new LinkedList<>();
 
-        Iterator<MetadataTypeForDocStructType> it = metadataTypeList.iterator();
-        while (it.hasNext()) {
-            MetadataTypeForDocStructType mdtfdst = it.next();
+        for (MetadataTypeForDocStructType mdtfdst : metadataTypeList) {
             out.add(mdtfdst.getMetadataType());
         }
         return out;
@@ -122,9 +118,7 @@ public class MetadataGroupType implements Serializable, PrefsType {
 
         List<MetadataTypeForDocStructType> ll = new LinkedList<>(metadataTypeList);
 
-        Iterator<MetadataTypeForDocStructType> it = ll.iterator();
-        while (it.hasNext()) {
-            MetadataTypeForDocStructType mdtfdst = it.next();
+        for (MetadataTypeForDocStructType mdtfdst : ll) {
             if (mdtfdst.getMetadataType().equals(metadataToRemove)) {
                 metadataTypeList.remove(mdtfdst);
                 return;
@@ -145,11 +139,11 @@ public class MetadataGroupType implements Serializable, PrefsType {
     }
 
     @Override
-    public HashMap<String, String> getAllLanguages() {
+    public Map<String, String> getAllLanguages() {
         return allLanguages;
     }
 
-    public void setAllLanguages(HashMap<String, String> allLanguages) {
+    public void setAllLanguages(Map<String, String> allLanguages) {
         this.allLanguages = allLanguages;
     }
 
@@ -158,12 +152,12 @@ public class MetadataGroupType implements Serializable, PrefsType {
      **************************************************************************/
     public void setNum(String in) {
         if (StringUtils.isBlank(in)) {
-            max_number = "1o";
-        } else if (!in.equals("1m") && !in.equals("1o") && !in.equals("+") && !in.equals("*")) {
+            maxNumber = "1o";
+        } else if (!"1m".equals(in) && !"1o".equals(in) && !"+".equals(in) && !"*".equals(in)) {
             // Unknown syntax.
-            max_number = "1o";
+            maxNumber = "1o";
         } else {
-            this.max_number = in;
+            this.maxNumber = in;
         }
     }
 
@@ -191,7 +185,7 @@ public class MetadataGroupType implements Serializable, PrefsType {
      * @return number of MetadataType
      **************************************************************************/
     public String getNum() {
-        return this.max_number;
+        return this.maxNumber;
     }
 
     /***************************************************************************
@@ -208,9 +202,7 @@ public class MetadataGroupType implements Serializable, PrefsType {
             return "0";
         }
 
-        Iterator<MetadataTypeForDocStructType> it = metadataTypeList.iterator();
-        while (it.hasNext()) {
-            MetadataTypeForDocStructType mdtfdst = it.next();
+        for (MetadataTypeForDocStructType mdtfdst : metadataTypeList) {
             if (mdtfdst.getMetadataType().getName().equals(inType.getName())) {
                 return mdtfdst.getNumber();
             }
@@ -225,8 +217,8 @@ public class MetadataGroupType implements Serializable, PrefsType {
 
         newMDType.setAllLanguages(this.allLanguages);
         newMDType.setName(this.name);
-        if (this.max_number != null) {
-            newMDType.setNum(this.max_number);
+        if (this.maxNumber != null) {
+            newMDType.setNum(this.maxNumber);
         }
         List<MetadataTypeForDocStructType> newList = new LinkedList<>();
         for (MetadataTypeForDocStructType mdt : metadataTypeList) {
@@ -238,7 +230,6 @@ public class MetadataGroupType implements Serializable, PrefsType {
             newList.add(newType);
         }
         newMDType.setTypes(newList);
-
 
         for (AllowedMetadataGroupType amgt : allGroups) {
             newMDType.addGroupTypeAsChild(amgt.getGroupName(), amgt.getNumAllowed(), amgt.isDefaultDisplay(), amgt.isHidden());
@@ -260,10 +251,8 @@ public class MetadataGroupType implements Serializable, PrefsType {
         String testname;
         String typename;
 
-        // Check, if MetadataType is already available.
-        Iterator<MetadataTypeForDocStructType> it = metadataTypeList.iterator();
-        while (it.hasNext()) {
-            test = it.next();
+        for (MetadataTypeForDocStructType element : metadataTypeList) {
+            test = element;
             PrefsType mdt = test.getMetadataType();
             testname = mdt.getName();
             typename = type.getName();
@@ -284,9 +273,7 @@ public class MetadataGroupType implements Serializable, PrefsType {
     public List<MetadataType> getAllDefaultDisplayMetadataTypes() {
         List<MetadataType> out = new LinkedList<>();
 
-        Iterator<MetadataTypeForDocStructType> it = metadataTypeList.iterator();
-        while (it.hasNext()) {
-            MetadataTypeForDocStructType mdtfdst = it.next();
+        for (MetadataTypeForDocStructType mdtfdst : metadataTypeList) {
             if (mdtfdst.isDefaultdisplay()) {
                 out.add(mdtfdst.getMetadataType());
             }
@@ -294,7 +281,6 @@ public class MetadataGroupType implements Serializable, PrefsType {
 
         return out;
     }
-
 
     @Override
     public void addLanguage(String lang, String value) {
@@ -312,10 +298,8 @@ public class MetadataGroupType implements Serializable, PrefsType {
             throw new IllegalArgumentException("null should not be used as key");
         }
 
-        // Check, if language already available.
-        Iterator<Map.Entry<String, String>> it = this.allLanguages.entrySet().iterator();
-        while (it.hasNext()) {
-            test = it.next();
+        for (Entry<String, String> element : this.allLanguages.entrySet()) {
+            test = element;
             key = test.getKey();
             if (key.equals(lang)) {
                 // Language is already available.

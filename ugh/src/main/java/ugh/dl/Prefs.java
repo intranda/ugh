@@ -27,10 +27,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -60,7 +60,6 @@ import ugh.exceptions.PreferencesException;
  * 
  *        TODOLOG
  * 
- *        TODO Remove the "p004" error codes? Where do they come from anyway??
  * 
  *        CHANGELOG
  * 
@@ -83,7 +82,7 @@ import ugh.exceptions.PreferencesException;
 @Log4j2
 public class Prefs implements Serializable {
 
-    private final static String VERSION = "1.1-20091117";
+    private static final String VERSION = "1.1-20091117";
 
     private static final long serialVersionUID = 6162006030440683152L;
     private static final String HIDDEN_METADATA_CHAR = "_";
@@ -91,7 +90,7 @@ public class Prefs implements Serializable {
     private List<DocStructType> allDocStrctTypes;
     private List<MetadataType> allMetadataTypes;
     private List<MetadataGroupType> allMetadataGroupTypes;
-    private Hashtable<String, Node> allFormats;
+    private Map<String, Node> allFormats;
 
     public static final short ELEMENT_NODE = 1;
 
@@ -152,10 +151,7 @@ public class Prefs implements Serializable {
             String message = "Parse error at line " + e.getLineNumber() + ", uri " + e.getSystemId() + "!";
             log.error(message);
             throw new PreferencesException(message, e);
-        } catch (SAXException e) {
-            log.error(e);
-            throw new PreferencesException(e);
-        } catch (ParserConfigurationException e) {
+        } catch (SAXException | ParserConfigurationException e) {
             log.error(e);
             throw new PreferencesException(e);
         } catch (IOException e) {
@@ -189,7 +185,7 @@ public class Prefs implements Serializable {
             currentNode = childlist.item(i);
 
             if (currentNode.getNodeType() == ELEMENT_NODE) {
-                if (currentNode.getNodeName().equals("DocStrctType")) {
+                if ("DocStrctType".equals(currentNode.getNodeName())) {
                     NamedNodeMap nnm = currentNode.getAttributes();
                     Node topmost = nnm.getNamedItem("topStruct");
                     Node fileset = nnm.getNamedItem("fileset");
@@ -204,10 +200,10 @@ public class Prefs implements Serializable {
                     }
                     parsedDocStrctType = parseDocStrctType(currentNode);
                     if (parsedDocStrctType != null) {
-                        if (topmostvalue != null && (topmostvalue.equals("yes") || topmostvalue.equals("true"))) {
+                        if (topmostvalue != null && ("yes".equals(topmostvalue) || "true".equals(topmostvalue))) {
                             parsedDocStrctType.setTopmost(true);
                         }
-                        if (filesetvalue != null && (filesetvalue.equals("no") || filesetvalue.equals("false"))) {
+                        if (filesetvalue != null && ("no".equals(filesetvalue) || "false".equals(filesetvalue))) {
                             parsedDocStrctType.setHasFileSet(false);
                         }
 
@@ -215,21 +211,21 @@ public class Prefs implements Serializable {
                     }
                 }
 
-                if (currentNode.getNodeName().equals("MetadataType")) {
+                if ("MetadataType".equals(currentNode.getNodeName())) {
                     parsedMetadataType = parseMetadataType(currentNode);
                     if (parsedMetadataType != null) {
                         this.allMetadataTypes.add(parsedMetadataType);
                     }
                 }
 
-                if (currentNode.getNodeName().equals("Group")) {
+                if ("Group".equals(currentNode.getNodeName())) {
                     parsedMetadataGroup = parseMetadataGroup(currentNode);
                     if (parsedMetadataGroup != null) {
                         this.allMetadataGroupTypes.add(parsedMetadataGroup);
                     }
                 }
 
-                if (currentNode.getNodeName().equals("Formats")) {
+                if ("Formats".equals(currentNode.getNodeName())) {
                     // Get all formats.
                     NodeList formatlist = currentNode.getChildNodes();
                     for (int x = 0; x < formatlist.getLength(); x++) {
@@ -306,7 +302,7 @@ public class Prefs implements Serializable {
         if (attrnodes != null) {
             // Check if it's an anchor.
             Node typenode = attrnodes.item(0);
-            if (typenode != null && typenode.getNodeName().equals("anchor") && typenode.getNodeValue().equalsIgnoreCase("true")) {
+            if (typenode != null && "anchor".equals(typenode.getNodeName()) && "true".equalsIgnoreCase(typenode.getNodeValue())) {
                 currentDocStrctType.isAnchor(true);
             }
         }
@@ -315,7 +311,7 @@ public class Prefs implements Serializable {
             currentNode = allchildren.item(i);
 
             if (currentNode.getNodeType() == ELEMENT_NODE) {
-                if (currentNode.getNodeName().equals("Name")) {
+                if ("Name".equals(currentNode.getNodeName())) {
                     // Get value; value is always a text node.
                     NodeList textnodes = currentNode.getChildNodes();
                     if (textnodes != null) {
@@ -333,12 +329,12 @@ public class Prefs implements Serializable {
                         return null;
                     }
                 }
-                if (currentNode.getNodeName().equals("language")) {
+                if ("language".equals(currentNode.getNodeName())) {
                     attributeNodelist = currentNode.getAttributes();
                     attribNode = attributeNodelist.getNamedItem("name");
                     if (attribNode == null) {
                         log.error("No name definition for language (" + currentDocStrctType.getName() + "); " + currentDocStrctType.getName()
-                        + "; Error Code: p005");
+                                + "; Error Code: p005");
                         return null;
                     }
                     languageName = attribNode.getNodeValue();
@@ -364,7 +360,7 @@ public class Prefs implements Serializable {
                 }
                 // Read all types which are allowed for this documentstructure
                 // type.
-                if (currentNode.getNodeName().equals("metadata")) {
+                if ("metadata".equals(currentNode.getNodeName())) {
                     attributeNodelist = currentNode.getAttributes();
                     attribNode = attributeNodelist.getNamedItem("num");
                     defaultNode = attributeNodelist.getNamedItem("DefaultDisplay");
@@ -406,8 +402,7 @@ public class Prefs implements Serializable {
                         // Language name or the value (term) wasn't set.
                         continue;
                     }
-                    // MetadataType newMDType=new MetadataType();
-                    // newMDType.setName(mdtype_name);
+
                     MetadataType newMdType = getMetadataTypeByName(mdtypeName);
                     if (newMdType == null) {
                         log.error("Error reading config for DocStrctType '" + currentDocStrctType.getName() + "'! MetadataType '" + mdtypeName
@@ -420,13 +415,13 @@ public class Prefs implements Serializable {
 
                     // Handle Invisible attribute.
                     boolean invisible = false;
-                    if (invisibleValue != null && (invisibleValue.equalsIgnoreCase("true") || invisibleValue.equalsIgnoreCase("yes"))) {
+                    if (invisibleValue != null && ("true".equalsIgnoreCase(invisibleValue) || "yes".equalsIgnoreCase(invisibleValue))) {
                         invisible = true;
                     }
 
                     // Handle DefaultDisplay attribute.
                     if (defaultValue != null) {
-                        if (defaultValue.equalsIgnoreCase("true") || defaultValue.equalsIgnoreCase("yes")) {
+                        if ("true".equalsIgnoreCase(defaultValue) || "yes".equalsIgnoreCase(defaultValue)) {
                             result = currentDocStrctType.addMetadataType(newMdType, mdtypeNum, true, invisible);
                         } else {
                             result = currentDocStrctType.addMetadataType(newMdType, mdtypeNum, false, invisible);
@@ -444,7 +439,7 @@ public class Prefs implements Serializable {
                     }
                 }
 
-                if (currentNode.getNodeName().equals("group")) {
+                if ("group".equals(currentNode.getNodeName())) {
                     attributeNodelist = currentNode.getAttributes();
                     attribNode = attributeNodelist.getNamedItem("num");
                     defaultNode = attributeNodelist.getNamedItem("DefaultDisplay");
@@ -486,8 +481,7 @@ public class Prefs implements Serializable {
                         // Language name or the value (term) wasn't set.
                         continue;
                     }
-                    // MetadataType newMDType=new MetadataType();
-                    // newMDType.setName(mdtype_name);
+
                     MetadataGroupType newMdGroup = getMetadataGroupTypeByName(mdtypeName);
                     if (newMdGroup == null) {
                         log.error("Error reading config for DocStrctType '" + currentDocStrctType.getName() + "'! MetadataType '" + mdtypeName
@@ -500,13 +494,13 @@ public class Prefs implements Serializable {
 
                     // Handle Invisible attribute.
                     boolean invisible = false;
-                    if (invisibleValue != null && (invisibleValue.equalsIgnoreCase("true") || invisibleValue.equalsIgnoreCase("yes"))) {
+                    if (invisibleValue != null && ("true".equalsIgnoreCase(invisibleValue) || "yes".equalsIgnoreCase(invisibleValue))) {
                         invisible = true;
                     }
 
                     // Handle DefaultDisplay attribute.
                     if (defaultValue != null) {
-                        if (defaultValue.equalsIgnoreCase("true") || defaultValue.equalsIgnoreCase("yes")) {
+                        if ("true".equalsIgnoreCase(defaultValue) || "yes".equalsIgnoreCase(defaultValue)) {
                             result = currentDocStrctType.addMetadataGroup(newMdGroup, mdtypeNum, true, invisible);
                         } else {
                             result = currentDocStrctType.addMetadataGroup(newMdGroup, mdtypeNum, false, invisible);
@@ -525,7 +519,7 @@ public class Prefs implements Serializable {
                 }
 
                 // Read type of DocStruct, which is allowed as children.
-                if (currentNode.getNodeName().equals("allowedchildtype")) {
+                if ("allowedchildtype".equals(currentNode.getNodeName())) {
                     allowedChild = "";
                     // Get value; value is always a text node.
                     NodeList textnodes = currentNode.getChildNodes();
@@ -533,7 +527,7 @@ public class Prefs implements Serializable {
                         Node textnode = textnodes.item(0);
                         if (textnode.getNodeType() != Node.TEXT_NODE) {
                             log.error("Syntax Error reading config for DocStrctType '" + currentDocStrctType.getName()
-                            + "'! Expected a text node under <allowedchildtype> element containing the DocStructType's name");
+                                    + "'! Expected a text node under <allowedchildtype> element containing the DocStructType's name");
                             // No text node available; maybe it's another
                             // element etc. anyhow: an error.
                             return null;
@@ -565,7 +559,6 @@ public class Prefs implements Serializable {
      * @return
      **************************************************************************/
     public MetadataType parseMetadataType(Node theMetadataTypeNode) {
-        // TODO
         NodeList allchildren;
         // NamedNodeMap containing all attributes.
         NamedNodeMap attributeNodelist;
@@ -597,6 +590,7 @@ public class Prefs implements Serializable {
                     case "corporate":
                         currenMdType.setCorporate(true);
                         break;
+                    default:
                 }
             }
 
@@ -605,7 +599,7 @@ public class Prefs implements Serializable {
         Node normdata = nnm.getNamedItem("normdata");
         if (normdata != null) {
             String nodevalue = normdata.getNodeValue();
-            if (nodevalue != null && nodevalue.equals("true")) {
+            if (nodevalue != null && "true".equals(nodevalue)) {
                 currenMdType.setAllowNormdata(true);
             }
         }
@@ -613,7 +607,7 @@ public class Prefs implements Serializable {
         Node additional = nnm.getNamedItem("namepart");
         if (additional != null) {
             String nodevalue = additional.getNodeValue();
-            if (nodevalue != null && nodevalue.equals("true")) {
+            if (nodevalue != null && "true".equals(nodevalue)) {
                 currenMdType.setAllowNameParts(true);
             }
         }
@@ -623,15 +617,15 @@ public class Prefs implements Serializable {
             currentNode = allchildren.item(i);
 
             if (currentNode.getNodeType() == ELEMENT_NODE) {
-                if (currentNode.getNodeName().equals("Name")) {
+                if ("Name".equals(currentNode.getNodeName())) {
                     // Get value; value is always a text node.
                     NodeList textnodes = currentNode.getChildNodes();
                     if (textnodes != null) {
                         Node textnode = textnodes.item(0);
                         if (textnode == null) {
                             log.error("Syntax Error reading config for MetadataType " + currenMdType.getName()
-                            + "; Error Code: p002b! Expected a text node under <Name> attribute at '" + theMetadataTypeNode.getNodeName()
-                            + "'. <Name> must not be empty!");
+                                    + "; Error Code: p002b! Expected a text node under <Name> attribute at '" + theMetadataTypeNode.getNodeName()
+                                    + "'. <Name> must not be empty!");
                             return null;
                         } else if (textnode.getNodeType() != Node.TEXT_NODE) {
                             log.error(
@@ -643,7 +637,7 @@ public class Prefs implements Serializable {
                         }
                         currenMdType.setName(textnode.getNodeValue());
                     }
-                } else if (currentNode.getNodeName().equals("language")) {
+                } else if ("language".equals(currentNode.getNodeName())) {
                     attributeNodelist = currentNode.getAttributes();
                     attributeNode = attributeNodelist.getNamedItem("name");
                     languageName = attributeNode.getNodeValue();
@@ -654,13 +648,13 @@ public class Prefs implements Serializable {
                         Node textnode = textnodes.item(0);
                         if (textnode == null) {
                             log.error("Syntax Error reading config for MetadataType " + currenMdType.getName()
-                            + "; Error Code: p001b! Expected a text node under <language> attribute at '" + theMetadataTypeNode.getNodeName()
-                            + "'. <language> must not be empty!");
+                                    + "; Error Code: p001b! Expected a text node under <language> attribute at '" + theMetadataTypeNode.getNodeName()
+                                    + "'. <language> must not be empty!");
                             return null;
                         } else if (textnode.getNodeType() != Node.TEXT_NODE) {
                             log.error("Syntax Error reading config for MetadataType " + currenMdType.getName()
-                            + "; Error Code: p001! Wrong node type under <language> attribute - a text node was expected at "
-                            + theMetadataTypeNode.getNodeName());
+                                    + "; Error Code: p001! Wrong node type under <language> attribute - a text node was expected at "
+                                    + theMetadataTypeNode.getNodeName());
                             return null;
                         }
                         languageValue = textnode.getNodeValue();
@@ -670,13 +664,13 @@ public class Prefs implements Serializable {
                         continue;
                     }
                     allLanguages.put(languageName, languageValue);
-                } else if (currentNode.getNodeName().equals("validationExpression")) {
+                } else if ("validationExpression".equals(currentNode.getNodeName())) {
                     NodeList textnodes = currentNode.getChildNodes();
                     if (textnodes != null) {
                         Node textnode = textnodes.item(0);
                         validationExpression = textnode.getNodeValue();
                     }
-                } else if (currentNode.getNodeName().equals("validationErrorMessage")) {
+                } else if ("validationErrorMessage".equals(currentNode.getNodeName())) {
                     attributeNodelist = currentNode.getAttributes();
                     attributeNode = attributeNodelist.getNamedItem("name");
                     String lang = attributeNode.getNodeValue();
@@ -686,13 +680,13 @@ public class Prefs implements Serializable {
                         Node textnode = textnodes.item(0);
                         if (textnode == null) {
                             log.error("Syntax Error reading config for MetadataType " + currenMdType.getName()
-                            + "; Error Code: p001b! Expected a text node under <language> attribute at '" + theMetadataTypeNode.getNodeName()
-                            + "'. <language> must not be empty!");
+                                    + "; Error Code: p001b! Expected a text node under <language> attribute at '" + theMetadataTypeNode.getNodeName()
+                                    + "'. <language> must not be empty!");
                             return null;
                         } else if (textnode.getNodeType() != Node.TEXT_NODE) {
                             log.error("Syntax Error reading config for MetadataType " + currenMdType.getName()
-                            + "; Error Code: p001! Wrong node type under <language> attribute - a text node was expected at "
-                            + theMetadataTypeNode.getNodeName());
+                                    + "; Error Code: p001! Wrong node type under <language> attribute - a text node was expected at "
+                                    + theMetadataTypeNode.getNodeName());
                             return null;
                         }
                         String value = textnode.getNodeValue();
@@ -735,7 +729,7 @@ public class Prefs implements Serializable {
             currentNode = allchildren.item(i);
 
             if (currentNode.getNodeType() == ELEMENT_NODE) {
-                if (currentNode.getNodeName().equals("Name")) {
+                if ("Name".equals(currentNode.getNodeName())) {
                     // Get value; value is always a text node.
                     NodeList textnodes = currentNode.getChildNodes();
                     if (textnodes != null) {
@@ -758,7 +752,7 @@ public class Prefs implements Serializable {
 
                 String mdtypeNum = "*";
                 boolean defaultDisplay = false;
-                if (currentNode.getNodeName().equals("metadata")) {
+                if ("metadata".equals(currentNode.getNodeName())) {
                     attributeNodelist = currentNode.getAttributes();
                     if (attributeNodelist != null) {
                         Node attribNode = attributeNodelist.getNamedItem("num");
@@ -766,7 +760,7 @@ public class Prefs implements Serializable {
                             mdtypeNum = attribNode.getNodeValue();
                         }
                         Node defaultNode = attributeNodelist.getNamedItem("DefaultDisplay");
-                        if (defaultNode != null && defaultNode.getNodeValue().equals("true")) {
+                        if (defaultNode != null && "true".equals(defaultNode.getNodeValue())) {
                             defaultDisplay = true;
                         }
                     }
@@ -800,7 +794,7 @@ public class Prefs implements Serializable {
                     }
                     newMdType.setNum(mdtypeNum);
                     currenGroup.addMetadataType(newMdType, mdtypeNum, defaultDisplay, false);
-                } else if (currentNode.getNodeName().equals("group")) {
+                } else if ("group".equals(currentNode.getNodeName())) {
                     attributeNodelist = currentNode.getAttributes();
                     Node attribNode = attributeNodelist.getNamedItem("num");
                     Node defaultNode = attributeNodelist.getNamedItem("DefaultDisplay");
@@ -813,7 +807,7 @@ public class Prefs implements Serializable {
                         mdtypeNum = attribNode.getNodeValue();
                     }
                     boolean defaultValue = false;
-                    if (defaultNode != null && defaultNode.getNodeValue().equals("true")) {
+                    if (defaultNode != null && "true".equals(defaultNode.getNodeValue())) {
                         defaultValue = true;
                     }
 
@@ -823,7 +817,7 @@ public class Prefs implements Serializable {
                         Node textnode = textnodes.item(0);
                         if (textnode.getNodeType() != Node.TEXT_NODE) {
                             log.error("Syntax Error reading config for group '" + currenGroup.getName()
-                            + "'! Expected a text node element containing the group's name");
+                                    + "'! Expected a text node element containing the group's name");
                             // No text node available; maybe it's another
                             // element etc. anyhow: an error.
                             return null;
@@ -833,7 +827,7 @@ public class Prefs implements Serializable {
                     boolean invisibleValue = groupName.startsWith("_");
                     currenGroup.addGroupTypeAsChild(groupName, mdtypeNum, defaultValue, invisibleValue);
 
-                } else if (currentNode.getNodeName().equals("language")) {
+                } else if ("language".equals(currentNode.getNodeName())) {
                     attributeNodelist = currentNode.getAttributes();
                     attributeNode = attributeNodelist.getNamedItem("name");
                     languageName = attributeNode.getNodeValue();
@@ -844,13 +838,13 @@ public class Prefs implements Serializable {
                         Node textnode = textnodes.item(0);
                         if (textnode == null) {
                             log.error("Syntax Error reading config for MetadataType " + currenGroup.getName()
-                            + "; Error Code: p001b! Expected a text node under <language> attribute at '" + theMetadataGroupNode.getNodeName()
-                            + "'. <language> must not be empty!");
+                                    + "; Error Code: p001b! Expected a text node under <language> attribute at '" + theMetadataGroupNode.getNodeName()
+                                    + "'. <language> must not be empty!");
                             return null;
                         } else if (textnode.getNodeType() != Node.TEXT_NODE) {
                             log.error("Syntax Error reading config for MetadataType " + currenGroup.getName()
-                            + "; Error Code: p001! Wrong node type under <language> attribute - a text node was expected at "
-                            + theMetadataGroupNode.getNodeName());
+                                    + "; Error Code: p001! Wrong node type under <language> attribute - a text node was expected at "
+                                    + theMetadataGroupNode.getNodeName());
                             return null;
                         }
                         languageValue = textnode.getNodeValue();
@@ -923,21 +917,17 @@ public class Prefs implements Serializable {
     public DocStructType getDocStrctTypeByName(String name, String inLanguage) {
 
         DocStructType currentDocStrctType;
-        HashMap<String, String> allLanguages;
+        Map<String, String> allLanguages;
         String checklanguage;
         String checklanguagevalue = "";
 
-        // Get dstype first.
-        Iterator<DocStructType> it = this.allDocStrctTypes.iterator();
-        while (it.hasNext()) {
-            currentDocStrctType = it.next();
+        for (DocStructType element : this.allDocStrctTypes) {
+            currentDocStrctType = element;
             // Get all languages.
             allLanguages = currentDocStrctType.getAllLanguages();
 
-            Iterator<Map.Entry<String, String>> itlang = allLanguages.entrySet().iterator();
             // Find language "inLanguage".
-            while (itlang.hasNext()) {
-                Map.Entry<String, String> entry = itlang.next();
+            for (Entry<String, String> entry : allLanguages.entrySet()) {
                 checklanguage = entry.getKey();
                 checklanguagevalue = entry.getValue();
                 if (checklanguage.equals(inLanguage)) {
@@ -945,7 +935,7 @@ public class Prefs implements Serializable {
                 }
             }
 
-            if (!checklanguagevalue.equals("") && checklanguagevalue.equals(name)) {
+            if (!"".equals(checklanguagevalue) && checklanguagevalue.equals(name)) {
                 // Found DocStrctType.
                 return currentDocStrctType;
             }
@@ -972,9 +962,8 @@ public class Prefs implements Serializable {
             // Format not available.
             return null;
         }
-        Node result = this.allFormats.get(in);
+        return this.allFormats.get(in);
 
-        return result;
     }
 
     /***************************************************************************
@@ -989,16 +978,6 @@ public class Prefs implements Serializable {
      **************************************************************************/
     public List<DocStructType> getAllDocStructTypes() {
         return this.allDocStrctTypes;
-    }
-
-    /***************************************************************************
-     * @deprecated
-     * @param inType
-     * @return
-     **************************************************************************/
-    @Deprecated
-    public boolean AddMetadataType(MetadataType inType) {
-        return addMetadataType(inType);
     }
 
     /***************************************************************************
@@ -1039,9 +1018,8 @@ public class Prefs implements Serializable {
         MetadataType currentMdType;
         List<MetadataType> allPersons = new LinkedList<>();
 
-        Iterator<MetadataType> it = this.allMetadataTypes.iterator();
-        while (it.hasNext()) {
-            currentMdType = it.next();
+        for (MetadataType element : this.allMetadataTypes) {
+            currentMdType = element;
             if (currentMdType.getIsPerson()) {
                 allPersons.add(currentMdType);
             }
@@ -1063,10 +1041,8 @@ public class Prefs implements Serializable {
         MetadataType currentMdType;
         String checkname;
 
-        // Get dstype first.
-        Iterator<MetadataType> it = this.allMetadataTypes.iterator();
-        while (it.hasNext()) {
-            currentMdType = it.next();
+        for (MetadataType element : this.allMetadataTypes) {
+            currentMdType = element;
             checkname = currentMdType.getName();
 
             if (checkname.equals(name)) {
@@ -1091,10 +1067,8 @@ public class Prefs implements Serializable {
         MetadataGroupType currentMdGroup;
         String checkname;
 
-        // Get dstype first.
-        Iterator<MetadataGroupType> it = this.allMetadataGroupTypes.iterator();
-        while (it.hasNext()) {
-            currentMdGroup = it.next();
+        for (MetadataGroupType element : this.allMetadataGroupTypes) {
+            currentMdGroup = element;
             checkname = currentMdGroup.getName();
 
             if (checkname.equals(name)) {
@@ -1118,15 +1092,13 @@ public class Prefs implements Serializable {
         String checklanguage;
         String checklanguagevalue = "";
 
-        // Get dstype first.
-        Iterator<MetadataType> it = this.allMetadataTypes.iterator();
-        while (it.hasNext()) {
-            currentMdType = it.next();
+        for (MetadataType element : this.allMetadataTypes) {
+            currentMdType = element;
 
             // Get all languages.
             allLanguages = currentMdType.getAllLanguages();
             if (allLanguages == null) {
-                if (!(currentMdType.getName().substring(0, 1).equals(HIDDEN_METADATA_CHAR))) {
+                if (!(HIDDEN_METADATA_CHAR.equals(currentMdType.getName().substring(0, 1)))) {
                     log.debug("MetadataType without language definition:" + currentMdType.getName());
                 }
 
@@ -1134,10 +1106,8 @@ public class Prefs implements Serializable {
                 continue;
             }
 
-            Iterator<Map.Entry<String, String>> itlang = allLanguages.entrySet().iterator();
             // Find language "inLanguage".
-            while (itlang.hasNext()) {
-                Map.Entry<String, String> entry = itlang.next();
+            for (Entry<String, String> entry : allLanguages.entrySet()) {
                 checklanguage = entry.getKey();
                 checklanguagevalue = entry.getValue();
                 if (checklanguage.equals(inLanguage)) {
@@ -1145,7 +1115,7 @@ public class Prefs implements Serializable {
                 }
             }
 
-            if (!checklanguagevalue.equals("") && checklanguagevalue.equals(name)) {
+            if (!"".equals(checklanguagevalue) && checklanguagevalue.equals(name)) {
                 // Found MetadataType.
                 return currentMdType;
             }

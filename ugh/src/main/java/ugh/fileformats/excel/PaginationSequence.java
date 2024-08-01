@@ -23,6 +23,7 @@ package ugh.fileformats.excel;
  ******************************************************************************/
 
 import java.util.LinkedList;
+import java.util.List;
 
 import lombok.extern.log4j.Log4j2;
 import ugh.dl.DigitalDocument;
@@ -44,8 +45,7 @@ import ugh.exceptions.TypeNotAllowedForParentException;
  * 
  *        CHANGELOG
  * 
- *        27.10.2009 --- Funk --- Changed from deprecated class to deprecetad
- *        constructor, class must be still used for reading. --- Removed debug
+ *        27.10.2009 --- Funk --- Changed from deprecated class to deprecetad constructor, class must be still used for reading. --- Removed debug
  *        output.
  * 
  *        05.10.2009 --- Funk --- Adapted metadata and person constructors.
@@ -57,18 +57,16 @@ import ugh.exceptions.TypeNotAllowedForParentException;
 @Log4j2
 public class PaginationSequence {
 
-
-
-    protected int				physicalstart		= 0;
-    protected int				physicalend			= 0;
-    protected int				logcountedstart		= -1;
-    protected int				logcountedend		= -1;
-    protected int				lognotcountedstart	= -1;
-    protected int				lognotcountedend	= -1;
+    protected int physicalstart = 0;
+    protected int physicalend = 0;
+    protected int logcountedstart = -1;
+    protected int logcountedend = -1;
+    protected int lognotcountedstart = -1;
+    protected int lognotcountedend = -1;
     // Can be "1" for arabic or "R" for roman number; 1 is default.
-    protected String			pageformatnumber	= "1";
+    protected String pageformatnumber = "1";
 
-    private ugh.dl.Prefs		mypreferences;
+    private ugh.dl.Prefs mypreferences;
 
     /***************************************************************************
      * @param myprefs
@@ -80,15 +78,14 @@ public class PaginationSequence {
 
     /***************************************************************************
      * <p>
-     * Convert the pages from this sequence to the physical document structure
-     * entities these entities can be added to a digital document etc...
+     * Convert the pages from this sequence to the physical document structure entities these entities can be added to a digital document etc...
      * strucutre entities (DocStruct-objects) are returned as a LinkedList.
      * </p>
      * 
      * @param digdoc
      * @return
      **************************************************************************/
-    public LinkedList<DocStruct> ConvertToPhysicalStructure(
+    public List<DocStruct> convertToPhysicalStructure(
             DigitalDocument digdoc) {
         // Document structure type for the page.
         ugh.dl.DocStructType pagetype;
@@ -102,7 +99,7 @@ public class PaginationSequence {
         pagetype = this.mypreferences.getDocStrctTypeByName("page");
         if (pagetype == null) {
             log
-            .error("PaginationSequence.ConvertToPhysicalStructure: No DocStructType for 'page' available");
+                    .error("PaginationSequence.ConvertToPhysicalStructure: No DocStructType for 'page' available");
             return null;
         }
 
@@ -114,11 +111,11 @@ public class PaginationSequence {
 
         if (logpagenumbertype == null) {
             log
-            .error("Ppagination sequences can't be calculated; 'logicalPageNumber' metadata type is NOT defined! This may cause corrupt data!");
+                    .error("Ppagination sequences can't be calculated; 'logicalPageNumber' metadata type is NOT defined! This may cause corrupt data!");
         }
         if (physpagenumbertype == null) {
             log
-            .error("Pagination sequences can't be calculated; 'physPageNumber' metadata type is NOT defined! This may cause corrupt data!");
+                    .error("Pagination sequences can't be calculated; 'physPageNumber' metadata type is NOT defined! This may cause corrupt data!");
         }
 
         // Ccreate a LinkedList containing all pages.
@@ -136,15 +133,15 @@ public class PaginationSequence {
                 physpagenumber = new Metadata(physpagenumbertype);
             } catch (TypeNotAllowedForParentException e) {
                 log
-                .error(
-                        "PaginationSequence.ConvertToPhysicalStructure: Type not allowed as child!",
-                        e);
+                        .error(
+                                "PaginationSequence.ConvertToPhysicalStructure: Type not allowed as child!",
+                                e);
                 return null;
             } catch (MetadataTypeNotAllowedException e) {
                 log
-                .error(
-                        "PaginationSequence.ConvertToPhysicalStructure: Type must not be null!",
-                        e);
+                        .error(
+                                "PaginationSequence.ConvertToPhysicalStructure: Type must not be null!",
+                                e);
                 return null;
             }
 
@@ -152,7 +149,7 @@ public class PaginationSequence {
             // uncounted roman number, if it's roman etc...
             if ((this.logcountedstart != -1) && (this.lognotcountedstart < 0)) {
                 // Counted start page.
-                if (this.pageformatnumber.equals("1")) {
+                if ("1".equals(this.pageformatnumber)) {
                     logpagenumber.setValue(Integer
                             .toString(this.logcountedstart + i));
                 } else {

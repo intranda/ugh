@@ -26,8 +26,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
@@ -39,7 +37,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import ugh.dl.DigitalDocument.ListPairCheck;
 import ugh.exceptions.ContentFileNotLinkedException;
 import ugh.exceptions.DocStructHasNoTypeException;
 import ugh.exceptions.IncompletePersonObjectException;
@@ -223,15 +220,6 @@ public class DocStruct implements Serializable, HoldingElement {
 
     /***************************************************************************
      * <p>
-     * This is needed so we can exclude the possibility to run eternal loops with non hierarchial references, will be filled with super()toString
-     * signature of the compared DocStruct.
-     * </p>
-     **************************************************************************/
-    private transient HashMap<String, Object> signaturesForEqualsMethodRefsFrom;
-    private transient HashMap<String, Object> signaturesForEqualsMethodRefsTo;
-
-    /***************************************************************************
-     * <p>
      * Constructor just used to be compatible with JavaBeans.
      * </p>
      * 
@@ -363,7 +351,7 @@ public class DocStruct implements Serializable, HoldingElement {
         for (DocStruct child : this.children) {
 
             // Check doctype.
-            if (theDocTypeName.equals("*")) {
+            if ("*".equals(theDocTypeName)) {
                 // Wildcard; we do not have to check the doctype.
                 docTypeTestPassed = true;
             } else {
@@ -383,14 +371,14 @@ public class DocStruct implements Serializable, HoldingElement {
             if (allMD == null) {
                 // MetadataType doesn't matter anyhow, so we can add this one,
                 // too.
-                if (theMDTypeName.equals("*")) {
+                if ("*".equals(theMDTypeName)) {
                     mdTypeTestPassed = true;
                 } else {
                     mdTypeTestPassed = false;
                 }
             } else {
                 for (Metadata md : allMD) {
-                    if (theMDTypeName.equals("*")) {
+                    if ("*".equals(theMDTypeName)) {
                         mdTypeTestPassed = true;
                     } else {
                         PrefsType mdtype = md.getType();
@@ -502,9 +490,9 @@ public class DocStruct implements Serializable, HoldingElement {
                             mdnew.setValueQualifier(md.getValueQualifier(), md.getValueQualifierType());
                         }
                         if (md.getAuthorityID() != null && md.getAuthorityValue() != null && md.getAuthorityURI() != null) {
-                            mdnew.setAutorityFile(md.getAuthorityID(), md.getAuthorityURI(), md.getAuthorityValue());
+                            mdnew.setAuthorityFile(md.getAuthorityID(), md.getAuthorityURI(), md.getAuthorityValue());
                         } else if (StringUtils.isNotBlank(md.getAuthorityValue())) {
-                            mdnew.setAutorityFile("", "", md.getAuthorityValue());
+                            mdnew.setAuthorityFile("", "", md.getAuthorityValue());
                         }
                         newStruct.addMetadata(mdnew);
                     } catch (DocStructHasNoTypeException | MetadataTypeNotAllowedException e) {
@@ -529,9 +517,9 @@ public class DocStruct implements Serializable, HoldingElement {
                                 newMeta.setValueQualifier(meta.getValueQualifier(), meta.getValueQualifierType());
                             }
                             if (meta.getAuthorityID() != null && meta.getAuthorityValue() != null && meta.getAuthorityURI() != null) {
-                                newMeta.setAutorityFile(meta.getAuthorityID(), meta.getAuthorityURI(), meta.getAuthorityValue());
+                                newMeta.setAuthorityFile(meta.getAuthorityID(), meta.getAuthorityURI(), meta.getAuthorityValue());
                             } else if (StringUtils.isNotBlank(meta.getAuthorityValue())) {
-                                newMeta.setAutorityFile("", "", meta.getAuthorityValue());
+                                newMeta.setAuthorityFile("", "", meta.getAuthorityValue());
                             }
                             newmdlist.add(newMeta);
                         }
@@ -545,9 +533,9 @@ public class DocStruct implements Serializable, HoldingElement {
                                 newps.setFirstname(ps.getFirstname());
                             }
                             if (ps.getAuthorityID() != null && ps.getAuthorityURI() != null && ps.getAuthorityValue() != null) {
-                                newps.setAutorityFile(ps.getAuthorityID(), ps.getAuthorityURI(), ps.getAuthorityValue());
+                                newps.setAuthorityFile(ps.getAuthorityID(), ps.getAuthorityURI(), ps.getAuthorityValue());
                             } else if (StringUtils.isNotBlank(ps.getAuthorityValue())) {
-                                newps.setAutorityFile("", "", ps.getAuthorityValue());
+                                newps.setAuthorityFile("", "", ps.getAuthorityValue());
                             }
                             if (ps.getInstitution() != null) {
                                 newps.setInstitution(ps.getInstitution());
@@ -585,7 +573,7 @@ public class DocStruct implements Serializable, HoldingElement {
                         }
 
                         if (ps.getAuthorityID() != null && ps.getAuthorityURI() != null && ps.getAuthorityValue() != null) {
-                            newps.setAutorityFile(ps.getAuthorityID(), ps.getAuthorityURI(), ps.getAuthorityValue());
+                            newps.setAuthorityFile(ps.getAuthorityID(), ps.getAuthorityURI(), ps.getAuthorityValue());
                         }
 
                         if (ps.getInstitution() != null) {
@@ -613,7 +601,7 @@ public class DocStruct implements Serializable, HoldingElement {
                         newC.setMainName(c.getMainName());
                         newC.setSubNames(c.getSubNames());
                         newC.setPartName(c.getPartName());
-                        newC.setAutorityFile(c.getAuthorityID(), c.getAuthorityURI(), c.getAuthorityValue());
+                        newC.setAuthorityFile(c.getAuthorityID(), c.getAuthorityURI(), c.getAuthorityValue());
                         newStruct.addCorporate(newC);
                     } catch (MetadataTypeNotAllowedException e) {
                         log.error(e);
@@ -652,10 +640,10 @@ public class DocStruct implements Serializable, HoldingElement {
         if (in == null) {
             return null; //NOSONAR
         }
-        if (in.equals("to")) {
+        if ("to".equals(in)) {
             return this.docStructRefsTo;
         }
-        if (in.equals("from")) {
+        if ("from".equals(in)) {
             return this.docStructRefsFrom;
         }
 
@@ -1254,17 +1242,17 @@ public class DocStruct implements Serializable, HoldingElement {
         number = countMDofthisType(inMdName);
 
         // As many as we want (zero or more).
-        if (maxnumberallowed.equals("*")) {
+        if ("*".equals(maxnumberallowed)) {
             insert = true;
         }
 
         // Once or more.
-        if (maxnumberallowed.equals("+")) {
+        if ("+".equals(maxnumberallowed)) {
             insert = true;
         }
 
         // Only one, if we have already one, we cannot add it.
-        if (maxnumberallowed.equalsIgnoreCase("1m") || maxnumberallowed.equalsIgnoreCase("1o")) {
+        if ("1m".equalsIgnoreCase(maxnumberallowed) || "1o".equalsIgnoreCase(maxnumberallowed)) {
             if (number < 1) {
                 insert = true;
             } else {
@@ -1324,11 +1312,11 @@ public class DocStruct implements Serializable, HoldingElement {
         // How many types must be at least available.
         maxnumbersallowed = this.type.getNumberOfMetadataGroups(inMdType);
 
-        if (!force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
+        if (!force && typesavailable == 1 && "+".equals(maxnumbersallowed)) {
             // There must be at least one.
             return false;
         }
-        if (!force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+        if (!force && typesavailable == 1 && "1m".equals(maxnumbersallowed)) {
             // There must be at least one.
             return false;
         }
@@ -1517,17 +1505,17 @@ public class DocStruct implements Serializable, HoldingElement {
         if (maxnumberallowed == null) {
             maxnumberallowed = "*";
         }
-        if (maxnumberallowed.equals("*")) {
+        if ("*".equals(maxnumberallowed)) {
             insert = true;
         }
 
         // Once or more.
-        if (maxnumberallowed.equals("+")) {
+        if ("+".equals(maxnumberallowed)) {
             insert = true;
         }
 
         // Only one, if we have already one, we cannot add it.
-        if (maxnumberallowed.equalsIgnoreCase("1m") || maxnumberallowed.equalsIgnoreCase("1o")) {
+        if ("1m".equalsIgnoreCase(maxnumberallowed) || "1o".equalsIgnoreCase(maxnumberallowed)) {
             if (number < 1) {
                 insert = true;
             } else {
@@ -1585,11 +1573,11 @@ public class DocStruct implements Serializable, HoldingElement {
         // How many types must be at least available.
         maxnumbersallowed = this.type.getNumberOfMetadataType(inMdType);
 
-        if (!force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
+        if (!force && typesavailable == 1 && "+".equals(maxnumbersallowed)) {
             // There must be at least one.
             return;
         }
-        if (!force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+        if (!force && typesavailable == 1 && "1m".equals(maxnumbersallowed)) {
             // There must be at least one.
             return;
         }
@@ -2081,7 +2069,7 @@ public class DocStruct implements Serializable, HoldingElement {
 
                 // Metadata can only be available once; so we have to check if
                 // it is already available.
-                if (maxnumber.equals("1m") || maxnumber.equals("1o")) {
+                if ("1m".equals(maxnumber) || "1o".equals(maxnumber)) {
                     // Check metadata here only.
                     List<? extends MetadataGroup> availableMD = this.getAllMetadataGroupsByType(mdt);
 
@@ -2139,7 +2127,7 @@ public class DocStruct implements Serializable, HoldingElement {
 
                 // Metadata can only be available once; so we have to check if
                 // it is already available.
-                if (maxnumber.equals("1m") || maxnumber.equals("1o")) {
+                if ("1m".equals(maxnumber) || "1o".equals(maxnumber)) {
                     // Check metadata here only.
                     List<? extends Metadata> availableMD = this.getAllMetadataByType(mdt);
 
@@ -2452,8 +2440,8 @@ public class DocStruct implements Serializable, HoldingElement {
         String typename = inType.getName();
         String testname;
 
-        for (int i = 0; i < allTypes.size(); ++i) {
-            testname = allTypes.get(i);
+        for (String type2 : allTypes) {
+            testname = type2;
             // Jep, it's in here.
             if (testname.equals(typename)) {
                 return true;
@@ -2470,12 +2458,12 @@ public class DocStruct implements Serializable, HoldingElement {
         // How many types must be at least available.
         String maxnumbersallowed = this.type.getNumberOfMetadataGroups(inMDType);
 
-        if (typesavailable == 1 && maxnumbersallowed.equals("+")) {
+        if (typesavailable == 1 && "+".equals(maxnumbersallowed)) {
             // There must be at least one.
             return false;
         }
 
-        if (typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+        if (typesavailable == 1 && "1m".equals(maxnumbersallowed)) {
             // There must be at least one.
             return false;
         }
@@ -2503,12 +2491,12 @@ public class DocStruct implements Serializable, HoldingElement {
         // How many types must be at least available.
         String maxnumbersallowed = this.type.getNumberOfMetadataType(inMDType);
 
-        if (typesavailable == 1 && maxnumbersallowed.equals("+")) {
+        if (typesavailable == 1 && "+".equals(maxnumbersallowed)) {
             // There must be at least one.
             return false;
         }
 
-        if (typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+        if (typesavailable == 1 && "1m".equals(maxnumbersallowed)) {
             // There must be at least one.
             return false;
         }
@@ -2551,15 +2539,15 @@ public class DocStruct implements Serializable, HoldingElement {
         number = countMDofthisType(mdtype.getName());
 
         // As many as we want (zero or more).
-        if (maxnumberallowed.equals("*")) {
+        if ("*".equals(maxnumberallowed)) {
             insert = true;
         }
         // One or more.
-        if (maxnumberallowed.equals("+")) {
+        if ("+".equals(maxnumberallowed)) {
             insert = true;
         }
         // Only one, if we have already one, we cannot add it.
-        if (maxnumberallowed.equals("1m") || maxnumberallowed.equals("1o")) {
+        if ("1m".equals(maxnumberallowed) || "1o".equals(maxnumberallowed)) {
             if (number < 1) {
                 insert = true;
             } else {
@@ -2618,15 +2606,15 @@ public class DocStruct implements Serializable, HoldingElement {
         number = countMDofthisType(mdtype.getName());
 
         // As many as we want (zero or more).
-        if (maxnumberallowed.equals("*")) {
+        if ("*".equals(maxnumberallowed)) {
             insert = true;
         }
         // One or more.
-        if (maxnumberallowed.equals("+")) {
+        if ("+".equals(maxnumberallowed)) {
             insert = true;
         }
         // Only one, if we have already one, we cannot add it.
-        if (maxnumberallowed.equals("1m") || maxnumberallowed.equals("1o")) {
+        if ("1m".equals(maxnumberallowed) || "1o".equals(maxnumberallowed)) {
             if (number < 1) {
                 insert = true;
             } else {
@@ -2680,11 +2668,11 @@ public class DocStruct implements Serializable, HoldingElement {
         // How many types must be at least available.
         String maxnumbersallowed = this.type.getNumberOfMetadataType(inMDType);
 
-        if (force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
+        if (force && typesavailable == 1 && "+".equals(maxnumbersallowed)) {
             // There must be at least one.
             return;
         }
-        if (force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+        if (force && typesavailable == 1 && "1m".equals(maxnumbersallowed)) {
             // There must be at least one.
             return;
         }
@@ -2712,11 +2700,11 @@ public class DocStruct implements Serializable, HoldingElement {
         // How many types must be at least available.
         String maxnumbersallowed = this.type.getNumberOfMetadataType(inMDType);
 
-        if (force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
+        if (force && typesavailable == 1 && "+".equals(maxnumbersallowed)) {
             // There must be at least one.
             return;
         }
-        if (force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+        if (force && typesavailable == 1 && "1m".equals(maxnumbersallowed)) {
             // There must be at least one.
             return;
         }
@@ -2845,15 +2833,10 @@ public class DocStruct implements Serializable, HoldingElement {
             return null; //NOSONAR
         }
 
-        // Iterator over DMT.
-        Iterator<MetadataType> mdtIterator = dmt.iterator();
-        while (mdtIterator.hasNext()) {
-            MetadataType mdt = mdtIterator.next();
-
+        for (MetadataType mdt : dmt) {
             // Check, if mdt is already in the allMDs Metadata list.
             boolean notIncluded = true;
-            for (int i = 0; i < allMDs.size(); i++) {
-                Metadata md = allMDs.get(i);
+            for (Metadata md : allMDs) {
                 PrefsType mdt2 = md.getType();
 
                 // Compare the display MetadataType and the type of current
@@ -2876,7 +2859,7 @@ public class DocStruct implements Serializable, HoldingElement {
                         // Add this new metadata element.
                         this.addPerson(psFoo);
                     } catch (DocStructHasNoTypeException | MetadataTypeNotAllowedException e) {
-                        continue;
+                        // person type is not allowed
                     }
                 } else if (mdt.isCorporate) {
                     Corporate corp = new Corporate(mdt);
@@ -2884,7 +2867,7 @@ public class DocStruct implements Serializable, HoldingElement {
                     try {
                         addCorporate(corp);
                     } catch (UGHException e) {
-                        continue;
+                        // corporate type is not allowed
                     }
                 }
 
@@ -2895,7 +2878,7 @@ public class DocStruct implements Serializable, HoldingElement {
                         // Add this new metadata element.
                         this.addMetadata(metaFoo);
                     } catch (DocStructHasNoTypeException | MetadataTypeNotAllowedException e) {
-                        continue;
+                        // metadata type is not allowed
                     }
                 }
             }
@@ -3173,365 +3156,6 @@ public class DocStruct implements Serializable, HoldingElement {
         this.allMetadata = metadataList;
         this.persons = personList;
 
-    }
-
-    /****************************************************************************
-     * <p>
-     * Used to register a signature the first time a DocStruct Object runs into the non hierarchial branch of referenced DocStruct Objects by way of
-     * the equals method.
-     * </p>
-     * 
-     * @author Wulf Riebensahm
-     * @param docStruct
-     ****************************************************************************/
-    private boolean registerToRef(DocStruct docStruct) {
-
-        if (this.signaturesForEqualsMethodRefsTo == null) {
-            this.signaturesForEqualsMethodRefsTo = new HashMap<>();
-        }
-
-        // If not null then we have the case of looping, then we must return
-        // false here.
-        if (this.signaturesForEqualsMethodRefsTo.get(docStruct.toString()) != null) {
-            return false;
-        }
-
-        this.signaturesForEqualsMethodRefsTo.put(docStruct.toString(), docStruct);
-        return true;
-    }
-
-    /****************************************************************************
-     * <p>
-     * Used to register a signature the first time a DocStruct Object runs into the non hierarchial branch of DocStruct Objects referencing this
-     * DocStruct by way of the equals method.
-     * </p>
-     * 
-     * @author Wulf Riebensahm
-     * @param docStruct
-     ****************************************************************************/
-    private boolean registerFromRef(DocStruct docStruct) {
-
-        if (this.signaturesForEqualsMethodRefsFrom == null) {
-            this.signaturesForEqualsMethodRefsFrom = new HashMap<>();
-        }
-
-        // If not null then we have the case of looping, then we must return
-        // false here.
-        if (this.signaturesForEqualsMethodRefsFrom.get(docStruct.toString()) != null) {
-            return false;
-        }
-
-        this.signaturesForEqualsMethodRefsFrom.put(docStruct.toString(), docStruct);
-        return true;
-    }
-
-    /**************************************************************************
-     * @author Wulf Riebensahm
-     * @param docStruct
-     **************************************************************************/
-    private void unregisterToRefs(DocStruct docStruct) {
-
-        this.signaturesForEqualsMethodRefsTo.remove(docStruct.toString());
-        // Set to null if no element is left.
-        if (this.signaturesForEqualsMethodRefsTo.size() == 0) {
-            this.signaturesForEqualsMethodRefsTo = null;
-        }
-    }
-
-    /**************************************************************************
-     * @author Wulf Riebensahm
-     * @param docStruct
-     **************************************************************************/
-    private void unregisterFromRefs(DocStruct docStruct) {
-
-        this.signaturesForEqualsMethodRefsFrom.remove(docStruct.toString());
-        // Sset to null if no element is left.
-        if (this.signaturesForEqualsMethodRefsFrom.size() == 0) {
-            this.signaturesForEqualsMethodRefsFrom = null;
-        }
-    }
-
-    /**************************************************************************
-     * @author Wulf Riebensahm
-     * @param docStruct
-     * @return
-     **************************************************************************/
-    public boolean equals(DocStruct docStruct) {
-
-        log.debug("\r\n" + this.getClass() + " ->id:" + this.getType().getName() + " other:" + docStruct.getType().getName() + "\r\n");
-
-        // Simple attributes.
-        if (this.isLogical() != docStruct.isLogical()) {
-            log.debug("isLogical=false");
-            return false;
-        }
-
-        if (this.isPhysical() != docStruct.isPhysical()) {
-            log.debug("isPhysical=false");
-            return false;
-        }
-
-        if (!((this.getReferenceToAnchor() == null && docStruct.getReferenceToAnchor() == null)
-                || this.getReferenceToAnchor().equals(docStruct.getReferenceToAnchor()))) {
-            log.debug("getreferenceAnchor=false");
-            return false;
-        }
-
-        // Compare types.
-        if (!this.getType().equals(docStruct.getType())) {
-            log.debug("getType=false");
-            return false;
-        }
-
-        // ListPairCheck.isNotEqual is returned, if one List Object is null
-        // while the other List Object refers to an instance. In this case
-        // equals can already return false.
-        // If needsFurtherChecking is returned we need to compare the instances,
-        // or rather the instances of the listed Objects.
-        // For a quick test in this case we first compare the number referenced
-        // objects contained in the lists: If the number of referenced objects
-        // already differs, equals again can return false already.
-        // Only if also the number of Objects in the lists is the same we need
-        // an exhausting in depth comparism of the Objects contained.
-        // Simply using the List.equals method doesn't help us, because the
-        // lists may only have two seperate instances of equal objects but
-        // never the same instances.
-        ListPairCheck lpcResult = null;
-
-        // Metadata.
-        lpcResult = DigitalDocument.quickPairCheck(this.getAllMetadata(), docStruct.getAllMetadata());
-        if (lpcResult == ListPairCheck.isNotEqual) {
-            log.debug("1 false returned");
-            return false;
-        }
-        if (lpcResult == ListPairCheck.needsFurtherChecking && this.getAllMetadata().size() != docStruct.getAllMetadata().size()) {
-            log.debug("2 false returned");
-            return false;
-        }
-
-        // DocStructs (children).
-        lpcResult = DigitalDocument.quickPairCheck(this.getAllChildren(), docStruct.getAllChildren());
-        if (lpcResult == ListPairCheck.isNotEqual) {
-            log.debug("3 false returned");
-            return false;
-        }
-        if (lpcResult == ListPairCheck.needsFurtherChecking && this.getAllChildren().size() != docStruct.getAllChildren().size()) {
-            log.debug("4 false returned");
-            return false;
-        }
-
-        // FileReferences.
-        lpcResult = DigitalDocument.quickPairCheck(this.getAllContentFileReferences(), docStruct.getAllContentFileReferences());
-        if (lpcResult == ListPairCheck.isNotEqual) {
-            log.debug("5 false returned");
-            return false;
-        }
-
-        if (lpcResult == ListPairCheck.needsFurtherChecking
-                && this.getAllContentFileReferences().size() != docStruct.getAllContentFileReferences().size()) {
-            log.debug("6 false returned");
-            return false;
-        }
-
-        // Persons.
-        lpcResult = DigitalDocument.quickPairCheck(this.getAllPersons(), docStruct.getAllPersons());
-        if (lpcResult == ListPairCheck.isNotEqual) {
-            log.debug("7 false returned");
-            return false;
-        }
-        if (lpcResult == ListPairCheck.needsFurtherChecking && this.getAllPersons().size() != docStruct.getAllPersons().size()) {
-            log.debug("8 false returned");
-            return false;
-        }
-
-        // To references.
-        lpcResult = DigitalDocument.quickPairCheck(this.getAllToReferences(), docStruct.getAllToReferences());
-        if (lpcResult == ListPairCheck.isNotEqual) {
-            log.debug("9 false returned");
-            return false;
-        }
-        if (lpcResult == ListPairCheck.needsFurtherChecking && this.getAllToReferences().size() != docStruct.getAllToReferences().size()) {
-            log.debug("10 false returned");
-            return false;
-        }
-
-        // From references.
-        lpcResult = DigitalDocument.quickPairCheck(this.getAllFromReferences(), docStruct.getAllFromReferences());
-        if (lpcResult == ListPairCheck.isNotEqual) {
-            log.debug("11 false returned");
-            return false;
-        }
-        if (lpcResult == ListPairCheck.needsFurtherChecking && this.getAllFromReferences().size() != docStruct.getAllFromReferences().size()) {
-            log.debug("12 false returned");
-            return false;
-        }
-
-        // If we got this far we need to take a deeper look into the referenced
-        // Objects trying to find a match, only if no match is found we can
-        // exclude that the compared Objects are equal.
-        boolean flagFound = false;
-
-        // If both lists are null, isEqual is returned, no in depth check
-        // needed.
-        if (DigitalDocument.quickPairCheck(this.getAllChildren(), docStruct.getAllChildren()) != DigitalDocument.ListPairCheck.isEqual) {
-
-            for (DocStruct ds1 : this.getAllChildren()) {
-                int i = this.getAllChildren().indexOf(ds1);
-                if (!ds1.equals(docStruct.getAllChildren().get(i))) {
-                    return false;
-                }
-            }
-        }
-
-        // If both lists are null, isEqual is returned, no in depth check
-        // needed.
-        if (DigitalDocument.quickPairCheck(this.getAllMetadata(), docStruct.getAllMetadata()) != DigitalDocument.ListPairCheck.isEqual) {
-            for (Metadata md1 : this.getAllMetadata()) {
-                flagFound = false;
-
-                for (Metadata md2 : docStruct.getAllMetadata()) {
-                    if (md1.equals(md2)) {
-                        log.debug("equals=true: MD1=" + md1.getType().getName() + ";MD2=" + md2.getType().getName());
-                        flagFound = true;
-                        break;
-                    }
-
-                    log.debug("equals=false: MD1=" + md1.getType().getName() + ", MD2=" + md2.getType().getName());
-                }
-
-                // If equal Metadata couldn't be found this DocStruct cannot be
-                // equal either.
-                if (!flagFound) {
-                    return false;
-                }
-            }
-        }
-
-        // If both lists are null, isEqual is returned, no in depth check
-        // needed.
-        if (DigitalDocument.quickPairCheck(this.getAllMetadataGroups(), docStruct.getAllMetadataGroups()) != DigitalDocument.ListPairCheck.isEqual) {
-
-            for (MetadataGroup md1 : this.getAllMetadataGroups()) {
-                flagFound = false;
-
-                for (MetadataGroup md2 : docStruct.getAllMetadataGroups()) {
-                    if (md1.equals(md2)) {
-                        log.debug("equals=true: MD1=" + md1.getType().getName() + ";MD2=" + md2.getType().getName());
-                        flagFound = true;
-                        break;
-                    }
-
-                    log.debug("equals=false: MD1=" + md1.getType().getName() + ", MD2=" + md2.getType().getName());
-                }
-
-                // If equal Metadata couldn't be found this DocStruct cannot be
-                // equal either.
-                if (!flagFound) {
-                    return false;
-                }
-            }
-        }
-
-        // If both lists are null, isEqual is returned, no in depth check
-        // needed.
-        if (DigitalDocument.quickPairCheck(this.getAllPersons(), docStruct.getAllPersons()) != DigitalDocument.ListPairCheck.isEqual) {
-
-            for (Person p1 : this.getAllPersons()) {
-                flagFound = false;
-                for (Person p2 : docStruct.getAllPersons()) {
-                    if (p1.equals(p2)) {
-                        flagFound = true;
-                        break;
-                    }
-                }
-                // If equal Person couldn't be found this DocStruct cannot be
-                // equal either.
-                if (!flagFound) {
-                    log.debug("15 false returned");
-                    return false;
-                }
-            }
-        }
-
-        // If both lists are null, isEqual is returned, no in depth check
-        // needed.
-        if (DigitalDocument.quickPairCheck(this.getAllContentFileReferences(),
-                docStruct.getAllContentFileReferences()) != DigitalDocument.ListPairCheck.isEqual) {
-
-            for (ContentFileReference cfr1 : this.getAllContentFileReferences()) {
-                int i = this.getAllContentFileReferences().indexOf(cfr1);
-                if (!cfr1.equals(docStruct.getAllContentFileReferences().get(i))) {
-                    return false;
-                }
-            }
-        }
-
-        // If both lists are null, isEqual is returned, no in depth check
-        // needed.
-        if (DigitalDocument.quickPairCheck(this.getAllFromReferences(), docStruct.getAllFromReferences()) != DigitalDocument.ListPairCheck.isEqual) {// now
-            // The tricky part: before we go in to the equal method of the next
-            // DocStruct we have to register the signature and respectively
-            // check if signature is already listed if signature is already
-            // listed then we entered a loop and equals has to return true.
-
-            // This interrupts the loop acknowledging that docStruct had been
-            // here before - unregister is done one loop down the stack.
-            if (!registerFromRef(docStruct)) {
-                return true;
-            }
-
-            for (Reference rf1 : this.getAllFromReferences()) {
-                flagFound = false;
-
-                for (Reference rf2 : docStruct.getAllFromReferences()) {
-                    if (rf1.getTarget().equals(rf2.getTarget())) {
-                        flagFound = true;
-                        break;
-                    }
-                }
-
-                if (!flagFound) {
-                    unregisterFromRefs(docStruct);
-                    log.debug("17 false returned");
-                    return false;
-                }
-            }
-
-            unregisterFromRefs(docStruct);
-        }
-
-        // If both lists are null, isEqual is returned, no in depth check
-        // needed.
-        if (DigitalDocument.quickPairCheck(this.getAllToReferences(), docStruct.getAllToReferences()) != DigitalDocument.ListPairCheck.isEqual) {
-
-            // Interrupt the loop.
-            if (!registerToRef(docStruct)) {
-                return true;
-            }
-
-            for (Reference rt1 : this.getAllToReferences()) {
-                flagFound = false;
-
-                for (Reference rt2 : docStruct.getAllToReferences()) {
-                    if (rt1.getTarget().equals(rt2.getTarget())) {
-                        flagFound = true;
-                        break;
-                    }
-                }
-
-                if (!flagFound) {
-                    unregisterToRefs(docStruct);
-                    log.debug("18 false returned");
-                    return false;
-                }
-            }
-
-            unregisterToRefs(docStruct);
-        }
-
-        // Finally we are through and can assume that this DocStruct is the same
-        // as parameter docStruct and we return true.
-        return true;
     }
 
     /***************************************************************************

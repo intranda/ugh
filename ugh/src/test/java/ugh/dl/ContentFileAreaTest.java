@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,12 +37,6 @@ public class ContentFileAreaTest {
         assertNull(testArea.getTo());
     }
 
-    // Tests for the method equals(ContentFileArea)
-    @Test
-    public void testEqualsGivenBothNullValues() {
-        assertTrue(testArea.equals(anotherArea));
-    }
-
     @Test
     public void testEqualsGivenOneNullType() throws ContentFileAreaTypeUnknownException {
         anotherArea.setType("xmlid");
@@ -74,33 +67,5 @@ public class ContentFileAreaTest {
         anotherArea.setTo(new String());
         assertFalse(testArea.equals(anotherArea));
     }
-
-    @Test
-    public void testEqualsGivenTypeButEmptyFromTo() throws ContentFileAreaTypeUnknownException {
-        testArea.setType("xmlid");
-        testArea.setFrom("");
-        testArea.setTo(new String());
-        anotherArea.setType("smtpe");
-        anotherArea.setFrom(new String());
-        anotherArea.setTo("");
-        assertFalse(testArea.equals(anotherArea));
-        anotherArea.setType("xmlid");
-        assertTrue(testArea.equals(anotherArea));
-    }
-
-    @Test
-    public void testEqualsGivenNormalValues() throws ContentFileAreaTypeUnknownException {
-        testArea.setType("xmlid");
-        anotherArea.setType("xmlid");
-        testArea.setFrom("from");
-        anotherArea.setFrom("another from");
-        testArea.setTo("to");
-        anotherArea.setTo("to");
-        assertFalse(testArea.equals(anotherArea));
-        anotherArea.setFrom("from");
-        assertTrue(testArea.equals(anotherArea));
-    }
-
-
 
 }

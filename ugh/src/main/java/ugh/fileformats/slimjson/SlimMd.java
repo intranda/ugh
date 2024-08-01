@@ -61,16 +61,14 @@ public class SlimMd {
         return null;
     }
 
-    public Md ToMd() {
+    public Md toMd() {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         Document doc = null;
         try {
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             doc = dBuilder.parse(new InputSource(new StringReader(content)));
-            Md md = new Md(doc.getFirstChild());
-            return md;
+            return new Md(doc.getFirstChild());
         } catch (SAXException | IOException | ParserConfigurationException e) {
-            // TODO Auto-generated catch block
             log.error(e);
         }
         return null;

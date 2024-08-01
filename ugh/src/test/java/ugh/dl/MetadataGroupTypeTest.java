@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -149,7 +150,7 @@ public class MetadataGroupTypeTest {
         assertThrows(NullPointerException.class, () -> mdType.getAllLanguages().size());
         assertThrows(NullPointerException.class, () -> md.getType().getAllLanguages().size());
         assertThrows(NullPointerException.class, () -> mdgType.getMetadataTypeList().get(0).getAllLanguages().size());
-        md.getType().setAllLanguages(new HashMap<String, String>());
+        md.getType().setAllLanguages(new HashMap<>());
         assertEquals(0, mdType.getAllLanguages().size());
         assertEquals(0, md.getType().getAllLanguages().size());
         assertThrows(NullPointerException.class, () -> mdgType.getMetadataTypeList().get(0).getAllLanguages().size());
@@ -160,7 +161,7 @@ public class MetadataGroupTypeTest {
         // add MetadataType after setting its language list first
         MetadataType mdType = new MetadataType();
         mdType.setName("name");
-        mdType.setAllLanguages(new HashMap<String, String>());
+        mdType.setAllLanguages(new HashMap<>());
         Metadata md = new Metadata(mdType);
         mdgType.addMetadataType(mdType, null, false, false);
         assertEquals(0, mdType.getAllLanguages().size());
@@ -289,7 +290,7 @@ public class MetadataGroupTypeTest {
         mdgType.addLanguage("de", "deutsch"); // should make no change according to the logic of the method addLanguage(String, String)
         assertEquals(1, mdgType.getAllLanguages().size());
         assertEquals("Deutsch", mdgType.getNameByLanguage("de"));
-        HashMap<String, String> languages = mdgType.getAllLanguages();
+        Map<String, String> languages = mdgType.getAllLanguages();
         languages.put("de", "deutsch"); // but one can still modify the value from outside, which is DANGEROUS !
         assertEquals(1, mdgType.getAllLanguages().size());
         assertEquals("deutsch", mdgType.getNameByLanguage("de"));
@@ -297,7 +298,7 @@ public class MetadataGroupTypeTest {
 
     @Test
     public void testGetLanguageGivenNull() {
-        mdgType.setAllLanguages(new HashMap<String, String>());
+        mdgType.setAllLanguages(new HashMap<>());
         mdgType.addLanguage("de", "Deutsch");
         assertNull(mdgType.getLanguage(null));
     }
@@ -309,7 +310,7 @@ public class MetadataGroupTypeTest {
 
     @Test
     public void testGetLanguageGivenUnexistingLanguage() {
-        mdgType.setAllLanguages(new HashMap<String, String>());
+        mdgType.setAllLanguages(new HashMap<>());
         mdgType.addLanguage("de", "Deutsch");
         assertNull(mdgType.getLanguage("en"));
     }
@@ -322,7 +323,7 @@ public class MetadataGroupTypeTest {
     @Test
     public void testAddLanguageGivenNullAsSecondArgument() {
         // Null should be allowed as value. - Robert
-        mdgType.setAllLanguages(new HashMap<String, String>());
+        mdgType.setAllLanguages(new HashMap<>());
         mdgType.addLanguage("de", null);
         assertNull(mdgType.getNameByLanguage("de"));
     }
@@ -409,20 +410,17 @@ public class MetadataGroupTypeTest {
         assertFalse(mdgType2.getMetadataTypeList() == mdgType.getMetadataTypeList());
         assertTrue(mdgType2.getAllAllowedGroupTypeTypes().size() == mdgType.getAllAllowedGroupTypeTypes().size());
         assertTrue(mdgType2.getMetadataTypeList().size() == mdgType.getMetadataTypeList().size());
-        Iterator<AllowedMetadataGroupType> allGroupsIterator1 = mdgType.getAllAllowedGroupTypeTypes().iterator();
         Iterator<AllowedMetadataGroupType> allGroupsIterator2 = mdgType2.getAllAllowedGroupTypeTypes().iterator();
-        while (allGroupsIterator1.hasNext()) {
-            AllowedMetadataGroupType type1 = allGroupsIterator1.next();
+        for (AllowedMetadataGroupType type1 : mdgType.getAllAllowedGroupTypeTypes()) {
             AllowedMetadataGroupType type2 = allGroupsIterator2.next();
             assertEquals(type1.getGroupName(), type2.getGroupName());
             assertEquals(type1.getNumAllowed(), type2.getNumAllowed());
             assertEquals(type1.isDefaultDisplay(), type2.isDefaultDisplay());
             assertEquals(type1.isHidden(), type2.isHidden());
         }
-        Iterator<MetadataType> mdTypeListIterator1 = mdgType.getMetadataTypeList().iterator();
         Iterator<MetadataType> mdTypeListIterator2 = mdgType2.getMetadataTypeList().iterator();
-        while (mdTypeListIterator1.hasNext()) {
-            assertTrue(mdTypeListIterator1.next().equals(mdTypeListIterator2.next()));
+        for (MetadataType element : mdgType.getMetadataTypeList()) {
+            assertTrue(element.equals(mdTypeListIterator2.next()));
         }
     }
 
@@ -498,6 +496,3 @@ public class MetadataGroupTypeTest {
         assertNull(mdgType.getAllowedMetadataGroupTypeByName(null));
     }
 }
-
-
-
