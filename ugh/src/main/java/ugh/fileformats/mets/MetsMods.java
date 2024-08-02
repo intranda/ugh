@@ -111,6 +111,7 @@ import ugh.dl.DocStruct;
 import ugh.dl.DocStructType;
 import ugh.dl.FileSet;
 import ugh.dl.Md;
+import ugh.dl.Md.MdType;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataGroup;
 import ugh.dl.MetadataGroupType;
@@ -370,8 +371,8 @@ public class MetsMods implements ugh.dl.Fileformat {
     protected static final String LINE = "--------------------" + "--------------------" + "--------------------" + "--------------------";
 
     // Default namespace things.
-    private static final String DEFAULT_METS_PREFIX = "mets";
-    private static final String DEFAULT_METS_URI = "http://www.loc.gov/METS/";
+    public static final String DEFAULT_METS_PREFIX = "mets";
+    public static final String DEFAULT_METS_URI = "http://www.loc.gov/METS/";
     private static final String DEFAULT_METS_SCHEMA_LOCATION = "http://www.loc.gov/standards/mets/mets.xsd";
     private static final String DEFAULT_MODS_PREFIX = "mods";
     private static final String DEFAULT_MODS_URI = "http://www.loc.gov/mods/v3";
@@ -740,9 +741,8 @@ public class MetsMods implements ugh.dl.Fileformat {
                 for (MdSecType tech : mst) {
                     MdWrap wrap = tech.getMdWrap();
                     Node premis = wrap.getDomNode();
-                    Md techMd = new Md(premis);
+                    Md techMd = new Md(premis, MdType.TECH_MD);
                     techMd.setId(tech.getID());
-                    techMd.setType("techMD");
                     this.digdoc.addTechMd(techMd);
                 }
             }
@@ -751,9 +751,8 @@ public class MetsMods implements ugh.dl.Fileformat {
                 for (MdSecType tech : mst) {
                     MdWrap wrap = tech.getMdWrap();
                     Node premis = wrap.getDomNode();
-                    Md techMd = new Md(premis);
+                    Md techMd = new Md(premis, MdType.RIGHTS_MD);
                     techMd.setId(tech.getID());
-                    techMd.setType("rightsMD");
                     this.digdoc.addTechMd(techMd);
                 }
             }
@@ -762,9 +761,8 @@ public class MetsMods implements ugh.dl.Fileformat {
                 for (MdSecType tech : mst) {
                     MdWrap wrap = tech.getMdWrap();
                     Node premis = wrap.getDomNode();
-                    Md techMd = new Md(premis);
+                    Md techMd = new Md(premis, MdType.DIGIPROV_MD);
                     techMd.setId(tech.getID());
-                    techMd.setType("digiprovMD");
                     this.digdoc.addTechMd(techMd);
                 }
             }
@@ -773,9 +771,8 @@ public class MetsMods implements ugh.dl.Fileformat {
                 for (MdSecType tech : mst) {
                     MdWrap wrap = tech.getMdWrap();
                     Node premis = wrap.getDomNode();
-                    Md techMd = new Md(premis);
+                    Md techMd = new Md(premis, MdType.SOURCE_MD);
                     techMd.setId(tech.getID());
-                    techMd.setType("sourceMD");
                     this.digdoc.addTechMd(techMd);
                 }
             }
@@ -1233,6 +1230,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             if (admList != null) {
                 for (Object object : admList) {
                     String admid = (String) object;
+                    newDocStruct.setAdmId(admid);
                     AmdSec amdSec = digdoc.getAmdSec(admid);
                     if (amdSec != null) {
                         newDocStruct.setAmdSec(amdSec);
@@ -1386,6 +1384,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                 if (admList != null) {
                     for (Object object : admList) {
                         String admid = (String) object;
+                        newDocStruct.setAdmId(admid);
                         AmdSec amdSec = digdoc.getAmdSec(admid);
                         if (amdSec != null) {
                             newDocStruct.setAmdSec(amdSec);
@@ -5055,18 +5054,26 @@ public class MetsMods implements ugh.dl.Fileformat {
             for (Md md : techMdList) {
                 this.techidMax++;
                 Node theNode = theDomDoc.importNode(md.getContent(), true);
-                Node child = theNode.getFirstChild();
-                Element techMd = createDomElementNS(theDomDoc, this.metsNamespacePrefix, md.getType());
-                techMd.setAttribute(METS_ID_STRING, md.getId());
-                Element techNode = createDomElementNS(theDomDoc, this.metsNamespacePrefix, METS_MDWRAP_STRING);
-                for (int i = 0; i < theNode.getAttributes().getLength(); i++) {
-                    Node attribute = theNode.getAttributes().item(i);
-                    techNode.setAttribute(attribute.getNodeName(), attribute.getNodeValue());
-                }
 
-                techNode.appendChild(child);
-                techMd.appendChild(techNode);
-                amdSec.appendChild(techMd);
+                if (MdType.getType(theNode.getLocalName()) != null) {
+                    // wrapper element exists, add it directly
+                    amdSec.appendChild(theNode);
+                    ((Element) theNode).setAttribute(METS_ID_STRING, md.getId());
+                } else {
+                    // create wrapper element
+                    Node child = theNode.getFirstChild();
+                    Element techMd = createDomElementNS(theDomDoc, this.metsNamespacePrefix, md.getType().toString());
+                    techMd.setAttribute(METS_ID_STRING, md.getId());
+                    Element techNode = createDomElementNS(theDomDoc, this.metsNamespacePrefix, METS_MDWRAP_STRING);
+                    for (int i = 0; i < theNode.getAttributes().getLength(); i++) {
+                        Node attribute = theNode.getAttributes().item(i);
+                        techNode.setAttribute(attribute.getNodeName(), attribute.getNodeValue());
+                    }
+
+                    techNode.appendChild(child);
+                    techMd.appendChild(techNode);
+                    amdSec.appendChild(techMd);
+                }
             }
             String element;
             if (isAnchorFile) {

@@ -24,6 +24,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import ugh.dl.Md.MdType;
 import ugh.exceptions.MetadataTypeNotAllowedException;
 import ugh.exceptions.TypeNotAllowedForParentException;
 
@@ -186,7 +187,7 @@ public class ContentFileTest {
     public void testAddTechMdBeforeInitialization() {
         assertNull(cf.getTechMds());
         Node node = nList.item(0);
-        Md md = new Md(node);
+        Md md = new Md(node, MdType.TECH_MD);
         cf.addTechMd(md);
         assertNotNull(cf.getTechMds());
         assertEquals(1, cf.getTechMds().size());
@@ -205,7 +206,7 @@ public class ContentFileTest {
     public void testAddTechMdGivenNullAfterInitialization() {
         assertNull(cf.getTechMds());
         Node node = nList.item(0);
-        Md md = new Md(node);
+        Md md = new Md(node, MdType.TECH_MD);
         cf.addTechMd(md);
         assertEquals(1, cf.getTechMds().size());
         cf.addTechMd(null);
@@ -215,7 +216,7 @@ public class ContentFileTest {
     @Test
     public void testSetTechMdsGivenNullAfterInitialization() {
         Node node = nList.item(0);
-        Md md = new Md(node);
+        Md md = new Md(node, MdType.TECH_MD);
         cf.addTechMd(md);
         assertNotNull(cf.getTechMds());
         cf.setTechMds(null);
@@ -226,7 +227,7 @@ public class ContentFileTest {
     public void testAddTechMdTogetherWithModificationsOnTheResultOfGetterThenApplySetter() {
         // according to the design of the method addTechMd(Md), null can not be added
         Node node = nList.item(0);
-        Md md = new Md(node);
+        Md md = new Md(node, MdType.TECH_MD);
         cf.addTechMd(md);
         assertEquals(1, cf.getTechMds().size());
         cf.addTechMd(null);

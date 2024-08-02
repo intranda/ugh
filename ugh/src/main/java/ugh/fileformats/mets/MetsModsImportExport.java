@@ -1443,8 +1443,8 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 this.techidMax++;
                 Node theNode = domDoc.importNode(md.getContent(), true);
                 Node child = theNode.getFirstChild();
-                Element techMd = createDomElementNS(domDoc, this.metsNamespacePrefix, md.getType());
-                if (md.getType().contentEquals(METS_RIGHTSMD_STRING)) {
+                Element techMd = createDomElementNS(domDoc, this.metsNamespacePrefix, md.getType().toString());
+                if (md.getType().toString().contentEquals(METS_RIGHTSMD_STRING)) {
                     Node mdWrap = md.getContent();
                     if (mdWrap != null) {
                         Node mdType = mdWrap.getAttributes().getNamedItem("OTHERMDTYPE");
@@ -1452,7 +1452,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                             rightsMDExists = true;
                         }
                     }
-                } else if (md.getType().contentEquals("digiprovMD")) {
+                } else if (md.getType().toString().contentEquals("digiprovMD")) {
                     Node mdWrap = md.getContent();
                     if (mdWrap != null) {
                         Node mdType = mdWrap.getAttributes().getNamedItem("OTHERMDTYPE");

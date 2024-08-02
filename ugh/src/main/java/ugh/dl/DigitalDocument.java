@@ -54,6 +54,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 import lombok.extern.log4j.Log4j2;
+import ugh.dl.Md.MdType;
 import ugh.exceptions.ContentFileNotLinkedException;
 import ugh.exceptions.PreferencesException;
 import ugh.exceptions.TypeNotAllowedForParentException;
@@ -1022,11 +1023,11 @@ public class DigitalDocument implements Serializable {
     /**
      * @param techMd the techMd to set
      */
-    public void addTechMd(Node techMdNode) {
+    public void addTechMd(Node techMdNode, MdType type) {
         if (this.amdSec == null) {
             amdSec = new AmdSec(new ArrayList<>());
         }
-        Md techMd = new Md(techMdNode);
+        Md techMd = new Md(techMdNode, type);
         this.amdSec.addTechMd(techMd);
     }
 

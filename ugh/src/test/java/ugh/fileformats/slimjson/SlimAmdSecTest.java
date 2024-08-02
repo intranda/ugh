@@ -22,6 +22,7 @@ import org.xml.sax.SAXException;
 
 import ugh.dl.AmdSec;
 import ugh.dl.Md;
+import ugh.dl.Md.MdType;
 
 public class SlimAmdSecTest {
     private static final File xmlFile = new File("src/test/resources/nodeTest.xml");
@@ -43,7 +44,7 @@ public class SlimAmdSecTest {
         nList = doc.getElementsByTagName("node");
         for (int i = 0; i < nList.getLength(); ++i) {
             Node nNode = nList.item(i);
-            mdList.add(new Md(nNode));
+            mdList.add(new Md(nNode, MdType.TECH_MD));
         }
     }
 

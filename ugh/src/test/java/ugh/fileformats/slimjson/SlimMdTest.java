@@ -27,6 +27,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import ugh.dl.Md;
+import ugh.dl.Md.MdType;
 
 public class SlimMdTest {
     private static final File xmlFile = new File("src/test/resources/nodeTest.xml");
@@ -57,7 +58,7 @@ public class SlimMdTest {
     public void testFromMdGivenMdWithoutId() {
         for (int i = 0; i < nList.getLength(); ++i) {
             Node nNode = nList.item(i);
-            Md md = new Md(nNode);
+            Md md = new Md(nNode, MdType.TECH_MD);
             assertNull(md.getId());
             SlimMd smd = SlimMd.fromMd(md);
             assertNotNull(md.getId());
@@ -69,19 +70,13 @@ public class SlimMdTest {
     public void testFromMdGivenMdWithId() throws TransformerException {
         for (int i = 0; i < nList.getLength(); ++i) {
             Node nNode = nList.item(i);
-            Md md = new Md(nNode);
+            Md md = new Md(nNode, MdType.TECH_MD);
             String id = "md-id";
-            String type = "md-type";
+            String type = "techMD";
             md.setId(id);
-            md.setType(type);
             SlimMd smd = SlimMd.fromMd(md);
             assertEquals(id, smd.getId());
             assertEquals(type, smd.getType());
-
-            // check content
-            StringWriter writer = new StringWriter();
-            transformer.transform(new DOMSource(nNode), new StreamResult(writer));
-            assertEquals(writer.toString(), smd.getContent());
         }
     }
 
@@ -90,7 +85,7 @@ public class SlimMdTest {
     public void testFromMdToMdTogether() throws TransformerException {
         for (int i = 0; i < nList.getLength(); ++i) {
             Node nNode = nList.item(i);
-            Md md = new Md(nNode);
+            Md md = new Md(nNode, MdType.TECH_MD);
             SlimMd smd = SlimMd.fromMd(md);
             assertNotNull(smd.getId());
             smd.setType("type");

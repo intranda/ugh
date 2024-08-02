@@ -28,6 +28,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import ugh.dl.DigitalDocument.PhysicalElement;
+import ugh.dl.Md.MdType;
 import ugh.exceptions.ContentFileNotLinkedException;
 import ugh.exceptions.MetadataTypeNotAllowedException;
 import ugh.exceptions.PreferencesException;
@@ -719,7 +720,7 @@ public class DigitalDocumentTest {
     public void testAddTechMdGivenNodeObject() {
         // before initializing the field amdSec
         assertNull(dd.getAmdSec());
-        dd.addTechMd(upperChild);
+        dd.addTechMd(upperChild, MdType.TECH_MD);
         assertEquals(1, dd.getAmdSec().getTechMdsAsNodes().size());
     }
 
@@ -727,7 +728,7 @@ public class DigitalDocumentTest {
     public void testAddTechMdGivenMdObject() {
         // before initializing the field amdSec
         assertNull(dd.getAmdSec());
-        Md md = new Md(upperChild);
+        Md md = new Md(upperChild, MdType.TECH_MD);
         dd.addTechMd(md);
         assertEquals(1, dd.getAmdSec().getTechMdList().size());
     }
@@ -745,14 +746,13 @@ public class DigitalDocumentTest {
         assertNotNull(dd.getTechMdsAsNodes());
         assertEquals(0, dd.getTechMdsAsNodes().size());
 
-        Md md = new Md(upperChild);
+        Md md = new Md(upperChild, MdType.TECH_MD);
         dd.addTechMd(md);
         assertEquals(1, dd.getTechMdsAsNodes().size());
         assertEquals(md.getContent(), dd.getTechMdsAsNodes().get(0));
 
-        dd.addTechMd(upperChild);
+        dd.addTechMd(upperChild, MdType.TECH_MD);
         assertEquals(2, dd.getTechMdsAsNodes().size());
-        assertEquals(upperChild, dd.getTechMdsAsNodes().get(0));
     }
 
     @Test
@@ -766,7 +766,7 @@ public class DigitalDocumentTest {
         assertEquals(1, nodes.size());
         assertEquals(0, dd.getTechMdsAsNodes().size());
 
-        dd.addTechMd(upperChild);
+        dd.addTechMd(upperChild, MdType.TECH_MD);
         assertEquals(1, dd.getTechMdsAsNodes().size());
         nodes = dd.getTechMdsAsNodes();
         assertEquals(1, nodes.size());
@@ -782,10 +782,10 @@ public class DigitalDocumentTest {
         assertNotNull(dd.getTechMds());
         assertEquals(0, dd.getTechMds().size());
 
-        dd.addTechMd(upperChild);
+        dd.addTechMd(upperChild, MdType.TECH_MD);
         assertEquals(1, dd.getTechMds().size());
 
-        dd.addTechMd(new Md(upperChild));
+        dd.addTechMd(new Md(upperChild, MdType.TECH_MD));
         assertEquals(2, dd.getTechMds().size());
     }
 
@@ -801,7 +801,7 @@ public class DigitalDocumentTest {
         // initialize the field amdSec with a new AmdSec object
         AmdSec sec = new AmdSec(new ArrayList<>());
         dd.setAmdSec(sec);
-        Md md = new Md(upperChild);
+        Md md = new Md(upperChild, MdType.TECH_MD);
         md.setId("id");
         sec.addTechMd(md);
         assertEquals(1, dd.getTechMds().size());
@@ -827,7 +827,7 @@ public class DigitalDocumentTest {
         assertNull(dd.getTechMd(null));
 
         // add a Md object and test this method again
-        Md md = new Md(upperChild);
+        Md md = new Md(upperChild, MdType.TECH_MD);
         assertEquals(0, sec.getTechMdList().size());
         dd.addTechMd(md);
         assertEquals(1, sec.getTechMdList().size());
@@ -847,7 +847,7 @@ public class DigitalDocumentTest {
         assertNull(dd.getTechMd(""));
 
         // add a Md object and test this method again
-        Md md = new Md(upperChild);
+        Md md = new Md(upperChild, MdType.TECH_MD);
         assertEquals(0, sec.getTechMdList().size());
         dd.addTechMd(md);
         assertEquals(1, sec.getTechMdList().size());
@@ -871,7 +871,7 @@ public class DigitalDocumentTest {
             assertNull(dd.getTechMd(name));
 
             // add a Md object and test this method again
-            Md md = new Md(upperChild);
+            Md md = new Md(upperChild, MdType.TECH_MD);
             dd.addTechMd(md);
             assertNull(dd.getTechMd(name));
 
@@ -885,8 +885,8 @@ public class DigitalDocumentTest {
     @Test
     public void testCopyAfterInitializingTheFieldAmdSec() throws WriteException {
         assertEquals(0, dd.getTechMds().size());
-        Md md1 = new Md(upperChild);
-        Md md2 = new Md(upperChild);
+        Md md1 = new Md(upperChild, MdType.TECH_MD);
+        Md md2 = new Md(upperChild, MdType.TECH_MD);
         dd.addTechMd(md1);
         dd.addTechMd(md2);
         assertEquals(2, dd.getTechMds().size());

@@ -23,6 +23,7 @@ import org.xml.sax.SAXException;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import ugh.dl.Md;
+import ugh.dl.Md.MdType;
 
 @Data
 @Log4j2
@@ -41,7 +42,7 @@ public class SlimMd {
             smd.setId(UUID.randomUUID().toString());
             md.setId(smd.id);
         }
-        smd.setType(md.getType());
+        smd.setType(md.getType().toString());
         StringWriter writer = new StringWriter();
         try {
             transformer.transform(new DOMSource(md.getContent()), new StreamResult(writer));
@@ -67,7 +68,7 @@ public class SlimMd {
         try {
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             doc = dBuilder.parse(new InputSource(new StringReader(content)));
-            return new Md(doc.getFirstChild());
+            return new Md(doc.getFirstChild(), MdType.getType(type));
         } catch (SAXException | IOException | ParserConfigurationException e) {
             log.error(e);
         }
