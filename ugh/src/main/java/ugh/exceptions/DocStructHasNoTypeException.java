@@ -24,8 +24,7 @@ package ugh.exceptions;
 
 /*******************************************************************************
  * <p>
- * Exception is thrown, if metadata should be added, but the DocStruct has no
- * DocStructType.
+ * Exception is thrown, if metadata should be added, but the DocStruct has no DocStructType.
  * </p>
  * 
  * @author Markus Enders
@@ -35,35 +34,35 @@ package ugh.exceptions;
 
 public class DocStructHasNoTypeException extends RuntimeException {
 
-	private static final long	serialVersionUID	= -1950082217522786783L;
+    private static final long serialVersionUID = -1950082217522786783L;
 
-	/***************************************************************************
-	 * Default constructor.
-	 **************************************************************************/
-	public DocStructHasNoTypeException() {
-		super();
-	}
+    /***************************************************************************
+     * Default constructor.
+     **************************************************************************/
+    public DocStructHasNoTypeException() {
+        super();
+    }
 
-	/***************************************************************************
-	 * @param inMessage
-	 **************************************************************************/
-	public DocStructHasNoTypeException(String inMessage) {
-		super(inMessage);
-	}
+    /***************************************************************************
+     * @param inMessage
+     **************************************************************************/
+    public DocStructHasNoTypeException(String inMessage) {
+        super(inMessage);
+    }
 
-	/***************************************************************************
-	 * @param exp
-	 **************************************************************************/
-	public DocStructHasNoTypeException(Exception e) {
-		super(e);
-	}
+    /***************************************************************************
+     * @param exp
+     **************************************************************************/
+    public DocStructHasNoTypeException(Exception e) {
+        super(e);
+    }
 
-	/***************************************************************************
-	 * @param inMessage
-	 * @param exp
-	 **************************************************************************/
-	public DocStructHasNoTypeException(String inMessage, Exception e) {
-		super(inMessage, e);
-	}
+    /***************************************************************************
+     * @param inMessage
+     * @param exp
+     **************************************************************************/
+    public DocStructHasNoTypeException(String inMessage, Exception e) {
+        super(inMessage, e);
+    }
 
 }

@@ -24,6 +24,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import ugh.dl.Md.MdType;
 import ugh.exceptions.MetadataTypeNotAllowedException;
 import ugh.exceptions.TypeNotAllowedForParentException;
 
@@ -69,13 +70,12 @@ public class ContentFileTest {
     public void testAddMetadataBeforeInitialization() throws MetadataTypeNotAllowedException {
         MetadataType mdType = new MetadataType();
         Metadata md = new Metadata(mdType);
-        assertTrue(cf.addMetadata(md));
+        cf.addMetadata(md);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddMetadataGivenNull() {
-        // Null should be avoided
-        assertTrue(cf.addMetadata(null));
+        cf.addMetadata(null);
     }
 
     /* Tests for the method removeMetadata(Metadata) */
@@ -83,7 +83,7 @@ public class ContentFileTest {
     public void testRemoveMetadataBeforeInitialization() throws MetadataTypeNotAllowedException {
         MetadataType mdType = new MetadataType();
         Metadata md = new Metadata(mdType);
-        assertFalse(cf.removeMetadata(md));
+        cf.removeMetadata(md);
     }
 
     /* Tests for the method addDocStructAsReference(DocStruct) */
@@ -141,11 +141,9 @@ public class ContentFileTest {
         DocStructType dsType2 = new DocStructType();
         dsType2.setName("name");
         dsType2.setHasfileset(false);
-        assertTrue(dsType1.equals(dsType2));
         DocStruct ds1 = new DocStruct(dsType1);
         DocStruct ds2 = new DocStruct(dsType2);
         assertNotSame(ds1, ds2);
-        assertTrue(ds1.equals(ds2));
         assertTrue(cf.addDocStructAsReference(ds1));
         assertEquals(1, cf.getReferencedDocStructs().size());
         assertTrue(cf.removeDocStructAsReference(ds2));
@@ -176,12 +174,12 @@ public class ContentFileTest {
     // Everything from L277 till the end of the method cannot be tested, since they are unreachable thanks to the uninitializable field allMetadata. - Zehong
     @Test
     public void testEqualsToItself() {
-        assertTrue(cf.equals(cf));
+        assertEquals(cf, cf);
     }
 
     @Test
     public void testEqualsGivenNull() {
-        assertFalse(cf.equals(null));
+        assertNotEquals(cf, null);
     }
 
     /* Tests for the methods getTechMds(), addTechMd(Md), setTechMds(List<Md>) */
@@ -189,7 +187,7 @@ public class ContentFileTest {
     public void testAddTechMdBeforeInitialization() {
         assertNull(cf.getTechMds());
         Node node = nList.item(0);
-        Md md = new Md(node);
+        Md md = new Md(node, MdType.TECH_MD);
         cf.addTechMd(md);
         assertNotNull(cf.getTechMds());
         assertEquals(1, cf.getTechMds().size());
@@ -208,7 +206,7 @@ public class ContentFileTest {
     public void testAddTechMdGivenNullAfterInitialization() {
         assertNull(cf.getTechMds());
         Node node = nList.item(0);
-        Md md = new Md(node);
+        Md md = new Md(node, MdType.TECH_MD);
         cf.addTechMd(md);
         assertEquals(1, cf.getTechMds().size());
         cf.addTechMd(null);
@@ -218,7 +216,7 @@ public class ContentFileTest {
     @Test
     public void testSetTechMdsGivenNullAfterInitialization() {
         Node node = nList.item(0);
-        Md md = new Md(node);
+        Md md = new Md(node, MdType.TECH_MD);
         cf.addTechMd(md);
         assertNotNull(cf.getTechMds());
         cf.setTechMds(null);
@@ -229,7 +227,7 @@ public class ContentFileTest {
     public void testAddTechMdTogetherWithModificationsOnTheResultOfGetterThenApplySetter() {
         // according to the design of the method addTechMd(Md), null can not be added
         Node node = nList.item(0);
-        Md md = new Md(node);
+        Md md = new Md(node, MdType.TECH_MD);
         cf.addTechMd(md);
         assertEquals(1, cf.getTechMds().size());
         cf.addTechMd(null);

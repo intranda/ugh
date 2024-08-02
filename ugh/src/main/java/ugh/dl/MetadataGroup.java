@@ -34,12 +34,11 @@ public class MetadataGroup implements Serializable, HoldingElement {
 
     private static final long serialVersionUID = -6283388063178498292L;
 
-
     protected MetadataGroupType metadataGroupType;
     // Document structure to which this metadata type belongs to.
     @Getter
     @Setter
-    protected HoldingElement parent;
+    protected transient HoldingElement parent;
     @Getter
     @Setter
     private String identifier;
@@ -79,45 +78,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
         personList = new LinkedList<>();
         corporateList = new LinkedList<>();
         allMetadataGroups = new LinkedList<>();
-        //        for (MetadataType mdt : metadataGroupType.getAllDefaultDisplayMetadataTypes()) {
-        //            if (mdt.getIsPerson() ) {
-        //                Person p = new Person(mdt);
-        //                p.setRole(mdt.getName());
-        //                addPerson(p);
-        //            } else if (mdt.isCorporate()) {
-        //                Corporate c = new Corporate(mdt);
-        //                c.setRole(mdt.getName());
-        //                addCorporate(c);
-        //            } else {
-        //                Metadata md = new Metadata(mdt);
-        //                addMetadata(md);
-        //            }
-        //        }
-
     }
-    //
-    //    /***************************************************************************
-    //     * <p>
-    //     * Sets the Document structure entity to which this object belongs to.
-    //     * </p>
-    //     *
-    //     * @param inDoc
-    //     **************************************************************************/
-    //    public void setDocStruct(DocStruct inDoc) {
-    //        this.myDocStruct = inDoc;
-    //    }
-    //
-    //    /***************************************************************************
-    //     * <p>
-    //     * Returns the DocStruct instance, to which this metadataGroup object belongs. This is extremly helpful, if only the metadata instance is stored
-    //     * in a list; the reference to the associated DocStrct instance is always kept.
-    //     * </p>
-    //     *
-    //     * @return DocStruct instance.
-    //     **************************************************************************/
-    //    public DocStruct getDocStruct() {
-    //        return this.myDocStruct;
-    //    }
 
     /***************************************************************************
      * <p>
@@ -236,7 +197,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("MetadataGroup [MDType:");
         sb.append(metadataGroupType.getName());
         sb.append(", myDocStruct:");
@@ -354,12 +315,12 @@ public class MetadataGroup implements Serializable, HoldingElement {
         // How many types must be at least available.
         String maxnumbersallowed = metadataGroupType.getNumberOfMetadataType(inMDType);
 
-        if (typesavailable == 1 && maxnumbersallowed.equals("+")) {
+        if (typesavailable == 1 && "+".equals(maxnumbersallowed)) {
             // There must be at least one.
             return false;
         }
 
-        if (typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+        if (typesavailable == 1 && "1m".equals(maxnumbersallowed)) {
             // There must be at least one.
             return false;
         }
@@ -382,11 +343,11 @@ public class MetadataGroup implements Serializable, HoldingElement {
         // How many types must be at least available.
         maxnumbersallowed = metadataGroupType.getNumberOfMetadataType(inMdType);
 
-        if (!force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
+        if (!force && typesavailable == 1 && "+".equals(maxnumbersallowed)) {
             // There must be at least one.
             return;
         }
-        if (!force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+        if (!force && typesavailable == 1 && "1m".equals(maxnumbersallowed)) {
             // There must be at least one.
             return;
         }
@@ -416,11 +377,11 @@ public class MetadataGroup implements Serializable, HoldingElement {
         // How many types must be at least available.
         String maxnumbersallowed = metadataGroupType.getNumberOfMetadataType(inMDType);
 
-        if (force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
+        if (force && typesavailable == 1 && "+".equals(maxnumbersallowed)) {
             // There must be at least one.
             return;
         }
-        if (force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+        if (force && typesavailable == 1 && "1m".equals(maxnumbersallowed)) {
             // There must be at least one.
             return;
         }
@@ -447,11 +408,11 @@ public class MetadataGroup implements Serializable, HoldingElement {
         // How many types must be at least available.
         String maxnumbersallowed = metadataGroupType.getNumberOfMetadataType(inMDType);
 
-        if (force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
+        if (force && typesavailable == 1 && "+".equals(maxnumbersallowed)) {
             // There must be at least one.
             return;
         }
-        if (force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+        if (force && typesavailable == 1 && "1m".equals(maxnumbersallowed)) {
             // There must be at least one.
             return;
         }
@@ -581,7 +542,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
 
                 // Metadata can only be available once; so we have to check if
                 // it is already available.
-                if (maxnumber.equals("1m") || maxnumber.equals("1o")) {
+                if ("1m".equals(maxnumber) || "1o".equals(maxnumber)) {
                     // Check metadata here only.
                     int availableMD = countMDofthisType(mdt.getName());
                     if (availableMD < 1) {
@@ -595,7 +556,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
             }
         }
 
-        if (addableMetadata == null || addableMetadata.isEmpty()) {
+        if (addableMetadata.isEmpty()) {
             return null;
         }
 
@@ -682,17 +643,17 @@ public class MetadataGroup implements Serializable, HoldingElement {
         number = countMDofthisType(inMdName);
 
         // As many as we want (zero or more).
-        if (maxnumberallowed.equals("*")) {
+        if ("*".equals(maxnumberallowed)) {
             insert = true;
         }
 
         // Once or more.
-        if (maxnumberallowed.equals("+")) {
+        if ("+".equals(maxnumberallowed)) {
             insert = true;
         }
 
         // Only one, if we have already one, we cannot add it.
-        if (maxnumberallowed.equalsIgnoreCase("1m") || maxnumberallowed.equalsIgnoreCase("1o")) {
+        if ("1m".equalsIgnoreCase(maxnumberallowed) || "1o".equalsIgnoreCase(maxnumberallowed)) {
             if (number < 1) {
                 insert = true;
             } else {
@@ -756,17 +717,16 @@ public class MetadataGroup implements Serializable, HoldingElement {
         AllowedMetadataGroupType type = metadataGroupType.getAllowedMetadataGroupTypeByName(inMdType.getName());
         if (type == null) {
             // type is not allowed
-            // TODO throw exception?
             return false;
 
         }
         maxnumbersallowed = type.getNumAllowed();
 
-        if (!force && typesavailable == 1 && maxnumbersallowed.equals("+")) {
+        if (!force && typesavailable == 1 && "+".equals(maxnumbersallowed)) {
             // There must be at least one.
             return false;
         }
-        if (!force && typesavailable == 1 && maxnumbersallowed.equals("1m")) {
+        if (!force && typesavailable == 1 && "1m".equals(maxnumbersallowed)) {
             // There must be at least one.
             return false;
         }
@@ -899,11 +859,11 @@ public class MetadataGroup implements Serializable, HoldingElement {
 
                 // Metadata can only be available once; so we have to check if
                 // it is already available.
-                if (maxnumber.equals("1m") || maxnumber.equals("1o")) {
+                if ("1m".equals(maxnumber) || "1o".equals(maxnumber)) {
                     // Check metadata here only.
                     List<? extends MetadataGroup> availableMD = this.getAllMetadataGroupsByName(mdt.getGroupName());
 
-                    if (availableMD.size() < 1) {
+                    if (availableMD.isEmpty()) {
                         // Metadata is NOT available; we are allowed to add it.
                         addableMetadata.add(mdt.getGroupName());
                     }
@@ -914,7 +874,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
             }
         }
 
-        if (addableMetadata == null || addableMetadata.isEmpty()) {
+        if (addableMetadata.isEmpty()) {
             return null;
         }
 

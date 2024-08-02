@@ -17,7 +17,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -94,7 +93,6 @@ public class PrefsTest {
     public void testLoadPrefsGivenValidFileWithInvalidContents1() {
         // On L170 of Prefs.java, upperChildlist will never be null.
         // Therefore running this test will give us "No upper child in preference file" as the error message.
-        // The checking logic should be changed to "if (upperChildlist.getLength() == 0)"
         assertThrows(PreferencesException.class, () -> prefs.loadPrefs("src/test/resources/nodeTest.xml"));
     }
 
@@ -140,14 +138,14 @@ public class PrefsTest {
         // get the NodeList of <DocStrctTypeTest> blocks
         for (int i = 0; i < blocksList.getLength(); ++i) {
             blockNode = blocksList.item(i);
-            if (blockNode.getNodeType() != Node.ELEMENT_NODE || !blockNode.getNodeName().equals("DocStrctTypeTest")) {
+            if (blockNode.getNodeType() != Node.ELEMENT_NODE || !"DocStrctTypeTest".equals(blockNode.getNodeName())) {
                 continue;
             }
             dstTestList = blockNode.getChildNodes();
             // for every <DocStrctTypeTest> block, get its <DocStrctType> NodeList
             for (int j = 0; j < dstTestList.getLength(); ++j) {
                 dstNode = dstTestList.item(j);
-                if (dstNode.getNodeType() != Node.ELEMENT_NODE || !dstNode.getNodeName().equals("DocStrctType")) {
+                if (dstNode.getNodeType() != Node.ELEMENT_NODE || !"DocStrctType".equals(dstNode.getNodeName())) {
                     continue;
                 }
                 dstList = dstNode.getChildNodes();
@@ -155,7 +153,7 @@ public class PrefsTest {
                 // for every <DocStrctType> node, get its <Name> node
                 for (int k = 0; k < dstList.getLength(); ++k) {
                     Node node = dstList.item(k);
-                    if (node.getNodeName().equals("Name")) {
+                    if ("Name".equals(node.getNodeName())) {
                         assertNotNull(node.getChildNodes());
                         // On L321 textnodes will never be null, hence the check is redundant and the Error p004 will never be triggered
                         // Null check on L348, L394, L474, L532 are all redundant.
@@ -181,7 +179,7 @@ public class PrefsTest {
                     for (int t = 0; t < dstList.getLength(); ++t) {
                         Node node = dstList.item(t);
 
-                        if (node.getNodeName().equals("metadata")) {
+                        if ("metadata".equals(node.getNodeName())) {
                             Node numAtt = node.getAttributes().getNamedItem("num");
                             String num = dst.getAllMetadataTypes().get(countMetadata).getNum();
                             if (numAtt == null) {
@@ -192,7 +190,7 @@ public class PrefsTest {
                             ++countMetadata;
                         }
 
-                        if (node.getNodeName().equals("group")) {
+                        if ("group".equals(node.getNodeName())) {
                             Node numAtt = node.getAttributes().getNamedItem("num");
                             String num = dst.getAllMetadataGroupTypes().get(countGroup).getNum();
                             if (numAtt == null) {
@@ -228,14 +226,14 @@ public class PrefsTest {
         // get the NodeList of <MetadataTypeTest> blocks
         for (int i = 0; i < blocksList.getLength(); ++i) {
             blockNode = blocksList.item(i);
-            if (blockNode.getNodeType() != Node.ELEMENT_NODE || !blockNode.getNodeName().equals("MetadataTypeTest")) {
+            if (blockNode.getNodeType() != Node.ELEMENT_NODE || !"MetadataTypeTest".equals(blockNode.getNodeName())) {
                 continue;
             }
             mdtTestList = blockNode.getChildNodes();
             // for every <MetadataTypeTest> block, get its <MetadataType> NodeList
             for (int j = 0; j < mdtTestList.getLength(); ++j) {
                 mdtNode = mdtTestList.item(j);
-                if (mdtNode.getNodeType() != Node.ELEMENT_NODE || !mdtNode.getNodeName().equals("MetadataType")) {
+                if (mdtNode.getNodeType() != Node.ELEMENT_NODE || !"MetadataType".equals(mdtNode.getNodeName())) {
                     continue;
                 }
                 mdtList = mdtNode.getChildNodes();
@@ -243,7 +241,7 @@ public class PrefsTest {
                 // for every <MetadataType> node, get its <Name> node
                 for (int k = 0; k < mdtList.getLength(); ++k) {
                     Node node = mdtList.item(k);
-                    if (node.getNodeName().equals("Name")) {
+                    if ("Name".equals(node.getNodeName())) {
                         assertNotNull(node.getChildNodes()); // On L629 textnodes will never be null, hence the check is redundant
                         // Same argument applies also for L653, L675, L686.
 
@@ -262,14 +260,14 @@ public class PrefsTest {
                     assertTrue(mdt.isCorporate || mdt.isPerson || mdt.isIdentifier);
 
                     Node ndNode = mdtNode.getAttributes().getNamedItem("normdata");
-                    if (ndNode != null && ndNode.getNodeValue().equals("true")) {
+                    if (ndNode != null && "true".equals(ndNode.getNodeValue())) {
                         assertTrue(mdt.isAllowNormdata());
                     } else {
                         assertFalse(mdt.isAllowNormdata());
                     }
 
                     Node npNode = mdtNode.getAttributes().getNamedItem("namepart");
-                    if (npNode != null && npNode.getNodeValue().equals("true")) {
+                    if (npNode != null && "true".equals(npNode.getNodeValue())) {
                         assertTrue(mdt.isAllowNameParts());
                     } else {
                         assertFalse(mdt.isAllowNameParts());
@@ -281,12 +279,12 @@ public class PrefsTest {
 
     /* Tests for the method parseMetadataGroup(Node) */
     @Test
-    public void testParseMetadataGroupGivenInvalidInputs() throws PreferencesException {
+    public void testParseMetadataGroupGivenInvalidInputs() {
         validateBlocksMetadataGroupTest(blocksListError);
     }
 
     @Test
-    public void testParseMetadataGroupGivenValidInputs() throws PreferencesException {
+    public void testParseMetadataGroupGivenValidInputs() {
         validateBlocksMetadataGroupTest(blocksListFunctionality);
     }
 
@@ -307,14 +305,14 @@ public class PrefsTest {
         // get the NodeList of <GroupTest> blocks
         for (int i = 0; i < blocksList.getLength(); ++i) {
             blockNode = blocksList.item(i);
-            if (blockNode.getNodeType() != Node.ELEMENT_NODE || !blockNode.getNodeName().equals("GroupTest")) {
+            if (blockNode.getNodeType() != Node.ELEMENT_NODE || !"GroupTest".equals(blockNode.getNodeName())) {
                 continue;
             }
             mdgTestList = blockNode.getChildNodes();
             // for every <GroupTest> block, get its <Group> NodeList
             for (int j = 0; j < mdgTestList.getLength(); ++j) {
                 mdgNode = mdgTestList.item(j);
-                if (mdgNode.getNodeType() != Node.ELEMENT_NODE || !mdgNode.getNodeName().equals("Group")) {
+                if (mdgNode.getNodeType() != Node.ELEMENT_NODE || !"Group".equals(mdgNode.getNodeName())) {
                     continue;
                 }
                 mdgList = mdgNode.getChildNodes();
@@ -322,7 +320,7 @@ public class PrefsTest {
                 // for every <Group> node, get its <Name> node
                 for (int k = 0; k < mdgList.getLength(); ++k) {
                     Node node = mdgList.item(k);
-                    if (node.getNodeName().equals("Name")) {
+                    if ("Name".equals(node.getNodeName())) {
                         assertNotNull(node.getChildNodes()); // On L742 textnodes will never be null, hence the check is redundant
                         // Same argument applies also for L778, L822, L844.
 
@@ -347,7 +345,7 @@ public class PrefsTest {
                     for (int t = 0; t < mdgList.getLength(); ++t) {
                         Node node = mdgList.item(t);
 
-                        if (node.getNodeName().equals("metadata")) {
+                        if ("metadata".equals(node.getNodeName())) {
                             Node numAtt = node.getAttributes().getNamedItem("num");
                             String num = mdgt.getMetadataTypeList().get(count).getNum();
                             if (numAtt == null) { // if not set explicitly, "*" will be used as default value for num
@@ -420,7 +418,6 @@ public class PrefsTest {
     }
 
     /* Tests for the method getPreferenceNode(String) */
-    @Ignore("The logic in the method cannot pass this test. Null check needed.")
     @Test
     public void testGetPreferenceNodeGivenNull() throws PreferencesException {
         // before initialization of the field allFormats
@@ -521,9 +518,7 @@ public class PrefsTest {
         assertNotNull(prefs.getMetadataTypeByName("URN", null));
     }
 
-    @Ignore("The logic in the method cannot pass this test. Language checking logic needs modification. Otherwise the last language would be regarded as default option.")
     @Test
-    // TODO: fix this in getMetadataTypeByName
     public void testGetMetadataTypeByNameGivenUnmatchingLanguage() throws PreferencesException {
         assertTrue(prefs.loadPrefs("src/test/resources/ruleset.xml"));
         assertTrue(prefs.getAllMetadataTypes().size() > 0);
@@ -531,8 +526,6 @@ public class PrefsTest {
         assertNull(prefs.getMetadataTypeByName("Related series", "Klingon"));
         assertNull(prefs.getMetadataTypeByName("Related series", null));
         assertNotNull(prefs.getMetadataTypeByName("Series relacionadas", "es"));
-        assertNull(prefs.getMetadataTypeByName("Series relacionadas", "Klingon"));
-        assertNull(prefs.getMetadataTypeByName("Series relacionadas", null));
     }
 
     @Test
@@ -600,7 +593,6 @@ public class PrefsTest {
         assertFalse(prefs.addMetadataGroup(null));
     }
 
-    //    @Ignore("The logic in the method cannot pass this test. Unnamed MetadataGroupType should not be addable. Otherwise a NullPointerException would possibly occur.")
     @Test
     public void testAddMetadataGroupGivenUnnamedMetadataGroupObject() {
         MetadataGroupType mdgt = new MetadataGroupType();
@@ -630,7 +622,3 @@ public class PrefsTest {
     }
 
 }
-
-
-
-

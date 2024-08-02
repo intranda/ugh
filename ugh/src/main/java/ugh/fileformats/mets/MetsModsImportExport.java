@@ -290,20 +290,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
     /*
      * (non-Javadoc)
      * 
-     * @see ugh.dl.Fileformat#read(java.lang.String)
-     */
-    @Override
-    public boolean read(String filename) throws ReadException {
-        // The reading of the METS is already existing in the method
-        // parseMODSForLogicalDOM for import of external METS/MODS files
-        // configured by the METS section in the prefs.
-
-        return super.read(filename);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see ugh.fileformats.mets.MetsMods#WriteMODS(ugh.dl.DocStruct, org.w3c.dom.Node, org.w3c.dom.Document)
      */
     @Override
@@ -385,7 +371,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                                 }
                                 // Node was created successfully, now add
                                 // value to it.
-                                // metadataValue = metadataValue.replace("< ", "&lt; ").replace("> ", "&gt; ").replace("\"", "&quot;");
                                 Node valueNode = domDoc.createTextNode(metadataValue);
                                 createdNode.appendChild(valueNode);
 
@@ -910,7 +895,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                             ps.setAffiliation(affiliationvalue[0]);
                         }
                         if (authorityfileidvalue != null && authorityuri != null && authorityvalue != null) {
-                            ps.setAutorityFile(authorityfileidvalue[0], authorityuri[0], authorityvalue[0]);
+                            ps.setAuthorityFile(authorityfileidvalue[0], authorityuri[0], authorityvalue[0]);
                         }
                         if (displaynamevalue != null) {
                             ps.setDisplayname(displaynamevalue[0]);
@@ -929,7 +914,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                             String message = "Person '" + mdt.getName() + "' (" + ps.getDisplayname() + ") is not allowed as a child for '"
                                     + inStruct.getType().getName() + "' during MODS import!";
                             log.error(message, e);
-                            // throw new ImportException(message, e);
                         }
 
                         // Get out of for loop; we don't need to iterate over
@@ -956,11 +940,9 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                         String authority = node.getAttributes().getNamedItem("authority").getNodeValue();
                         String authorityURI = node.getAttributes().getNamedItem("authorityURI").getNodeValue();
                         String valueURI = node.getAttributes().getNamedItem("valueURI").getNodeValue();
-                        md.setAutorityFile(authority, authorityURI, valueURI);
+                        md.setAuthorityFile(authority, authorityURI, valueURI);
                     }
                     md.setValue(value);
-
-                    // TODO read groups
 
                     // Add the metadata.
                     try {
@@ -1007,8 +989,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
 
         // Do query. Query syntax is like in the following example:
         // String queryExpression = "declare namespace
-        // xq='http://xmlbeans.apache.org/samples/xquery/employees';" +
-        // "$this/xq:employees/xq:employee/xq:phone[contains(., '(206)')]";
+
         String path = this.namespaceDeclarations.get(this.modsNamespacePrefix) + " $this/" + this.xPathAnchorReference;
 
         XmlOptions xo = new XmlOptions();
@@ -1088,9 +1069,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
 
         // Copy the anchor DocStruct, so it can be added as a parent: copy all
         // metadata, but not it's children.
-        DocStruct newanchor = anchorDocStruct.copy(true, false);
-
-        return newanchor;
+        return anchorDocStruct.copy(true, false);
     }
 
     /*
@@ -1099,7 +1078,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
      * @see ugh.fileformats.mets.MetsMods#getAnchorIdentifierFromMODSDOM(org.w3c. dom.Node, ugh.dl.DocStruct)
      */
     @Override
-    protected String getAnchorIdentifierFromMODSDOM(Node inMods, DocStruct inStruct) {
+    protected String getAnchorIdentifierFromMODSDOM(Node inMods) {
 
         String anchoridentifier = null;
         // Result from XPath expression.
@@ -1359,7 +1338,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         String ordernumber = "";
         // current element is anchor file
         if (inStruct.getType().isAnchor()) {
-            if (inStruct.getAllChildren() != null && inStruct.getAllChildren().size() > 0) {
+            if (inStruct.getAllChildren() != null && !inStruct.getAllChildren().isEmpty()) {
                 DocStruct child = inStruct.getAllChildren().get(0);
                 if (child.getAllMetadata() != null) {
                     for (Metadata md : child.getAllMetadata()) {
@@ -1440,7 +1419,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
      * @see ugh.fileformats.mets.MetsMods#writeAmdSec(org.w3c.dom.Document, boolean)
      */
     @Override
-    protected void writeAmdSec(Document domDoc, boolean isAnchorFile, boolean hasImages) {
+    protected void writeAmdSec(Document domDoc, boolean isAnchorFile) {
 
         boolean rightsMDExists = false;
         boolean digiprovMDExists = false;
@@ -1459,13 +1438,13 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
 
         // create techMD
         List<Md> techMdList = this.digdoc.getTechMds();
-        if (techMdList != null && techMdList.size() > 0) {
+        if (techMdList != null && !techMdList.isEmpty()) {
             for (Md md : techMdList) {
                 this.techidMax++;
                 Node theNode = domDoc.importNode(md.getContent(), true);
                 Node child = theNode.getFirstChild();
-                Element techMd = createDomElementNS(domDoc, this.metsNamespacePrefix, md.getType());
-                if (md.getType().contentEquals(METS_RIGHTSMD_STRING)) {
+                Element techMd = createDomElementNS(domDoc, this.metsNamespacePrefix, md.getType().toString());
+                if (md.getType().toString().contentEquals(METS_RIGHTSMD_STRING)) {
                     Node mdWrap = md.getContent();
                     if (mdWrap != null) {
                         Node mdType = mdWrap.getAttributes().getNamedItem("OTHERMDTYPE");
@@ -1473,7 +1452,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                             rightsMDExists = true;
                         }
                     }
-                } else if (md.getType().contentEquals("digiprovMD")) {
+                } else if (md.getType().toString().contentEquals("digiprovMD")) {
                     Node mdWrap = md.getContent();
                     if (mdWrap != null) {
                         Node mdType = mdWrap.getAttributes().getNamedItem("OTHERMDTYPE");
@@ -1487,11 +1466,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 for (int i = 0; i < theNode.getAttributes().getLength(); i++) {
                     Node attribute = theNode.getAttributes().item(i);
                     techNode.setAttribute(attribute.getNodeName(), attribute.getNodeValue());
-                    //					System.out.println("mdWrap attribute " + attribute.getNodeName() + ": " + attribute.getNodeValue());
                 }
-                //				techNode.setAttribute(METS_MDTYPE_STRING, "PREMIS:OBJECT");
-                //				String idlog = TECHMD_PREFIX + "_" + new DecimalFormat(DECIMAL_FORMAT).format(this.techidMax);
-                //				techMd.setAttribute(METS_ID_STRING, idlog);
                 techNode.appendChild(child);
                 techMd.appendChild(techNode);
                 amdSec.appendChild(techMd);
@@ -1609,7 +1584,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         // if anchor file).
         //
         String element;
-        if (isAnchorFile || !hasImages) {
+        if (isAnchorFile) {
             element = this.metsNamespacePrefix + ":" + METS_STRUCTMAP_STRING;
         } else {
             element = this.metsNamespacePrefix + ":" + METS_FILESEC_STRING;
@@ -1725,8 +1700,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                     ((Element) createdNode).setAttribute("authorityURI", theMetadata.getAuthorityURI());
                     ((Element) createdNode).setAttribute("valueURI", theMetadata.getAuthorityURI() + theMetadata.getAuthorityValue());
                 }
-            } else if (StringUtils.isNotBlank(theMetadata.getAuthorityValue())) {
-                ((Element) createdNode).setAttribute("valueURI", theMetadata.getAuthorityURI() + theMetadata.getAuthorityValue());
             }
 
             createdNode.appendChild(valueNode);
@@ -2064,13 +2037,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             throw new PreferencesException(message);
         }
 
-        // if (thePerson.getLastname() != null) {
-        // thePerson.setLastname(thePerson.getLastname().replace("< ", "&lt; ").replace("> ", "&gt; ").replace("\"", "&quot;"));
-        // }
-        // if (thePerson.getFirstname() != null) {
-        // thePerson.setFirstname(thePerson.getFirstname().replace("< ", "&lt; ").replace("> ", "&gt; ").replace("\"", "&quot;"));
-        // }
-
         // Set the displayname of the current person, if NOT already set! Use
         // "lastname, name" as we were told in the MODS profile.
 
@@ -2245,17 +2211,6 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 ((Element) createdNode).setAttribute("valueURI", corporate.getAuthorityURI() + corporate.getAuthorityValue());
             }
         }
-        //        if (corporate.getDisplayname() != null) {
-        //            xquery = theMMO.getDisplayNameXQuery();
-        //            if (xquery == null) {
-        //                log.warn("No XQuery given for " + corporate.getType().getName() + "'s displayName '" + corporate.getDisplayname() + "'");
-        //            } else {
-        //                Node displaynameNode = createNode(xquery, createdNode, theDomDoc);
-        //                Node displaynamevalueNode = theDomDoc.createTextNode(corporate.getDisplayname());
-        //                displaynameNode.appendChild(displaynamevalueNode);
-        //                createdNode.appendChild(displaynameNode);
-        //            }
-        //        }
     }
 
     /***************************************************************************
@@ -2291,7 +2246,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
         String result = "";
 
         if (theStruct != null && !theList.isEmpty()) {
-            StringBuffer listEntries = new StringBuffer();
+            StringBuilder listEntries = new StringBuilder();
 
             for (Object o : theList) {
                 if (o instanceof Metadata || o instanceof Person) {
@@ -2563,8 +2518,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 if (METS_PREFS_WRITEXPATH_STRING.equalsIgnoreCase(currentNode.getNodeName())) {
                     String xpathName = getTextNodeValue(currentNode);
                     if (xpathName == null) {
-                        PreferencesException pe = new PreferencesException("<" + METS_PREFS_WRITEXPATH_STRING + "> is existing, but has no value!");
-                        throw pe;
+                        throw new PreferencesException("<" + METS_PREFS_WRITEXPATH_STRING + "> is existing, but has no value!");
                     }
                     mmo.setWriteXQuery(xpathName.trim());
                 }

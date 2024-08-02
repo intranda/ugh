@@ -114,24 +114,24 @@ public class VirtualFileGroupTest {
      */
     @Test
     public void testAllowAllFilesAndRestrictFiles() {
-        assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         vfg.restrictFiles();
-        assertNotSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertNotSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         vfg.allowAllFiles();
-        assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
     }
 
     @Test
     public void testAddContentFileGivenNull1() {
-        assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         vfg.addContentFile(null);
-        assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
     }
 
     @Test
     public void testAddContentFileGivenNull2() {
         vfg.restrictFiles();
-        assertNotSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertNotSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         assertEquals(0, vfg.getContentFiles().size());
         vfg.addContentFile(null);
         assertEquals(0, vfg.getContentFiles().size());
@@ -139,9 +139,9 @@ public class VirtualFileGroupTest {
 
     @Test
     public void testAddContentFilesGivenNull1() {
-        assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         vfg.addContentFiles(null);
-        assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
     }
 
     @Test
@@ -159,33 +159,33 @@ public class VirtualFileGroupTest {
         List<ContentFile> files = new ArrayList<>();
         files.add(cf1);
         files.add(cf2);
-        assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         vfg.addContentFiles(files);
-        assertNotSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertNotSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         assertEquals(2, vfg.getContentFiles().size());
     }
 
     @Test
     public void testRemoveContentFileGivenNull() {
-        assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         vfg.removeContentFile(null);
-        assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         vfg.restrictFiles();
-        assertNotSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertNotSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         vfg.removeContentFile(null);
-        assertNotSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertNotSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
     }
 
     @Test
     public void testRemoveContentFileGivenUnexistingObject() {
         ContentFile cf = new ContentFile();
-        assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         vfg.removeContentFile(cf);
-        assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         vfg.restrictFiles();
-        assertNotSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertNotSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         vfg.removeContentFile(cf);
-        assertNotSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertNotSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
     }
 
     @Test
@@ -193,21 +193,21 @@ public class VirtualFileGroupTest {
         ContentFile cf = new ContentFile();
         vfg.addContentFile(cf);
         assertEquals(1, vfg.getContentFiles().size());
-        assertNotSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertNotSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         vfg.removeContentFile(cf);
         assertEquals(0, vfg.getContentFiles().size());
-        assertNotSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertNotSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
     }
 
     @Test
     public void testRemoveContentFilesGivenNull() {
-        assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         vfg.removeContentFiles(null);
-        assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         vfg.restrictFiles();
-        assertNotSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertNotSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         vfg.removeContentFile(null);
-        assertNotSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertNotSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
     }
 
     @Test
@@ -232,27 +232,27 @@ public class VirtualFileGroupTest {
 
     @Test
     public void testContainsGivenNullWhenAllAllowed() {
-        assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         assertFalse(vfg.contains(null));
     }
 
     @Test
     public void testContainsGivenNullWhenRestricted() {
         vfg.restrictFiles();
-        assertNotSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertNotSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         assertFalse(vfg.contains(null));
     }
 
     @Test
     public void testContainsGivenAnyContentFile() {
         ContentFile cf = new ContentFile();
-        assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         assertTrue(vfg.contains(cf));
         vfg.restrictFiles();
-        assertNotSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertNotSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         assertFalse(vfg.contains(cf));
         vfg.allowAllFiles();
-        assertSame(vfg.ALL_FILES, vfg.getContentFiles());
+        assertSame(VirtualFileGroup.ALL_FILES, vfg.getContentFiles());
         assertTrue(vfg.contains(cf));
     }
 

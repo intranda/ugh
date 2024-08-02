@@ -12,7 +12,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ugh.exceptions.MetadataTypeNotAllowedException;
@@ -220,6 +219,8 @@ public class MetadataGroupTest {
 
     // class needed for the test case above
     private class ExtendedPerson extends Person {
+        private static final long serialVersionUID = -2950339572744664603L;
+
         public ExtendedPerson(MetadataType type) throws MetadataTypeNotAllowedException {
             super(type);
         }
@@ -263,18 +264,13 @@ public class MetadataGroupTest {
         fixture.addCorporate(corporate2);
     }
 
-    @Ignore("The logic in the method cannot pass this test. No suggestions available. Same logic of addPerson passed the same test. Feature OR Bug?")
-    @Test
-    // TODO your example PublisherCorporate is set to num="1o" in your group. So you can't add it a second time. PublisherPerson can be added multiple times
+    @Test(expected = MetadataTypeNotAllowedException.class)
     public void testAddCorporateGivenObjectExtendedFromCorporate() throws MetadataTypeNotAllowedException {
         MetadataType type = prefs.getMetadataTypeByName("PublisherCorporate");
-        //        MetadataType type = new MetadataType();
-        //        type.setName("PublisherCorporate");
-        //        type.isCorporate = true;
+
         Corporate corporate = new Corporate(type);
         ExtendedCorporate exCorporate = new ExtendedCorporate(type);
         fixture.addCorporate(corporate);
-        //fixture.addCorporate(new Corporate(type));
         fixture.addCorporate(exCorporate);
         assertEquals(2, fixture.getCorporateList().size());
         assertNotEquals("This is the ExtendedCorporate", fixture.getCorporateList().get(0).toString());
@@ -283,6 +279,8 @@ public class MetadataGroupTest {
 
     // class needed for the test case above
     private class ExtendedCorporate extends Corporate {
+        private static final long serialVersionUID = 2996585449296266592L;
+
         public ExtendedCorporate(MetadataType type) throws MetadataTypeNotAllowedException {
             super(type);
         }
@@ -440,12 +438,12 @@ public class MetadataGroupTest {
     /* Tests for the method equals(Object) */
     @Test
     public void testEqualsToItself() {
-        assertTrue(fixture.equals(fixture));
+        assertEquals(fixture, fixture);
     }
 
     @Test
     public void testEqualsGivenNull() {
-        assertFalse(fixture.equals(null));
+        assertNotEquals(fixture, null);
     }
 
     @Test
@@ -478,11 +476,13 @@ public class MetadataGroupTest {
 
     @Test
     public void testEqualsGivenObjectOfAnExtendedClass() throws MetadataTypeNotAllowedException {
-        assertFalse(fixture.equals(new ExtendedMetadataGroup(groupType)));
+        assertNotEquals(fixture, new ExtendedMetadataGroup(groupType));
     }
 
     // class needed for the test case above
     private class ExtendedMetadataGroup extends MetadataGroup {
+        private static final long serialVersionUID = 2391203496112284470L;
+
         public ExtendedMetadataGroup(MetadataGroupType type) throws MetadataTypeNotAllowedException {
             super(type);
         }

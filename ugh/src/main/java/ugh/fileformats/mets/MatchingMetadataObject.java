@@ -2,6 +2,7 @@ package ugh.fileformats.mets;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -53,7 +54,6 @@ public class MatchingMetadataObject {
     // RegExp value replacing.
     private String valueCondition = null;
     private String valueRegExp = null;
-    //    private String valueReplacement = null;
 
     // Role of a person.
     private String role = null;
@@ -82,7 +82,7 @@ public class MatchingMetadataObject {
     private String modsauthority = null;
     private String modsID = null;
     private String modstransliteration = null;
-    //	private String	modsscript				= null;
+
     private String modslang = null;
     private String modsxmllang = null;
 
@@ -254,7 +254,7 @@ public class MatchingMetadataObject {
      * @param in
      **************************************************************************/
     public void setMODSScript(String in) {
-        this.modstransliteration = in;
+        setMODSTransliteration(in);
     }
 
     /***************************************************************************
@@ -507,37 +507,4 @@ public class MatchingMetadataObject {
     public void addToMap(String key, Map<String, String> value) {
         metadataGroupXQueries.put(key, value);
     }
-
-    /***************************************************************************
-     * @param checkObject
-     * @return
-     **************************************************************************/
-    public boolean equals(MatchingMetadataObject checkObject) {
-
-        // Check ReadModsName.
-        if ((checkObject.getReadModsName() != null)
-                && (this.getReadModsName() != null)) {
-            if (!(this.getReadModsName().equals(checkObject.getReadModsName()))) {
-                // The two values are NOT identical.
-                return false;
-            }
-        } else {
-            // One of the two objects does not have ReadModsName value.
-            return false;
-        }
-
-        // Check Role.
-        if ((checkObject.getRole() != null) && (this.getRole() != null)) {
-            if (!(this.getRole().equals(checkObject.getRole()))) {
-                // The two values are NOT identical.
-                return false;
-            }
-        } else {
-            // One of the two objects does not have ReadModsName value.
-            return false;
-        }
-
-        return true;
-    }
-
 }

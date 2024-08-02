@@ -56,7 +56,7 @@ import ugh.exceptions.TypeNotAllowedForParentException;
 @Log4j2
 public class SlimDocStruct {
     @JsonIgnore
-    private transient SlimDigitalDocument digitalDocument;
+    private SlimDigitalDocument digitalDocument;
 
     private String id;
     private String type;
@@ -115,10 +115,10 @@ public class SlimDocStruct {
             }
         }
         //add persons
-        if(ds.getAllPersons() != null) {            
+        if (ds.getAllPersons() != null) {
             sds.persons = ds.getAllPersons().stream().map(p -> SlimPerson.fromPerson(p, sdd)).collect(Collectors.toList());
         } else {
-            sds.persons = new ArrayList<SlimPerson>();
+            sds.persons = new ArrayList<>();
         }
         // add children
         if (ds.getAllChildren() != null) {
@@ -207,9 +207,7 @@ public class SlimDocStruct {
             }
             //add to-references
             for (SlimReference ref : this.docStructRefsTo) {
-                // if (ref.getSourceDsId().equals("LOG_0001")) {
-                //     System.out.println("refTo");
-                // }
+
                 DocStruct otherDs = digitalDocument.getOrigDsMap().get(ref.getTargetDsId());
                 if (otherDs == null) {
                     otherDs = digitalDocument.getDsMap().get(ref.getTargetDsId()).toDocStruct(dd);
@@ -230,7 +228,7 @@ public class SlimDocStruct {
             }
             //add techMdList
             for (SlimMd md : this.techMdList) {
-                ds.addTechMd(md.ToMd());
+                ds.addTechMd(md.toMd());
             }
             digitalDocument.getOrigDsMap().put(ds.getIdentifier(), ds);
             return ds;

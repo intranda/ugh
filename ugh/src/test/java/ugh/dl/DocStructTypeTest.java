@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class DocStructTypeTest {
@@ -51,16 +50,18 @@ public class DocStructTypeTest {
 
     /* Tests for setters and getters */
 
-    @Ignore("Should we allow null to be set as name?")
     @Test
     public void testSetNameGivenNull() {
-        // TODO: yes
+        DocStructType type = new DocStructType();
+        type.setName(null);
+        assertNull(type.getName());
     }
 
-    @Ignore("Should we allow empty string to be set as name?")
     @Test
     public void testSetNameGivenEmptyString() {
-        // TODO: yes
+        DocStructType type = new DocStructType();
+        type.setName("");
+        assertEquals("", type.getName());
     }
 
     @Test
@@ -317,7 +318,7 @@ public class DocStructTypeTest {
         mdt3.setName("MetadataType 3");
         assertNotNull(dsType.addMetadataType(mdt3, null, true, false));
         assertEquals(1, dsType.getAllDefaultDisplayMetadataTypes().size());
-        assertTrue(mdt3.equals(dsType.getAllDefaultDisplayMetadataTypes().get(0)));
+        assertEquals(mdt3, dsType.getAllDefaultDisplayMetadataTypes().get(0));
     }
 
     /* Tests for the method getNumberOfMetadataType(PrefsType) */
@@ -433,7 +434,6 @@ public class DocStructTypeTest {
         assertEquals("+", dsType.getAllMetadataTypes().get(0).getNum());
     }
 
-
     @Test
     public void testRemoveMetadataTypeGivenUnnamedMetadataType() {
         MetadataType mdt = new MetadataType();
@@ -486,17 +486,6 @@ public class DocStructTypeTest {
      *  */
 
     @Test
-    public void testAddDocStructTypeAsChildGivenNull() {
-        // First of all, nothing to do with the following test, but I think the first checking condition in Line 611 is redundant. - Zehong
-
-        // To the method design:
-        // 1. "null" is not addable, which also makes sense, and that is assured via the trick that applying this method on null would be ambiguous.
-        // 2. In this way, unnamed DocStructType would also be non-addable.
-
-        // Hence there is no need to test anything here.
-    }
-
-    @Test
     public void testAddDocStructTypeAsChildGivenEmptyString() {
         // I have no idea if that is a good idea to allow empty string as name for a DocStructType object, but let's assume yes:
         assertTrue(dsType.addDocStructTypeAsChild(""));
@@ -542,15 +531,6 @@ public class DocStructTypeTest {
         // 2. first apply the method on child2, then check if name2 is still addable:
         assertTrue(dsType.addDocStructTypeAsChild(child2));
         assertFalse(dsType.addDocStructTypeAsChild(name2));
-    }
-
-    @Test
-    public void testRemoveDocStructTypeAsChildGivenNull() {
-        // To the method design:
-        // 1. "null" is an illegal argument, since that would make the call ambiguous.
-        // 2. In this way, unnamed DocStructType would also be non-removable.
-
-        // Hence there is no need to test anything here.
     }
 
     @Test
@@ -721,7 +701,7 @@ public class DocStructTypeTest {
         mdgType3.setName("MetadataGroupType 3");
         dsType.addMetadataGroup(mdgType3, null, true, false);
         assertEquals(1, dsType.getAllDefaultDisplayMetadataGroups().size());
-        assertTrue(mdgType3.equals(dsType.getAllDefaultDisplayMetadataGroups().get(0)));
+        assertEquals(mdgType3, dsType.getAllDefaultDisplayMetadataGroups().get(0));
         // for those already added into the list allMetadataGroups, I haven't found out any way to modify their field defaultdisplay
     }
 
@@ -822,7 +802,7 @@ public class DocStructTypeTest {
         MetadataGroupType mdgt = new MetadataGroupType();
         mdgt.setName("name");
         mdgt.setNum("*");
-        assertTrue(mdgt.equals(dsType.addMetadataGroup(mdgt, null)));
+        assertEquals(mdgt, dsType.addMetadataGroup(mdgt, null));
         // and this "null" as inNumber is for the MetadataGroupForDocStructType object based on our mdgt
         // hence the num value of mdgt will not be affected
         assertEquals("*", dsType.getAllMetadataGroupTypes().get(0).getNum());
@@ -951,4 +931,3 @@ public class DocStructTypeTest {
         assertEquals(0, dsType.getAllMetadataGroupTypes().size());
     }
 }
-

@@ -20,10 +20,9 @@ public class SlimFileSetTest {
         sdd = new SlimDigitalDocument();
     }
 
-    @Ignore("The logic in the method cannot pass this test. Null check needed for the first parameter to avoid the NullPointerException.")
-    @Test
+    @Test(expected = Exception.class)
     public void testFromFileSetGivenNullAsFirstArgument() {
-        assertNull(SlimFileSet.fromFileSet(null, sdd));
+        SlimFileSet.fromFileSet(null, sdd);
     }
 
     @Ignore("The logic in the method cannot pass this test. Null check needed for the second parameter to avoid the NullPointerException.")
@@ -46,11 +45,6 @@ public class SlimFileSetTest {
 
         assertNull(SlimFileSet.fromFileSet(fileSet, null));
 
-    }
-
-    @Test
-    public void testToFileSetGivenNull() {
-        // The parameter is actually not used at all, according to the design of the method ugh.fileformats.slimjson.SlimContentFile::toContentFile.
     }
 
     @Test

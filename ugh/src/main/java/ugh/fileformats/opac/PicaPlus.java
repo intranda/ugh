@@ -1104,7 +1104,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                         }
                     }
                 } else if (mmo != null && "Corporate".equals(mmo.getType())) {
-                    // TODO
+
                     String internalname = mmo.getInternalName();
                     if (corp == null) {
 
@@ -1123,14 +1123,14 @@ public class PicaPlus implements ugh.dl.Fileformat {
                                 String catalogue = content.substring(0, content.indexOf("/"));
                                 String identifier = content.substring(content.indexOf("/") + 1);
                                 if ("gnd".equals(catalogue)) {
-                                    corp.setAutorityFile(catalogue, "http://d-nb.info/gnd/", identifier);
+                                    corp.setAuthorityFile(catalogue, "http://d-nb.info/gnd/", identifier);
                                 }
                             } else if (content.matches("gnd\\.+")) {
-                                corp.setAutorityFile("gnd", "http://d-nb.info/gnd/", content.replace("gnd", ""));
+                                corp.setAuthorityFile("gnd", "http://d-nb.info/gnd/", content.replace("gnd", ""));
                             } else if (content.matches("\\(.*\\).+")) {
-                                corp.setAutorityFile("gnd", "http://d-nb.info/gnd/", content.replaceAll("\\(.*\\)", ""));
+                                corp.setAuthorityFile("gnd", "http://d-nb.info/gnd/", content.replaceAll("\\(.*\\)", ""));
                             } else {
-                                corp.setAutorityFile("gnd", "http://d-nb.info/gnd/", content);
+                                corp.setAuthorityFile("gnd", "http://d-nb.info/gnd/", content);
                             }
                         }
                     }
@@ -1182,34 +1182,18 @@ public class PicaPlus implements ugh.dl.Fileformat {
                                 String catalogue = content.substring(0, content.indexOf("/"));
                                 String identifier = content.substring(content.indexOf("/") + 1);
                                 if ("gnd".equals(catalogue)) {
-                                    per.setAutorityFile(catalogue, "http://d-nb.info/gnd/", identifier);
+                                    per.setAuthorityFile(catalogue, "http://d-nb.info/gnd/", identifier);
                                 }
                             } else if (content.matches("gnd\\.+")) {
-                                per.setAutorityFile("gnd", "http://d-nb.info/gnd/", content.replace("gnd", ""));
+                                per.setAuthorityFile("gnd", "http://d-nb.info/gnd/", content.replace("gnd", ""));
                             } else if (content.matches("\\(.*\\).+")) {
-                                per.setAutorityFile("gnd", "http://d-nb.info/gnd/", content.replaceAll("\\(.*\\)", ""));
+                                per.setAuthorityFile("gnd", "http://d-nb.info/gnd/", content.replaceAll("\\(.*\\)", ""));
                             } else {
-                                per.setAutorityFile("gnd", "http://d-nb.info/gnd/", content);
+                                per.setAuthorityFile("gnd", "http://d-nb.info/gnd/", content);
                             }
 
                         }
 
-                        // Some OPAC (e.g. SWB) don't carry separate subfields for
-                        // firstname and lastname. Therefore we try to extract the
-                        // name parts from the expansion subfield
-                        // ("Expansion der Ansetzungsform").
-                        //
-                        // <cite>Vorbehaltlich anderslautender Aussagen aus Konstanz
-                        // wäre das also unser Weg, an Personenansetzungen
-                        // herauzukommen: 028A $8 ..., Name 028A $8 , ... Vorname
-                        // 028A $8 , ... / von Vorname mit angehängtem Präfix (nur
-                        // "/" fällt weg bei Übernahme nach Goobi) 028A $8 ..., ...
-                        // *Jahr-Jahr* Lebensdaten (weglassen oder in eigenes
-                        // Metadatenfeld schieben, nicht immer vorhanden).
-                        //
-                        // 028A $8 @... <...> Name (@ kennzeichnet persönlichen
-                        // Namen, kein "," als Steuerzeichen vorhanden, vollständig
-                        // mit Sonderzeichen <> in Feld Name übernehmen)</cite>.
                         if (mmo.isExpansion() && content != null) {
                             // Ignore life dates.
                             String heading = content.split("\\*")[0].trim();
@@ -1386,7 +1370,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
         // Delimits the values.
         private String delimiter = "";
         // Is used to store content during processing.
-        private StringBuffer content;
+        private StringBuilder content;
 
         /***********************************************************************
          * Constructor.
@@ -1423,13 +1407,6 @@ public class PicaPlus implements ugh.dl.Fileformat {
             this.metadatatypename = metadatatypename;
         }
 
-        //		/***********************************************************************
-        //		 * @return the delimiter
-        //		 **********************************************************************/
-        //		public String getDelimiter() {
-        //			return this.delimiter;
-        //		}
-
         /***********************************************************************
          * @param delimiter the delimiter to set
          **********************************************************************/
@@ -1443,7 +1420,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
         public void addContent(String in) {
 
             if (this.content == null) {
-                this.content = new StringBuffer();
+                this.content = new StringBuilder();
                 this.content.append(in);
             } else {
                 this.content.append(this.delimiter);
@@ -1481,7 +1458,6 @@ public class PicaPlus implements ugh.dl.Fileformat {
         private String picaplusGroupname = null;
         private String valueCondition = null;
         private String valueRegExp = null;
-        //        private String valueRegExReplacement = null;
 
         // These are only important, if MMO matches a person.
         private boolean isFirstname = false;
@@ -1519,7 +1495,6 @@ public class PicaPlus implements ugh.dl.Fileformat {
 
     @Override
     public void setGoobiID(String goobiId) {
-        // TODO Auto-generated method stub
-
+        // do nothing
     }
 }

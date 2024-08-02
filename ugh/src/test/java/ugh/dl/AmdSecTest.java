@@ -21,6 +21,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import ugh.dl.Md.MdType;
+
 public class AmdSecTest {
 
     private static final File xmlFile = new File("src/test/resources/nodeTest.xml");
@@ -41,7 +43,7 @@ public class AmdSecTest {
         list = new ArrayList<>();
         for (int i = 0; i < nList.getLength(); ++i) {
             Node nNode = nList.item(i);
-            list.add(new Md(nNode));
+            list.add(new Md(nNode, MdType.TECH_MD));
         }
     }
 
@@ -53,7 +55,7 @@ public class AmdSecTest {
 
     @Test
     public void testContructorWithEmptyList() {
-        AmdSec tester = new AmdSec(new ArrayList<Md>());
+        AmdSec tester = new AmdSec(new ArrayList<>());
         assertNotNull(tester.getTechMdList());
         assertEquals(0, tester.getTechMdList().size());
     }
@@ -67,7 +69,7 @@ public class AmdSecTest {
     @Test
     public void testAddTechMd() {
         AmdSec tester = new AmdSec(list);
-        Md edon = new Md(doc.getElementsByTagName("edon").item(0));
+        Md edon = new Md(doc.getElementsByTagName("edon").item(0), MdType.TECH_MD);
         tester.addTechMd(edon);
         assertTrue(tester.getTechMdList().contains(edon));
     }
@@ -77,7 +79,7 @@ public class AmdSecTest {
         ArrayList<Md> tempList = new ArrayList<>();
         for (int i = 0; i < nList.getLength(); ++i) {
             Node nNode = nList.item(i);
-            tempList.add(new Md(nNode));
+            tempList.add(new Md(nNode, MdType.TECH_MD));
         }
         AmdSec tester = new AmdSec(tempList);
         List<Node> result = tester.getTechMdsAsNodes();
@@ -96,11 +98,10 @@ public class AmdSecTest {
 
     @Test
     public void testGetTechMdsAsNodesGivenEmptyTechMdList() {
-        AmdSec tester = new AmdSec(new ArrayList<Md>());
+        AmdSec tester = new AmdSec(new ArrayList<>());
         List<Node> result = tester.getTechMdsAsNodes();
         assertNotNull(result);
         assertEquals(0, result.size());
     }
 
 }
-

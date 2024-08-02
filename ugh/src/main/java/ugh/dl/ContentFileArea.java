@@ -88,7 +88,7 @@ public class ContentFileArea implements Serializable {
      **************************************************************************/
     public void setType(String type) throws ContentFileAreaTypeUnknownException {
 
-        if (type.equals("coordinates") || type.equals("byteoffset") || type.equals("xmlid") || type.equals("smtpe")) {
+        if ("coordinates".equals(type) || "byteoffset".equals(type) || "xmlid".equals(type) || "smtpe".equals(type)) {
             this.type = type;
         } else {
             String message = "'" + type + "' is unknown for ContentFileArea type";
@@ -96,39 +96,4 @@ public class ContentFileArea implements Serializable {
             throw new ContentFileAreaTypeUnknownException(message);
         }
     }
-
-    /***************************************************************************
-     * <p>
-     * Overloaded method compares this ContentFileArea with parameter contentFileArea.
-     * </p>
-     * 
-     * @author Wulf Riebensahm
-     * @return TRUE if type and value are the same.
-     * @param ContentFileArea contentFileArea
-     **************************************************************************/
-    public boolean equals(ContentFileArea contentFileArea) {
-
-        // Try block for comparing strings.
-        try {
-            if (!((this.getType() == null && contentFileArea.getType() == null) || this.getType().equals(contentFileArea.getType()))) {
-                return false;
-            }
-
-            if (!((this.getFrom() == null && contentFileArea.getFrom() == null) || this.getFrom().equals(contentFileArea.getFrom()))) {
-                return false;
-            }
-
-            if (!((this.getTo() == null && contentFileArea.getTo() == null) || this.getTo().equals(contentFileArea.getTo()))) {
-                return false;
-            }
-
-        }
-        // TODO Teldemokles says: "Do never catch a NullPointerException"!
-        catch (NullPointerException npe) {
-            return false;
-        }
-
-        return true;
-    }
-
 }

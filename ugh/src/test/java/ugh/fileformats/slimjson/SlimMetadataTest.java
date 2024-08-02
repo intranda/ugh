@@ -34,27 +34,25 @@ public class SlimMetadataTest {
     }
 
     /* tests for the public methods */
-    @Ignore("The logic in the method cannot pass this test. Null check needed for the first parameter to avoid the NullPointerException.")
-    @Test
+    @Test(expected = Exception.class)
     public void testFromMetadataGivenNullAsFirstArgument() {
-        assertNull(SlimMetadata.fromMetadata(null, sdd));
+        SlimMetadata.fromMetadata(null, sdd);
     }
 
     @Ignore("The logic in the method cannot pass this test. Null check needed for the second parameter to avoid the NullPointerException.")
     @Test
-    public void testFromMetadataGivenNullAsSecondArgument() throws MetadataTypeNotAllowedException {
+    public void testFromMetadataGivenNullAsSecondArgument() {
         assertNull(SlimMetadata.fromMetadata(md, null));
     }
 
     @Test
-    public void testFromMetadataWithoutIdentifier() throws MetadataTypeNotAllowedException {
+    public void testFromMetadataWithoutIdentifier() {
         md.setParent(mdg);
         assertNull(md.getParent().getIdentifier());
 
         SlimMetadata smd = SlimMetadata.fromMetadata(md, sdd);
         assertNotNull(md.getParent().getIdentifier());
     }
-
 
     @Ignore("The logic in the method cannot pass this test. Null check needed to avoid the NullPointerException.")
     @Test
@@ -66,7 +64,7 @@ public class SlimMetadataTest {
         // initialize the fields of smd via calling the method fromMetadata
         md.setValue("value");
         md.setValueQualifier("en", "language");
-        md.setAutorityFile("id", "uri", "value");
+        md.setAuthorityFile("id", "uri", "value");
         assertNotNull(md.getValue());
         assertNotNull(md.getValueQualifier());
         assertNotNull(md.getAuthorityID());
@@ -89,7 +87,7 @@ public class SlimMetadataTest {
         String id = "id";
         md.setValue(value);
         md.setValueQualifier(vq, vqType);
-        md.setAutorityFile(authorityId, authorityUri, authorityValue);
+        md.setAuthorityFile(authorityId, authorityUri, authorityValue);
         mdg.setIdentifier(id);
         md.setParent(mdg);
         assertEquals(id, md.getParent().getIdentifier());

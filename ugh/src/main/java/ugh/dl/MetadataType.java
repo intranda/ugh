@@ -92,10 +92,10 @@ public class MetadataType implements Serializable, PrefsType {
 
     // Maximum number of occurences of this MetadataType for one DocStrct (can
     // be 1 (1), one or more (+) or as many as you want (*).
-    private String max_number = "1o";
+    private String maxNumber = "1o";
 
     // Hash containing all languages.
-    private HashMap<String, String> allLanguages;
+    private Map<String, String> allLanguages;
 
     // Is set to true, if metadata is a person.
     protected boolean isPerson = false;
@@ -140,7 +140,7 @@ public class MetadataType implements Serializable, PrefsType {
             // Unknown syntax.
             return;
         } else {
-            this.max_number = in;
+            this.maxNumber = in;
         }
     }
 
@@ -161,8 +161,8 @@ public class MetadataType implements Serializable, PrefsType {
 
         newMDType.setAllLanguages(this.allLanguages);
         newMDType.setName(this.name);
-        if (this.max_number != null) {
-            newMDType.setNum(this.max_number);
+        if (this.maxNumber != null) {
+            newMDType.setNum(this.maxNumber);
         }
         newMDType.setIdentifier(this.isIdentifier());
         newMDType.setIsPerson(this.isPerson);
@@ -211,13 +211,13 @@ public class MetadataType implements Serializable, PrefsType {
      * @return number of MetadataType
      **************************************************************************/
     public String getNum() {
-        return this.max_number;
+        return this.maxNumber;
     }
 
     /***************************************************************************
      * @param in
      **************************************************************************/
-    public void setAllLanguages(HashMap<String, String> in) {
+    public void setAllLanguages(Map<String, String> in) {
         this.allLanguages = in;
     }
 
@@ -225,7 +225,7 @@ public class MetadataType implements Serializable, PrefsType {
      * @return
      **************************************************************************/
     @Override
-    public HashMap<String, String> getAllLanguages() {
+    public Map<String, String> getAllLanguages() {
         return this.allLanguages;
     }
 

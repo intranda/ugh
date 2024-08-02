@@ -19,7 +19,7 @@ import ugh.exceptions.MetadataTypeNotAllowedException;
 @Log4j2
 public class SlimMetadataGroup {
     @JsonIgnore
-    private transient SlimDigitalDocument digitalDocument;
+    private SlimDigitalDocument digitalDocument;
 
     protected String mDGroupTypeId;
     // Document structure to which this metadata type belongs to.
@@ -62,7 +62,6 @@ public class SlimMetadataGroup {
             mg.setPersonList(this.personList);
             return mg;
         } catch (MetadataTypeNotAllowedException e) {
-            // TODO Auto-generated catch block
             log.error(e);
         }
         return null;

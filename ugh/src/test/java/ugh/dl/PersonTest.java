@@ -1,10 +1,9 @@
 package ugh.dl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
@@ -165,13 +164,13 @@ public class PersonTest {
     @Test
     public void testEqualsToItself() throws MetadataTypeNotAllowedException {
         person = new Person(type);
-        assertTrue(person.equals(person));
+        assertEquals(person, person);
     }
 
     @Test
     public void testEqualsGivenNull() throws MetadataTypeNotAllowedException {
         person = new Person(type);
-        assertFalse(person.equals(null));
+        assertNotEquals(person, null);
     }
 
     @Test
@@ -180,29 +179,31 @@ public class PersonTest {
         type.setName("type name");
         Person anotherPerson = new Person(type);
         assertEquals("type name", person.getType().getName());
-        assertTrue(person.equals(anotherPerson));
+        assertEquals(person, anotherPerson);
     }
 
     @Test
     public void testEqualsGivenObjectOfAnExtendedClassOfPerson() throws MetadataTypeNotAllowedException {
         person = new Person(type);
         ExtendedPerson extendedPerson = new ExtendedPerson(type);
-        assertFalse(person.equals(extendedPerson));
+        assertNotEquals(person, extendedPerson);
         person = new Person(type, "First", "Last");
         extendedPerson = new ExtendedPerson(type, "First", "Last");
-        assertFalse(extendedPerson.equals(person));
+        assertNotEquals(extendedPerson, person);
         person.setDisplayname("display name");
-        assertFalse(extendedPerson.equals(person));
+        assertNotEquals(extendedPerson, person);
         extendedPerson.setDisplayname("display name");
-        assertFalse(person.equals(extendedPerson));
+        assertNotEquals(person, extendedPerson);
         extendedPerson.setExtendedProperty("property");
-        assertFalse(person.equals(extendedPerson));
-        assertFalse(extendedPerson.equals(person));
+        assertNotEquals(person, extendedPerson);
+        assertNotEquals(extendedPerson, person);
     }
 
     // class needed for the test case above
     private class ExtendedPerson extends Person {
+        private static final long serialVersionUID = -6553971299427168068L;
         private String extendedProperty = null;
+
         public ExtendedPerson(MetadataType t) throws MetadataTypeNotAllowedException {
             super(t);
         }
@@ -234,7 +235,7 @@ public class PersonTest {
         person.setAdditionalNameParts(list);
         assertEquals(0, person.getAdditionalNameParts().size());
         Person anotherPerson = new Person(type, "First", "Last");
-        assertFalse(anotherPerson.equals(person));
+        assertNotEquals(anotherPerson, person);
         anotherPerson.setAdditionalNameParts(list);
         assertEquals(0, anotherPerson.getAdditionalNameParts().size());
         person.addNamePart(new NamePart()); // this operation should not affect the same field of another person
@@ -243,4 +244,3 @@ public class PersonTest {
     }
 
 }
-

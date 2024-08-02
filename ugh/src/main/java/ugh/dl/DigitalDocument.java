@@ -38,6 +38,7 @@ import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
@@ -53,6 +54,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 import lombok.extern.log4j.Log4j2;
+import ugh.dl.Md.MdType;
 import ugh.exceptions.ContentFileNotLinkedException;
 import ugh.exceptions.PreferencesException;
 import ugh.exceptions.TypeNotAllowedForParentException;
@@ -120,7 +122,7 @@ import ugh.exceptions.WriteException;
  * 
  *      16.12.2009 --- Mahnke --- Marked print methods as deprecated.
  * 
- *      14.12.2009 --- Funk --- Added TODO to the equals() method, must be fixed!
+ *      14.12.2009 --- Funk --- Added to the equals() method, must be fixed!
  * 
  *      09.12.2009 --- Funk --- Maekrd addAllContentFiles() deprecated. --- Added addContentFileFromPhysicalPage() to add content files to a DocStruct
  *      "page".
@@ -177,8 +179,6 @@ public class DigitalDocument implements Serializable {
 
     // This contains the list of techMds. Currently only one amdSec is allowed, to comply with DFG-Viewer
     private AmdSec amdSec;
-
-    // private List<Node> techMd = new ArrayList<Node>();
 
     public enum PhysicalElement {
         PAGE("page"),
@@ -425,20 +425,16 @@ public class DigitalDocument implements Serializable {
 
         if (this.topPhysicalStruct != null) {
             physicallist = getAllDocStructsByTypePrivate(this.topPhysicalStruct, inTypeName);
-            if (physicallist != null && !physicallist.isEmpty()) {
+            if (!physicallist.isEmpty()) {
                 commonlist.addAll(physicallist);
             }
         }
 
         if (this.topLogicalStruct != null) {
             logicallist = getAllDocStructsByTypePrivate(this.topLogicalStruct, inTypeName);
-            if (logicallist != null && !logicallist.isEmpty()) {
+            if (!logicallist.isEmpty()) {
                 commonlist.addAll(logicallist);
             }
-        }
-
-        if (commonlist == null || commonlist.isEmpty()) {
-            return null;
         }
 
         return commonlist;
@@ -455,7 +451,7 @@ public class DigitalDocument implements Serializable {
         List<DocStruct> children = inStruct.getAllChildren();
 
         if (children == null) {
-            return null;
+            return selectedChildren;
         }
 
         for (DocStruct child : children) {
@@ -505,10 +501,9 @@ public class DigitalDocument implements Serializable {
      **************************************************************************/
     public DigitalDocument readXStreamXml(String theFilename, Prefs thePrefs) throws FileNotFoundException, UnsupportedEncodingException {
 
-        BufferedReader infile = new BufferedReader(new InputStreamReader(new FileInputStream(theFilename), "UTF8"));
+        BufferedReader infile = new BufferedReader(new InputStreamReader(new FileInputStream(theFilename), StandardCharsets.UTF_8));
 
         // Read the DigitalDocument from an XStream file.
-        // XStream xStream = new XStream(new DomDriver());
         XStream xStream = new XStream() {
             @Override
             protected MapperWrapper wrapMapper(MapperWrapper next) {
@@ -743,7 +738,7 @@ public class DigitalDocument implements Serializable {
         // Write the DigitalDocument as an XStream file.
         XStream xStream = new XStream(new DomDriver());
 
-        BufferedWriter outfile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF8"));
+        BufferedWriter outfile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_8));
         xStream.toXML(this, outfile);
     }
 
@@ -931,7 +926,6 @@ public class DigitalDocument implements Serializable {
                                 if (!representative.isEmpty() && representative.equals(md.getValue())) {
                                     cf.setRepresentative(true);
                                 }
-                                // Using parseInt instead of new Integer() now;
                                 int value = Integer.parseInt(md.getValue());
                                 cf.setLocation(pif + File.separator + images.get(value - 1));
                                 // Remove all content files from the page, if
@@ -1026,83 +1020,14 @@ public class DigitalDocument implements Serializable {
         return VERSION;
     }
 
-    /***************************************************************************
-     * <p>
-     * Overloaded equals method, compares this DigitalDocument with the DigitalDocument in parameter digitalDocument.
-     * </p>
-     * 
-     * <p>
-     * This method is not yet working within normal parameters! Please use with care (or do not use it at all!)
-     * </p>
-     * 
-     * TODO Make this method work properly!!
-     * 
-     * @author Wulf Riebensahm
-     * @param digitalDocument
-     * @return TRUE if documents can be considered equal, false if they are different.
-     **************************************************************************/
-    public boolean equals(DigitalDocument digitalDocument) {
-
-        log.debug("test phys pair");
-        if (DigitalDocument.quickPairCheck(this.getPhysicalDocStruct(), digitalDocument.getPhysicalDocStruct()) == ListPairCheck.isNotEqual) {
-            log.debug("phys pair false returned");
-            return false;
-        }
-
-        log.debug("test log pair");
-        if (DigitalDocument.quickPairCheck(this.getLogicalDocStruct(), digitalDocument.getLogicalDocStruct()) == ListPairCheck.isNotEqual) {
-            log.debug("log pair false returned");
-            return false;
-        }
-
-        log.debug("in depth test phys pair");
-        if (!(DigitalDocument.quickPairCheck(this.getPhysicalDocStruct(), digitalDocument.getPhysicalDocStruct()) == ListPairCheck.isEqual)
-                && !this.getPhysicalDocStruct().equals(digitalDocument.getPhysicalDocStruct())) {
-            log.debug("ind. phys pair false returned");
-            return false;
-        }
-
-        log.debug("in depth test log pair");
-        if (!(DigitalDocument.quickPairCheck(this.getLogicalDocStruct(), digitalDocument.getLogicalDocStruct()) == ListPairCheck.isEqual)
-                && !this.getLogicalDocStruct().equals(digitalDocument.getLogicalDocStruct())) {
-            log.debug("ind. log pair false returned");
-            return false;
-        }
-
-        return true;
-    }
-
-    /***************************************************************************
-     * <p>
-     * Helps simplifying code in equals method, reused in equals methods subsequent to this one (other objects of digdoc), hence protected, not
-     * private.
-     * </p>
-     * 
-     * @author Wulf Riebensahm
-     * @param o1
-     * @param o2
-     * @return
-     **************************************************************************/
-    protected static ListPairCheck quickPairCheck(Object o1, Object o2) {
-
-        if (o1 == null && o2 == null) {
-            return ListPairCheck.isEqual;
-        }
-        if (o1 == null || o2 == null) {
-            return ListPairCheck.isNotEqual;
-        }
-
-        return ListPairCheck.needsFurtherChecking;
-    }
-
     /**
      * @param techMd the techMd to set
      */
-    public void addTechMd(Node techMdNode) {
+    public void addTechMd(Node techMdNode, MdType type) {
         if (this.amdSec == null) {
             amdSec = new AmdSec(new ArrayList<>());
         }
-        Md techMd = new Md(techMdNode);
+        Md techMd = new Md(techMdNode, type);
         this.amdSec.addTechMd(techMd);
     }
 
@@ -1169,20 +1094,6 @@ public class DigitalDocument implements Serializable {
 
     public AmdSec getAmdSec() {
         return amdSec;
-    }
-
-    /***************************************************************************
-     * <p>
-     * Return values for method ListPairCheck.
-     * </p>
-     * 
-     * @author Wulf Riebensahm
-     * @see {@link quickPairCheck}
-     **************************************************************************/
-    protected static enum ListPairCheck {
-        isEqual,
-        isNotEqual,
-        needsFurtherChecking
     }
 
     /***************************************************************************

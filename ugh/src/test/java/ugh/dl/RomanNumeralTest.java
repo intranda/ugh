@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class RomanNumeralTest {
@@ -64,20 +63,10 @@ public class RomanNumeralTest {
         }
     }
 
-    @Ignore("Using modern style the greatest presentable number is actually 3999.")
-    @Test
-    public void testConstructorForBigIntString() {
-        for (int i = 0; i < bigModernRom.length; ++i) {
-            System.out.println(bigModernRom[i]);
-            numeral = new RomanNumeral(bigModernRom[i]);
-            assertEquals(bigIntegers[i], numeral.intValue());
-        }
-    }
-
     @Test
     public void testIsArchaicIsModern() {
         numeral = new RomanNumeral();
-        assertTrue(numeral.isArchaic() == !numeral.isModern());
+        assertEquals(numeral.isArchaic(), !numeral.isModern());
         numeral.setStyleArchaic();
         assertFalse(numeral.isModern());
         numeral.setStyleModern();
@@ -94,8 +83,8 @@ public class RomanNumeralTest {
             numeral1 = new RomanNumeral(integers[i]);
             numeral2 = new RomanNumeral(modernRom[i]);
             numeral3 = new RomanNumeral(archaicRom[i]);
-            assertTrue(numeral1.equals(numeral2));
-            assertTrue(numeral2.equals(numeral3));
+            assertEquals(numeral1, numeral2);
+            assertEquals(numeral2, numeral3);
         }
     }
 
@@ -130,47 +119,4 @@ public class RomanNumeralTest {
             assertEquals(bigArchaicRom[i], numeral.getNumber());
         }
     }
-
-    @Ignore("Until ready to debug.")
-    @Test
-    public void testSetStyles() {
-        for (int i = 0; i < integers.length; ++i) {
-            numeral = new RomanNumeral(integers[i]);
-            numeral.setStyleArchaic();
-            assertEquals(archaicRom[i], numeral.getNumber());
-        }
-
-        //========= The Following Part Cannot Pass =========// 
-        /* Problem is in the method setValue(String), in which the method */
-        /* convertIntArchaic() should be called manually given archaic style */
-        for (int i = 0; i < archaicRom.length; ++i) {
-            numeral = new RomanNumeral(archaicRom[i]);
-            System.out.println(numeral.intValue());
-            System.out.println(numeral.getNumber());
-            assertTrue(numeral.isModern());
-            assertEquals(modernRom[i], numeral.getNumber());
-        }
-        for (int i = 0; i < archaicRom.length; ++i) {
-            numeral = new RomanNumeral(archaicRom[i]);
-            numeral.setStyleModern();
-            assertEquals(modernRom[i], numeral.getNumber());
-        }
-        //========= The Above Part Cannot Pass =========//
-
-        for (int i = 0; i < archaicRom.length; ++i) {
-            numeral = new RomanNumeral();
-            numeral.setStyleArchaic();
-            numeral.setValue(archaicRom[i]);
-            numeral.setStyleModern();
-            assertEquals(modernRom[i], numeral.getNumber());
-        }
-
-        for (int i = 0; i < modernRom.length; ++i) {
-            numeral = new RomanNumeral(modernRom[i]);
-            assertFalse(numeral.isArchaic());
-            numeral.setStyleArchaic();
-            assertEquals(archaicRom[i], numeral.getNumber());
-        }
-    }
-
 }

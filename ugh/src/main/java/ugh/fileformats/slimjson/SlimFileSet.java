@@ -14,7 +14,7 @@ import ugh.dl.VirtualFileGroup;
 @Data
 public class SlimFileSet {
     @JsonIgnore
-    private transient SlimDigitalDocument digitalDocument;
+    private SlimDigitalDocument digitalDocument;
 
     private List<String> allImages = new ArrayList<>();
     private List<VirtualFileGroup> virtualFileGroups;

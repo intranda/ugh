@@ -39,7 +39,7 @@ import ugh.exceptions.WriteException;
  * 
  *        TODOLOG
  * 
- *        TODO Must we check the given Prefs object in the constructor?
+ *        Must we check the given Prefs object in the constructor?
  * 
  *        CHANGELOG
  * 
@@ -47,8 +47,7 @@ import ugh.exceptions.WriteException;
  * 
  *        28.10.2009 --- Funk --- Minor changes.
  * 
- *        26.10.2009 --- Funk --- Fixed a NPE sorting the metadata if no prefs
- *        are set, hm... Prefs MUST be set anyway... --- Fixes Bug DPD-364.
+ *        26.10.2009 --- Funk --- Fixed a NPE sorting the metadata if no prefs are set, hm... Prefs MUST be set anyway... --- Fixes Bug DPD-364.
  * 
  *        09.10.2009 --- Funk --- Changed the deprecated annotations.
  * 
@@ -60,16 +59,14 @@ public class XStream implements ugh.dl.Fileformat {
      * VERSION STRING
      **************************************************************************/
 
-    private static final String	VERSION	= "1.2-20100215";
+    private static final String VERSION = "1.2-20100215";
 
     /***************************************************************************
      * STATIC FINALS
      **************************************************************************/
 
-
-
-    private DigitalDocument		digdoc	= null;
-    private Prefs				myPreferences;
+    private DigitalDocument digdoc = null;
+    private Prefs myPreferences;
 
     public XStream() {
     }
@@ -114,7 +111,7 @@ public class XStream implements ugh.dl.Fileformat {
         }
 
         log
-        .info("Sorting metadata according to occurance in the Preferences");
+                .info("Sorting metadata according to occurance in the Preferences");
 
         this.digdoc.sortMetadataRecursively(this.myPreferences);
 
@@ -214,7 +211,6 @@ public class XStream implements ugh.dl.Fileformat {
 
     @Override
     public void setGoobiID(String goobiId) {
-        // TODO Auto-generated method stub
-
+        // do nothing
     }
 }

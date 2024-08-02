@@ -68,14 +68,14 @@ public class CorporateTest {
         corporate.addSubName(new NamePart("subname", firstSubName));
         assertEquals(1, corporate.getSubNames().size());
         // add second sub name
-        corporate.addSubName(new NamePart("subname",secondSubName));
+        corporate.addSubName(new NamePart("subname", secondSubName));
         assertEquals(2, corporate.getSubNames().size());
         // add first name again, should not be added to list
-        corporate.addSubName(new NamePart("subname",firstSubName));
+        corporate.addSubName(new NamePart("subname", firstSubName));
         assertEquals(2, corporate.getSubNames().size());
 
         // remove first name from list, only second should remain
-        corporate.removeSubName(new NamePart("subname",firstSubName));
+        corporate.removeSubName(new NamePart("subname", firstSubName));
         assertEquals(1, corporate.getSubNames().size());
         assertEquals(secondSubName, corporate.getSubNames().get(0).getValue());
 
@@ -120,9 +120,10 @@ public class CorporateTest {
 
     @Test
     public void testRemoveSubNameGivenNull() {
+        corporate.addSubName(new NamePart("type", "val"));
+        assertEquals(1, corporate.getSubNames().size());
         corporate.removeSubName(null);
-        // no more assertions needed here
-        // we are good as long as no exception is thrown
+        assertEquals(1, corporate.getSubNames().size());
     }
 
     @Test
@@ -143,6 +144,5 @@ public class CorporateTest {
         corporate.removeSubName(part2); // it should be permitted to use an equivalent NamePart object for the remove action
         assertEquals(0, corporate.getSubNames().size());
     }
-
 
 }
