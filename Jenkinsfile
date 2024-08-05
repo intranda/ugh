@@ -38,7 +38,7 @@ pipeline {
       }
       steps {
         withCredentials([string(credentialsId: 'jenkins-sonarcloud', variable: 'TOKEN')]) {
-          sh 'ugh/mvn verify sonar:sonar -Dsonar.token=$TOKEN -U'
+          sh 'mvn -f ugh/pom.xml verify sonar:sonar -Dsonar.token=$TOKEN -U'
         }
       }
     }
