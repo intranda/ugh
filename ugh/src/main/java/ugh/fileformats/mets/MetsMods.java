@@ -2058,6 +2058,10 @@ public class MetsMods implements ugh.dl.Fileformat {
                             String valueURI = metabagu.getAttributes().getNamedItem("valueURI").getNodeValue();
                             md.setAuthorityFile(authority, authorityURI, valueURI);
                         }
+                        if (mdt.isAllowAccessRestriction() && metabagu.getAttributes().getNamedItem("accessRestrict") != null
+                                && "true".equals(metabagu.getAttributes().getNamedItem("accessRestrict").getNodeValue())) {
+                            md.setAccessRestrict(true);
+                        }
 
                         inStruct.addMetadata(md);
 
@@ -2140,6 +2144,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                 }
             }
         }
+
     }
 
     private MetadataGroup readMetadataGroup(Node metabagu) throws ReadException {
@@ -2280,7 +2285,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         Corporate corporate = null;
 
-        String role = metabagu.getAttributes().item(0).getTextContent();
+        String role = metabagu.getAttributes().getNamedItem("name").getTextContent();
 
         log.debug("Corporate metadata '" + role + "' found in Goobi's MODS extension");
 
@@ -2336,7 +2341,10 @@ public class MetsMods implements ugh.dl.Fileformat {
             if (authorityFileID != null && authorityURI != null && authortityValue != null) {
                 corporate.setAuthorityFile(authorityFileID, authorityURI, authortityValue);
             }
-
+            if (mdt.isAllowAccessRestriction() && metabagu.getAttributes().getNamedItem("accessRestrict") != null
+                    && "true".equals(metabagu.getAttributes().getNamedItem("accessRestrict").getNodeValue())) {
+                corporate.setAccessRestrict(true);
+            }
         }
         return corporate;
     }
@@ -2345,7 +2353,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         Person ps = null;
 
-        String role = metabagu.getAttributes().item(0).getTextContent();
+        String role = metabagu.getAttributes().getNamedItem("name").getTextContent();
 
         log.debug("Person metadata '" + role + "' found in Goobi's MODS extension");
 
@@ -2415,7 +2423,10 @@ public class MetsMods implements ugh.dl.Fileformat {
             if (authorityFileID != null && authorityURI != null && authortityValue != null) {
                 ps.setAuthorityFile(authorityFileID, authorityURI, authortityValue);
             }
-
+            if (mdt.isAllowAccessRestriction() && metabagu.getAttributes().getNamedItem("accessRestrict") != null
+                    && "true".equals(metabagu.getAttributes().getNamedItem("accessRestrict").getNodeValue())) {
+                ps.setAccessRestrict(true);
+            }
         }
         return ps;
     }
@@ -4117,9 +4128,8 @@ public class MetsMods implements ugh.dl.Fileformat {
                 lastbracketpos = 0;
             }
         }
-        String[] result = resultList.toArray(new String[resultList.size()]);
+        return resultList.toArray(new String[resultList.size()]);
 
-        return result;
     }
 
     /***************************************************************************
@@ -4439,9 +4449,8 @@ public class MetsMods implements ugh.dl.Fileformat {
                     // Check if anchor identifier type is existing in the prefs.
                     PrefsType identifierType = this.myPreferences.getMetadataTypeByName(this.anchorIdentifierMetadataType);
                     if (identifierType == null) {
-                        PreferencesException pe = new PreferencesException("Unable to write MODS section! No metadata of type '"
+                        throw new PreferencesException("Unable to write MODS section! No metadata of type '"
                                 + this.anchorIdentifierMetadataType + "' found in prefs to create anchor MODS record");
-                        throw pe;
                     }
 
                     // Go throught all the identifier metadata of the
@@ -4451,9 +4460,8 @@ public class MetsMods implements ugh.dl.Fileformat {
 
                     // Can only be one!
                     if (identifierMetadataList.isEmpty()) {
-                        WriteException we = new WriteException("Unable to write MODS section! No metadata of type '"
+                        throw new WriteException("Unable to write MODS section! No metadata of type '"
                                 + this.anchorIdentifierMetadataType + "' existing for parent DocStruct '" + parentStruct.getType().getName() + "'");
-                        throw we;
                     }
 
                     Metadata identifierMetadata = identifierMetadataList.get(0);
@@ -4479,9 +4487,8 @@ public class MetsMods implements ugh.dl.Fileformat {
             // Check if an anchorIdentifier metadata type was written, if
             // inStruct was a anchor.
             if (parentStruct != null && parentStruct.getType().isAnchor() && !gotAnchorIdentifierType) {
-                WriteException we = new WriteException("Unable to write MODS section! No metadata of type '" + this.anchorIdentifierMetadataType
+                throw new WriteException("Unable to write MODS section! No metadata of type '" + this.anchorIdentifierMetadataType
                         + "' existing for parent DocStruct '" + parentStruct.getType().getName() + "'");
-                throw we;
             }
         }
 
@@ -4556,6 +4563,9 @@ public class MetsMods implements ugh.dl.Fileformat {
             }
         } else if (StringUtils.isNotBlank(theMetadata.getAuthorityValue())) {
             ((Element) createdNode).setAttribute("valueURI", theMetadata.getAuthorityURI() + theMetadata.getAuthorityValue());
+        }
+        if (theMetadata.getType().isAllowAccessRestriction() && theMetadata.isAccessRestrict()) {
+            ((Element) createdNode).setAttribute("accessRestrict", "true");
         }
 
         log.trace("Value '" + theMetadata.getValue() + "' (" + theMetadata.getType().getName() + ") added to node >>" + createdNode.getNodeName()
@@ -4682,6 +4692,10 @@ public class MetsMods implements ugh.dl.Fileformat {
                 createdNode.appendChild(identifierNode);
             }
         }
+
+        if (thePerson.getType().isAllowAccessRestriction() && thePerson.isAccessRestrict()) {
+            ((Element) createdNode).setAttribute("accessRestrict", "true");
+        }
     }
 
     protected void writeSingleModsCorporate(String theXQuery, Corporate corp, Node theStartingNode, Document theDocument)
@@ -4736,6 +4750,9 @@ public class MetsMods implements ugh.dl.Fileformat {
             createdNode.appendChild(authorityfileidNode);
         }
 
+        if (corp.getType().isAllowAccessRestriction() && corp.isAccessRestrict()) {
+            ((Element) createdNode).setAttribute("accessRestrict", "true");
+        }
     }
 
     protected void writeSingleModsGroup(String theXQuery, MetadataGroup theGroup, Node theStartingNode, Document theDocument, boolean checkParent)
@@ -5128,7 +5145,7 @@ public class MetsMods implements ugh.dl.Fileformat {
      * @param xmlFile
      * @throws IOException
      **************************************************************************/
-    protected void serializeMets(Document domDoc, FileOutputStream xmlFile) throws IOException {
+    protected synchronized void serializeMets(Document domDoc, FileOutputStream xmlFile) throws IOException {
 
         MetsDocument metsBean = null;
         XmlOptions opts = new XmlOptions();
@@ -5146,8 +5163,8 @@ public class MetsMods implements ugh.dl.Fileformat {
         opts.setSavePrettyPrint().setSavePrettyPrintIndent(3);
         opts.setSaveAggressiveNamespaces();
         Map<String, String> suggestedPrefixes = new HashMap<>();
-        for (String abbrev : namespaces.keySet()) {
-            suggestedPrefixes.put(namespaces.get(abbrev).getUri(), abbrev);
+        for (Entry<String, Namespace> abbrev : namespaces.entrySet()) {
+            suggestedPrefixes.put(abbrev.getValue().getUri(), abbrev.getKey());
         }
 
         opts.setSaveSuggestedPrefixes(suggestedPrefixes);
@@ -5159,11 +5176,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             throw new IOException(message + "! System message: " + e.getMessage());
         }
 
-        // Save the METS bean synchronized (one write per class instance) to
-        // avoid concurrent writes!
-        synchronized (xmlFile) {
-            metsBean.save(xmlFile, opts);
-        }
+        metsBean.save(xmlFile, opts);
 
         // Close METS file.
         xmlFile.close();

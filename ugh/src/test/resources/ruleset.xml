@@ -131,7 +131,7 @@
     <language name="en">Artist</language>
     <language name="es">Artista</language>
   </MetadataType>
-  <MetadataType normdata="true" type="person">
+  <MetadataType normdata="true" type="person" allowAccessRestriction="true">
     <Name>Author</Name>
     <language name="de">Autor</language>
     <language name="en">Author</language>
@@ -311,7 +311,7 @@
   </MetadataType>
   <!-- Persons end -->
   <!-- Corporations start -->
-  <MetadataType type="corporate" normdata="true">
+  <MetadataType type="corporate" normdata="true" allowAccessRestriction="true">
     <Name>Corporation</Name>
     <language name="de">Körperschaft</language>
     <language name="en">Corporation</language>
@@ -703,7 +703,7 @@
     <language name="en">Parallel title</language>
     <language name="es">Título paralelo</language>
   </MetadataType>
-  <MetadataType>
+  <MetadataType allowAccessRestriction="true">
     <Name>PublicationYear</Name>
     <language name="de">Entstehungsjahr</language>
     <language name="en">Publication year</language>

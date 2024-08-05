@@ -603,6 +603,14 @@ public class Prefs implements Serializable {
             }
         }
 
+        Node restriction = nnm.getNamedItem("allowAccessRestriction");
+        if (restriction != null) {
+            String nodevalue = restriction.getNodeValue();
+            if (nodevalue != null && "true".equals(nodevalue)) {
+                currenMdType.setAllowAccessRestriction(true);
+            }
+        }
+
         Node additional = nnm.getNamedItem("namepart");
         if (additional != null) {
             String nodevalue = additional.getNodeValue();

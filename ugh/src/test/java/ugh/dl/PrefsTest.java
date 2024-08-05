@@ -621,4 +621,24 @@ public class PrefsTest {
         assertEquals("1m", prefs.getMetadataGroupTypeByName("mdgt").getNum());
     }
 
+    @Test
+    public void testAllowAccessRestrictionConfiguration() throws PreferencesException {
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
+        MetadataType metadataTypeWithoutRestriction = prefs.getMetadataTypeByName("PlaceOfPublication");
+        MetadataType personTypeWithoutRestriction = prefs.getMetadataTypeByName("Editor");
+        MetadataType corporateTypeWithoutRestriction = prefs.getMetadataTypeByName("CorporateOther");
+
+        MetadataType metadataTypeWithRestriction = prefs.getMetadataTypeByName("PublicationYear");
+        MetadataType personTypeWithRestriction = prefs.getMetadataTypeByName("Author");
+        MetadataType corporateTypeWithRestriction = prefs.getMetadataTypeByName("Corporation");
+
+        assertFalse(metadataTypeWithoutRestriction.isAllowAccessRestriction());
+        assertFalse(personTypeWithoutRestriction.isAllowAccessRestriction());
+        assertFalse(corporateTypeWithoutRestriction.isAllowAccessRestriction());
+        assertTrue(metadataTypeWithRestriction.isAllowAccessRestriction());
+        assertTrue(personTypeWithRestriction.isAllowAccessRestriction());
+        assertTrue(corporateTypeWithRestriction.isAllowAccessRestriction());
+
+    }
+
 }

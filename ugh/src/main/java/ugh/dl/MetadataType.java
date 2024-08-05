@@ -112,6 +112,10 @@ public class MetadataType implements Serializable, PrefsType {
     private boolean allowNameParts = false;
     private boolean allowNormdata = false;
 
+    @Getter
+    @Setter
+    protected boolean allowAccessRestriction = false;
+
     private String validationExpression = "";
 
     @Getter
@@ -169,6 +173,7 @@ public class MetadataType implements Serializable, PrefsType {
         newMDType.setCorporate(isCorporate);
         newMDType.setAllowNameParts(this.allowNameParts);
         newMDType.setAllowNormdata(this.allowNormdata);
+        newMDType.setAllowAccessRestriction(allowAccessRestriction);
         newMDType.setValidationExpression(validationExpression);
         newMDType.setValidationErrorMessages(validationErrorMessages);
         return newMDType;

@@ -44,6 +44,7 @@
         <mods.version>3.8</mods.version>
         <jcabi.version>1.2.1</jcabi.version>
         <junit.version>4.13.2</junit.version>
+        <jaxen.version>1.2.0</jaxen.version>
     </properties>
 
 
@@ -271,6 +272,11 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+            <version>${jaxen.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

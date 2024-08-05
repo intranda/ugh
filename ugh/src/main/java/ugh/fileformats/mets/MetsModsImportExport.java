@@ -1702,6 +1702,10 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 }
             }
 
+            if (theMetadata.getType().isAllowAccessRestriction() && theMetadata.isAccessRestrict()) {
+                ((Element) createdNode).setAttribute("accessRestrict", "true");
+            }
+
             createdNode.appendChild(valueNode);
             log.trace(
                     "Value '" + newMetadataValue + "' (" + theMetadata.getType().getName() + ") added to node >>" + createdNode.getNodeName() + "<<");
@@ -1953,6 +1957,10 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 createdNode.appendChild(identifierNode);
             }
         }
+
+        if (thePerson.getType().isAllowAccessRestriction() && thePerson.isAccessRestrict()) {
+            ((Element) createdNode).setAttribute("accessRestrict", "true");
+        }
     }
 
     private void writeSingleGroupCorporate(Corporate corporate, Map<String, String> xpathMap, Node theDomModsNode, Document theDomDoc)
@@ -2010,6 +2018,10 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 ((Element) createdNode).setAttribute("authorityURI", corporate.getAuthorityURI());
                 ((Element) createdNode).setAttribute("valueURI", corporate.getAuthorityURI() + corporate.getAuthorityValue());
             }
+        }
+
+        if (corporate.getType().isAllowAccessRestriction() && corporate.isAccessRestrict()) {
+            ((Element) createdNode).setAttribute("accessRestrict", "true");
         }
 
     }
@@ -2148,6 +2160,10 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 createdNode.appendChild(identifierNode);
             }
         }
+
+        if (thePerson.getType().isAllowAccessRestriction() && thePerson.isAccessRestrict()) {
+            ((Element) createdNode).setAttribute("accessRestrict", "true");
+        }
     }
 
     private void writeSingleModsCorporate(String xquery, MatchingMetadataObject theMMO, Corporate corporate, Node theDomModsNode, Document theDomDoc)
@@ -2210,6 +2226,10 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                 ((Element) createdNode).setAttribute("authorityURI", corporate.getAuthorityURI());
                 ((Element) createdNode).setAttribute("valueURI", corporate.getAuthorityURI() + corporate.getAuthorityValue());
             }
+        }
+
+        if (corporate.getType().isAllowAccessRestriction() && corporate.isAccessRestrict()) {
+            ((Element) createdNode).setAttribute("accessRestrict", "true");
         }
     }
 

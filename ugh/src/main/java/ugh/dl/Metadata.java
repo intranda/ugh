@@ -99,6 +99,10 @@ public class Metadata implements Serializable {
     @Setter
     private String validationMessage;
 
+    @Getter
+    @Setter
+    private boolean accessRestrict;
+
     @Deprecated
     public Metadata() {
 
