@@ -3207,7 +3207,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                         }
                         admid.append(md.getId());
                     }
-                    if (!admid.isEmpty()) {
+                    if (StringUtils.isNotBlank(admid)) {
                         file.setAttribute(METS_ADMID_STRING, admid.toString());
                     }
                 }
