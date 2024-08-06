@@ -26,7 +26,22 @@ pipeline {
         recordIssues enabledForFailure: true, aggregatingResults: true, tools: [java(), javaDoc()]
       }
     }
-
+    stage('sonarcloud') {
+      when {
+        anyOf {
+          branch 'sonar_*'
+          allOf {
+            branch 'PR-*'
+            expression { env.CHANGE_BRANCH.startsWith("release_") }
+          }
+        }
+      }
+      steps {
+        withCredentials([string(credentialsId: 'jenkins-sonarcloud', variable: 'TOKEN')]) {
+          sh 'mvn -f ugh/pom.xml verify sonar:sonar -Dsonar.token=$TOKEN -U'
+        }
+      }
+    }
     stage('deployment to maven repository') {
       when {
         anyOf {

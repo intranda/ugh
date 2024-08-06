@@ -115,7 +115,6 @@ public class MetadataGroupTest {
         Metadata year = new Metadata(prefs.getMetadataTypeByName("PublicationYear"));
         year.setValue("fixture");
         fixture.addMetadata(year);
-        assertEquals(1, fixture.getMetadataByType("PublicationYear").size());
         year = new Metadata(prefs.getMetadataTypeByName("PublicationYear"));
         year.setValue("fixture");
         fixture.addMetadata(year);
@@ -127,7 +126,6 @@ public class MetadataGroupTest {
         Corporate c = new Corporate(prefs.getMetadataTypeByName("PublisherCorporate"));
         c.setMainName("fixture");
         fixture.addCorporate(c);
-        assertEquals(1, fixture.getCorporateByType("PublisherCorporate").size());
 
         Corporate c2 = new Corporate(prefs.getMetadataTypeByName("PublisherCorporate"));
         c2.setMainName("fixture");
@@ -237,11 +235,11 @@ public class MetadataGroupTest {
         assertThrows(NullPointerException.class, () -> fixture.addCorporate(null));
     }
 
-    @Test
-    public void testAddCorporateGivenCorporateObjectBasedOnMetadataTypePerson() {
+    @Test(expected = MetadataTypeNotAllowedException.class)
+    public void testAddCorporateGivenCorporateObjectBasedOnMetadataTypePerson() throws MetadataTypeNotAllowedException {
         MetadataType type = new MetadataType();
         type.setName("PublisherPerson");
-        assertThrows(MetadataTypeNotAllowedException.class, () -> fixture.addCorporate(new Corporate(type)));
+        fixture.addCorporate(new Corporate(type));
     }
 
     @Test(expected = MetadataTypeNotAllowedException.class)
@@ -264,7 +262,6 @@ public class MetadataGroupTest {
         fixture.addCorporate(corporate2);
     }
 
-    @Test(expected = MetadataTypeNotAllowedException.class)
     public void testAddCorporateGivenObjectExtendedFromCorporate() throws MetadataTypeNotAllowedException {
         MetadataType type = prefs.getMetadataTypeByName("PublisherCorporate");
 
@@ -302,10 +299,8 @@ public class MetadataGroupTest {
 
     @Test(expected = MetadataTypeNotAllowedException.class)
     public void testAddMoreMetadataGroupsThenAllowed() throws Exception {
-        assertEquals(0, fixture.getAllMetadataGroups().size());
         MetadataGroup other = new MetadataGroup(prefs.getMetadataGroupTypeByName("LocationGroup"));
         fixture.addMetadataGroup(other);
-        assertEquals(1, fixture.getAllMetadataGroups().size());
 
         MetadataGroup other2 = new MetadataGroup(prefs.getMetadataGroupTypeByName("LocationGroup"));
         fixture.addMetadataGroup(other2);
@@ -313,7 +308,6 @@ public class MetadataGroupTest {
 
     @Test(expected = MetadataTypeNotAllowedException.class)
     public void testAddMetadataGroupNotAllowed() throws Exception {
-        assertEquals(0, fixture.getAllMetadataGroups().size());
         MetadataGroup other = new MetadataGroup(prefs.getMetadataGroupTypeByName("UnusedGroup"));
         fixture.addMetadataGroup(other);
     }

@@ -318,7 +318,6 @@ public class RDFFile implements ugh.dl.Fileformat {
                         throw new ReadException(message);
                     }
                     // Get out of loop.
-                    continue;
                 } catch (TypeNotAllowedForParentException e) {
                     String message = "DocStruct type is not allowed for parent DocStruct";
                     log.error(message, e);
@@ -404,7 +403,7 @@ public class RDFFile implements ugh.dl.Fileformat {
     @Deprecated
     public boolean write(String filename) throws WriteException {
 
-        FileOutputStream xmlFile;
+        FileOutputStream xmlFile = null;
 
         // Get output stream.
         try {
@@ -412,6 +411,13 @@ public class RDFFile implements ugh.dl.Fileformat {
         } catch (Exception e) {
             log.error("Can't write file '" + filename
                     + "'! System message: " + e.getMessage());
+            try {
+                if (xmlFile != null) {
+                    xmlFile.close();
+                }
+            } catch (IOException e1) {
+                log.error(e1);
+            }
             return false;
         }
 
@@ -503,7 +509,6 @@ public class RDFFile implements ugh.dl.Fileformat {
                 String message = "RDF file '" + filename
                         + "' could not be closed";
                 log.error(message, e);
-                throw new WriteException(message, e);
             }
         }
 
@@ -1898,9 +1903,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                 // Search for it; all Metadata elements are returned in a list.
                 List<Metadata> allMDs = readRDFSeq(currentNode, subTypeList);
                 for (Metadata singleObj : allMDs) {
-                    if ("ugh.dl.Metadata"
-                            .equals(singleObj.getClass()
-                                    .getName())) {
+                    if (singleObj instanceof Metadata) {
                         // It's metadata, so add it to Metadata.
                         Metadata singleMD = singleObj;
                         try {
@@ -1921,8 +1924,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                                     .getType(), docStruct.getType());
                         }
                     }
-
-                    if ("ugh.dl.Person".equals(singleObj.getClass().getName())) {
+                    if (singleObj instanceof Person) {
                         // It's a person, so add it to PersonList.
                         Person singlePer = (Person) singleObj;
                         // Gets global type.

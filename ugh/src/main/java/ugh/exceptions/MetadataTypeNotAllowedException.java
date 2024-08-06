@@ -98,12 +98,12 @@ public class MetadataTypeNotAllowedException extends UGHException {
         }
         if (groupType != null && metadataType != null) {
             result = String.format("Metadata '%s' not allowed in group '%s'", metadataType.getName(), groupType.getName());
-        } else if (this.metadataType == null && this.docStructType != null) {
+        } else if (this.metadataType == null) {
             result = "Metadata not allowed for DocStruct '" + this.docStructType.getName() + "'";
-        } else if (this.metadataType != null && this.docStructType == null) {
+        } else if (this.docStructType == null) {
             result = "Metadata '" + this.metadataType.getName() + "' not allowed for current DocStruct";
         } else {
-            result = "Metadata of " + (this.metadataType == null ? "unknown type" : "type '" + this.metadataType.getName() + "'")
+            result = "Metadata of type '" + this.metadataType.getName() + "'"
                     + " not allowed for DocStruct '" + this.docStructType.getName() + "'";
         }
 

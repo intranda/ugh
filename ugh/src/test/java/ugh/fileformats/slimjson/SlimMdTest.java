@@ -3,6 +3,7 @@ package ugh.fileformats.slimjson;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 import java.io.File;
 import java.io.IOException;
@@ -93,7 +94,7 @@ public class SlimMdTest {
             Md md2 = smd.toMd();
             // check id and type
             assertEquals(smd.getId(), md2.getId());
-            assertEquals(smd.getType(), md2.getType());
+            assertSame(smd.getType(), md2.getType());
 
             // check content
             StringWriter writer = new StringWriter();

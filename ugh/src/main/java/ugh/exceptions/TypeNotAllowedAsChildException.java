@@ -95,20 +95,20 @@ public class TypeNotAllowedAsChildException extends UGHException {
     @Override
     public String getMessage() {
         String result = null;
-
-        if (this.dsChildType == null && this.dsParentType != null) {
+        if (dsChildType == null && dsParentType == null) {
+            result = "Child of unknown type can't be added to a DocStructType";
+        } else if (this.dsChildType == null) {
             result = "DocStructType for child is not defined; probably a mapping problem in the ruleset. Child should be added for parent '"
                     + this.dsParentType.getName() + "'";
-        } else if (this.dsParentType == null && this.dsChildType != null) {
+        } else if (this.dsParentType == null) {
             result = "Child of type '"
                     + this.dsChildType.getName()
                     + "' is not allowed for parent; unfortunately we don't have any information about the parent";
         } else {
-            result = "Child of "
-                    + (this.dsChildType == null ? "unknown type" : "type '"
-                            + this.dsChildType.getName() + "'")
+            result = "Child of type '"
+                    + this.dsChildType.getName() + "'"
                     + " can't be added to a DocStruct of type '"
-                    + this.dsParentType.getName() + "'";
+                    + dsParentType.getName() + "'";
         }
 
         return result;
