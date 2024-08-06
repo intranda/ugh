@@ -134,14 +134,17 @@ public class MetadataGroupType implements Serializable, PrefsType {
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj == null) {
             return false;
         }
-        MetadataGroupType mdgType = (MetadataGroupType) obj;
-        if (this.name == null) {
-            return mdgType.getName() == null;
+        if (getClass() != obj.getClass()) {
+            return false;
         }
-        return this.name.equals(mdgType.getName());
+        MetadataGroupType other = (MetadataGroupType) obj;
+        return Objects.equals(name, other.name);
     }
 
     @Override

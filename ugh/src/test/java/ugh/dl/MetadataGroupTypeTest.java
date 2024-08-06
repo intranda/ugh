@@ -250,33 +250,30 @@ public class MetadataGroupTypeTest {
     }
 
     @Test
+    public void testEquals() {
+        // nothing is set
+        MetadataGroupType mgt1 = new MetadataGroupType();
+        MetadataGroupType mgt2 = new MetadataGroupType();
+        assertEquals(mgt1, mgt2);
+        mgt1.setName("name");
+        assertNotEquals(mgt1, mgt2);
+
+        mgt1.setName(null);
+        mgt2.setName("name");
+        assertNotEquals(mgt1, mgt2);
+
+        mgt1.setName("name");
+        mgt2.setName("name");
+        assertEquals(mgt1, mgt2);
+
+    }
+
+    @Test
     public void testEqualsToItsCopy() {
         mdgType.setName("name");
         MetadataGroupType mdgTypeCopy = mdgType.copy();
         assertNotSame(mdgType, mdgTypeCopy);
         assertEquals(mdgType, mdgTypeCopy);
-    }
-
-    @Test
-    public void testEqualsGivenExtendedObject() {
-        mdgType.setName("name");
-        ExtendedMetadataGroupType extendedType = new ExtendedMetadataGroupType("name");
-        assertEquals(mdgType, extendedType);
-        assertEquals(extendedType, mdgType);
-    }
-
-    // class needed for the test case above
-    private class ExtendedMetadataGroupType extends MetadataGroupType {
-        private static final long serialVersionUID = 630033786970054284L;
-
-        public ExtendedMetadataGroupType(String name) {
-            super();
-            super.setName(name);
-        }
-
-        public ExtendedMetadataGroupType() {
-            new ExtendedMetadataGroupType("");
-        }
     }
 
     /* Tests for the following methods:
