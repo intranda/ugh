@@ -1903,9 +1903,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                 // Search for it; all Metadata elements are returned in a list.
                 List<Metadata> allMDs = readRDFSeq(currentNode, subTypeList);
                 for (Metadata singleObj : allMDs) {
-                    if ("ugh.dl.Metadata"
-                            .equals(singleObj.getClass()
-                                    .getName())) {
+                    if (singleObj instanceof Metadata) {
                         // It's metadata, so add it to Metadata.
                         Metadata singleMD = singleObj;
                         try {
@@ -1926,8 +1924,7 @@ public class RDFFile implements ugh.dl.Fileformat {
                                     .getType(), docStruct.getType());
                         }
                     }
-
-                    if ("ugh.dl.Person".equals(singleObj.getClass().getName())) {
+                    if (singleObj instanceof Person) {
                         // It's a person, so add it to PersonList.
                         Person singlePer = (Person) singleObj;
                         // Gets global type.

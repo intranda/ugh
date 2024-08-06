@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -124,6 +125,11 @@ public class MetadataGroupType implements Serializable, PrefsType {
                 return;
             }
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 
     @Override
@@ -258,7 +264,7 @@ public class MetadataGroupType implements Serializable, PrefsType {
             typename = type.getName();
 
             if (testname == null || typename == null) {
-                return testname == typename;
+                return testname == null && typename == null;
             }
 
             if (testname.equals(typename)) {

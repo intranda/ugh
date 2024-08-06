@@ -409,8 +409,6 @@ public class MetadataTypeTest {
         assertNotEquals(mdt, mdt2);
         mdt2.setIdentifier(true);
         assertEquals(mdt2, mdt);
-        mdt2.setCorporate(true); // the value of isCorporate plays no role in the comparison
-        assertEquals(mdt2, mdt);
     }
 
 }

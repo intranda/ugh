@@ -25,6 +25,7 @@ package ugh.dl;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -142,7 +143,6 @@ public class MetadataType implements Serializable, PrefsType {
     public void setNum(String in) {
         if (StringUtils.isBlank(in) || (!"1m".equals(in) && !"1o".equals(in) && !"+".equals(in) && !"*".equals(in))) {
             // Unknown syntax.
-            return;
         } else {
             this.maxNumber = in;
         }
@@ -348,35 +348,25 @@ public class MetadataType implements Serializable, PrefsType {
         return this.isPerson;
     }
 
-    /***************************************************************************
-     * <p>
-     * Compares this MetadataType with parameter metadataType.
-     * </p>
-     * 
-     * @author Wulf Riebensahm
-     * @param MetadataType metadataType
-     * @return TRUE if isPerson, isIdentifier and name is the same.
-     **************************************************************************/
     @Override
-    public boolean equals(Object other) {
-        if (other == null) {
-            return false;
-        }
-        MetadataType metadataType = (MetadataType) other;
+    public int hashCode() {
+        return Objects.hash(isCorporate, isIdentifier, isPerson, name);
+    }
 
-        try {
-            if (!((this.getName() == null && metadataType.getName() == null) || this.getName().equals(metadataType.getName()))) {
-                return false;
-            }
-        } catch (NullPointerException npe) {
-            return false;
-        }
-
-        if (this.isIdentifier == metadataType.isIdentifier && metadataType.isPerson == this.isPerson) {
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-
-        return false;
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        MetadataType other = (MetadataType) obj;
+        return isCorporate == other.isCorporate && isIdentifier == other.isIdentifier && isPerson == other.isPerson
+                && Objects.equals(name, other.name);
     }
 
     public boolean isAllowNameParts() {

@@ -237,20 +237,6 @@ public class MetadataTest {
     }
 
     @Test
-    public void testEqualsGivenTwoMetadataObjectsCreatedFromTwoEqualButDifferentMetadataTypeObjects() throws MetadataTypeNotAllowedException {
-        // The method equals(MetadataType) defined in the class MetadataType compares only the following items:
-        // isPerson, isIdentifier, name
-        assertFalse(type.isCorporate());
-        MetadataType type2 = new MetadataType();
-        type2.setCorporate(true);
-        assertTrue(type2.isCorporate());
-        Metadata md2 = new Metadata(type2);
-        assertEquals(type, type2);
-        assertNotSame(type.isCorporate(), type2.isCorporate());
-        assertEquals(md, md2);
-    }
-
-    @Test
     public void testEqualsGivenTwoEqualButDifferentMetadataObjectsCreatedFromTheSameMetadataTypeObject() throws MetadataTypeNotAllowedException {
         // The method equals(Metadata) defined in the class Metadata compares only the following items:
         // MDType, metadataValue, MetadataVQ, MetadataVQType
