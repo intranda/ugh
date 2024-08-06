@@ -240,6 +240,16 @@ public class MetadataGroupTypeTest {
     }
 
     @Test
+    public void testEqualsWithoutName() {
+        MetadataGroupType mgt1 = new MetadataGroupType();
+        MetadataGroupType mgt2 = new MetadataGroupType();
+        assertEquals(mgt1, mgt2);
+
+        mgt2.setName("name");
+        assertNotEquals(mgt1, mgt2);
+    }
+
+    @Test
     public void testEqualsToItsCopy() {
         mdgType.setName("name");
         MetadataGroupType mdgTypeCopy = mdgType.copy();
