@@ -1462,13 +1462,8 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                     }
                 }
                 techMd.setAttribute(METS_ID_STRING, md.getId());
-                Element techNode = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_MDWRAP_STRING);
-                for (int i = 0; i < theNode.getAttributes().getLength(); i++) {
-                    Node attribute = theNode.getAttributes().item(i);
-                    techNode.setAttribute(attribute.getNodeName(), attribute.getNodeValue());
-                }
-                techNode.appendChild(child);
-                techMd.appendChild(techNode);
+
+                techMd.appendChild(child);
                 amdSec.appendChild(techMd);
             }
         }
