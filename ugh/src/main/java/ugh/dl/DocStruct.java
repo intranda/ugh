@@ -2379,7 +2379,7 @@ public class DocStruct implements Serializable, HoldingElement {
             test = this.children.get(i);
             // Child found.
             if (test.equals(inChild)) {
-                if (i != this.children.size()) {
+                if (i != this.children.size() - 1) {
                     nextchild = this.children.get(i + 1);
                     return nextchild;
                 }

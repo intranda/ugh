@@ -806,5 +806,264 @@ public class DocStructTest {
         assertEquals("Chapter", ds.getAllChildren().get(1).getType().getName());
     }
 
-    // TODO continue with line 2312
+    @Test
+    public void testMoveChildAfter() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        DocStruct sub = new DocStruct(prefs.getDocStrctTypeByName("Chapter"));
+        DocStruct sub2 = new DocStruct(prefs.getDocStrctTypeByName("Cover"));
+
+        DocStruct sub3 = new DocStruct(prefs.getDocStrctTypeByName("Cover"));
+
+        assertTrue(ds.addChild(sub));
+        assertTrue(ds.addChild(sub2));
+        assertEquals("Chapter", ds.getAllChildren().get(0).getType().getName());
+
+        // false, as sub3 is not part of parent element
+        assertFalse(ds.moveChildafter(sub2, sub3));
+
+        // change position of sub element
+        assertTrue(ds.addChild(sub3));
+        assertTrue(ds.moveChildafter(sub, sub2));
+        // new order is now sub2, sub
+        assertEquals("Cover", ds.getAllChildren().get(0).getType().getName());
+    }
+
+    @Test
+    public void testMoveChildbefore() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        DocStruct sub = new DocStruct(prefs.getDocStrctTypeByName("Chapter"));
+        DocStruct sub2 = new DocStruct(prefs.getDocStrctTypeByName("Cover"));
+
+        DocStruct sub3 = new DocStruct(prefs.getDocStrctTypeByName("Cover"));
+
+        assertTrue(ds.addChild(sub));
+        assertTrue(ds.addChild(sub2));
+        assertEquals("Chapter", ds.getAllChildren().get(0).getType().getName());
+
+        // false, as sub3 is not part of parent element
+        assertFalse(ds.moveChildbefore(sub2, sub3));
+
+        // change position of sub element
+        assertTrue(ds.moveChildbefore(sub2, sub));
+        // new order is now sub2, sub
+        assertEquals("Cover", ds.getAllChildren().get(0).getType().getName());
+    }
+
+    @Test
+    public void testPositionofChild() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        DocStruct sub = new DocStruct(prefs.getDocStrctTypeByName("Chapter"));
+        DocStruct sub2 = new DocStruct(prefs.getDocStrctTypeByName("Cover"));
+
+        assertTrue(ds.addChild(sub));
+        assertTrue(ds.addChild(sub2));
+
+        assertEquals(0, ds.getPositionofChild(sub));
+        assertEquals(1, ds.getPositionofChild(sub2));
+    }
+
+    @Test
+    public void testGetNextChild() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        DocStruct sub = new DocStruct(prefs.getDocStrctTypeByName("Chapter"));
+        DocStruct sub2 = new DocStruct(prefs.getDocStrctTypeByName("Cover"));
+
+        DocStruct sub3 = new DocStruct(prefs.getDocStrctTypeByName("Cover"));
+
+        assertTrue(ds.addChild(sub));
+        assertTrue(ds.addChild(sub2));
+
+        // returns the second element
+        assertEquals("Cover", ds.getNextChild(sub).getType().getName());
+
+        // element is not in parent list, so it has no following element
+        assertNull(ds.getNextChild(sub3));
+        // nothing after the last child
+        assertNull(ds.getNextChild(sub2));
+    }
+
+    @Test
+    public void testGetPreviousChild() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        DocStruct sub = new DocStruct(prefs.getDocStrctTypeByName("Chapter"));
+        DocStruct sub2 = new DocStruct(prefs.getDocStrctTypeByName("Cover"));
+
+        DocStruct sub3 = new DocStruct(prefs.getDocStrctTypeByName("Cover"));
+
+        assertTrue(ds.addChild(sub));
+        assertTrue(ds.addChild(sub2));
+
+        // returns the second element
+        assertEquals("Chapter", ds.getPreviousChild(sub2).getType().getName());
+
+        // element is not in parent list, so it has no following element
+        assertNull(ds.getPreviousChild(sub3));
+        // nothing after the last child
+        assertNull(ds.getPreviousChild(sub));
+    }
+
+    @Test
+    public void testIsDocStructTypeAllowedAsChild() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        DocStructType allowed = prefs.getDocStrctTypeByName("Chapter");
+        DocStructType notAllowed = prefs.getDocStrctTypeByName("Periodical");
+
+        assertTrue(ds.isDocStructTypeAllowedAsChild(allowed));
+        assertFalse(ds.isDocStructTypeAllowedAsChild(notAllowed));
+    }
+
+    @Test
+    public void testIsMetadataGroupBeRemoved() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+
+        MetadataGroupType grtpType = prefs.getMetadataGroupTypeByName("LocationGroup");
+        assertTrue(ds.isMetadataGroupBeRemoved(grtpType));
+
+    }
+
+    @Test
+    public void testIsMetadataTypeBeRemoved() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+
+        MetadataType mdt = prefs.getMetadataTypeByName("CatalogIDDigital");
+
+        assertTrue(ds.isMetadataTypeBeRemoved(mdt));
+        Metadata md = new Metadata(mdt);
+        md.setValue("1");
+        ds.addMetadata(md);
+        assertFalse(ds.isMetadataTypeBeRemoved(mdt));
+    }
+
+    @Test
+    public void testOrigObject() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        Object obj = ds;
+
+        assertNull(ds.getOrigObject());
+        ds.setOrigObject(obj);
+        assertNotNull(ds.getOrigObject());
+        assertEquals(obj, ds.getOrigObject());
+    }
+
+    @Test
+    public void testShowMetadataForm() throws Exception {
+
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataType mdt = prefs.getMetadataTypeByName("CatalogIDDigital");
+        Metadata md = new Metadata(mdt);
+        md.setValue("1");
+        ds.addMetadata(md);
+
+        MetadataType pt = prefs.getMetadataTypeByName("Author");
+        Person p = new Person(pt);
+        p.setLastname("last");
+        ds.addPerson(p);
+
+        List<Metadata> list = ds.showMetadataForm("en", false);
+
+        assertEquals(11, list.size());
+        // first metadata, then persons
+        assertFalse(list.get(0).getType().getIsPerson());
+        assertTrue(list.get(10).getType().getIsPerson());
+
+        ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        md = new Metadata(mdt);
+        md.setValue("1");
+        ds.addMetadata(md);
+
+        pt = prefs.getMetadataTypeByName("Author");
+        p = new Person(pt);
+        p.setLastname("last");
+        ds.addPerson(p);
+        list = ds.showMetadataForm("en", true);
+
+        assertEquals(11, list.size());
+        // first persons, then metadata
+        assertTrue(list.get(0).getType().getIsPerson());
+        assertFalse(list.get(10).getType().getIsPerson());
+    }
+
+    @Test
+    public void testDeleteUnusedPersonsAndMetadata() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataType mdt = prefs.getMetadataTypeByName("DocLanguage");
+        MetadataType pt = prefs.getMetadataTypeByName("Author");
+
+        // metadata with value
+        Metadata md = new Metadata(mdt);
+        md.setValue("1");
+        ds.addMetadata(md);
+        Person p = new Person(pt);
+        p.setLastname("last");
+        ds.addPerson(p);
+
+        // metadata without value
+        Metadata md2 = new Metadata(mdt);
+        ds.addMetadata(md2);
+
+        Person p2 = new Person(pt);
+        ds.addPerson(p2);
+
+        assertEquals(2, ds.getAllMetadata().size());
+        assertEquals(2, ds.getAllPersons().size());
+
+        ds.deleteUnusedPersonsAndMetadata();
+        assertEquals(1, ds.getAllMetadata().size());
+        assertEquals(1, ds.getAllPersons().size());
+    }
+
+    @Test
+    public void testSortMetadataAbcdefg() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataType mdt = prefs.getMetadataTypeByName("DocLanguage");
+        MetadataType mdt2 = prefs.getMetadataTypeByName("CatalogIDDigital");
+
+        Metadata md1 = new Metadata(mdt);
+        md1.setValue("DocLanguage");
+        ds.addMetadata(md1);
+
+        Metadata md2 = new Metadata(mdt2);
+        md2.setValue("CatalogIDDigital");
+        ds.addMetadata(md2);
+
+        // DocLanguage was added first, so it is the first in list
+        assertEquals("DocLanguage", ds.getAllMetadata().get(0).getType().getName());
+
+        // sort
+        ds.sortMetadataAbcdefg();
+        assertEquals("CatalogIDDigital", ds.getAllMetadata().get(0).getType().getName());
+
+    }
+
+    @Test
+    public void testImageName() throws Exception {
+        DigitalDocument dd = new DigitalDocument();
+        DocStruct ds = dd.createDocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        dd.setLogicalDocStruct(ds);
+        assertNull(ds.getImageName());
+
+        ds.setImageName("image name");
+
+        assertEquals("image name", ds.getImageName());
+    }
+
+    @Test
+    public void testGetAllChildrenAsFlatList() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        DocStruct sub = new DocStruct(prefs.getDocStrctTypeByName("Chapter"));
+        DocStruct sub2 = new DocStruct(prefs.getDocStrctTypeByName("Cover"));
+
+        DocStruct sub3 = new DocStruct(prefs.getDocStrctTypeByName("Cover"));
+        ds.addChild(sub);
+        ds.addChild(sub2);
+        sub.addChild(sub3);
+
+        // regular children list contains 2 images, as sub3 is sub element of sub and not of monograph
+        assertEquals(2, ds.getAllChildren().size());
+
+        // flat list contains all child elements
+        assertEquals(3, ds.getAllChildrenAsFlatList().size());
+
+    }
+
 }
