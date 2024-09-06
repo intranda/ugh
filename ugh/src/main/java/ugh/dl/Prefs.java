@@ -336,7 +336,7 @@ public class Prefs implements Serializable {
                                 + "; Error Code: p005");
                         return null;
                     }
-                    languageName = attribNode.getNodeValue();
+                    languageName = attribNode.getNodeValue().trim();
                     // Get value; value is always a text node.
                     languageValue = "";
                     NodeList textnodes = currentNode.getChildNodes();
@@ -348,7 +348,7 @@ public class Prefs implements Serializable {
                             // element etc. anyhow: an error.
                             return null;
                         }
-                        languageValue = textnode.getNodeValue();
+                        languageValue = textnode.getNodeValue().trim();
                     }
 
                     if (languageName == null || languageValue == null) {
@@ -394,7 +394,7 @@ public class Prefs implements Serializable {
                             // element etc. anyhow: an error.
                             return null;
                         }
-                        mdtypeName = textnode.getNodeValue();
+                        mdtypeName = textnode.getNodeValue().trim();
                     }
 
                     if (mdtypeName == null || mdtypeNum == null) {
@@ -473,7 +473,7 @@ public class Prefs implements Serializable {
                             // element etc. anyhow: an error.
                             return null;
                         }
-                        mdtypeName = textnode.getNodeValue();
+                        mdtypeName = textnode.getNodeValue().trim();
                     }
 
                     if (mdtypeName == null || mdtypeNum == null) {
@@ -531,7 +531,7 @@ public class Prefs implements Serializable {
                             // element etc. anyhow: an error.
                             return null;
                         }
-                        allowedChild = textnode.getNodeValue();
+                        allowedChild = textnode.getNodeValue().trim();
                     }
 
                     // Check, if an appropriate DocStruct Type is defined.
@@ -642,12 +642,12 @@ public class Prefs implements Serializable {
                             // element etc. anyhow: an error.
                             return null;
                         }
-                        currenMdType.setName(textnode.getNodeValue());
+                        currenMdType.setName(textnode.getNodeValue().trim());
                     }
                 } else if ("language".equals(currentNode.getNodeName())) {
                     attributeNodelist = currentNode.getAttributes();
                     attributeNode = attributeNodelist.getNamedItem("name");
-                    languageName = attributeNode.getNodeValue();
+                    languageName = attributeNode.getNodeValue().trim();
                     // Get value; value is always a text node.
                     languageValue = "";
                     NodeList textnodes = currentNode.getChildNodes();
@@ -664,7 +664,7 @@ public class Prefs implements Serializable {
                                     + theMetadataTypeNode.getNodeName());
                             return null;
                         }
-                        languageValue = textnode.getNodeValue();
+                        languageValue = textnode.getNodeValue().trim();
                     }
                     if (languageName == null || languageValue == null) {
                         // Language name or the value (term) wasn't set.
@@ -784,7 +784,7 @@ public class Prefs implements Serializable {
                             // element etc. anyhow: an error.
                             return null;
                         }
-                        mdtypeName = textnode.getNodeValue();
+                        mdtypeName = textnode.getNodeValue().trim();
                     }
 
                     if (mdtypeName == null) {
@@ -829,7 +829,7 @@ public class Prefs implements Serializable {
                             // element etc. anyhow: an error.
                             return null;
                         }
-                        groupName = textnode.getNodeValue();
+                        groupName = textnode.getNodeValue().trim();
                     }
                     boolean invisibleValue = groupName.startsWith("_");
                     currenGroup.addGroupTypeAsChild(groupName, mdtypeNum, defaultValue, invisibleValue);
@@ -854,7 +854,7 @@ public class Prefs implements Serializable {
                                     + theMetadataGroupNode.getNodeName());
                             return null;
                         }
-                        languageValue = textnode.getNodeValue();
+                        languageValue = textnode.getNodeValue().trim();
                     }
                     if (languageName == null || languageValue == null) {
                         // Language name or the value (term) wasn't set.
