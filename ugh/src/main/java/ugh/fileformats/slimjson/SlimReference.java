@@ -10,7 +10,8 @@ import ugh.dl.Reference;
 @Data
 public class SlimReference {
     @JsonIgnore
-    private SlimDigitalDocument digitalDocument;
+    // This `transient` is required for GSON to work properly (circular references would lead to StackOverflow)
+    private transient SlimDigitalDocument digitalDocument;
 
     private String type;
     private String sourceDsId;

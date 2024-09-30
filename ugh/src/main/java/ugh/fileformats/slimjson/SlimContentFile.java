@@ -14,7 +14,8 @@ import ugh.dl.DocStruct;
 @Data
 public class SlimContentFile {
     @JsonIgnore
-    private SlimDigitalDocument digitalDocument;
+    // This `transient` is required for GSON to work properly (circular references would lead to StackOverflow)
+    private transient SlimDigitalDocument digitalDocument;
 
     private List<String> referencedDocStructs = new ArrayList<>();
     private String location;

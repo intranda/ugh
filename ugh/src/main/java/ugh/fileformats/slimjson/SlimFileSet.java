@@ -14,7 +14,8 @@ import ugh.dl.VirtualFileGroup;
 @Data
 public class SlimFileSet {
     @JsonIgnore
-    private SlimDigitalDocument digitalDocument;
+    // This `transient` is required for GSON to work properly (circular references would lead to StackOverflow)
+    private transient SlimDigitalDocument digitalDocument;
 
     private List<String> allImages = new ArrayList<>();
     private List<VirtualFileGroup> virtualFileGroups;

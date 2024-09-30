@@ -56,7 +56,8 @@ import ugh.exceptions.TypeNotAllowedForParentException;
 @Log4j2
 public class SlimDocStruct {
     @JsonIgnore
-    private SlimDigitalDocument digitalDocument;
+    // This `transient` is required for GSON to work properly (circular references would lead to StackOverflow)
+    private transient SlimDigitalDocument digitalDocument;
 
     private String id;
     private String type;

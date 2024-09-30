@@ -18,9 +18,11 @@ import ugh.dl.Prefs;
 public class SlimDigitalDocument {
     //for conversion back
     @JsonIgnore
-    private Map<String, DocStruct> origDsMap = new HashMap<>();
+    // This `transient` is required for GSON to work properly (circular references would lead to StackOverflow)
+    private transient Map<String, DocStruct> origDsMap = new HashMap<>();
     @JsonIgnore
-    private Map<String, ContentFile> origContentFileMap = new HashMap<>();
+    // This `transient` is required for GSON to work properly (circular references would lead to StackOverflow)
+    private transient Map<String, ContentFile> origContentFileMap = new HashMap<>();
 
     private Map<String, SlimDocStruct> dsMap = new HashMap<>();
     private Map<String, DocStructType> dsTypeMap = new HashMap<>();

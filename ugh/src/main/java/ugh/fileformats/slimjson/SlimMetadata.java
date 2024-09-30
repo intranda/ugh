@@ -15,7 +15,8 @@ import ugh.exceptions.MetadataTypeNotAllowedException;
 @Log4j2
 public class SlimMetadata {
     @JsonIgnore
-    private SlimDigitalDocument digitalDocument;
+    // This `transient` is required for GSON to work properly (circular references would lead to StackOverflow)
+    private transient SlimDigitalDocument digitalDocument;
 
     private String mdTypeId;
     // Document structure to which this metadata type belongs to.
