@@ -739,8 +739,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             MdSecType[] mst = ast.getTechMDArray();
             if (mst != null) {
                 for (MdSecType tech : mst) {
-                    MdWrap wrap = tech.getMdWrap();
-                    Node premis = wrap.getDomNode();
+                    Node premis = tech.getDomNode();
                     Md techMd = new Md(premis, MdType.TECH_MD);
                     techMd.setId(tech.getID());
                     this.digdoc.addTechMd(techMd);
@@ -749,8 +748,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             mst = ast.getRightsMDArray();
             if (mst != null) {
                 for (MdSecType tech : mst) {
-                    MdWrap wrap = tech.getMdWrap();
-                    Node premis = wrap.getDomNode();
+                    Node premis = tech.getDomNode();
                     Md techMd = new Md(premis, MdType.RIGHTS_MD);
                     techMd.setId(tech.getID());
                     this.digdoc.addTechMd(techMd);
@@ -759,8 +757,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             mst = ast.getDigiprovMDArray();
             if (mst != null) {
                 for (MdSecType tech : mst) {
-                    MdWrap wrap = tech.getMdWrap();
-                    Node premis = wrap.getDomNode();
+                    Node premis = tech.getDomNode();
                     Md techMd = new Md(premis, MdType.DIGIPROV_MD);
                     techMd.setId(tech.getID());
                     this.digdoc.addTechMd(techMd);
@@ -769,8 +766,7 @@ public class MetsMods implements ugh.dl.Fileformat {
             mst = ast.getSourceMDArray();
             if (mst != null) {
                 for (MdSecType tech : mst) {
-                    MdWrap wrap = tech.getMdWrap();
-                    Node premis = wrap.getDomNode();
+                    Node premis = tech.getDomNode();
                     Md techMd = new Md(premis, MdType.SOURCE_MD);
                     techMd.setId(tech.getID());
                     this.digdoc.addTechMd(techMd);

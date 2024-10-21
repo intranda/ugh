@@ -193,6 +193,56 @@ public class MdTest {
         assertEquals("xmlData", xmlData.getName());
         String textcontent = xmlData.getChildren().get(0).getChildren().get(0).getText();
         assertEquals("page content 18", textcontent);
+    }
+
+    @Test
+    public void testSaveAndExpprt() throws Exception {
+        Prefs prefs = new Prefs();
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
+
+        MetsMods mm = new MetsMods(prefs);
+        mm.read("src/test/resources/meta.xml");
+        DocStruct boundBook = mm.getDigitalDocument().getPhysicalDocStruct();
+
+        int counter = 1;
+        for (DocStruct page : boundBook.getAllChildren()) {
+            Md md = new Md(getJdomContent("page content " + counter++), MdType.TECH_MD);
+            md.generateId();
+            mm.getDigitalDocument().addTechMd(md);
+            page.setAdmId(md.getId());
+        }
+
+        // save file
+        File exportFile = folder.newFile();
+        mm.write(exportFile.toString());
+
+        // load file again, MD sections are still available
+        mm.read(exportFile.toString());
+
+        MetsModsImportExport mmio = new MetsModsImportExport(prefs);
+        mmio.setDigitalDocument(mm.getDigitalDocument());
+        mmio.write(exportFile.toString());
+
+        Namespace mets = Namespace.getNamespace("mets", "http://www.loc.gov/METS/");
+        Namespace mods = Namespace.getNamespace("mods", "http://www.loc.gov/mods/v3");
+        SAXBuilder builder = new SAXBuilder();
+        org.jdom2.Document doc = builder.build(exportFile);
+
+        XPathFactory xpathFactory = XPathFactory.instance();
+        XPathExpression<Element> expr = xpathFactory.compile("//mets:amdSec/mets:techMD",
+                Filters.element(), null, mets, mods);
+        List<Element> elements = expr.evaluate(doc);
+        assertEquals(18, elements.size());
+
+        Element techMD = elements.get(17);
+        assertEquals("techMD", techMD.getName());
+        Element mdWrap = techMD.getChildren().get(0);
+        assertEquals("mdWrap", mdWrap.getName());
+        Element xmlData = mdWrap.getChildren().get(0);
+        assertEquals("xmlData", xmlData.getName());
+        String textcontent = xmlData.getChildren().get(0).getChildren().get(0).getText();
+        assertEquals("page content 18", textcontent);
 
     }
+
 }
