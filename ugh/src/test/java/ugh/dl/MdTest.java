@@ -146,7 +146,15 @@ public class MdTest {
         for (DocStruct page : boundBook.getAllChildren()) {
             String id = page.getAdmId();
             Md md = mm.getDigitalDocument().getTechMd(id);
-            assertEquals("page content " + counter++, md.getContent().getTextContent());
+            Node exampleElement = md.getContent().getFirstChild().getFirstChild().getFirstChild().getFirstChild();
+            Node textElement = null;
+            for (int x = 0; x < exampleElement.getChildNodes().getLength(); x++) {
+                Node childNode = exampleElement.getChildNodes().item(x);
+                if (childNode.getNodeType() == Node.TEXT_NODE) {
+                    textElement = childNode;
+                }
+            }
+            assertEquals("page content " + counter++, textElement.getNodeValue());
         }
     }
 
