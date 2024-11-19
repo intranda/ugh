@@ -411,4 +411,21 @@ public class MetadataTypeTest {
         assertEquals(mdt2, mdt);
     }
 
+    @Test
+    public void testAccessRestriction() {
+        assertFalse(mdt.isAllowAccessRestriction());
+        mdt.setAllowAccessRestriction(true);
+        assertTrue(mdt.isAllowAccessRestriction());
+    }
+
+    @Test
+    public void testHashCode() {
+        int hashCode1 = mdt.hashCode();
+        mdt.setCorporate(true);
+        mdt.setIdentifier(true);
+        mdt.setIsPerson(true);
+        int hashCode2 = mdt.hashCode();
+        assertNotEquals(hashCode1, hashCode2);
+
+    }
 }
