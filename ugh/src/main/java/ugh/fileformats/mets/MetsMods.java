@@ -592,6 +592,11 @@ public class MetsMods implements ugh.dl.Fileformat {
     // use UUID or incremental numbers as file identifier
     protected boolean createUUIDs = false;
 
+    private String softwareName;
+    private String softwareVersion;
+    private String instanceName;
+    private String clientName;
+
     /***************************************************************************
      * CONSTRUCTORS
      **************************************************************************/
@@ -2854,14 +2859,51 @@ public class MetsMods implements ugh.dl.Fileformat {
 
             try {
                 Element name = createDomElementNS(domDoc, this.metsNamespacePrefix, "name");
-                name.setTextContent(ugh.UghVersion.PROGRAMNAME + " - " + ugh.UghVersion.getBUILDVERSION() + " - " + ugh.UghVersion.getBUILDDATE());
-                agent.appendChild(name);
+                if (StringUtils.isBlank(softwareName)) {
+                    name.setTextContent(
+                            ugh.UghVersion.PROGRAMNAME + " - " + ugh.UghVersion.getBUILDVERSION() + " - " + ugh.UghVersion.getBUILDDATE());
+                    agent.appendChild(name);
+                } else {
+                    name.setTextContent(softwareName);
+                    agent.appendChild(name);
+
+                    Element hash = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
+                    hash.setAttributeNS(namespaces.get("ext").getUri(), "type", "hash");
+                    hash.setTextContent(ugh.UghVersion.getBUILDVERSION());
+                    agent.appendChild(hash);
+
+                    Element buildDate = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
+                    buildDate.setAttributeNS(namespaces.get("ext").getUri(), "type", "builddate");
+                    buildDate.setTextContent(ugh.UghVersion.getBUILDDATE());
+                    agent.appendChild(buildDate);
+
+                }
+
             } catch (Exception e1) {
                 // nothing
             }
-            Element note = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
-            note.setTextContent(ugh.UghVersion.PROGRAMNAME);
-            agent.appendChild(note);
+
+            if (StringUtils.isNotBlank(softwareVersion)) {
+                Element note = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
+                note.setAttributeNS(namespaces.get("ext").getUri(), "type", "version");
+                note.setTextContent(softwareVersion);
+                agent.appendChild(note);
+            }
+
+            if (StringUtils.isNotBlank(instanceName)) {
+                Element note = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
+                note.setAttributeNS(namespaces.get("ext").getUri(), "type", "instance");
+                note.setTextContent(instanceName);
+                agent.appendChild(note);
+            }
+
+            if (StringUtils.isNotBlank(clientName)) {
+                Element note = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
+                note.setAttributeNS(namespaces.get("ext").getUri(), "type", "client");
+                note.setTextContent(clientName);
+                agent.appendChild(note);
+            }
+
             metsHdr.appendChild(agent);
 
             this.metsNode.appendChild(metsHdr);
@@ -2972,7 +3014,9 @@ public class MetsMods implements ugh.dl.Fileformat {
             log.info("Serializing METS document to file");
             serializeMets(domDoc, xmlFile);
 
-        } catch (FactoryConfigurationError e) {
+        } catch (
+
+        FactoryConfigurationError e) {
             String message = "JAXP can't be found!";
             log.error(message, e.getException());
             throw new WriteException(message, e.getException());
@@ -5308,6 +5352,14 @@ public class MetsMods implements ugh.dl.Fileformat {
         }
         this.namespaces.put(xsi.getPrefix(), xsi);
         this.xsiNamespacePrefix = xsi.getPrefix();
+
+        // extension
+        Namespace metsExtension = new Namespace();
+        metsExtension.setPrefix("ext");
+        metsExtension.setUri("https://intranda.com/metsExtension"); // TODO change namespace?
+
+        this.namespaces.put(metsExtension.getPrefix(), metsExtension);
+
     }
 
     /**
@@ -5431,4 +5483,23 @@ public class MetsMods implements ugh.dl.Fileformat {
         return modsNamesDS;
     }
 
+    @Override
+    public void setSoftwareName(String softwareName) {
+        this.softwareName = softwareName;
+    }
+
+    @Override
+    public void setSoftwareVersion(String softwareVersion) {
+        this.softwareVersion = softwareVersion;
+    }
+
+    @Override
+    public void setInstanceName(String instance) {
+        instanceName = instance;
+    }
+
+    @Override
+    public void setClientName(String client) {
+        clientName = client;
+    }
 }

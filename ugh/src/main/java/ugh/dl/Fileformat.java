@@ -28,38 +28,31 @@ import ugh.exceptions.WriteException;
 
 /*******************************************************************************
  * <p>
- * A Fileformat is an abstract description of a serialization of a complete
- * <code>DigitalDocument</code>. A Fileformat may store or read a
+ * A Fileformat is an abstract description of a serialization of a complete <code>DigitalDocument</code>. A Fileformat may store or read a
  * <code>DigitalDocument</code> object to/from a file.
  * </p>
  * 
  * <p>
- * Depending on the implementation a Fileformat may store all or only part of
- * the information.
+ * Depending on the implementation a Fileformat may store all or only part of the information.
  * </p>
  * 
  * <p>
- * Every fileformat may have methods to load, save or update a file. In an
- * implementation not all methods need to be available. Certain Fileformats are
- * just readable; other may not be updateable.
+ * Every fileformat may have methods to load, save or update a file. In an implementation not all methods need to be available. Certain Fileformats
+ * are just readable; other may not be updateable.
  * </p>
  * 
  * <p>
  * <b>Differences between readable, updateable, writeable:</b><br>
  * <ul>
  * <li>readable: the fileformat can be read from a file
- * <li>updateable: after reading a fileformat, some information can be updated.
- * The result can be written back (to the same file).
- * <li>writeable: a <code>DigitalDocument</code> can be written to a completly
- * new file.
+ * <li>updateable: after reading a fileformat, some information can be updated. The result can be written back (to the same file).
+ * <li>writeable: a <code>DigitalDocument</code> can be written to a completly new file.
  * </ul>
  * </p>
  * 
  * <p>
- * Internally every fileformat has a DigitalDocument instance, which will be
- * created while reading a file successfully. This instance can be obtained by
- * calling the GetDigitalDocument instance. Before writing a file, a
- * DigitalDocument instance must be available.
+ * Internally every fileformat has a DigitalDocument instance, which will be created while reading a file successfully. This instance can be obtained
+ * by calling the GetDigitalDocument instance. Before writing a file, a DigitalDocument instance must be available.
  * </p>
  * 
  * @author Markus Enders
@@ -71,8 +64,7 @@ public interface Fileformat {
 
     /***************************************************************************
      * <p>
-     * Returns the new DigitalDocument instance, which was created while reading
-     * the file. If a file was unreadable, null is returned.
+     * Returns the new DigitalDocument instance, which was created while reading the file. If a file was unreadable, null is returned.
      * </p>
      * 
      * @return DigitalDocument the DigitalDocument instance
@@ -85,10 +77,8 @@ public interface Fileformat {
      * Reads a file and creates a DigitalDocument instance.
      * </p>
      * 
-     * @param filename
-     *            full path to file, which should be read
-     * @return a boolean value, true if everything was okay; false, if there
-     *         there was an error (IO Error etc...).
+     * @param filename full path to file, which should be read
+     * @return a boolean value, true if everything was okay; false, if there there was an error (IO Error etc...).
      * 
      * @throws ReadException
      **************************************************************************/
@@ -96,39 +86,32 @@ public interface Fileformat {
 
     /***************************************************************************
      * <p>
-     * Writes the content of the DigitalDocument instance to a file. The file
-     * format must already have a DigitalDocument instance.
+     * Writes the content of the DigitalDocument instance to a file. The file format must already have a DigitalDocument instance.
      * </p>
      * 
-     * @param filename
-     *            full path to the file
-     * @return true, if everything is okay. Otherwise false, if an error occured
-     *         (IO-Error etc...)
+     * @param filename full path to the file
+     * @return true, if everything is okay. Otherwise false, if an error occured (IO-Error etc...)
      * @throws WriteException
      * @throws PreferencesException
      **************************************************************************/
     public boolean write(String filename) throws WriteException,
-    PreferencesException;
+            PreferencesException;
 
     /***************************************************************************
      * <p>
-     * Updates a file, which had to be read before. Updating means, that the
-     * same file, which was read will be written again. Changes made in the
-     * Metadata-instances can be written back to the file. To support file
-     * updates, the fileformat implementation must support the storage of native
+     * Updates a file, which had to be read before. Updating means, that the same file, which was read will be written again. Changes made in the
+     * Metadata-instances can be written back to the file. To support file updates, the fileformat implementation must support the storage of native
      * objects (e.g. dom.elements-objects) in the metadata.
      * </p>
      * 
-     * @param filename
-     *            full path of output file
+     * @param filename full path of output file
      * @return true if updating was successful; otherwise false.
      **************************************************************************/
     public boolean update(String filename);
 
     /***************************************************************************
      * <p>
-     * Sets a DigitalDocument instance. This instance must be available before a
-     * file can be written or updated.
+     * Sets a DigitalDocument instance. This instance must be available before a file can be written or updated.
      * </p>
      * 
      * @param inDoc
@@ -154,20 +137,45 @@ public interface Fileformat {
 
     public boolean isExportable();
 
-
     /***************************************************************************
      * <p>
-     * Returns a human readable name of the implementation. This name should be
-     * unique as he can be used to identify the implementation.
+     * Returns a human readable name of the implementation. This name should be unique as he can be used to identify the implementation.
      * </p>
      * 
      * @returna human readable name of the fileformat.
      **************************************************************************/
     public String getDisplayName();
 
-
     public void setPrefs(Prefs prefs) throws PreferencesException;
 
     public void setGoobiID(String goobiId);
+
+    /**
+     * Define the software name, that is writing the file. Can be used as agent name
+     * 
+     * @param softwareName
+     */
+
+    default void setSoftwareName(String softwareName) {
+        // default implementation ignores this setting
+    }
+
+    /**
+     * Define the software version
+     * 
+     * @param softwareVersion
+     */
+
+    default void setSoftwareVersion(String softwareVersion) {
+        // default implementation ignores this setting
+    }
+
+    default void setInstanceName(String instance) {
+        // default implementation ignores this setting
+    }
+
+    default void setClientName(String client) {
+        // default implementation ignores this setting
+    }
 
 }
