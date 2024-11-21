@@ -20,6 +20,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import ugh.UghVersion;
 import ugh.dl.ExportFileformat;
 import ugh.dl.Prefs;
 
@@ -37,6 +38,9 @@ public class MetsModsAgentTest {
 
     @Before
     public void setUp() throws Exception {
+        UghVersion.buildDate = "2000-01-01";
+        UghVersion.buildVersion = "1234";
+        UghVersion.PROGRAMNAME = "fixture";
         prefs = new Prefs();
 
         prefs.loadPrefs("src/test/resources/ruleset.xml");
@@ -72,7 +76,7 @@ public class MetsModsAgentTest {
         Element name = agent.getChild("name", metsNamespace);
         Element note = agent.getChild("note", metsNamespace);
 
-        assertTrue(name.getText().startsWith("Goobi"));
+        assertEquals("fixture - 1234 - 2000-01-01", name.getText());
         assertNull(note);
 
     }
