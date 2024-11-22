@@ -27,7 +27,7 @@ import ugh.dl.Prefs;
 public class MetsModsAgentTest {
 
     private static final Namespace metsNamespace = Namespace.getNamespace("mets", "http://www.loc.gov/METS/");
-    private static final Namespace extNamespace = Namespace.getNamespace("ext", "https://intranda.com/metsExtension");
+    private static final Namespace extNamespace = Namespace.getNamespace("ext", "http://intranda.com/MODS/");
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();

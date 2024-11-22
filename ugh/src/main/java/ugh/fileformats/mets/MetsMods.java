@@ -2868,12 +2868,12 @@ public class MetsMods implements ugh.dl.Fileformat {
                     agent.appendChild(name);
 
                     Element hash = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
-                    hash.setAttributeNS(namespaces.get("ext").getUri(), "type", "hash");
+                    hash.setAttributeNS(namespaces.get("intranda").getUri(), "type", "hash");
                     hash.setTextContent(ugh.UghVersion.getBUILDVERSION());
                     agent.appendChild(hash);
 
                     Element buildDate = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
-                    buildDate.setAttributeNS(namespaces.get("ext").getUri(), "type", "builddate");
+                    buildDate.setAttributeNS(namespaces.get("intranda").getUri(), "type", "builddate");
                     buildDate.setTextContent(ugh.UghVersion.getBUILDDATE());
                     agent.appendChild(buildDate);
 
@@ -2885,21 +2885,21 @@ public class MetsMods implements ugh.dl.Fileformat {
 
             if (StringUtils.isNotBlank(softwareVersion)) {
                 Element note = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
-                note.setAttributeNS(namespaces.get("ext").getUri(), "type", "version");
+                note.setAttributeNS(namespaces.get("intranda").getUri(), "type", "version");
                 note.setTextContent(softwareVersion);
                 agent.appendChild(note);
             }
 
             if (StringUtils.isNotBlank(instanceName)) {
                 Element note = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
-                note.setAttributeNS(namespaces.get("ext").getUri(), "type", "instance");
+                note.setAttributeNS(namespaces.get("intranda").getUri(), "type", "instance");
                 note.setTextContent(instanceName);
                 agent.appendChild(note);
             }
 
             if (StringUtils.isNotBlank(clientName)) {
                 Element note = createDomElementNS(domDoc, this.metsNamespacePrefix, "note");
-                note.setAttributeNS(namespaces.get("ext").getUri(), "type", "client");
+                note.setAttributeNS(namespaces.get("intranda").getUri(), "type", "client");
                 note.setTextContent(clientName);
                 agent.appendChild(note);
             }
@@ -5355,8 +5355,8 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         // extension
         Namespace metsExtension = new Namespace();
-        metsExtension.setPrefix("ext");
-        metsExtension.setUri("https://intranda.com/metsExtension"); // TODO change namespace?
+        metsExtension.setPrefix("intranda");
+        metsExtension.setUri("http://intranda.com/MODS/");
 
         this.namespaces.put(metsExtension.getPrefix(), metsExtension);
 
