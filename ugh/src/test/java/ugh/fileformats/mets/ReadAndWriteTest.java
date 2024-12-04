@@ -237,7 +237,7 @@ public class ReadAndWriteTest {
 
         Element element = expr.evaluateFirst(doc);
         assertNotNull(element);
-        assertEquals("true", element.getAttributeValue("accessRestrict"));
+        assertEquals("no", element.getAttributeValue("shareable"));
     }
 
     @Test

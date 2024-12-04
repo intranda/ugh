@@ -1698,7 +1698,7 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             }
 
             if (theMetadata.getType().isAllowAccessRestriction() && theMetadata.isAccessRestrict()) {
-                ((Element) createdNode).setAttribute("accessRestrict", "true");
+                ((Element) createdNode).setAttribute("shareable", "no");
             }
 
             createdNode.appendChild(valueNode);
