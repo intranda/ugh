@@ -508,7 +508,7 @@
   <xs:element name="LidoTerm" type="xs:string" />
   <xs:element name="XPathLogical" type="xs:string" />
   <xs:element name="XPathPhysical" type="xs:string" />
-  <xs:element name="fieldMainTag" type="xs:integer" />
+  <xs:element name="fieldMainTag" type="tagDataType" />
   <xs:element name="fieldMainName" type="xs:string" />
   <xs:element name="fieldSubName" type="xs:string" />
   <xs:element name="fieldPartName" type="xs:string" />
@@ -524,4 +524,12 @@
   <xs:element name="InternalName" type="xs:NCName" />
   <xs:element name="XPath" type="xs:string" />
   <xs:element name="exportEmptyNode" type="xs:boolean" />
+  
+    <xs:simpleType name="tagDataType" id="tag.st">
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="preserve"/>
+      <xs:pattern value="(0([1-9A-Z][0-9A-Z])|0([1-9a-z][0-9a-z]))|(([1-9A-Z][0-9A-Z]{2})|([1-9a-z][0-9a-z]{2}))|00[1-9A-Za-z]{1}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
 </xs:schema>
