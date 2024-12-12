@@ -2,12 +2,12 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
   <xs:element name="Preferences">
     <xs:complexType>
-      <xs:choice maxOccurs="unbounded">
+      <xs:sequence maxOccurs="unbounded">
         <xs:element maxOccurs="unbounded" ref="MetadataType" />
         <xs:element maxOccurs="unbounded" ref="Group" />
         <xs:element maxOccurs="unbounded" ref="DocStrctType" />
         <xs:element ref="Formats" />
-      </xs:choice>
+      </xs:sequence>
 
     </xs:complexType>
   </xs:element>
@@ -231,80 +231,23 @@
       <xs:choice maxOccurs="unbounded">
         <xs:element maxOccurs="unbounded" name="Group">
           <xs:complexType>
-            <xs:sequence>
+             <xs:choice minOccurs="0" maxOccurs="unbounded">
               <xs:element ref="Name" />
-              <xs:element maxOccurs="unbounded" name="Metadata">
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element ref="Name" />
-                    <xs:element maxOccurs="unbounded" ref="field" />
-                    <xs:choice minOccurs="0" maxOccurs="unbounded">
-                      <xs:element ref="identifierField" />
-                      <xs:element ref="identifierConditionField" />
-                      <xs:element ref="identifierReplacement" />
-                      <xs:element ref="conditionField" />
-                      <xs:element ref="conditionValue" />
-                      <xs:element ref="fieldReplacement" />
-                      <xs:element ref="separateEntries" />
-                      <xs:element minOccurs="0" ref="separator" />
-                    </xs:choice>
-                  </xs:sequence>
-                </xs:complexType>
-
-              </xs:element>
-            </xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="Metadata" />
+           
+             <xs:element minOccurs="0" maxOccurs="unbounded" ref="Person" />
+              
+              
+             </xs:choice>
           </xs:complexType>
         </xs:element>
 
-        <xs:element maxOccurs="unbounded" name="Metadata">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element ref="Name" />
-              <xs:element maxOccurs="unbounded" ref="field" />
-              <xs:choice minOccurs="0" maxOccurs="unbounded">
-                <xs:element ref="identifierField" />
-                <xs:element ref="identifierConditionField" />
-                <xs:element ref="identifierReplacement" />
-                <xs:element ref="conditionField" />
-                <xs:element ref="conditionValue" />
-                <xs:element ref="fieldReplacement" />
-                <xs:element ref="separateEntries" />
-                <xs:element minOccurs="0" ref="separator" />
-              </xs:choice>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element maxOccurs="unbounded" name="Corporate">
-          <xs:complexType>
-            <xs:choice minOccurs="0" maxOccurs="unbounded">
-              <xs:element ref="Name" />
-              <xs:element ref="field" />
-              <xs:element ref="identifierField" />
-              <xs:element ref="identifierConditionField" />
-              <xs:element ref="identifierReplacement" />
-              <xs:element ref="conditionField" />
-              <xs:element ref="conditionValue" />              
-              <xs:element ref="separateEntries" />
-              <xs:element ref="separator" />              
-            </xs:choice>
-          </xs:complexType>
 
-        </xs:element>
-        <xs:element maxOccurs="unbounded" name="Person">
-          <xs:complexType>
-            <xs:choice minOccurs="0" maxOccurs="unbounded">
-              <xs:element ref="Name" />
-              <xs:element maxOccurs="unbounded" ref="field" />
-              <xs:element ref="identifierField" />
-              <xs:element ref="identifierConditionField" />
-              <xs:element ref="identifierReplacement" />
-              <xs:element ref="conditionField" />
-              <xs:element ref="conditionValue" />
-              <xs:element ref="separateEntries" />
-              <xs:element ref="separator" />
-            </xs:choice>
-          </xs:complexType>
-        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="Metadata" />
+        
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="Corporate" />
+         <xs:element minOccurs="0" maxOccurs="unbounded" ref="Person" />
+        
         <xs:element maxOccurs="unbounded" name="DocStruct">
           <xs:complexType>
             <xs:sequence>
@@ -524,6 +467,9 @@
   <xs:element name="InternalName" type="xs:NCName" />
   <xs:element name="XPath" type="xs:string" />
   <xs:element name="exportEmptyNode" type="xs:boolean" />
+  <xs:element name="Metadata" type="marcMetadataType" />
+    <xs:element name="Corporate" type="marcCorporateType" />
+  <xs:element name="Person" type="marcPersonType" />
   
     <xs:simpleType name="tagDataType" id="tag.st">
     <xs:restriction base="xs:string">
@@ -532,4 +478,50 @@
     </xs:restriction>
   </xs:simpleType>
   
+  
+          <xs:complexType  name="marcPersonType">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element ref="Name" />
+              <xs:element maxOccurs="unbounded" ref="field" />
+              <xs:element ref="identifierField" />
+              <xs:element ref="identifierConditionField" />
+              <xs:element ref="identifierReplacement" />
+              <xs:element ref="conditionField" />
+              <xs:element ref="conditionValue" />
+              <xs:element ref="separateEntries" />
+              <xs:element ref="separator" />
+            </xs:choice>
+          </xs:complexType>
+          <xs:complexType name="marcCorporateType">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element ref="Name" />
+              <xs:element ref="field" />
+              <xs:element ref="identifierField" />
+              <xs:element ref="identifierConditionField" />
+              <xs:element ref="identifierReplacement" />
+              <xs:element ref="conditionField" />
+              <xs:element ref="conditionValue" />              
+              <xs:element ref="separateEntries" />
+              <xs:element ref="separator" />              
+            </xs:choice>
+          </xs:complexType>
+
+  
+  
+          <xs:complexType name="marcMetadataType">
+            <xs:sequence>
+              <xs:element ref="Name" />
+              <xs:element maxOccurs="unbounded" ref="field" />
+              <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="identifierField" />
+                <xs:element ref="identifierConditionField" />
+                <xs:element ref="identifierReplacement" />
+                <xs:element ref="conditionField" />
+                <xs:element ref="conditionValue" />
+                <xs:element ref="fieldReplacement" />
+                <xs:element ref="separateEntries" />
+                <xs:element minOccurs="0" ref="separator" />
+              </xs:choice>
+            </xs:sequence>
+          </xs:complexType>
 </xs:schema>
