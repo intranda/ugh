@@ -4,7 +4,7 @@
     <xs:complexType>
       <xs:sequence maxOccurs="unbounded">
         <xs:element maxOccurs="unbounded" ref="MetadataType" />
-        <xs:element maxOccurs="unbounded" ref="Group" />
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="Group" />
         <xs:element maxOccurs="unbounded" ref="DocStrctType" />
         <xs:element ref="Formats" />
       </xs:sequence>
@@ -21,8 +21,9 @@
           <xs:element minOccurs="0" maxOccurs="unbounded" ref="validationErrorMessage" />
         </xs:sequence>
       </xs:sequence>
-      <xs:attribute name="normdata" type="xs:boolean" />
-      <xs:attribute name="type" type="xs:NCName" />
+      <xs:attribute name="normdata" type="xs:boolean" use="optional" />
+      <xs:attribute name="type" type="xs:NCName" use="optional"/>
+      <xs:attribute name="namepart" type="xs:boolean" use="optional"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="validationExpression" type="xs:string" />
