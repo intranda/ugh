@@ -235,14 +235,22 @@
              <xs:choice minOccurs="0" maxOccurs="unbounded">
               <xs:element ref="Name" />
               <xs:element minOccurs="0" maxOccurs="unbounded" ref="Metadata" />
-           
-             <xs:element minOccurs="0" maxOccurs="unbounded" ref="Person" />
-              
-              
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="Person" />
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="Corporate" />
              </xs:choice>
           </xs:complexType>
         </xs:element>
-
+        <xs:element maxOccurs="unbounded" name="SubfieldGroup">
+          <xs:complexType>
+             <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element ref="Name" />
+              <xs:element ref="fieldMainTag" />
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="Metadata" />
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="Person" />
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="Corporate" />
+             </xs:choice>
+          </xs:complexType>
+        </xs:element>
 
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="Metadata" />
         
@@ -432,7 +440,7 @@
   <xs:element name="field">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="fieldMainTag" />
+        <xs:element minOccurs="0" ref="fieldMainTag" />
         <xs:sequence minOccurs="0">
           <xs:element ref="fieldMainName" />
           <xs:element ref="fieldSubName" maxOccurs="unbounded"/>
@@ -491,6 +499,7 @@
               <xs:element ref="conditionValue" />
               <xs:element ref="separateEntries" />
               <xs:element ref="separator" />
+              <xs:element name="abortAfterFirstMatch" />
             </xs:choice>
           </xs:complexType>
           <xs:complexType name="marcCorporateType">
