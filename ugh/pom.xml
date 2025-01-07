@@ -52,7 +52,7 @@
         <lombok.version>1.18.34</lombok.version>
         <xerces.version>2.12.2</xerces.version>
         <xmlbeans.version>5.1.1</xmlbeans.version>
-        <xstream.version>1.4.20</xstream.version>
+        <xstream.version>1.4.21</xstream.version>
         <saxon.version>11.4</saxon.version>
         <mets.version>1.12.2</mets.version>
         <mods.version>3.8</mods.version>
