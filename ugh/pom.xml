@@ -45,14 +45,14 @@
         </sonar.coverage.jacoco.xmlReportPaths>
 
 
-        <commons-lang.version>3.12.0</commons-lang.version>
+        <commons-lang.version>3.17.0</commons-lang.version>
         <jdom2.version>2.0.6.1</jdom2.version>
-        <jackson.version>2.14.1</jackson.version>
-        <log4j.version>2.20.0</log4j.version>
-        <lombok.version>1.18.34</lombok.version>
+        <jackson.version>2.18.2</jackson.version>
+        <log4j.version>2.24.3</log4j.version>
+        <lombok.version>1.18.36</lombok.version>
         <xerces.version>2.12.2</xerces.version>
-        <xmlbeans.version>5.1.1</xmlbeans.version>
-        <xstream.version>1.4.20</xstream.version>
+        <xmlbeans.version>5.3.0</xmlbeans.version>
+        <xstream.version>1.4.21</xstream.version>
         <saxon.version>12.5</saxon.version>
         <mets.version>1.12.2</mets.version>
         <mods.version>3.8</mods.version>
