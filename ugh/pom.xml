@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.intranda.ugh</groupId>
     <artifactId>ugh-core</artifactId>
-    <version>5.0.30</version>
+    <version>5.0.31-SNAPSHOT</version>
 
     <repositories>
         <repository>
@@ -53,7 +53,7 @@
         <xerces.version>2.12.2</xerces.version>
         <xmlbeans.version>5.1.1</xmlbeans.version>
         <xstream.version>1.4.20</xstream.version>
-        <saxon.version>11.4</saxon.version>
+        <saxon.version>12.5</saxon.version>
         <mets.version>1.12.2</mets.version>
         <mods.version>3.8</mods.version>
         <jcabi.version>1.2.1</jcabi.version>
