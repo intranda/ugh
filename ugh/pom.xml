@@ -48,19 +48,20 @@
 
 
         <commons-lang.version>3.17.0</commons-lang.version>
-        <jdom2.version>2.0.6.1</jdom2.version>
         <jackson.version>2.18.2</jackson.version>
+        <jaxen.version>1.2.0</jaxen.version>
+        <jcabi.version>1.2.1</jcabi.version>
+        <jdom2.version>2.0.6.1</jdom2.version>
+        <junit.version>4.13.2</junit.version>
         <log4j.version>2.24.3</log4j.version>
         <lombok.version>1.18.36</lombok.version>
+        <mets.version>1.12.2</mets.version>
+        <mods.version>3.8</mods.version>
+        <saxon.version>12.5</saxon.version>
+        <slf4j.version>2.0.16</slf4j.version>
         <xerces.version>2.12.2</xerces.version>
         <xmlbeans.version>5.3.0</xmlbeans.version>
         <xstream.version>1.4.21</xstream.version>
-        <saxon.version>12.5</saxon.version>
-        <mets.version>1.12.2</mets.version>
-        <mods.version>3.8</mods.version>
-        <jcabi.version>1.2.1</jcabi.version>
-        <junit.version>4.13.2</junit.version>
-        <jaxen.version>1.2.0</jaxen.version>
     </properties>
 
 
@@ -195,6 +196,13 @@
 
                                 <!-- Saxon is used for XML and XQuery during runtime -->
                                 <ignoredUnusedDeclaredDependency>net.sf.saxon:Saxon-HE</ignoredUnusedDeclaredDependency>
+
+                                <!-- SLF4J nop is needed to get rid of logging spam like this
+                                    SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+                                    SLF4J: Defaulting to no-operation (NOP) logger implementation
+                                    SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+                                -->
+                                <ignoredUnusedDeclaredDependency>org.slf4j:slf4j-nop</ignoredUnusedDeclaredDependency>
                             </ignoredUnusedDeclaredDependencies>
                         </configuration>
                     </execution>
@@ -316,6 +324,12 @@
             <artifactId>jaxen</artifactId>
             <version>${jaxen.version}</version>
             <scope>test</scope>
+        </dependency>
+        <!-- SLF4J nop is needed to get rid of logging spam -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
     </dependencies>
 </project>
