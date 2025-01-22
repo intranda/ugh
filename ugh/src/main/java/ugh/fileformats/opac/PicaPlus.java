@@ -130,7 +130,6 @@ public class PicaPlus implements ugh.dl.Fileformat {
     private static final String PREFS_METADATA_STRING = "Metadata";
     private static final String PREFS_VALUECONDITION_STRING = "ValueCondition";
     private static final String PREFS_VALUEREGEXP_STRING = "ValueRegExp";
-    private static final String PREFS_VALUEREPLACEMENT_STRING = "ValueReplacement";
     private static final String PREFS_DOCSTRUCT_STRING = "DocStruct";
     private static final String PREFS_PERSON_STRING = "Person";
     private static final String PREFS_PICAPLUSGROUP_STRING = "PicaPlusGroup";
@@ -775,7 +774,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
         // Contains all corporations
         LinkedList<Corporate> allCorp = new LinkedList<>();
         // Contains all metadata groups.
-        LinkedList<MetadataGroup> allGroups = new LinkedList<>();
+        LinkedList<MetadataGroup> allGroupsInNode = new LinkedList<>();
 
         DocStruct ds = null;
         Metadata md = null;
@@ -808,7 +807,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                             log.debug("Person '" + per.getType().getName() + "' found");
                         } else if (pprObject != null && pprObject.getClass() == ugh.dl.MetadataGroup.class) {
                             MetadataGroup group = (MetadataGroup) pprObject;
-                            allGroups.add(group);
+                            allGroupsInNode.add(group);
                             log.debug("MetadataGroup '" + group.getType().getName() + "' found");
                         } else if (pprObject != null && pprObject.getClass() == ugh.dl.Corporate.class) {
                             allCorp.add((Corporate) pprObject);
@@ -841,11 +840,9 @@ public class PicaPlus implements ugh.dl.Fileformat {
                 } catch (MetadataTypeNotAllowedException e) {
                     String message = "Ignoring MetadataTypeNotAllowedException at OPAC import!";
                     log.warn(message, e);
-                    continue;
                 } catch (DocStructHasNoTypeException e) {
                     String message = "Ignoring DocStructHasNoTypeException at OPAC import!";
                     log.warn(message, e);
-                    continue;
                 }
             }
         }
@@ -913,7 +910,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
         }
 
         // Add metadata groups to DocStruct.
-        for (MetadataGroup group : allGroups) {
+        for (MetadataGroup group : allGroupsInNode) {
             try {
                 ds.addMetadataGroup(group);
             } catch (MetadataTypeNotAllowedException e) {
@@ -1134,10 +1131,8 @@ public class PicaPlus implements ugh.dl.Fileformat {
                             }
                         }
                     }
-                    if (mmo.isMainField()) {
-                        if (StringUtils.isBlank(corp.getMainName())) {
-                            corp.setMainName(content);
-                        }
+                    if (mmo.isMainField() && StringUtils.isBlank(corp.getMainName())) {
+                        corp.setMainName(content);
                     }
                     if (mmo.isSubField()) {
                         corp.addSubName(new NamePart("subname", content));
@@ -1198,7 +1193,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                             // Ignore life dates.
                             String heading = content.split("\\*")[0].trim();
 
-                            if (heading.length() > 0) {
+                            if (!heading.isEmpty()) {
                                 String lastname = null;
                                 String firstname = null;
 
@@ -1237,7 +1232,7 @@ public class PicaPlus implements ugh.dl.Fileformat {
                             content = content.replace(".", "");
 
                             MetadataType mdt = null;
-                            if (content.length() > 0) {
+                            if (!content.isEmpty()) {
                                 internalname = "PicaPlus_" + mmo.getPicaplusField() + "_" + content;
                                 mdt = this.myPreferences.getMetadataTypeByName(internalname);
                                 per.setType(mdt);
@@ -1275,10 +1270,10 @@ public class PicaPlus implements ugh.dl.Fileformat {
             MetadataGroupType type = myPreferences.getMetadataGroupTypeByName(metadataGroups.get(fieldAttribute));
             MetadataGroup createdGroup = new MetadataGroup(type);
             for (Serializable content : result) {
-                if (content instanceof Person) {
-                    createdGroup.addPerson((Person) content);
-                } else if (content instanceof Metadata) {
-                    createdGroup.addMetadata((Metadata) content);
+                if (content instanceof Person p) {
+                    createdGroup.addPerson(p);
+                } else if (content instanceof Metadata m) {
+                    createdGroup.addMetadata(m);
                 } else {
                     log.warn("Can't add a " + content.getClass().getSimpleName() + " to a MetadataGroup.");
                 }

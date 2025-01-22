@@ -8,10 +8,8 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.InvalidPathException;
@@ -1013,15 +1011,13 @@ public class MetsMods implements ugh.dl.Fileformat {
         // Get the related METS div object.
         Object o = inStruct.getOrigObject();
         if (o != null) {
-            if (o instanceof DivType) {
-                DivType div = (DivType) o;
+            if (o instanceof DivType div) {
                 if (div.getID() != null && div.getID().equals(id)) {
                     return inStruct;
 
                 }
-            } else if (o instanceof AreaType) {
+            } else if (o instanceof AreaType area) {
                 // Convert object to area.
-                AreaType area = (AreaType) o;
                 if (area.getID() != null && area.getID().equals(id)) {
                     return inStruct;
 
@@ -1643,8 +1639,8 @@ public class MetsMods implements ugh.dl.Fileformat {
         String modsstring = null;
         Object o = inStruct.getOrigObject();
         DivType div = null;
-        if (o instanceof DivType) {
-            div = (DivType) o;
+        if (o instanceof DivType d) {
+            div = d;
         }
         if (div == null) {
             log.warn("Can't get div object for DocStruct to find appropriate metadata sections!");
@@ -1693,8 +1689,8 @@ public class MetsMods implements ugh.dl.Fileformat {
         Node modsnode = null;
         Object o = inStruct.getOrigObject();
         DivType div = null;
-        if (o instanceof DivType) {
-            div = (DivType) o;
+        if (o instanceof DivType d) {
+            div = d;
         }
         if (div == null) {
             log.warn("Can't get DIV object for DocStruct to find appropriate metadata sections");
@@ -2670,8 +2666,8 @@ public class MetsMods implements ugh.dl.Fileformat {
         // If not, add them and set them both to "1".
         if (DigitalDocument.PhysicalElement.checkPhysicalType(inStruct.getType().getName())) {
             DivType pagediv = null;
-            if (o instanceof DivType) {
-                pagediv = (DivType) o;
+            if (o instanceof DivType d) {
+                pagediv = d;
             }
             if (pagediv != null) {
                 // DivType object available, get and set ORDER and ORDERLABEL.
@@ -3299,8 +3295,8 @@ public class MetsMods implements ugh.dl.Fileformat {
             path = Paths.get(lc);
         } catch (InvalidPathException e) {
             try {
-                path = getPath(new URL(lc).toURI());
-            } catch (MalformedURLException | URISyntaxException e1) {
+                path = getPath(new URI(lc));
+            } catch (URISyntaxException e1) {
                 path = Paths.get(URI.create(lc));
             }
         }
@@ -3431,8 +3427,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                             List<?> admIds = file.getADMID();
                             if (admIds != null) {
                                 for (Object object : admIds) {
-                                    if (object instanceof String) {
-                                        String id = (String) object;
+                                    if (object instanceof String id) {
                                         cf.addTechMd(this.digdoc.getTechMd(id));
                                     }
                                 }
@@ -4377,8 +4372,8 @@ public class MetsMods implements ugh.dl.Fileformat {
             throw new WriteException(message);
         }
 
-        // Do NOT create a DIV element, if (a) a non-anchor file is written AND
-        // element is defined as an anchor in the prefs OR if (b) an anchor
+        // Do NOT create a DIV element, if a non-anchor file is written AND
+        // element is defined as an anchor in the prefs OR if an anchor
         // file is written AND parent element is an anchor.
         if ((!isAnchorFile && inStruct.getType().isAnchor()) || (isAnchorFile && !inStruct.getType().isAnchor())) {
             return -1;
@@ -4537,7 +4532,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                 // check if group has values
                 boolean isEmpty = true;
                 for (Metadata md : m.getMetadataList()) {
-                    if (md.getValue() != null && md.getValue().length() > 0) {
+                    if (StringUtils.isNotBlank(md.getValue())) {
                         isEmpty = false;
                         break;
                     }
@@ -4548,7 +4543,6 @@ public class MetsMods implements ugh.dl.Fileformat {
                         break;
                     }
                 }
-                // TODO sub groups
                 // only write groups with values
 
                 if (!isEmpty) {
@@ -5028,7 +5022,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                 // check if group has values
                 boolean isEmpty = true;
                 for (Metadata md : m.getMetadataList()) {
-                    if (md.getValue() != null && md.getValue().length() > 0) {
+                    if (StringUtils.isNotBlank(md.getValue())) {
                         isEmpty = false;
                         break;
                     }

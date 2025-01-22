@@ -3,6 +3,7 @@ package ugh.fileformats.slimjson;
 import java.util.List;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
 import ugh.dl.DigitalDocument;
 import ugh.dl.NamePart;
@@ -10,6 +11,7 @@ import ugh.dl.Person;
 import ugh.exceptions.MetadataTypeNotAllowedException;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Log4j2
 public class SlimPerson extends SlimMetadata {
 
@@ -22,7 +24,7 @@ public class SlimPerson extends SlimMetadata {
     private String persontype = null;
 
     private List<NamePart> additionalNameParts = null;
-    
+
     public static SlimPerson fromPerson(Person person, SlimDigitalDocument sdd) {
         SlimPerson sm = new SlimPerson();
         sm = (SlimPerson) SlimMetadata.fromMetadata(sm, person, sdd);
@@ -33,10 +35,10 @@ public class SlimPerson extends SlimMetadata {
         sm.institution = person.getAffiliation();
         sm.role = person.getRole();
         sm.persontype = person.getPersontype();
-        
+
         return sm;
     }
-    
+
     public Person toPerson(DigitalDocument dd) {
         try {
             Person sm = new Person(getDigitalDocument().getMetadataTypeMap().get(this.getMdTypeId()));

@@ -295,11 +295,6 @@ public class DocStruct implements Serializable, HoldingElement {
         return this.children;
     }
 
-    /***************************************************************************
-     * @deprecated
-     * @return
-     **************************************************************************/
-
     /**************************************************************************
      * <p>
      * Retrieves the identifier/URN/URL of the anchor. The anchor is another DocStruct which is stored in another DigitalDocument; e.g. a "Journal"
@@ -3244,7 +3239,7 @@ public class DocStruct implements Serializable, HoldingElement {
             for (ContentFileReference cfr : contentFileReferences) {
                 if (cfr.getCf() != null) {
                     String location = cfr.getCf().getLocation();
-                    if (location != null && location.length() > 0) {
+                    if (StringUtils.isNotBlank(location)) {
                         File imagefile = new File(location);
                         return imagefile.getName();
                     }

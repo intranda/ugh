@@ -2,7 +2,6 @@ package ugh.fileformats.mets;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import lombok.Getter;
 import lombok.Setter;
