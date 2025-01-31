@@ -29,6 +29,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.jdom2.JDOMException;
 import org.jdom2.output.DOMOutputter;
@@ -68,6 +69,7 @@ public class Md implements Serializable {
         return content;
     }
 
+    @JsonIgnore
     public void setContent(Node content) {
         this.content = content;
         checkWrapperElement();
