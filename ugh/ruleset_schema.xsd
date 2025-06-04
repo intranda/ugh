@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="Preferences">
+    <xs:complexType>
+      <xs:sequence maxOccurs="unbounded">
+        <xs:element maxOccurs="unbounded" ref="MetadataType" />
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="Group" />
+        <xs:element maxOccurs="unbounded" ref="DocStrctType" />
+        <xs:element ref="Formats" />
+      </xs:sequence>
+
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MetadataType">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Name" />
+        <xs:element maxOccurs="unbounded" ref="language" />
+        <xs:sequence minOccurs="0">
+          <xs:element ref="validationExpression" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="validationErrorMessage" />
+        </xs:sequence>
+      </xs:sequence>
+      <xs:attribute name="normdata" type="xs:boolean" use="optional" />
+      <xs:attribute name="type" type="xs:NCName" use="optional"/>
+      <xs:attribute name="namepart" type="xs:boolean" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="validationExpression" type="xs:string" />
+  <xs:element name="validationErrorMessage">
+    <xs:complexType mixed="true">
+      <xs:attribute name="name" use="required" type="xs:NCName" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Group">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Name" />
+        <xs:element maxOccurs="unbounded" ref="language" />
+        <xs:choice maxOccurs="unbounded">
+          <xs:element ref="group" />
+          <xs:element ref="metadata" />
+        </xs:choice>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DocStrctType">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Name" />
+        <xs:element maxOccurs="unbounded" ref="language" minOccurs="0"/>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="allowedchildtype" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="metadata" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="group" />
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="anchor" type="xs:boolean" />
+      <xs:attribute name="topStruct" type="xs:boolean" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="allowedchildtype" type="xs:NCName" />
+  <xs:element name="metadata">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:NCName">
+          <xs:attribute name="DefaultDisplay" type="xs:boolean" />
+          <xs:attribute name="num" use="required" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Formats">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="PicaPlus" />
+        <xs:element ref="Marc" />
+        <xs:element ref="METS" />
+        <xs:element ref="LIDO" />
+        <xs:element ref="Json" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="LIDO">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="NamespaceDefinition" />
+        <xs:choice maxOccurs="unbounded">
+          <xs:element maxOccurs="unbounded" name="Group">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:sequence minOccurs="0">
+                  <xs:element ref="Name" />
+                  <xs:element maxOccurs="unbounded" ref="language" />
+                  <xs:choice maxOccurs="unbounded">
+                    <xs:element ref="group" />
+                    <xs:element ref="metadata" />
+                  </xs:choice>
+                </xs:sequence>
+                <xs:element minOccurs="0" ref="InternalName" />
+                <xs:element minOccurs="0" ref="exportEmptyNode" />
+                <xs:sequence minOccurs="0">
+                  <xs:element ref="XPath" />
+                  <xs:element ref="WriteXPath" />
+                  <xs:element maxOccurs="unbounded" name="Metadata">
+                    <xs:complexType>
+                      <xs:choice maxOccurs="unbounded">
+                        <xs:element ref="InternalName" />
+                        <xs:element ref="WriteXPath" />
+                        <xs:element ref="XPath" />
+                        <xs:element ref="exportEmptyNode" />
+                <xs:element name="authorityName" maxOccurs="1" />
+                <xs:element name="authorityUri" maxOccurs="1" />
+                <xs:element name="authorityValue" maxOccurs="1" />                        
+                      </xs:choice>
+                      <xs:attribute name="type" type="xs:NCName" />
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:sequence>
+              <xs:attribute name="type" type="xs:NCName" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element maxOccurs="unbounded" name="Metadata">
+            <xs:complexType>
+              <xs:choice maxOccurs="unbounded">
+                <xs:element ref="InternalName" />
+                <xs:element ref="WriteXPath" />
+                <xs:element ref="XPath" />
+                <xs:element ref="exportEmptyNode" />
+                <xs:element name="authorityName" maxOccurs="1" />
+                <xs:element name="authorityUri" maxOccurs="1" />
+                <xs:element name="authorityValue" maxOccurs="1" />
+              </xs:choice>
+              <xs:attribute name="type" type="xs:NCName" />
+            </xs:complexType>
+
+          </xs:element>
+          <xs:element maxOccurs="unbounded" name="DocStruct">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="InternalName" />
+                <xs:element maxOccurs="unbounded" ref="LidoTerm" />
+                <xs:element ref="XPathLogical" />
+                <xs:element ref="XPathPhysical" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Json">
+    <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+            <xs:element maxOccurs="unbounded" name="Metadata">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1" />
+                        <xs:element name="field" type="xs:string" minOccurs="1" maxOccurs="1" />
+                        <xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1" />
+                        <xs:element name="identifierField" type="xs:string" minOccurs="0" maxOccurs="1" />
+                        <xs:element name="conditionValue" type="xs:string" minOccurs="0" maxOccurs="1" />
+                        <xs:element name="fieldReplacement" type="xs:string" minOccurs="0" maxOccurs="1" />
+                        <xs:element name="defaultValue" type="xs:string" minOccurs="0" maxOccurs="1" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element maxOccurs="unbounded" name="DocStruct">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1" />
+                        <xs:element name="field" type="xs:string" minOccurs="1" maxOccurs="1" />
+                        <xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1" />
+                        <xs:element name="value" type="xs:string" minOccurs="0" maxOccurs="1" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PicaPlus">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element maxOccurs="unbounded" name="Metadata">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="Name" />
+              <xs:element ref="picaMainTag" />
+              <xs:element ref="picaSubTag" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="Person">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="Name" />
+              <xs:element ref="picaMainTag" />
+              <xs:element maxOccurs="unbounded" ref="picaSubTag" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="Corporate">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="Name" />
+              <xs:element ref="picaMainTag" />
+              <xs:element maxOccurs="unbounded" ref="picaSubTag" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="DocStruct">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="Name" />
+              <xs:element ref="picaMainTag" />
+              <xs:element ref="picaSubTag" />
+              <xs:element ref="picaContent" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="picaContent" type="xs:NCName" />
+  <xs:element name="Marc">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element maxOccurs="unbounded" name="Group">
+          <xs:complexType>
+             <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element ref="Name" />
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="Metadata" />
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="Person" />
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="Corporate" />
+             </xs:choice>
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="SubfieldGroup">
+          <xs:complexType>
+             <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element ref="Name" />
+              <xs:element ref="fieldMainTag" />
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="Metadata" />
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="Person" />
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="Corporate" />
+             </xs:choice>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="Metadata" />
+        
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="Corporate" />
+         <xs:element minOccurs="0" maxOccurs="unbounded" ref="Person" />
+        
+        <xs:element maxOccurs="unbounded" name="DocStruct">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="Name" />
+              <xs:element ref="leader6" />
+              <xs:element ref="leader7" />
+              <xs:sequence minOccurs="0">
+                <xs:element ref="leader19" minOccurs="0"/>
+                <xs:element ref="field007_0" minOccurs="0"/>
+                <xs:element ref="field007_1" minOccurs="0"/>
+                <xs:element ref="field008_21" minOccurs="0"/>
+              </xs:sequence>
+            </xs:sequence>
+          </xs:complexType>
+
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="conditionField" type="xs:string" />
+  <xs:element name="conditionValue" type="xs:string" />
+  <xs:element name="fieldReplacement" type="xs:string" />
+  <xs:element name="leader6" type="xs:string" />
+  <xs:element name="leader7" type="xs:string" />
+  <xs:element name="leader19" type="xs:string" />
+  <xs:element name="field007_0" type="xs:string" />
+  <xs:element name="field007_1" type="xs:string" />
+  <xs:element name="field008_21" type="xs:string" />
+
+
+  <xs:element name="METS">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="NamespaceDefinition" />
+        <xs:element ref="XPathAnchorQuery" />
+        <xs:element ref="AnchorIdentifierMetadataType" />
+        <xs:element maxOccurs="unbounded" name="Metadata">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="InternalName" />
+              <xs:choice maxOccurs="unbounded">
+                <xs:element ref="ValueCondition" />
+                <xs:element ref="ValueRegExp" />
+                <xs:element ref="WriteXPath" />
+              </xs:choice>
+              <xs:sequence minOccurs="0">
+                <xs:element ref="FirstnameXPath" />
+                <xs:element ref="LastnameXPath" />
+                <xs:element ref="DisplayNameXPath" />
+              </xs:sequence>
+              <xs:choice minOccurs="0">
+                <xs:element ref="IdentifierXPath" />
+                <xs:sequence>
+                  <xs:element ref="MainNameXPath" />
+                  <xs:element ref="SubNameXPath" />
+                  <xs:element ref="PartNameXPath" />
+                </xs:sequence>
+              </xs:choice>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="Group">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="InternalName" />
+              <xs:element ref="WriteXPath" />
+              <xs:choice minOccurs="1" maxOccurs="unbounded">
+
+              <xs:element maxOccurs="unbounded" name="Metadata">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="InternalName" />
+                    <xs:choice maxOccurs="unbounded">
+                      <xs:element ref="ValueCondition" />
+                      <xs:element ref="ValueRegExp" />
+                      <xs:element ref="WriteXPath" />
+                    </xs:choice>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+           
+            
+             <xs:element maxOccurs="unbounded" name="Person">
+                <xs:complexType>
+                    <xs:sequence>
+                       <xs:element ref="InternalName" />
+                       <xs:element ref="WriteXPath" />
+                       <xs:element ref="IdentifierXPath" minOccurs="0"/>                       
+                       <xs:element ref="FirstnameXPath" minOccurs="0"/>
+                       <xs:element ref="LastnameXPath" minOccurs="0"/>
+                       <xs:element ref="DisplayNameXPath" minOccurs="0" />
+                    </xs:sequence>
+                </xs:complexType>            
+            </xs:element>
+            <xs:element maxOccurs="unbounded" name="Corporate">
+                <xs:complexType>
+                    <xs:sequence>
+                       <xs:element ref="InternalName" />
+                       <xs:element ref="WriteXPath" />
+                       <xs:element ref="IdentifierXPath" minOccurs="0"/>
+                       <xs:element ref="MainNameXPath" />
+                       <xs:element ref="SubNameXPath" minOccurs="0" maxOccurs="unbounded"/>
+                       <xs:element ref="PartNameXPath" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>                        
+            
+            </xs:element>
+            
+
+              </xs:choice>
+               </xs:sequence>
+          </xs:complexType>
+
+        </xs:element>
+
+        <xs:element maxOccurs="unbounded" name="DocStruct">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="InternalName" />
+              <xs:element ref="MetsType" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NamespaceDefinition">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="URI" />
+        <xs:element ref="prefix" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="URI" type="xs:anyURI" />
+  <xs:element name="prefix" type="xs:NCName" />
+  <xs:element name="XPathAnchorQuery" type="xs:string" />
+  <xs:element name="AnchorIdentifierMetadataType" type="xs:NCName" />
+
+  <xs:element name="ValueCondition" type="xs:string" />
+  <xs:element name="ValueRegExp" type="xs:string" />
+  <xs:element name="WriteXPath" type="xs:string" />
+  <xs:element name="FirstnameXPath" type="xs:string" />
+  <xs:element name="LastnameXPath" type="xs:string" />
+  <xs:element name="DisplayNameXPath" type="xs:string" />
+  <xs:element name="IdentifierXPath" type="xs:string" />
+  <xs:element name="MainNameXPath" type="xs:string" />
+  <xs:element name="SubNameXPath" type="xs:string" />
+  <xs:element name="PartNameXPath" type="xs:string" />
+
+
+  <xs:element name="MetsType" type="xs:NCName" />
+  <xs:element name="Name" type="xs:string" />
+  <xs:element name="group">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:NCName">
+          <xs:attribute name="DefaultDisplay" type="xs:boolean" />
+          <xs:attribute name="num" use="required" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="language">
+    <xs:complexType mixed="true">
+      <xs:attribute name="name" use="required" type="xs:NCName" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="picaMainTag" type="xs:string" />
+  <xs:element name="picaSubTag">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:NMTOKEN">
+          <xs:attribute name="type" type="xs:NCName" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="field">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="fieldMainTag" />
+        <xs:sequence minOccurs="0">
+          <xs:element ref="fieldMainName" />
+          <xs:element ref="fieldSubName" maxOccurs="unbounded"/>
+          <xs:element maxOccurs="unbounded" ref="fieldPartName" />
+        </xs:sequence>
+        <xs:choice minOccurs="0">
+          <xs:element ref="expansion" />
+          <xs:element ref="fieldSubTag" />
+        </xs:choice>
+        <xs:sequence minOccurs="0">
+          <xs:element ref="fieldInd1" />
+          <xs:element ref="fieldInd2" />
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LidoTerm" type="xs:string" />
+  <xs:element name="XPathLogical" type="xs:string" />
+  <xs:element name="XPathPhysical" type="xs:string" />
+  <xs:element name="fieldMainTag" type="tagDataType" />
+  <xs:element name="fieldMainName" type="xs:string" />
+  <xs:element name="fieldSubName" type="xs:string" />
+  <xs:element name="fieldPartName" type="xs:string" />
+  <xs:element name="expansion" type="xs:NCName" />
+  <xs:element name="fieldSubTag" type="xs:string" />
+  <xs:element name="fieldInd1" type="xs:string" />
+  <xs:element name="fieldInd2" type="xs:string" />
+  <xs:element name="identifierField" type="xs:integer" />
+  <xs:element name="identifierConditionField" type="xs:string" />
+  <xs:element name="identifierReplacement" type="xs:string" />
+  <xs:element name="separateEntries" type="xs:boolean" />
+  <xs:element name="separator" type="xs:string" />
+  <xs:element name="InternalName" type="xs:NCName" />
+  <xs:element name="XPath" type="xs:string" />
+  <xs:element name="exportEmptyNode" type="xs:boolean" />
+  <xs:element name="Metadata" type="marcMetadataType" />
+    <xs:element name="Corporate" type="marcCorporateType" />
+  <xs:element name="Person" type="marcPersonType" />
+  
+    <xs:simpleType name="tagDataType" id="tag.st">
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="preserve"/>
+      <xs:pattern value="(0([1-9A-Z][0-9A-Z])|0([1-9a-z][0-9a-z]))|(([1-9A-Z][0-9A-Z]{2})|([1-9a-z][0-9a-z]{2}))|00[1-9A-Za-z]{1}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  
+          <xs:complexType  name="marcPersonType">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element ref="Name" />
+              <xs:element maxOccurs="unbounded" ref="field" />
+              <xs:element ref="identifierField" />
+              <xs:element ref="identifierConditionField" />
+              <xs:element ref="identifierReplacement" />
+              <xs:element ref="conditionField" />
+              <xs:element ref="conditionValue" />
+              <xs:element ref="separateEntries" />
+              <xs:element ref="separator" />
+              <xs:element name="abortAfterFirstMatch" />
+            </xs:choice>
+          </xs:complexType>
+          <xs:complexType name="marcCorporateType">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element ref="Name" />
+              <xs:element ref="field" />
+              <xs:element ref="identifierField" />
+              <xs:element ref="identifierConditionField" />
+              <xs:element ref="identifierReplacement" />
+              <xs:element ref="conditionField" />
+              <xs:element ref="conditionValue" />              
+              <xs:element ref="separateEntries" />
+              <xs:element ref="separator" />              
+            </xs:choice>
+          </xs:complexType>
+
+  
+  
+          <xs:complexType name="marcMetadataType">
+            <xs:sequence>
+              <xs:element ref="Name" />
+              <xs:element maxOccurs="unbounded" ref="field" />
+              <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="identifierField" />
+                <xs:element ref="identifierConditionField" />
+                <xs:element ref="identifierReplacement" />
+                <xs:element ref="conditionField" />
+                <xs:element ref="conditionValue" />
+                <xs:element ref="fieldReplacement" />
+                <xs:element ref="separateEntries" />
+                <xs:element minOccurs="0" ref="separator" />
+              </xs:choice>
+            </xs:sequence>
+          </xs:complexType>
+</xs:schema>
