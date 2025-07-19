@@ -10,7 +10,7 @@ For various possibilities of the zvdd/DFG-Viewer METS format, no equivalent data
 * The attribute `contentIds`, on the other hand, is used to reference the individual pages of the physical structure. Currently it is used as a path to the single file, to which the filename is appended (This feature is still experimental).
 * If a regular expression (in Perl5 syntax) is passed at the end of such a metadata - in the form `$REGEXP(s//)` - then this regular expression is applied to the entire value before it is transferred to the METS.
 
-Example:\_
+_Example:_
 
 For example, if the value `http://opac.sub.uni-goettingen.de/DB=1/PPN?PPN=PPN123456789` is passed for the metadata `digiprovReference`, and if the `PPN123456789` comes from a specific metadata field and cannot be influenced in a specific context, `http://opac.sub.uni-goettingen.de/DB=1/PPN?PPN=PPN123456789$REGEXP(s/PPN=PPN/PPN/)` can be used to remove the `PPN` before the actual number.
 

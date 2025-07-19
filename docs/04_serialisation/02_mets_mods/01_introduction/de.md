@@ -7,10 +7,10 @@ Das METS/MODS XML-Format kann das interne Dokumentmodell vollständig serialisi
 
 :::info
 **Als PDF:**   
-[http://dfg-viewer.de/fileadmin/groups/dfgviewer/METS\_Anwendungsprofil\_2.0.pdf ](http://dfg-viewer.de/fileadmin/groups/dfgviewer/METS_Anwendungsprofil_2.0.pdf%20)  
+[http://dfg-viewer.de/fileadmin/groups/dfgviewer/METSAnwendungsprofil2.0.pdf ](http://dfg-viewer.de/fileadmin/groups/dfgviewer/METS_Anwendungsprofil_2.0.pdf%20)  
   
 **Als XML-Profil:**   
-[http://dfg-viewer.de/fileadmin/groups/dfgviewer/METS\_Anwendungsprofil\_2.0.xml](http://dfg-viewer.de/fileadmin/groups/dfgviewer/METS_Anwendungsprofil_2.0.xml)
+[http://dfg-viewer.de/fileadmin/groups/dfgviewer/METSAnwendungsprofil2.0.xml](http://dfg-viewer.de/fileadmin/groups/dfgviewer/METS_Anwendungsprofil_2.0.xml)
 :::
 
 Die Strukturtypen werden grundsätzlich in METS serialisiert, die Metadaten je nach genutzter Klasse im MODS-Format des [DFG-Viewer-Profils](http://dfg-viewer.de/fileadmin/groups/dfgviewer/MODS_Anwendungsprofil_1.0.pdf) (`ugh.fileformat.mets. MetsModsImportExport`) oder in einem Goobi-Namespace innerhalb des MODS Extension-Tags (`ugh.fileformat.mets.MetsMods`). Diese Trennung ist nötig, weil für eine Speicherung im MODS-Anwendungsprofil ein Mapping der Metadatentypen des Dokumentmodells zu den MODS-Typen UND UMGEKEHRT zwingend nötig ist. Da die Metadatentypen jedoch frei im Regelsatz definiert werden können, ist ein Mapping nach MODS immer möglich, bei verschiedenen Autoren beispielsweise - für die es nicht notwendigerweise eine voneinander unterschiedliche Entsprechung in MODS gibt - aber dann nicht in der anderen Richtung.

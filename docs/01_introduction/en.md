@@ -12,6 +12,6 @@ The source code of the UGH library can be found at the following URL
 :::info
 The name of the UGH Library is derived from a sound made by the librarian (an orangutan) of the Invisible University in Terry Pratchett's Discworld cycle - in the German translation. A separate article in Wikipedia is dedicated to this cycle:
 
-[http://de.wikipedia.org/wiki/Figuren\_und\_Schaupl%C3%A4tze\_der\_Scheibenwelt-Romane\#Der\_Bibliothekar](http://de.wikipedia.org/wiki/Figuren_und_Schaupl%C3%A4tze_der_Scheibenwelt-Romane#Der_Bibliothekar)
+[http://de.wikipedia.org/wiki/FigurenundSchaupl%C3%A4tzederScheibenwelt-Romane\#DerBibliothekar](http://de.wikipedia.org/wiki/Figuren_und_Schaupl%C3%A4tze_der_Scheibenwelt-Romane#Der_Bibliothekar)
 :::
 
