@@ -216,7 +216,7 @@ _...generates the following XML structure..._
 </mods:titleInfo>
 ```
 
-The group `<WriteXPath>` definition within the `<Group>` element creates the basic path. From then on, the relative path is formed by each `<WriteXPath>` element for the individual metadata. Mapping of personal data is also possible here and is explained in more detail in the \[Mapping for MODS Export - Persons\] section ([https://docs.intranda.com/ugh-de/4/4.2/4.2.4](https://docs.intranda.com/ugh-de/4/4.2/4.2.4)).
+The group `<WriteXPath>` definition within the `<Group>` element creates the basic path. From then on, the relative path is formed by each `<WriteXPath>` element for the individual metadata. Mapping of personal data is also possible here and is explained in more detail in the section [Mapping for MODS Export - Persons](/en/other/ugh/serialisation/mets_mods/mapping#mapping-for-the-mods-export---persons).
 
 The elements `<ValueCondition>` and `<ValueRegExp>` can be used - just like the PICA+ import - for conditional assignment and manipulation of metadata values, for example to remove the string `PN` preceding the PPN or generally to form more complex expressions. Again, this is done by using regular expressions in Perl5 syntax.
 

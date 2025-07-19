@@ -3,7 +3,7 @@ title: Konfiguration
 published: true
 ---
 
-Die PICA+ Konfiguration erfolgt innerhalb des umschließenden `<PicaPlus>` Elements, welches direkt dem `<Formats>` Element untergeordnet ist. Innerhalb des &lt;PicaPlus&gt; Elements kommen die typ-spezifischen Elemente `<Person>`, `<Metadata>` und `<DocStruct>` zu Einsatz, die jeweils einen internen Datentyp mappen. Ebenso wie beim RDF/XML-Format findet hier immer ein 1:1 Mapping statt.
+Die PICA+ Konfiguration erfolgt innerhalb des umschließenden `<PicaPlus>` Elements, welches direkt dem `<Formats>` Element untergeordnet ist. Innerhalb des `<PicaPlus>` Elements kommen die typ-spezifischen Elemente `<Person>`, `<Metadata>` und `<DocStruct>` zu Einsatz, die jeweils einen internen Datentyp mappen. Ebenso wie beim RDF/XML-Format findet hier immer ein 1:1 Mapping statt.
 
 Für das Mapping wird auf die Merkmale der PICA+ Struktur zurückgegriffen, innerhalb dieser typ- spezifischen Elemente sind folgende Unterelemente erlaubt:
 

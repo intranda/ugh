@@ -3,12 +3,12 @@ title: Document model
 published: true
 ---
 
-{% page-ref page="2.1.md" %}
+[Structural data](/en/other/ugh/document_model/structural_data)
 
-{% page-ref page="2.2.md" %}
+[Content files](/en/other/ugh/document_model/content_files)
 
-{% page-ref page="2.3.md" %}
+[Metadata](/en/other/ugh/document_model/metadata)
 
-{% page-ref page="2.4.md" %}
+[Metadata groups](/en/other/ugh/document_model/metadata_groups)
 
-{% page-ref page="2.5.md" %}
+[Anchor](/en/other/ugh/document_model/anchor)

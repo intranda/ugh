@@ -216,7 +216,7 @@ _...erzeugt die folgende XML-Struktur..._
 </mods:titleInfo>
 ```
 
-Die Gruppe `<WriteXPath>` Definition innerhalb des `<Group>` Elementes erzeugt den Grundpfad. Von da an wird der relative Pfad durch jedes `<WriteXPath>` Element für die einzelnen Metadaten gebildet. Das mappen von Personendaten ist hier ebenfalls möglich und wird im [Abschnitt Mapping für den MODS-Export - Personen](https://docs.intranda.com/ugh-de/4/4.2/4.2.4) genauer erläutert.
+Die Gruppe `<WriteXPath>` Definition innerhalb des `<Group>` Elementes erzeugt den Grundpfad. Von da an wird der relative Pfad durch jedes `<WriteXPath>` Element für die einzelnen Metadaten gebildet. Das mappen von Personendaten ist hier ebenfalls möglich und wird im Abschnitt [Mapping für den MODS-Export - Personen](/de/other/ugh/serialisation/mets_mods/mapping#mapping-für-den-mods-export--personen) genauer erläutert.
 
 Die Elemente `<ValueCondition>` und `<ValueRegExp>` können - genau wie beim PICA+ Import - zur bedingten Zuweisung und Manipulation von Metadatenwerten genutzt werden, beispielsweise zum Entfernen der der PPN vorangestellten Zeichenkette `PPN` oder generell zur Bildung von komplexeren Ausdrücken. Auch hier geschieht dies durch die Nutzung von regulären Ausdrücken in Perl5-Syntax.
 

@@ -15,7 +15,7 @@ Der interne Metadatenname. Dieses Element muss genau einmal vorhanden sein. Der 
 
 ### Unterelement `<field>`
 
-Mit diesem Feld wird ein `datafield` eines MARC Records beschrieben. Dieses Feld ist wiederholbar und muss mindestens einmal existieren. Es wird in der [Sektion field](https://docs.intranda.com/ugh-de/4/4.1/4.1.2#4-1-2-3-field) genauer beschrieben.
+Mit diesem Feld wird ein `datafield` eines MARC Records beschrieben. Dieses Feld ist wiederholbar und muss mindestens einmal existieren. Es wird in der Sektion [field](/de/other/ugh/serialisation/marc/configuration#field) genauer beschrieben.
 
 ### Unterelement `<identifierfield>`
 
@@ -65,7 +65,7 @@ Dieses Feld definiert die Zeichenfolge, die als Trennzeichen zwischen den Inhalt
 
 ## Person
 
-Mit dem `<Person>` Element wird der Import von Personen konfiguriert. Innerhalb des Feldes sind alle Elemente erlaubt, die auch für `<Metadata>` möglich sind. Der einzige Unterschied der beiden Definitionen wird in [Sektion field](https://docs.intranda.com/ugh-de/4/4.1/4.1.2#4-1-2-3-field) beschrieben.
+Mit dem `<Person>` Element wird der Import von Personen konfiguriert. Innerhalb des Feldes sind alle Elemente erlaubt, die auch für `<Metadata>` möglich sind. Der einzige Unterschied der beiden Definitionen wird in Sektion [field](/de/other/ugh/serialisation/marc/configuration#field) beschrieben.
 
 ## field
 

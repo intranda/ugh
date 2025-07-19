@@ -15,7 +15,7 @@ The internal metadata name. This element must exist exactly once. The content of
 
 ### Subelement `<field>`
 
-This field is used to describe a `datafield` of a MARC record. This field can be repeated and must exist at least once. It is described in detail in the [section field](https://docs.intranda.com/ugh-en/4/4.1/4.1.2#4-1-2-3-field).
+This field is used to describe a `datafield` of a MARC record. This field can be repeated and must exist at least once. It is described in detail in the section [field](/en/other/ugh/serialisation/marc/configuration#field).
 
 ### Subelement `<identifierfield>`
 
@@ -65,7 +65,7 @@ This field defines the character string to be used as a separator between the co
 
 ## Person
 
-The `<Person>` element is used to configure the import of persons. Within the field all elements are allowed, which are also possible for `<Metadata>`. The only difference between the two definitions is described in [section field](https://docs.intranda.com/ugh-en/4/4.1/4.1.2#4-1-2-3-field).
+The `<Person>` element is used to configure the import of persons. Within the field all elements are allowed, which are also possible for `<Metadata>`. The only difference between the two definitions is described in section [field](/en/other/ugh/serialisation/marc/configuration#field).
 
 ## field
 
