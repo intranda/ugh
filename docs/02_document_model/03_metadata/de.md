@@ -1,0 +1,8 @@
+---
+title: Metadaten
+published: true
+---
+
+Sowohl Inhaltsdateien als auch Struktureinheiten können Metadaten besitzen. Ein Metadatum zeichnet sich dadurch aus, dass es einen bestimmten Typ sowie einen Wert besitzt und entweder einer Struktureinheit oder einer Inhaltsdatei zugeordnet ist; es ist ein Typ-Wert Paar, welches zur Beschreibung des verknüpften Objekts dient. Ein Metadatum kann immer nur einem Objekt zugeordnet sein. Die Länge sowie der Typ des Metadatenwerts sind unbestimmt. Prinzipiell geht die API immer von beliebig langen Zeichenketten (Strings) aus. Abhängig von den jeweiligen Serialisierungsklassen können jedoch bestimmte Wert-Typen vorausgesetzt werden, entweder weil bestimmte Felder Werte gemäß ISO-Konventionen voraussetzen (zum Beispiel Datum-, Sprach- oder Ländercodes) oder aber Datenbankspalten bestimmte Maximallängen haben. Derzeit ist diese Problematik von übergeordneten Applikationsschichten abzufangen.
+
+Ein spezieller Typ von Metadatum sind Personen und Körperschaften. Sie unterscheiden sich nicht grundsätzlich von herkömmlichen Metadaten, jedoch wird das einfache Typ-Wert-Schema um weitere Merkmale ergänzt. So wird beispielsweise zwischen Vor- und Nachname einer Person unterschieden und es gibt einen Namen zur Anzeige (DisplayName) sowie eine Differenzierung, ob es sich um eine natürliche oder juristische Person (Firma oder Organisation) handelt. Körperschaften können neben dem Namen auch weitere Daten Adresse, Einheit, Zählung, Ort, Namenszusatz besitzen. Der Metadaten-Typ steht bei Personen und Körperschaften immer für eine bestimmte Rolle. Ähnlich wie bei einem regulären Metadatum hat jede Person oder Körperschaft einen Typ.
