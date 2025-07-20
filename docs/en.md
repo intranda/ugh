@@ -1,5 +1,5 @@
 ---
-title: UGH Manual
+title: UGH
 published: true
 sidemenu: true
 description: Documentation for the open source programme library UGH for rule sets and metadata mappings

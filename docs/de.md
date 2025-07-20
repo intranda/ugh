@@ -1,5 +1,5 @@
 ---
-title: UGH Handbuch
+title: UGH
 published: true
 sidemenu: true
 description: Dokumentation für die Open Source Programmbibliothek UGH für Regelsätze und Metadatenmappings

@@ -1,9 +1,9 @@
 ---
-title: Ausblick
+title: Weiterentwicklung
 published: true
 ---
 
-Dieses Dokument hat kurz einen Überblick über das Dokumentmodell und dessen Anpassbarkeit mittels eines Regelsatzes gegeben. Ferner sind kurz einige Klassen und deren Konfigurationsmöglichkeiten zur Serialisierung der Daten beschrieben worden.
+Dieses Dokument gibt einen kurzen Überblick über das Dokumentmodell und dessen Anpassbarkeit mittels eines Regelsatzes. Einige Klassen und deren Konfigurationsmöglichkeiten zur Serialisierung der Daten werden hier ebenfalls beschrieben.
 
 Zukünftig mag es sinnvoll sein, die Konfigurationsmöglichkeiten des Regelsatzes weiter auszubauen. Es ist bspw. eine Typisierung von Metadatenwerten denkbar. Derzeit wird ein Metadatenwert lediglich als Zeichenkette betrachtet. Zukünftig mag es für einige Anwendungsfälle sinnvoll sein, einem bestimmten Schema - wie einem bestimmten Zeit- oder Datumsformat - zu folgen oder aber lediglich nur ganzzahlige Werte für bestimmte Metadatentypen zu erlauben. Der darüber liegenden Applikation würde viel zusätzliche Businesslogik erspart bleiben, die derzeit entsprechende Eingaben vor der Weiterverarbeitung prüfen muss. Ein beschreibendes XML-Schema, das solche Dinge abbildet, wäre sehr wünschenswert und hilfreich. Weiterhin wäre ein Mechanismus sehr sinnvoll, der auch Dinge abbilden kann, die zunächst nicht mit einem XML-Schema abgedeckt werden können, wie zum Beispiel eine Prüfung, ob ein am Anfang des Regelsatzes definiertes Metadatum an allen benötigten Bereichen im Regelsatz wieder auftaucht. Zum Beispiel in einer bestimmten `<formats>` Sektion oder bei den Strukturdaten; so erweitert, könnte eine Methode des UGH Bibliothek die Korrektheit eines Regelsatzes problemlos umfassend prüfen und auf Fehler hinweisen.
 
