@@ -33,19 +33,6 @@ Zu Fragen rund um diese Dokumentation, für Anregungen zum weiteren Ausbau diese
 
 Bitte beachten Sie, dass die vorliegende Dokumentation nicht verändert oder in veränderter Form weitergegeben werden darf. Eine kommerzielle Nutzung dieser Dokumentation ist nicht gestattet.
 
-:::info
 ![copyright](icon_cc.png) 
 
 Dieses Werk ist unter einer Creative Commons Lizenz vom Typ Namensnennung - Nicht kommerziell - Keine Bearbeitungen 4.0 International zugänglich. Um eine Kopie dieser Lizenz einzusehen, konsultieren Sie [http://creativecommons.org/licenses/by-nc-nd/4.0/](http://creativecommons.org/licenses/by-nc-nd/4.0/) oder wenden Sie sich brieflich an Creative Commons, Postfach 1866, Mountain View, California, 94042, USA.
-:::
-
-
-
----
-description: Regelsätze und Referenzdokumentation für Goobi workflow
----
-
-# Dokumentation UGH Bibliothek
-
-
-
