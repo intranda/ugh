@@ -10,7 +10,7 @@ Das Mapping von Dokumentstrukturtypen des Dokumentmodells – also die im Regels
 | Unterelemente |  |
 | :--- | :--- |
 | `<InternalName>` | Interner Name des Dokumentstrukturtyps |
-| `<MetsType>` | Der Name, der im Attribut type des &lt;mets:div&gt; Elements erscheinen soll |
+| `<MetsType>` | Der Name, der im Attribut type des `<mets:div>` Elements erscheinen soll |
 
 _Beispiel: Mapping von Dokumentstrukturtypen (physische Struktur)_
 
@@ -71,7 +71,7 @@ Wenn es also mehrere gleiche Metadatentypen pro Dokumentstruktur gibt, wird das 
 ./mods:mods/mods:titleInfo/#mods:subTitle
 ```
 
-Dies führt dazu, dass das Element `<subTitle>` innerhalb von `<titleInfo`&gt; für jedes entsprechende Metadatum wiederholt angelegt wird. Wichtig ist, dass das Hash-Zeichen nur zu Beginn eines Elementnamens stehen darf, das heißt, es muss sich auch vor dem Prefix des entsprechenden Namespaces befinden. Stünde der `#` vor dem Element `mods:titleInfo`, würde für jedes Metadatum `TitleDocSub` ein solcher Teilbaum im XML-Dokument angelegt.
+Dies führt dazu, dass das Element `<subTitle>` innerhalb von `<titleInfo>` für jedes entsprechende Metadatum wiederholt angelegt wird. Wichtig ist, dass das Hash-Zeichen nur zu Beginn eines Elementnamens stehen darf, das heißt, es muss sich auch vor dem Prefix des entsprechenden Namespaces befinden. Stünde der `#` vor dem Element `mods:titleInfo`, würde für jedes Metadatum `TitleDocSub` ein solcher Teilbaum im XML-Dokument angelegt.
 
 _Beispiel: Verwendung von Attributen in Filtern_
 

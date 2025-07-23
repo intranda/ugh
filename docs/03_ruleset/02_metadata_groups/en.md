@@ -5,7 +5,7 @@ published: true
 
 A metadata group is defined within the `<Group>` element. This element must be the only child of the `<Name>` element, which contains the internal name of the metadata type. The internal name is also used to reference the metadata type from the serialization configuration. It must not contain any spaces.
 
-Furthermore the `<Group>` element can contain any number of `<language>` elements as a child. These `<language>` elements translate the internal name of the metadata type into the respective language specified in the name attribute. Therefore it is useful to define at least one `<language>` element per metadata type so that its value can be displayed and used in the user interface. There may only be one &lt;language&gt; element per language and `<Group>` element.
+Furthermore the `<Group>` element can contain any number of `<language>` elements as a child. These `<language>` elements translate the internal name of the metadata type into the respective language specified in the name attribute. Therefore it is useful to define at least one `<language>` element per metadata type so that its value can be displayed and used in the user interface. There may only be one `<language>` element per language and `<Group>` element.
 
 In addition, the `<group>` element must contain at least one `<metadata>` element. These elements can be used to add the metadata to the group. To do this, the element must contain the internal metadata name of a `<MetadataType>` definition.
 

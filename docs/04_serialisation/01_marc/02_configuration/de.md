@@ -99,19 +99,19 @@ Das Feld muss bei `<Metadata>` genau einmal vorhanden sein.
 
 Der Wert des `code` Attributes des `<subfield>` Elements, in dem der Vorname einer Person enthalten ist.
 
-Bei `<Person>` muss entweder `<firstname>` und `<lastname>` oder `<expansion>` einmal vorhanden sein. Dieses Feld ist wiederholbar. Wenn mehrere Felder konfiguriert wurden und vorhanden sind, werden die einzelnen Einträge in der angegebenen Reihenfolge durch den <separator> getrennt übernommen.
+Bei `<Person>` muss entweder `<firstname>` und `<lastname>` oder `<expansion>` einmal vorhanden sein. Dieses Feld ist wiederholbar. Wenn mehrere Felder konfiguriert wurden und vorhanden sind, werden die einzelnen Einträge in der angegebenen Reihenfolge durch den `<separator>` getrennt übernommen.
 
 ### Unterelement `<lastname>`
 
 Der Wert des `code` Attributes des `<subfield>` Elements, in dem der Nachname einer Person enthalten ist.
 
-Bei `<Person>` muss entweder `<firstname>` und `<lastname>` oder `<expansion>` einmal vorhanden sein. Dieses Feld ist wiederholbar. Wenn mehrere Felder konfiguriert wurden und vorhanden sind, werden die einzelnen Einträge in der angegebenen Reihenfolge durch den <separator> getrennt übernommen.
+Bei `<Person>` muss entweder `<firstname>` und `<lastname>` oder `<expansion>` einmal vorhanden sein. Dieses Feld ist wiederholbar. Wenn mehrere Felder konfiguriert wurden und vorhanden sind, werden die einzelnen Einträge in der angegebenen Reihenfolge durch den `<separator>` getrennt übernommen.
 
 ### Unterelement `<expansion>`
 
 Der Wert des `code` Attributes des `<subfield>` Elements, in dem die Expansion des Namens enthalten ist. Beim Import wird der Name am `Komma` in Vorname und Nachname aufgeteilt.
 
-Bei `<Person>` muss entweder `<firstname>` und `<lastname>` oder `<expansion>` einmal vorhanden sein. Wurden <firstname>, <lastname> und <expansion> angegeben, wird <expansion> nur dann ausgewertet, wenn kein Nachname gefunden werden konnte.
+Bei `<Person>` muss entweder `<firstname>` und `<lastname>` oder `<expansion>` einmal vorhanden sein. Wurden `<firstname>`, `<lastname>` und `<expansion>` angegeben, wird `<expansion>` nur dann ausgewertet, wenn kein Nachname gefunden werden konnte.
 
 ### Unterelement `<fieldMainName>`
 

@@ -10,7 +10,7 @@ The mapping of document structure types of the document model - that is, the str
 | Subelements |  |
 | :--- | :--- |
 | `<InternalName>` | Internal name of the document structure category |
-| `<MetsType>` | The name to appear in the type attribute of the &lt;mets:div&gt; element |
+| `<MetsType>` | The name to appear in the type attribute of the `<mets:div>` element |
 
 _Example: Mapping of document structure types (physical structure)_
 
@@ -71,7 +71,7 @@ So if there are several identical metadata types per document structure, the has
 ./mods:mods/mods:titleInfo/#mods:subTitle
 ```
 
-This results in the element `<subTitle>` within `<titleInfo`&gt; being created repeatedly for each corresponding metadata. It is important that the hash character may only be at the beginning of an element name, i.e. it must also be before the prefix of the corresponding namespace. If the `#` were placed before the element `mods:titleInfo`, such a subtree would be created in the XML document for each metadata `TitleDocSub`.
+This results in the element `<subTitle>` within `<titleInfo>` being created repeatedly for each corresponding metadata. It is important that the hash character may only be at the beginning of an element name, i.e. it must also be before the prefix of the corresponding namespace. If the `#` were placed before the element `mods:titleInfo`, such a subtree would be created in the XML document for each metadata `TitleDocSub`.
 
 _Example: Using attributes in filters_
 

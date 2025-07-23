@@ -99,19 +99,19 @@ The field must exist exactly once for `<Metadata>`.
 
 The value of the `code` attribute of the `<subfield>` element containing the first name of a person.
 
-With `<person>` either `<firstname>` and `<lastname>` or `<expansion>` must exist once. This field is repeatable. If several fields have been configured and are present, the individual entries are taken over in the specified order separated by the <separator>.
+With `<person>` either `<firstname>` and `<lastname>` or `<expansion>` must exist once. This field is repeatable. If several fields have been configured and are present, the individual entries are taken over in the specified order separated by the `<separator>`.
 
 ### Subelement `<lastname>`
 
 The value of the `code` attribute of the `<subfield>` element containing the last name of a person.
 
-With `<person>` either `<firstname>` and `<lastname>` or `<expansion>` must exist once. This field is repeatable. If several fields have been configured and are present, the individual entries are taken over in the specified order separated by the <separator>.
+With `<person>` either `<firstname>` and `<lastname>` or `<expansion>` must exist once. This field is repeatable. If several fields have been configured and are present, the individual entries are taken over in the specified order separated by the `<separator>`.
 
 ### Subelement `<expansion>`
 
 The value of the `code` attribute of the `<subfield>` element containing the expansion of the name. During import, the name is split into first name and last name at the `comma`.
 
-With `<person>` either `<firstname>` and `<lastname>` or `<expansion>` must exist once. If <firstname>, <lastname> and <expansion> were specified, <expansion> is only evaluated if no last name could be found.
+With `<person>` either `<firstname>` and `<lastname>` or `<expansion>` must exist once. If `<firstname>`, `<lastname>` and `<expansion>` were specified, `<expansion>` is only evaluated if no last name could be found.
 
 ### Subelement `<fieldMainName>`
 
