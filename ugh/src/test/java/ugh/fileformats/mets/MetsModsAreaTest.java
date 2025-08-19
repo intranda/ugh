@@ -2,7 +2,6 @@ package ugh.fileformats.mets;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ import ugh.dl.VirtualFileGroup;
 
 public class MetsModsAreaTest {
 
-    // @Test
+    @Test
     public void testReadPhysicalSectionInMetsFile() throws Exception {
         Prefs prefs = new Prefs();
 
@@ -30,17 +29,18 @@ public class MetsModsAreaTest {
         assertEquals("div", firstPage.getDocstructType());
         DocStruct firstArea = firstPage.getAllChildren().get(0);
         assertEquals("area", firstArea.getDocstructType());
+
+        String coords = null;
+        String shape = null;
         for (Metadata md : firstArea.getAllMetadata()) {
-            if ("_urn".equals(md.getType().getName())) {
-                assertEquals("some urn", md.getValue());
-            } else if ("_COORDS".equals(md.getType().getName())) {
-                assertEquals("1,2,3,4", md.getValue());
+            if ("_COORDS".equals(md.getType().getName())) {
+                coords = md.getValue();
             } else if ("_SHAPE".equals(md.getType().getName())) {
-                assertEquals("RECT", md.getValue());
-            } else {
-                fail("Found unexpected metadata type :" + md.getType().getName());
+                shape = md.getValue();
             }
         }
+        assertEquals("RECT", shape);
+        assertEquals("1,2,3,4", coords);
     }
 
     @Test
@@ -118,7 +118,6 @@ public class MetsModsAreaTest {
         assertEquals("main title", chapterFromMets.getAllMetadata().get(0).getValue());
         DocStruct linkedArea = chapterFromMets.getAllToReferences().get(0).getTarget();
         assertEquals("coordinates", linkedArea.getAllMetadataByType(prefs.getMetadataTypeByName("_COORDS")).get(0).getValue());
-
     }
 
     @Test
@@ -194,5 +193,38 @@ public class MetsModsAreaTest {
         Metadata shape = areaFromMets.getAllMetadataByType(prefs.getMetadataTypeByName("_SHAPE")).get(0);
         assertEquals(md1.getValue(), coords.getValue());
         assertEquals(md2.getValue(), shape.getValue());
+    }
+
+    @Test
+    public void testReadVideoSectionInMetsFile() throws Exception {
+        Prefs prefs = new Prefs();
+
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
+
+        MetsMods mm = new MetsMods(prefs);
+        mm.read("src/test/resources/video.xml");
+
+        assertNotNull(mm);
+        DocStruct boundBook = mm.getDigitalDocument().getPhysicalDocStruct();
+        DocStruct firstPage = boundBook.getAllChildren().get(0);
+        assertEquals("div", firstPage.getDocstructType());
+        DocStruct firstArea = firstPage.getAllChildren().get(0);
+        assertEquals("area", firstArea.getDocstructType());
+
+        String begin = null;
+        String end = null;
+        String type = null;
+        for (Metadata md : firstArea.getAllMetadata()) {
+            if ("_BEGIN".equals(md.getType().getName())) {
+                begin = md.getValue();
+            } else if ("_END".equals(md.getType().getName())) {
+                end = md.getValue();
+            } else if ("_BETYPE".equals(md.getType().getName())) {
+                type = md.getValue();
+            }
+        }
+        assertEquals("00:00:00", begin);
+        assertEquals("00:01:47", end);
+        assertEquals("TIME", type);
     }
 }

@@ -2544,19 +2544,46 @@ public class MetsMods implements ugh.dl.Fileformat {
                                                             getDigitalDocument().createDocStruct(myPreferences.getDocStrctTypeByName("area"));
                                                     areaDocStruct.setDocstructType("area");
                                                     String coords = area.getCOORDS(); // COORDS: xsd:string   optional
-                                                    Metadata coordinates = new Metadata(myPreferences.getMetadataTypeByName("_COORDS"));
-                                                    coordinates.setValue(coords);
-                                                    areaDocStruct.addMetadata(coordinates);
+
+                                                    if (StringUtils.isNotBlank(coords)) {
+                                                        Metadata coordinates = new Metadata(myPreferences.getMetadataTypeByName("_COORDS"));
+                                                        coordinates.setValue(coords);
+                                                        areaDocStruct.addMetadata(coordinates);
+
+                                                        AreaType.SHAPE.Enum currentShape = area.getSHAPE(); //  SHAPE:   optional   | RECT | CIRCLE | POLY
+                                                        Metadata shape = new Metadata(myPreferences.getMetadataTypeByName("_SHAPE"));
+                                                        shape.setValue(
+                                                                currentShape == null ? AreaType.SHAPE.RECT.toString() : currentShape.toString());
+                                                        areaDocStruct.addMetadata(shape);
+                                                    }
 
                                                     // String ID = area.getID(); // ID: xsd:ID   optional
                                                     areaDocStruct.setOrigObject(area);
                                                     // String fileId = area.getFILEID(); // FILEID: xsd:IDREF   required
 
-                                                    AreaType.SHAPE.Enum currentShape = area.getSHAPE(); //  SHAPE:   optional   | RECT | CIRCLE | POLY
-                                                    Metadata shape = new Metadata(myPreferences.getMetadataTypeByName("_SHAPE"));
-                                                    shape.setValue(currentShape == null ? AreaType.SHAPE.RECT.toString() : currentShape.toString());
-                                                    areaDocStruct.addMetadata(shape);
                                                     // List<String> admid = area.getADMID(); // ADMID: xsd:IDREFS   optional
+
+                                                    // metadata for video/audio section
+                                                    String beginn = area.getBEGIN();
+                                                    String end = area.getEND();
+                                                    if (StringUtils.isNotBlank(beginn) || StringUtils.isNotBlank(end)) {
+                                                        if (StringUtils.isNotBlank(beginn)) {
+                                                            Metadata beginMd = new Metadata(myPreferences.getMetadataTypeByName("_BEGIN"));
+                                                            beginMd.setValue(beginn);
+                                                            areaDocStruct.addMetadata(beginMd);
+                                                        }
+                                                        if (StringUtils.isNotBlank(end)) {
+                                                            Metadata endMd = new Metadata(myPreferences.getMetadataTypeByName("_END"));
+                                                            endMd.setValue(end);
+                                                            areaDocStruct.addMetadata(endMd);
+                                                        }
+                                                        AreaType.BETYPE.Enum t = area.getBETYPE();
+                                                        Metadata typeMd = new Metadata(myPreferences.getMetadataTypeByName("_BETYPE"));
+                                                        typeMd.setValue(t == null ? AreaType.BETYPE.TIME.toString() : t.toString());
+                                                        areaDocStruct.addMetadata(typeMd);
+
+                                                    }
+
                                                     child.addChild(areaDocStruct);
                                                 } catch (TypeNotAllowedForParentException | MetadataTypeNotAllowedException e) {
                                                     log.error("area is unsupported in the given ruleset. ");
@@ -3545,12 +3572,19 @@ public class MetsMods implements ugh.dl.Fileformat {
                     area.setAttribute(METS_ID_STRING, idphys);
 
                     for (Metadata md : inStruct.getAllMetadata()) {
+
                         if ("_urn".equals(md.getType().getName())) {
                             area.setAttribute("CONTENTIDS", md.getValue());
                         } else if ("_COORDS".equals(md.getType().getName())) {
                             area.setAttribute("COORDS", md.getValue());
                         } else if ("_SHAPE".equals(md.getType().getName())) {
                             area.setAttribute("SHAPE", md.getValue());
+                        } else if ("_BEGIN".equals(md.getType().getName())) {
+                            area.setAttribute("BEGIN", md.getValue());
+                        } else if ("_END".equals(md.getType().getName())) {
+                            area.setAttribute("END", md.getValue());
+                        } else if ("_BETYPE".equals(md.getType().getName())) {
+                            area.setAttribute("BETYPE", md.getValue());
                         }
                     }
                     area.setAttribute(METS_FILEID_STRING, fptr.getAttribute(METS_FILEID_STRING));

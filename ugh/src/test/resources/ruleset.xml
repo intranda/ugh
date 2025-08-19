@@ -488,6 +488,23 @@
     <language name="de">Form</language>
     <language name="en">Shape</language>
   </MetadataType>
+  
+  
+  <MetadataType>
+    <Name>_BEGIN</Name>
+    <language name="de">_BEGIN</language>
+    <language name="en">_BEGIN</language>
+  </MetadataType>
+  <MetadataType>
+    <Name>_END</Name>
+    <language name="de">_END</language>
+    <language name="en">_END</language>
+  </MetadataType>
+    <MetadataType>
+    <Name>_BETYPE</Name>
+    <language name="de">_BETYPE</language>
+    <language name="en">_BETYPE</language>
+  </MetadataType>
 
   <MetadataType>
     <Name>pagesize</Name>
@@ -3486,6 +3503,9 @@
     <metadata num="1o">_urn</metadata>
     <metadata num="1o">_COORDS</metadata>
     <metadata num="1o">_SHAPE</metadata>
+    <metadata num="1o">_BEGIN</metadata>
+    <metadata num="1o">_END</metadata>
+    <metadata num="1o">_BETYPE</metadata>
     <metadata num="1m">physPageNumber</metadata>
     <metadata num="1m">logicalPageNumber</metadata>
   </DocStrctType>
@@ -3495,6 +3515,7 @@
     <language name="en">Bound Book</language>
     <language name="es">Libro encuadernado</language>
     <allowedchildtype>page</allowedchildtype>
+    <allowedchildtype>video</allowedchildtype>    
     <metadata num="1o">PhysicalLocation</metadata>
     <metadata num="1o">datedigit</metadata>
     <metadata num="1o">shelfmarksource</metadata>
@@ -3508,6 +3529,15 @@
     <metadata num="1o">_urn</metadata>
     <metadata num="1o">_representative</metadata>
   </DocStrctType>
+  <DocStrctType>
+    <Name>video</Name>
+    <language name="de">Video</language>
+    <language name="en">Video</language>
+    <allowedchildtype>area</allowedchildtype>
+    <metadata num="1o">_urn</metadata>
+    <metadata num="1m">logicalPageNumber</metadata>
+    <metadata num="1m">physPageNumber</metadata>
+  </DocStrctType>  
   <DocStrctType>
     <Name>BlankPage</Name>
     <language name="de">Leerseite</language>
