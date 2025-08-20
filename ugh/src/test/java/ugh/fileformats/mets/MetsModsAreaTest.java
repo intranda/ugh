@@ -227,4 +227,41 @@ public class MetsModsAreaTest {
         assertEquals("00:01:47", end);
         assertEquals("TIME", type);
     }
+
+    @Test
+    public void testWriteVideoSectionInMetsFile() throws Exception {
+        Prefs prefs = new Prefs();
+
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
+
+        // read metadata
+        MetsMods mm = new MetsMods(prefs);
+        mm.read("src/test/resources/video.xml");
+
+        // write data into new file
+        mm.write("src/test/resources/tmp.xml");
+
+        // open file, data still exists
+        MetsMods mm2 = new MetsMods(prefs);
+        mm2.read("src/test/resources/tmp.xml");
+
+        DocStruct boundBook = mm.getDigitalDocument().getPhysicalDocStruct();
+        DocStruct firstPage = boundBook.getAllChildren().get(0);
+        DocStruct firstArea = firstPage.getAllChildren().get(0);
+        String begin = null;
+        String end = null;
+        String type = null;
+        for (Metadata md : firstArea.getAllMetadata()) {
+            if ("_BEGIN".equals(md.getType().getName())) {
+                begin = md.getValue();
+            } else if ("_END".equals(md.getType().getName())) {
+                end = md.getValue();
+            } else if ("_BETYPE".equals(md.getType().getName())) {
+                type = md.getValue();
+            }
+        }
+        assertEquals("00:00:00", begin);
+        assertEquals("00:01:47", end);
+        assertEquals("TIME", type);
+    }
 }
