@@ -3004,10 +3004,8 @@ public class MetsMods implements ugh.dl.Fileformat {
                 Element structMapPhys = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_STRUCTMAP_STRING);
                 this.metsNode.appendChild(structMapPhys);
                 structMapPhys.setAttribute(METS_STRUCTMAPTYPE_STRING, METS_STRUCTMAP_TYPE_PHYSICAL_STRING);
-                Element physdiv = writePhysDivs(this.metsNode, topphysdiv);
-                if (physdiv != null) {
-                    structMapPhys.appendChild(physdiv);
-                }
+                writePhysDivs(structMapPhys, topphysdiv);
+
                 if (topphysdiv.getAllChildren() != null && !topphysdiv.getAllChildren().isEmpty()) {
                     // Write smLinks.
                     log.info("Creating structLink element");
