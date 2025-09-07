@@ -1,6 +1,8 @@
 ---
 title: Structural data
 published: true
+keywords:
+    - UGH
 ---
 
 Structure data describes the structure of a document. For this purpose, however, a rather extensive structural term is used, which does not only concern the internal, hierarchical structure of a document, but also understands the document itself as part of this structure - as the bibliographic unit "document".

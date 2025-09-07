@@ -1,6 +1,8 @@
 ---
 title: Definition von Metadatengruppen
 published: true
+keywords:
+    - UGH
 ---
 
 Eine Metadatengruppe wird innerhalb des `<Group>` Elements definiert. Dieses Element muss als einziges Kind das `<Name>` Element besitzen, welches den internen Namen des Metadatentyps enthält. Der interne Name wird auch zur Referenzierung auf den Metadatentyp aus der Serialisierungskonfiguration heraus genutzt. Er darf keine Leerzeichen enthalten.

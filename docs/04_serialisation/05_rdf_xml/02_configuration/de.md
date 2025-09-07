@@ -1,6 +1,9 @@
 ---
 title: Konfiguration
 published: true
+keywords:
+    - UGH
+    - RDF/XML
 ---
 
 Die Konfiguration des Formats findet ausschließlich im umschließenden `<RDF>` Element statt.

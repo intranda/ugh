@@ -1,6 +1,10 @@
 ---
 title: Configuration of the mapping of structure and metadata
 published: true
+keywords:
+    - UGH
+    - METS
+    - MODS
 ---
 
 ## Document structures and metadata

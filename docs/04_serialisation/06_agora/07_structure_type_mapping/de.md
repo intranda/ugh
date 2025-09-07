@@ -1,6 +1,8 @@
 ---
 title: Strukturtyp-Mapping
 published: true
+keywords:
+    - UGH
 ---
 
 Der Dokumentstrukturtyp wird relativ einfach gemappt. Da der Name des Strukturtyps ebenfalls in der Datenbank gespeichert wird, jedoch mittels einer separaten Tabelle über eine ID mit der eigentlichen Struktureinheit verknüpft wird, ist der entsprechende Typname lediglich ein einziges Mal in der Datenbank gespeichert.

@@ -1,6 +1,8 @@
 ---
 title: Definition von Strukturtypen
 published: true
+keywords:
+    - UGH
 ---
 
 Strukturtypen werden ähnlich definiert wie Metadatentypen. Das Element zur Definition eines Strukturtyps heißt `<DocStrctType>` und genau wie bei den Metadatentypen existieren auch hier die Elemente `<Name>` und `<language>` mit denselben Eigenschaften.

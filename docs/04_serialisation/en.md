@@ -1,6 +1,8 @@
 ---
 title: Serialisation
 published: true
+keywords:
+    - UGH
 ---
 
 Data created using the API should of course be able to be read and written. For this purpose the API has an internal JAVA interface, which can be implemented by different classes and provides methods for reading and writing. Whether these read and write operations used a database or the file system, or which file format is used, is not relevant. These specific things are encapsulated by the interface.

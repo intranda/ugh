@@ -1,6 +1,10 @@
 ---
 title: UghConvert
 published: true
+keywords:
+    - UGH
+    - METS
+    - MODS
 ---
 
 To convert the serialisation formats of the used document model described above between each other independently of an external application, UghConvert can be used. It is a Java application that can read and write the respective formats at command line level with the supplied scripts for Windows and Linux systems. Only a complete version of the UGH library (ughCLI) and a Java runtime environment in version 1.5 is required for execution.

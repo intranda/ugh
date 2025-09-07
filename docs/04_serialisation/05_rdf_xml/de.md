@@ -1,6 +1,9 @@
 ---
 title: RDF/XML
 published: true
+keywords:
+    - UGH
+    - RDF/XML
 ---
 
 Serialisierungsklasse:

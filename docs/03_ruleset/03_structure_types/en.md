@@ -1,6 +1,8 @@
 ---
 title: Definition of structure types
 published: true
+keywords:
+    - UGH
 ---
 
 Structure types are defined similarly to metadata types. The element for defining a structure type is called `DocStrctType` and just like the metadata types, the elements `Name` and `Language` have the same properties.

@@ -1,6 +1,10 @@
 ---
 title: Konfiguration des Mappings von Struktur- und Metadaten
 published: true
+keywords:
+    - UGH
+    - METS
+    - MODS
 ---
 
 ## Dokumentstrukturen und Metadaten

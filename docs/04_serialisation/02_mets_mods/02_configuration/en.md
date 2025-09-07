@@ -1,6 +1,10 @@
 ---
 title: General configuration
 published: true
+keywords:
+    - UGH
+    - METS
+    - MODS
 ---
 
 Serialization in METS/MODS with the MetsMods class does not require any further configuration, almost all tags within the `<METS>` tag in the `Format` section of the ruleset refer exclusively to the `MetsModsImportExport` class. Only the tag `<AnchorIdentifierMetadataType>` must be present here.

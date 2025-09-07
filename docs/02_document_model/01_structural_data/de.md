@@ -1,6 +1,8 @@
 ---
 title: Strukturdaten
 published: true
+keywords:
+    - UGH
 ---
 
 Strukturdaten beschreiben die Struktur eines Dokumentes. Hierzu wird allerdings ein recht weitgehender Strukturbegriff verwendet, der nicht nur den internen, hierarchischen Aufbau eines Dokumentes betrifft, sondern das Dokument an sich ebenfalls als Teil dieser Struktur versteht – als bibliographische Einheit „Dokument“. 

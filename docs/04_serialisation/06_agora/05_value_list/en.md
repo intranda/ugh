@@ -1,6 +1,8 @@
 ---
 title: Value lists
 published: true
+keywords:
+    - UGH
 ---
 
 A value list can replace certain values when writing to the database. This can then be useful for rewriting language codes. In a corresponding mapping file, the old values (from the API) are compared with the new values (in the database). The mapping file is nothing more than a text file that contains one pair of values per line. The first value is the value to replace (i.e. the value used in the UGH library), the second value is the corresponding value from the database. Both values are separated by a space.

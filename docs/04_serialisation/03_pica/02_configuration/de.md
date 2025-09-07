@@ -1,6 +1,9 @@
 ---
 title: Konfiguration
 published: true
+keywords:
+    - UGH
+    - PICA
 ---
 
 Die PICA+ Konfiguration erfolgt innerhalb des umschließenden `<PicaPlus>` Elements, welches direkt dem `<Formats>` Element untergeordnet ist. Innerhalb des `<PicaPlus>` Elements kommen die typ-spezifischen Elemente `<Person>`, `<Metadata>` und `<DocStruct>` zu Einsatz, die jeweils einen internen Datentyp mappen. Ebenso wie beim RDF/XML-Format findet hier immer ein 1:1 Mapping statt.

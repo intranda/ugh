@@ -1,6 +1,8 @@
 ---
 title: Weiterentwicklung
 published: true
+keywords:
+    - UGH
 ---
 
 Dieses Dokument gibt einen kurzen Überblick über das Dokumentmodell und dessen Anpassbarkeit mittels eines Regelsatzes. Einige Klassen und deren Konfigurationsmöglichkeiten zur Serialisierung der Daten werden hier ebenfalls beschrieben.

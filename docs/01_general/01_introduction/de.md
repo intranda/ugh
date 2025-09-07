@@ -1,6 +1,8 @@
 ---
 title: Einführung
 published: true
+keywords:
+    - UGH
 ---
 
 In diesem Dokument wird zunächst das interne, universelle Dokumentmodell der UGH Bibliothek kurz skizziert, um anschließend auf die allgemeine Konfiguration und auf die einzelnen Serialisierungsformate einzugehen.

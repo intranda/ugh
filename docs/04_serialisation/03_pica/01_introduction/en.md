@@ -1,6 +1,9 @@
 ---
 title: Introduction
 published: true
+keywords:
+    - UGH
+    - PICA
 ---
 
 The PICA+ format is mainly used in library catalogues and describes only the bibliographic unit; only metadata for a structural unit can be found in PICA+ and no structural data at all. If necessary, some metadata fields may contain references to other structural units, but the application must retrieve these from the library catalog again and link them via the API accordingly.

@@ -1,6 +1,9 @@
 ---
 title: Konfiguration
 published: true
+keywords:
+    - UGH
+    - MARC
 ---
 
 Die Konfiguration erfolgt im Regelsatz innerhalb des `<Formats>` Elements. Dort kann ein `<Marc>` Element angelegt werden. Innerhalb dieses Elements sind die vier Elemente `<Person>`, `<Metadata>`, `<Group>` und `<DocStruct>` erlaubt, die jeweils mit einem internen Datentyp verknüpft werden müssen.

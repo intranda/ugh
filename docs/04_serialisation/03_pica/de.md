@@ -1,6 +1,9 @@
 ---
 title: PICA+
 published: true
+keywords:
+    - UGH
+    - PICA
 ---
 
 Serialisierungsklasse:

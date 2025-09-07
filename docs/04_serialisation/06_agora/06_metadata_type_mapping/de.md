@@ -1,6 +1,8 @@
 ---
 title: Metadatentyp-Mapping
 published: true
+keywords:
+    - UGH
 ---
 
 Hauptbestandteil der Konfiguration für diese Serialisierungsklasse ist jedoch das Mapping der Metadatentypen in bestimmte Tabellen und Tabellenspalten. Für das Verständnis der unten beschriebenen Erläuterungen ist die Kenntnis des AGORA-Datenbankschemas daher sinnvoll.

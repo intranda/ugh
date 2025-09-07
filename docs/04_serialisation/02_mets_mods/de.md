@@ -1,6 +1,10 @@
 ---
 title: METS/MODS
 published: true
+keywords:
+    - UGH
+    - METS
+    - MODS
 ---
 
 Serialisierungsklassen:

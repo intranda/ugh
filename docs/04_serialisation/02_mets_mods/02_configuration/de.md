@@ -1,6 +1,10 @@
 ---
 title: Allgemeine Konfiguration
 published: true
+keywords:
+    - UGH
+    - METS
+    - MODS
 ---
 
 Die Serialisierung in METS/MODS mit der Klasse MetsMods bedarf keiner weiteren Konfiguration, nahezu alle Tags innerhalb des `<METS>` Tags in der `Format`-Sektion des Regelsatzes beziehen sich ausschließlich auf die Klasse `MetsModsImportExport`. Lediglich der Tag `<AnchorIdentifierMetadataType>` muss hier vorhanden sein.

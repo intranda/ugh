@@ -1,6 +1,8 @@
 ---
 title: Introduction
 published: true
+keywords:
+    - UGH
 ---
 
 In this document, the internal, universal document model of the UGH library is first briefly outlined and then the general configuration and the individual serialization formats are discussed.

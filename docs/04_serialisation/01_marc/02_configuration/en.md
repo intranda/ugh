@@ -1,6 +1,9 @@
 ---
 title: Configuration
 published: true
+keywords:
+    - UGH
+    - MARC
 ---
 
 The configuration takes place in the rule set within the `<format>` element. A `<Marc>` element can be created there. Within this element the four elements `<Person>`, `<Metadata>`, `<Group>` and `<DocStruct>` are allowed, each of which must be linked to an internal data type.
