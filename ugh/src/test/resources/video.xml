@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mets:mets OBJID="" xsi:schemaLocation="http://www.loc.gov/standards/premis/ http://www.loc.gov/standards/premis/v2/premis-v2-0.xsd http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-7.xsd http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd http://www.loc.gov/standards/mix/ http://www.loc.gov/standards/mix/mix.xsd" xmlns:mets="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:goobi="http://meta.goobi.org/v1.5.1/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:premis="http://www.loc.gov/standards/premis/">
+   <mets:metsHdr CREATEDATE="2025-08-19T08:42:34Z">
+      <mets:agent OTHERTYPE="SOFTWARE" ROLE="CREATOR" TYPE="OTHER">
+         <mets:name>Goobi workflow</mets:name>
+      </mets:agent>
+   </mets:metsHdr>
+      <mets:dmdSec ID="DMDLOG_0000">
+        <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="CatalogIDDigital">12345</goobi:metadata>
+                     <goobi:metadata name="TitleDocMain">Video title</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDLOG_0001">
+        <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="TitleDocMain">opening</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDLOG_0002">
+        <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="TitleDocMain">chapter 1</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDLOG_0003">
+        <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="TitleDocMain">chapter 2</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+         </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:dmdSec ID="DMDLOG_0004">
+        <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:extension>
+                  <goobi:goobi>
+                     <goobi:metadata name="TitleDocMain">credits</goobi:metadata>
+                  </goobi:goobi>
+               </mods:extension>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:amdSec ID="AMD">
+      <mets:techMD ID="AMD_0001">
+         <mets:mdWrap MDTYPE="OTHER" MIMETYPE="text/xml">
+            <mets:xmlData>
+               <premis:object version="3.0">
+                  <premis:objectIdentifier>
+                     <premis:objectIdentifierType>local</premis:objectIdentifierType>
+                     <premis:objectIdentifierValue>12345.mp4</premis:objectIdentifierValue>
+                  </premis:objectIdentifier>
+                  <premis:significantProperties>
+                     <premis:significantPropertiesType>Duration</premis:significantPropertiesType>
+                     <premis:significantPropertiesValue>00:20:30</premis:significantPropertiesValue>
+                  </premis:significantProperties>
+                   <premis:significantProperties>
+                     <premis:significantPropertiesType>Bitrate</premis:significantPropertiesType>
+                     <premis:significantPropertiesValue>24</premis:significantPropertiesValue>
+                  </premis:significantProperties>
+                  <premis:significantProperties>
+                     <premis:significantPropertiesType>ImageWidth</premis:significantPropertiesType>
+                     <premis:significantPropertiesValue>1920</premis:significantPropertiesValue>
+                  </premis:significantProperties>       
+                  <premis:significantProperties>
+                     <premis:significantPropertiesType>ImageHeight</premis:significantPropertiesType>
+                     <premis:significantPropertiesValue>1080</premis:significantPropertiesValue>
+                  </premis:significantProperties>            
+                  <premis:objectCharacteristics>
+                     <premis:fixity>
+                        <premis:messageDigestAlgorithm>SHA-256</premis:messageDigestAlgorithm>
+                        <premis:messageDigest>ff60af876a5130040e2a0cd0eed7044e8003cf278ff397589da0098eb411d5a4</premis:messageDigest>
+                     </premis:fixity>
+                     <premis:size>174023</premis:size>
+                  </premis:objectCharacteristics>
+               </premis:object>
+            </mets:xmlData>
+         </mets:mdWrap>
+      </mets:techMD>
+   </mets:amdSec>
+   <mets:fileSec>
+      <mets:fileGrp USE="LOCAL">
+         <mets:file ID="FILE_0001" MIMETYPE="video/mp4">
+            <mets:FLocat LOCTYPE="URL" xlink:href="file:///opt/digiverso/viewer/media/12345/video.mp4"/>
+         </mets:file>
+      </mets:fileGrp>
+   </mets:fileSec>
+   <mets:structMap TYPE="LOGICAL">
+      <mets:div ADMID="AMD" DMDID="DMDLOG_0000" ID="LOG_0000" LABEL="video title" TYPE="Monograph">
+         <mets:div DMDID="DMDLOG_0001" ID="LOG_0001" LABEL="opening" TYPE="Chapter"/>
+         <mets:div DMDID="DMDLOG_0002" ID="LOG_0002" LABEL="chapter 1" TYPE="Chapter"/>
+         <mets:div DMDID="DMDLOG_0003" ID="LOG_0003" LABEL="chapter 2" TYPE="Chapter"/>
+         <mets:div DMDID="DMDLOG_0004" ID="LOG_0004" LABEL="credits" TYPE="Chapter"/>
+      </mets:div>
+   </mets:structMap>
+   <mets:structMap TYPE="PHYSICAL">
+      <mets:div ID="PHYS_0000" TYPE="BoundBook">
+         <mets:div ADMID="AMD_0001" ID="PHYS_0001" ORDER="1" ORDERLABEL=" - " TYPE="video">
+            <mets:fptr FILEID="FILE_0001">
+               <mets:seq>
+                  <mets:area FILEID="FILE_0001" ID="PHYS_0002" BEGIN="00:00:00" END="00:01:47" BETYPE="TIME" />
+                  <mets:area FILEID="FILE_0001" ID="PHYS_0003" BEGIN="00:01:47" END="00:10:00" BETYPE="TIME" />
+                  <mets:area FILEID="FILE_0001" ID="PHYS_0004" BEGIN="00:10:00" END="00:20:00" BETYPE="TIME" />
+                  <mets:area FILEID="FILE_0001" ID="PHYS_0005" BEGIN="00:20:00" END="00:20:30" BETYPE="TIME" />
+               </mets:seq>
+            </mets:fptr>
+        </mets:div>
+      </mets:div>
+   </mets:structMap>
+   <mets:structLink>
+      <mets:smLink xlink:to="PHYS_0001" xlink:from="LOG_0000"/>
+      <mets:smLink xlink:to="PHYS_0002" xlink:from="LOG_0001"/>
+      <mets:smLink xlink:to="PHYS_0003" xlink:from="LOG_0002"/>
+      <mets:smLink xlink:to="PHYS_0004" xlink:from="LOG_0003"/>
+      <mets:smLink xlink:to="PHYS_0005" xlink:from="LOG_0004"/>
+   </mets:structLink>
+</mets:mets>

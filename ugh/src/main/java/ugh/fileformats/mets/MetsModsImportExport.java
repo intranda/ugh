@@ -1240,6 +1240,12 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
                             area.setAttribute("COORDS", md.getValue());
                         } else if ("_SHAPE".equals(md.getType().getName())) {
                             area.setAttribute("SHAPE", md.getValue());
+                        } else if ("_BEGIN".equals(md.getType().getName())) {
+                            area.setAttribute("BEGIN", md.getValue());
+                        } else if ("_END".equals(md.getType().getName())) {
+                            area.setAttribute("END", md.getValue());
+                        } else if ("_BETYPE".equals(md.getType().getName())) {
+                            area.setAttribute("BETYPE", md.getValue());
                         }
                     }
                     area.setAttribute(METS_FILEID_STRING, fptr.getAttribute(METS_FILEID_STRING));
