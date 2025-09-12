@@ -1,6 +1,9 @@
 ---
 title: Configuration
 published: true
+keywords:
+    - UGH
+    - RDF/XML
 ---
 
 The configuration of the format takes place exclusively in the enclosing \`' element.

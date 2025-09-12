@@ -1,6 +1,10 @@
 ---
 title: Erweiterte Möglicheiten des METS-Exports
 published: true
+keywords:
+    - UGH
+    - METS
+    - MODS
 ---
 
 Für diverse Möglichkeiten des zvdd/DFG-Viewer METS-Formats sind keine äquivalenten Daten in unserem Dokumentmodell vorgesehen. Für einen ordentlichen METS-Export sind diese Daten jedoch unerlässlich. Für die Festlegung von Werten der folgenden Felder sind in der Klasse `ugh.fileformats.mets.MetsModsImportExport` Setter- und Getter-Methoden implementiert – nähere Erläuterungen finden sich im bereits erwähnten zvdd/DFG-Viewer METS-Profil:

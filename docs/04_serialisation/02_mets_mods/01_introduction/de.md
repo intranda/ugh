@@ -1,6 +1,10 @@
 ---
 title: Einführung
 published: true
+keywords:
+    - UGH
+    - METS
+    - MODS
 ---
 
 Das METS/MODS XML-Format kann das interne Dokumentmodell vollständig serialisieren, es sind sowohl Lese- und Schreibmethoden implementiert. Da es sich lediglich um eine Untermenge von METS handelt - es werden nicht alle METS Elemente genutzt - existiert eine Beschreibung des dieser Implementierung zugrunde liegenden Formats auf den Seiten des [DFG-Viewer](http://dfg-viewer.de/): Das DFG-Viewer METS-Profil in Version 2.0.

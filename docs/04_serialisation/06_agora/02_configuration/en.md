@@ -1,6 +1,8 @@
 ---
 title: Database configuration
 published: true
+keywords:
+    - UGH
 ---
 
 The configuration is located in the enclosing `<AGORADATABASE>` element, which is subordinate to the `<Formats>` element. First, some basic parameters of the database must be specified. These are in detail:

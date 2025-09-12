@@ -1,6 +1,8 @@
 ---
 title: Datenbankkonfiguration
 published: true
+keywords:
+    - UGH
 ---
 
 Die Konfiguration befindet sich in dem umschließenden `<AGORADATABASE>` Element, welches sich dem `<Formats>` Element unterordnet. Zunächst müssen einige Basisparameter der Datenbank angegeben werden. Dies sind im Einzelnen:

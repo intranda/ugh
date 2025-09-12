@@ -1,6 +1,9 @@
 ---
 title: Einführung
 published: true
+keywords:
+    - UGH
+    - RDF/XML
 ---
 
 Das RDF/XML-Format ist das ursprünglich für das AGORA Dokument-Management-System (AGORA DMS) entwickelte Datenformat, welches von diesem für den Import unterstützt wird. Ferner generiert das dazugehörige Meta- und Strukturdatenerfassungsprogramm AGORA Editor dieses Format. Es handelt sich also um kein generisches RDF-basiertes XML-Format, sondern vielmehr um eine ganz spezielle Ausprägung, um digitalisierte Dokumente zu beschreiben, wobei davon ausgegangen wird, dass jede Seite als einzelnes Image gespeichert wird. Um Daten in diesem Format übernehmen und in das DMS importieren zu können, wird das entsprechende Datenformat von UGH unterstützt.

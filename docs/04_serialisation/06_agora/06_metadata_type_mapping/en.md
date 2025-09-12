@@ -1,6 +1,8 @@
 ---
 title: Metadata Type Mapping
 published: true
+keywords:
+    - UGH
 ---
 
 However, the main part of the configuration for this serialization class is the mapping of the metadata types to specific tables and table columns. To understand the explanations described below, it is therefore useful to be familiar with the AGORA database schema.

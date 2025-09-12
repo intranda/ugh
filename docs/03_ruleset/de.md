@@ -1,6 +1,8 @@
 ---
 title: Regelsatz
 published: true
+keywords:
+    - UGH
 ---
 
 Das oben beschriebene Dokumentmodell ist recht allgemein gehalten, es legt keinerlei Metadaten- oder Strukturtypen fest. Um überhaupt Instanzen von Struktureinheiten und Metadaten anlegen zu können, ist es notwendig, in einem Regelsatz entsprechende Typen zu definieren. Weiterhin enthält dieser auch entsprechende Abschnitte für die Serialisierungsinformationen der jeweiligen Serialisierungsklassen.

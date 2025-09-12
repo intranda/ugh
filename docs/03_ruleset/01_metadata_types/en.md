@@ -1,6 +1,8 @@
 ---
 title: Definition of metadata types
 published: true
+keywords:
+    - UGH
 ---
 
 A metadata type is defined within the `<MetadataType>` element. This element must be the only child of the `<Name>` element, which contains the internal name of the metadata type. The internal name is also used to reference the metadata type from the serialization configuration. It must not contain any spaces.

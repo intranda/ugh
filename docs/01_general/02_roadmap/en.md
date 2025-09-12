@@ -1,6 +1,8 @@
 ---
 title: Further development
 published: true
+keywords:
+    - UGH
 ---
 
 This document provides a brief overview of the document model and its customisability using a rule set. Some classes and their configuration options for serialising the data are also described here.

@@ -1,6 +1,8 @@
 ---
 title: Definition von Metadatentypen
 published: true
+keywords:
+    - UGH
 ---
 
 Ein Metadatentyp wird innerhalb des `<MetadataType>` Elements definiert. Dieses Element muss als einziges Kind das `<Name>` Element besitzen, welches den internen Namen des Metadatentyps enthält. Der interne Name wird auch zur Referenzierung auf den Metadatentyp aus der Serialisierungskonfiguration heraus genutzt. Er darf keine Leerzeichen enthalten.

@@ -1,6 +1,8 @@
 ---
 title: Document model
 published: true
+keywords:
+    - UGH
 ---
 
 [Structural data](/en/other/ugh/document_model/structural_data)

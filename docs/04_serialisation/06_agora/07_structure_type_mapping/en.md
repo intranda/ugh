@@ -1,6 +1,8 @@
 ---
 title: Structure Type Mapping
 published: true
+keywords:
+    - UGH
 ---
 
 The document structure type is mapped relatively simply. As the name of the structure type is also stored in the database but is linked to the actual structural unit by means of a separate table via an ID, the corresponding type name is only stored once in the database.

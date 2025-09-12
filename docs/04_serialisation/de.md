@@ -1,6 +1,8 @@
 ---
 title: Serialisierung
 published: true
+keywords:
+    - UGH
 ---
 
 Daten, die mittels der API angelegt wurden, sollen natürlich auch geschrieben und gelesen werden können. Dazu verfügt die API über ein internes JAVA-Interface, welches durch unterschiedliche Klassen implementiert werden kann und Methoden zum Lesen und Schreiben bereitstellt. Ob diese Lese- und Schreibvorgänge dazu eine Datenbank oder das Dateisystem nutzten, oder welches Dateiformat genutzt wird, ist nicht relevant. Diese spezifischen Dinge werden durch das Interface gekapselt.

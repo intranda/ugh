@@ -1,6 +1,9 @@
 ---
 title: Example configurations
 published: true
+keywords:
+    - UGH
+    - MARC
 ---
 
 ## Example: Mapping of metadata

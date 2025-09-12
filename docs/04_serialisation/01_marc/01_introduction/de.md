@@ -1,6 +1,9 @@
 ---
 title: Einführung
 published: true
+keywords:
+    - UGH
+    - MARC
 ---
 
 Das Format **MARC** (**MA**chine-**R**eadable **C**ataloging) ist ein Datenformat, das zum Austausch von bibliographischen Daten entwickelt wurde. Das Format enthält Metadaten zu einer einzelnen Struktureinheit. Strukturdaten können über das Format nicht beschrieben werden. Daher kann das Format lediglich zum Import von Datensätzen genutzt werden, das Schreiben von Metadaten im MARC Format ist in UGH nicht vorgesehen.

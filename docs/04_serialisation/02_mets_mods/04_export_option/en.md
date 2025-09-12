@@ -1,6 +1,10 @@
 ---
 title: Extended METS export options
 published: true
+keywords:
+    - UGH
+    - METS
+    - MODS
 ---
 
 For various possibilities of the zvdd/DFG-Viewer METS format, no equivalent data are provided in our document model. However, these data are essential for a proper METS export. Setter and getter methods are implemented in the class ```ugh.fileformats.mets.MetsModsImportExport`` for specifying values of the following fields - for further explanations see the zvdd/DFG Viewer METS profile mentioned above:

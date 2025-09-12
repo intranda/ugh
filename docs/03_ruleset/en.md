@@ -1,6 +1,8 @@
 ---
 title: Rule set
 published: true
+keywords:
+    - UGH
 ---
 
 The document model described above is quite general, it does not specify any metadata or structure types. To be able to create instances of structural units and metadata at all, it is necessary to define corresponding types in a rule set. The rule set also contains corresponding sections for the serialization information of the respective serialization classes.

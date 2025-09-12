@@ -1,6 +1,9 @@
 ---
 title: Einführung
 published: true
+keywords:
+    - UGH
+    - PICA
 ---
 
 Das PICA+ Format wird überwiegend in Bibliothekskatalogen genutzt und beschreibt lediglich die bibliographische Einheit; es sind nur Metadaten für eine Struktureinheit in PICA+ zu finden und keinerlei Strukturdaten. Gegebenenfalls können einige Metadatenfelder Verweise auf andere Struktureinheiten enthalten, die jedoch durch die Applikation nochmals aus dem Bibliothekskatalog geholt werden und über die API entsprechend verknüpft werden muss.

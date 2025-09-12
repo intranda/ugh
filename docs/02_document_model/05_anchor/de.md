@@ -1,6 +1,8 @@
 ---
 title: Anker
 published: true
+keywords:
+    - UGH
 ---
 
 Als Anker (Anchor) wird eine Dokumentstruktur verstanden, die eher virtueller Natur ist und andere Struktureinheiten zu einer Gruppe zusammenfügen kann. Solche Anker sind beispielsweise die Strukturen Mehrbändiges Werk oder Zeitschrift, welches alle Bände des Werkes bzw. alle Bände der Zeitschrift zusammenhält. Der Anker selber besitzt keine Inhaltsdateien – also kein Imageset mit Bild-Dateien, er besteht lediglich aus einer Struktureinheit, die über deskriptive Metadaten verfügt. Das wesentliche Metadatum ist ein Identifier, mit welchem der Anker eindeutig identifiziert werden kann.
