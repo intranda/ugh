@@ -83,6 +83,11 @@ public class MetsModsImportExportTest {
         assertEquals(1, parts.size());
         assertEquals("(Restricted|AK_Noe_intern|AK_Tirol_intern)", parts.get(0));
 
+        regex = "s/\\(.+\\)//g";
+        parts = MetsModsImportExport.splitRegularExpression(regex);
+        assertEquals(2, parts.size());
+        assertEquals("\\(.+\\)", parts.get(0));
+        assertEquals("", parts.get(1));
     }
 
     @Test
