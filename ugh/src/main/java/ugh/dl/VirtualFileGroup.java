@@ -33,8 +33,7 @@ import lombok.Setter;
 
 /*******************************************************************************
  * <p>
- * A <code>VirtualFileGroup</code> contains all file groups needed for the class
- * MetsModsImportExport.
+ * A <code>VirtualFileGroup</code> contains all file groups needed for the class MetsModsImportExport.
  * </p>
  * 
  * @author Stefan E. Funk
@@ -57,23 +56,29 @@ public class VirtualFileGroup implements Serializable {
     /**
      * A list constant representing the state that all files should be allowed for this FileGroup. Per default this is the case
      */
-    public static final List<ContentFile>     ALL_FILES           = Collections.emptyList();
-    private static final long	serialVersionUID	= 8594056041230503891L;
+    public static final List<ContentFile> ALL_FILES = Collections.emptyList();
+    private static final long serialVersionUID = 8594056041230503891L;
 
-
-    private String				name				= "";
-    private String				pathToFiles			= "";
-    private String				mimetype			= "";
-    private String				fileSuffix			= "";
-    private String				idSuffix			= "";
-    private List<ContentFile>   contentFiles        = ALL_FILES;
+    private String name = "";
+    private String pathToFiles = "";
+    private String mimetype = "";
+    private String fileSuffix = "";
+    private String idSuffix = "";
+    private List<ContentFile> contentFiles = ALL_FILES;
     private boolean mainGroup;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private boolean ignoreConfiguredMimetypeAndSuffix;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private String fileExtensionsToIgnore;
+
+    @Getter
+    @Setter
+    // defines, if a single file fileGrp for the physSequence or a regular multi file fileGrp for each image is created
+    private boolean singleFile = false;
 
     /***************************************************************************
      * Default constructor.
@@ -149,16 +154,16 @@ public class VirtualFileGroup implements Serializable {
      **************************************************************************/
     public void setFileSuffix(String fileSuffix) {
 
-    	if(fileSuffix != null) {
-    		// If the given file suffix starts with a ".", remove the ".".
-	        if (fileSuffix.startsWith(".")) {
+        if (fileSuffix != null) {
+            // If the given file suffix starts with a ".", remove the ".".
+            if (fileSuffix.startsWith(".")) {
                 this.fileSuffix = fileSuffix.replaceAll("^\\.+", "");
-	        } else {
-	            this.fileSuffix = fileSuffix;
-	        }
-    	}else {
-    		this.fileSuffix = "";
-    	}
+            } else {
+                this.fileSuffix = fileSuffix;
+            }
+        } else {
+            this.fileSuffix = "";
+        }
     }
 
     /***************************************************************************
@@ -176,9 +181,8 @@ public class VirtualFileGroup implements Serializable {
     }
 
     /**
-     * Returns the list of content files which should be written for this FileGroup
-     * If the list is identical to {@link VirtualFileGroup#ALL_FILES ALL_FILES}
-     * then all ContentFiles should be included in this FileGroup
+     * Returns the list of content files which should be written for this FileGroup If the list is identical to {@link VirtualFileGroup#ALL_FILES
+     * ALL_FILES} then all ContentFiles should be included in this FileGroup
      * 
      * @return the list of allowed ContentFiles for this FileGroup. Never null
      */
@@ -187,8 +191,7 @@ public class VirtualFileGroup implements Serializable {
     }
 
     /**
-     * Set the list of allowed ContentFiles to {@link VirtualFileGroup#ALL_FILES ALL_FILES}
-     * so all ContentFiles may be written to this FileGroup
+     * Set the list of allowed ContentFiles to {@link VirtualFileGroup#ALL_FILES ALL_FILES} so all ContentFiles may be written to this FileGroup
      */
     public void allowAllFiles() {
         this.contentFiles = ALL_FILES;
@@ -199,7 +202,7 @@ public class VirtualFileGroup implements Serializable {
      * 
      */
     public void restrictFiles() {
-        if(this.contentFiles == ALL_FILES) {
+        if (this.contentFiles == ALL_FILES) {
             this.contentFiles = new ArrayList<>();
         }
     }
@@ -213,7 +216,7 @@ public class VirtualFileGroup implements Serializable {
         if (contentFile == null) { // adding null should make no difference
             return;
         }
-        if(this.contentFiles == ALL_FILES) {
+        if (this.contentFiles == ALL_FILES) {
             this.contentFiles = new ArrayList<>();
         }
         this.contentFiles.add(contentFile);
@@ -225,12 +228,12 @@ public class VirtualFileGroup implements Serializable {
      * @param contentFiles
      */
     public void addContentFiles(Collection<ContentFile> contentFiles) {
-        // handle null as empty list, and it should make no difference, since if one would like to add restrictions on files, 
+        // handle null as empty list, and it should make no difference, since if one would like to add restrictions on files,
         // there is a better way to achieve that using the method restrictFiles() instead of applying this method with null.
         if (contentFiles == null) {
             return;
         }
-        if(this.contentFiles == ALL_FILES) {
+        if (this.contentFiles == ALL_FILES) {
             this.contentFiles = new ArrayList<>();
         }
         this.contentFiles.addAll(contentFiles);
@@ -242,7 +245,7 @@ public class VirtualFileGroup implements Serializable {
      * @param contentFile
      */
     public void removeContentFile(ContentFile contentFile) {
-        if(this.contentFiles.contains(contentFile)) {
+        if (this.contentFiles.contains(contentFile)) {
             this.contentFiles.remove(contentFile);
         }
     }
@@ -253,7 +256,7 @@ public class VirtualFileGroup implements Serializable {
      * @param contentFiles
      */
     public void removeContentFiles(Collection<ContentFile> contentFiles) {
-        if(!this.contentFiles.isEmpty()) {
+        if (!this.contentFiles.isEmpty()) {
             this.contentFiles.removeAll(contentFiles);
         }
     }
