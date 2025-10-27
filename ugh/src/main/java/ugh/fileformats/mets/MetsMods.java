@@ -2998,12 +2998,14 @@ public class MetsMods implements ugh.dl.Fileformat {
 
             // Create structMap type physical.
             DocStruct topphysdiv = this.digdoc.getPhysicalDocStruct();
+
             if (topphysdiv != null) {
                 log.info("Creating structMap physical");
 
                 Element structMapPhys = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_STRUCTMAP_STRING);
                 this.metsNode.appendChild(structMapPhys);
                 structMapPhys.setAttribute(METS_STRUCTMAPTYPE_STRING, METS_STRUCTMAP_TYPE_PHYSICAL_STRING);
+
                 writePhysDivs(structMapPhys, topphysdiv);
 
                 if (topphysdiv.getAllChildren() != null && !topphysdiv.getAllChildren().isEmpty()) {
@@ -3023,6 +3025,25 @@ public class MetsMods implements ugh.dl.Fileformat {
                         this.metsNode.appendChild(structMapPhys);
                     }
                     this.metsNode.appendChild(structLinkElement);
+                }
+
+                Element div = (Element) structMapPhys.getFirstChild();
+                for (VirtualFileGroup vfg : digdoc.getFileSet().getVirtualFileGroups()) {
+                    if (vfg.isSingleFile()) {
+
+                        Element fptr = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_FPTR_STRING);
+                        String id = vfg.getFileSuffix();
+
+                        fptr.setAttribute(METS_FILEID_STRING, id);
+
+                        Node child = div.getFirstChild();
+                        if (child != null) {
+                            div.insertBefore(fptr, child);
+                        } else {
+
+                            div.appendChild(fptr);
+                        }
+                    }
                 }
             }
 
@@ -3158,153 +3179,178 @@ public class MetsMods implements ugh.dl.Fileformat {
         Element result = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_FILEGRP_STRING);
         result.setAttribute(METS_FILEGROUPUSE_STRING, theFilegroup.getName());
 
-        // Check fileset availibility.
-        FileSet fs = this.digdoc.getFileSet();
-        if (fs == null) {
-            log.warn("No fileset available... unable to create FileGroups!");
-            return result;
-        }
+        if (theFilegroup.isSingleFile()) {
+            String path = theFilegroup.getPathToFiles();
+            if (!theFilegroup.getContentFiles().isEmpty()) {
+                String location = theFilegroup.getContentFiles().get(0).getLocation();
+                path = path + Paths.get(location).getFileName().toString();
+            }
+            Element file = createDomElementNS(domDoc, this.metsNamespacePrefix, "file");
 
-        if (fs.getAllFiles() != null) {
-            for (ContentFile file : fs.getAllFiles()) {
-                if (file.getReferencedDocStructs() != null) {
-                    for (DocStruct ds : file.getReferencedDocStructs()) {
-                        if (ds.getTechMds() != null) {
-                            file.setTechMds(ds.getTechMds());
+            file.setAttribute(METS_MIMETYPE_STRING, theFilegroup.getMimetype());
+
+            String id = theFilegroup.getName();
+            if (createUUIDs) {
+                UUID uuid = UUID.randomUUID();
+                id = uuid.toString();
+            }
+            theFilegroup.setFileSuffix(id);
+            file.setAttribute(METS_ID_STRING, id);
+            Element flocat = createDomElementNS(domDoc, this.metsNamespacePrefix, "FLocat");
+            flocat.setAttribute(METS_LOCTYPE_STRING, "URL");
+            createDomAttributeNS(flocat, this.xlinkNamespacePrefix, METS_HREF_STRING, path);
+
+            file.appendChild(flocat);
+            result.appendChild(file);
+        } else {
+
+            // Check fileset availibility.
+            FileSet fs = this.digdoc.getFileSet();
+            if (fs == null) {
+                log.warn("No fileset available... unable to create FileGroups!");
+                return result;
+            }
+
+            if (fs.getAllFiles() != null) {
+                for (ContentFile file : fs.getAllFiles()) {
+                    if (file.getReferencedDocStructs() != null) {
+                        for (DocStruct ds : file.getReferencedDocStructs()) {
+                            if (ds.getTechMds() != null) {
+                                file.setTechMds(ds.getTechMds());
+                            }
                         }
                     }
                 }
             }
-        }
 
-        // Check file group pathes, suffixes, and mimetypes, except for
-        // filegroup LOCAL.
-        if (!METS_FILEGROUP_LOCAL_STRING.equals(theFilegroup.getName())) {
-            if ("".equals(theFilegroup.getPathToFiles())) {
-                log.warn("The path for file group " + theFilegroup.getName() + " is not configured yet! Using local path '"
-                        + theFilegroup.getPathToFiles() + "'.");
-            }
-            if ("".equals(theFilegroup.getMimetype())) {
-                log.warn("The mimetype for file group " + theFilegroup.getName() + " is not configured yet! Using local mimetype '"
-                        + theFilegroup.getMimetype() + "'.");
-            }
-            if ("".equals(theFilegroup.getFileSuffix())) {
-                log.warn("The file suffix for file group " + theFilegroup.getName() + " is not configured yet! Using local suffix '"
-                        + theFilegroup.getFileSuffix() + "'.");
-            }
-        }
-        // Iterate over all the content files.
-        List<ContentFile> contentFiles = fs.getAllFiles();
-        for (ContentFile cf : contentFiles) {
-            //only add content file to filegroup if it may be contained in the filegroup.
-            //Per default all files may be contained in all filegroups
-            if (theFilegroup.contains(cf)) {
-
-                if (checkIfFiletypeIsSkipped(theFilegroup.getFileExtensionsToIgnore(), cf.getLocation())) {
-                    // remove current content file from theFilegroup
-                    theFilegroup.removeContentFile(cf);
-                    continue;
+            // Check file group pathes, suffixes, and mimetypes, except for
+            // filegroup LOCAL.
+            if (!METS_FILEGROUP_LOCAL_STRING.equals(theFilegroup.getName())) {
+                if ("".equals(theFilegroup.getPathToFiles())) {
+                    log.warn("The path for file group " + theFilegroup.getName() + " is not configured yet! Using local path '"
+                            + theFilegroup.getPathToFiles() + "'.");
                 }
-
-                Element file = createDomElementNS(domDoc, this.metsNamespacePrefix, "file");
-                String mt = cf.getMimetype();
-                // We use the mimetype from Goobi if configured, the local one if not.
                 if ("".equals(theFilegroup.getMimetype())) {
-                    file.setAttribute(METS_MIMETYPE_STRING, mt);
-                } else {
-                    file.setAttribute(METS_MIMETYPE_STRING, theFilegroup.getMimetype());
+                    log.warn("The mimetype for file group " + theFilegroup.getName() + " is not configured yet! Using local mimetype '"
+                            + theFilegroup.getMimetype() + "'.");
                 }
-
-                // We use the ID suffix from Goobi if configured, the filegroup's
-                // name if not.
-                String idSuffix = theFilegroup.getIdSuffix();
-                if (idSuffix == null || "".equals(idSuffix)) {
-                    idSuffix = "_" + theFilegroup.getName();
-                    theFilegroup.setIdSuffix(idSuffix);
+                if ("".equals(theFilegroup.getFileSuffix())) {
+                    log.warn("The file suffix for file group " + theFilegroup.getName() + " is not configured yet! Using local suffix '"
+                            + theFilegroup.getFileSuffix() + "'.");
                 }
+            }
+            // Iterate over all the content files.
+            List<ContentFile> contentFiles = fs.getAllFiles();
+            for (ContentFile cf : contentFiles) {
+                //only add content file to filegroup if it may be contained in the filegroup.
+                //Per default all files may be contained in all filegroups
+                if (theFilegroup.contains(cf)) {
 
-                // Set content file's identifier (if not existing yet).
-                String id = null;
-                if (createUUIDs) {
-                    UUID uuid = UUID.randomUUID();
-                    id = uuid.toString();
-                    cf.addUUID(theFilegroup.getName(), id);
-                } else {
-
-                    id = cf.getIdentifier();
-                    if (id == null || "".equals(id)) {
-                        id = FILE_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(++fileidMax);
-                        cf.setIdentifier(id);
-                    } else if (id.contains(FILE_PREFIX)) {
-                        String numberPart = id.replace(FILE_PREFIX, "");
-                        try {
-                            int number = Integer.parseInt(numberPart);
-                            fileidMax = number;
-                        } catch (NumberFormatException e) {
-                            // do nothing
-                        }
-
+                    if (checkIfFiletypeIsSkipped(theFilegroup.getFileExtensionsToIgnore(), cf.getLocation())) {
+                        // remove current content file from theFilegroup
+                        theFilegroup.removeContentFile(cf);
+                        continue;
                     }
-                }
 
-                // Use the content file's ID if local filegroup is written, append
-                // the filegroup's name if not.
-                if (!createUUIDs && !METS_FILEGROUP_LOCAL_STRING.equals(theFilegroup.getName())) {
-                    id += "_" + theFilegroup.getName();
-                }
-                file.setAttribute(METS_ID_STRING, id);
-
-                if (cf.isRepresentative()) {
-                    file.setAttribute("USE", "banner");
-                }
-
-                // write admid attribute is necessary
-                List<Md> mdList = cf.getTechMds();
-                if (mdList != null) {
-                    StringBuilder admid = new StringBuilder();
-                    for (Md md : mdList) {
-                        if (admid.length() > 0) {
-                            admid.append(" ");
-                        }
-                        admid.append(md.getId());
-                    }
-                    if (StringUtils.isNotBlank(admid)) {
-                        file.setAttribute(METS_ADMID_STRING, admid.toString());
-                    }
-                }
-
-                // Write location (as URL).
-                Element flocat = createDomElementNS(domDoc, this.metsNamespacePrefix, "FLocat");
-                flocat.setAttribute(METS_LOCTYPE_STRING, "URL");
-
-                // We use the path from Goobi if configured, the local one if not.
-                String lc = cf.getLocation();
-                if (!"".equals(theFilegroup.getPathToFiles())) {
-                    // Get the filename and replace the filename suffix, if
-                    // necessary.
-                    if (theFilegroup.isIgnoreConfiguredMimetypeAndSuffix()) {
-                        Path path = getFilePath(lc);
-
-                        String mimeType = DigitalDocument.detectMimeType(path);
-                        if (StringUtils.isBlank(mimeType) && StringUtils.isNotBlank(cf.getMimetype())) {
-                            mimeType = cf.getMimetype();
-                        }
-                        file.setAttribute(METS_MIMETYPE_STRING, mimeType);
-
-                        lc = theFilegroup.getPathToFiles() + path.getFileName().toString();
+                    Element file = createDomElementNS(domDoc, this.metsNamespacePrefix, "file");
+                    String mt = cf.getMimetype();
+                    // We use the mimetype from Goobi if configured, the local one if not.
+                    if ("".equals(theFilegroup.getMimetype())) {
+                        file.setAttribute(METS_MIMETYPE_STRING, mt);
                     } else {
-                        String n = new File(lc).getName();
-                        n = n.substring(0, n.lastIndexOf('.') + 1) + theFilegroup.getFileSuffix();
-                        lc = theFilegroup.getPathToFiles() + n;
+                        file.setAttribute(METS_MIMETYPE_STRING, theFilegroup.getMimetype());
                     }
-                }
-                createDomAttributeNS(flocat, this.xlinkNamespacePrefix, METS_HREF_STRING, lc);
 
-                file.appendChild(flocat);
-                result.appendChild(file);
+                    // We use the ID suffix from Goobi if configured, the filegroup's
+                    // name if not.
+                    String idSuffix = theFilegroup.getIdSuffix();
+                    if (idSuffix == null || "".equals(idSuffix)) {
+                        idSuffix = "_" + theFilegroup.getName();
+                        theFilegroup.setIdSuffix(idSuffix);
+                    }
+
+                    // Set content file's identifier (if not existing yet).
+                    String id = null;
+                    if (createUUIDs) {
+                        UUID uuid = UUID.randomUUID();
+                        id = uuid.toString();
+                        cf.addUUID(theFilegroup.getName(), id);
+                    } else {
+
+                        id = cf.getIdentifier();
+                        if (id == null || "".equals(id)) {
+                            id = FILE_PREFIX + new DecimalFormat(DECIMAL_FORMAT).format(++fileidMax);
+                            cf.setIdentifier(id);
+                        } else if (id.contains(FILE_PREFIX)) {
+                            String numberPart = id.replace(FILE_PREFIX, "");
+                            try {
+                                int number = Integer.parseInt(numberPart);
+                                fileidMax = number;
+                            } catch (NumberFormatException e) {
+                                // do nothing
+                            }
+
+                        }
+                    }
+
+                    // Use the content file's ID if local filegroup is written, append
+                    // the filegroup's name if not.
+                    if (!createUUIDs && !METS_FILEGROUP_LOCAL_STRING.equals(theFilegroup.getName())) {
+                        id += "_" + theFilegroup.getName();
+                    }
+                    file.setAttribute(METS_ID_STRING, id);
+
+                    if (cf.isRepresentative()) {
+                        file.setAttribute("USE", "banner");
+                    }
+
+                    // write admid attribute is necessary
+                    List<Md> mdList = cf.getTechMds();
+                    if (mdList != null) {
+                        StringBuilder admid = new StringBuilder();
+                        for (Md md : mdList) {
+                            if (admid.length() > 0) {
+                                admid.append(" ");
+                            }
+                            admid.append(md.getId());
+                        }
+                        if (StringUtils.isNotBlank(admid)) {
+                            file.setAttribute(METS_ADMID_STRING, admid.toString());
+                        }
+                    }
+
+                    // Write location (as URL).
+                    Element flocat = createDomElementNS(domDoc, this.metsNamespacePrefix, "FLocat");
+                    flocat.setAttribute(METS_LOCTYPE_STRING, "URL");
+
+                    // We use the path from Goobi if configured, the local one if not.
+                    String lc = cf.getLocation();
+                    if (!"".equals(theFilegroup.getPathToFiles())) {
+                        // Get the filename and replace the filename suffix, if
+                        // necessary.
+                        if (theFilegroup.isIgnoreConfiguredMimetypeAndSuffix()) {
+                            Path path = getFilePath(lc);
+
+                            String mimeType = DigitalDocument.detectMimeType(path);
+                            if (StringUtils.isBlank(mimeType) && StringUtils.isNotBlank(cf.getMimetype())) {
+                                mimeType = cf.getMimetype();
+                            }
+                            file.setAttribute(METS_MIMETYPE_STRING, mimeType);
+
+                            lc = theFilegroup.getPathToFiles() + path.getFileName().toString();
+                        } else {
+                            String n = new File(lc).getName();
+                            n = n.substring(0, n.lastIndexOf('.') + 1) + theFilegroup.getFileSuffix();
+                            lc = theFilegroup.getPathToFiles() + n;
+                        }
+                    }
+                    createDomAttributeNS(flocat, this.xlinkNamespacePrefix, METS_HREF_STRING, lc);
+
+                    file.appendChild(flocat);
+                    result.appendChild(file);
+                }
             }
         }
-
         return result;
     }
 
@@ -3612,12 +3658,11 @@ public class MetsMods implements ugh.dl.Fileformat {
             log.debug("No content files for DocStruct '" + theStruct.getType().getName() + "'");
             return;
         }
-
         for (ContentFile cf : contentFiles) {
             // Pass each file group.
             for (VirtualFileGroup vFileGroup : this.digdoc.getFileSet().getVirtualFileGroups()) {
                 // Write XML elements (METS:fptr).
-                if (vFileGroup.contains(cf)) {
+                if (vFileGroup.contains(cf) && !vFileGroup.isSingleFile()) {
                     if (checkIfFiletypeIsSkipped(vFileGroup.getFileExtensionsToIgnore(), cf.getLocation())) {
                         // remove current content file from theFilegroup
                         vFileGroup.removeContentFile(cf);
