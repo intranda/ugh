@@ -3028,20 +3028,22 @@ public class MetsMods implements ugh.dl.Fileformat {
                 }
 
                 Element div = (Element) structMapPhys.getFirstChild();
-                for (VirtualFileGroup vfg : digdoc.getFileSet().getVirtualFileGroups()) {
-                    if (vfg.isSingleFile()) {
+                if (digdoc.getFileSet() != null) {
+                    for (VirtualFileGroup vfg : digdoc.getFileSet().getVirtualFileGroups()) {
+                        if (vfg.isSingleFile()) {
 
-                        Element fptr = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_FPTR_STRING);
-                        String id = vfg.getFileSuffix();
+                            Element fptr = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_FPTR_STRING);
+                            String id = vfg.getFileSuffix();
 
-                        fptr.setAttribute(METS_FILEID_STRING, id);
+                            fptr.setAttribute(METS_FILEID_STRING, id);
 
-                        Node child = div.getFirstChild();
-                        if (child != null) {
-                            div.insertBefore(fptr, child);
-                        } else {
+                            Node child = div.getFirstChild();
+                            if (child != null) {
+                                div.insertBefore(fptr, child);
+                            } else {
 
-                            div.appendChild(fptr);
+                                div.appendChild(fptr);
+                            }
                         }
                     }
                 }
