@@ -827,15 +827,17 @@ public class DigitalDocument implements Serializable {
         String representative = "";
 
         // Iterate throught all the physical docstruct's metadata.
-        if (tp != null && tp.getAllMetadata() != null) {
+        if (tp != null) {
 
             // Set the path to the images.
             String pif = "";
-            for (Metadata md : tp.getAllMetadata()) {
-                if ("pathimagefiles".equals(md.getType().getName())) {
-                    pif = md.getValue();
-                } else if ("_representative".equals(md.getType().getName())) {
-                    representative = md.getValue();
+            if (tp.getAllMetadata() != null) {
+                for (Metadata md : tp.getAllMetadata()) {
+                    if ("pathimagefiles".equals(md.getType().getName())) {
+                        pif = md.getValue();
+                    } else if ("_representative".equals(md.getType().getName())) {
+                        representative = md.getValue();
+                    }
                 }
             }
 
