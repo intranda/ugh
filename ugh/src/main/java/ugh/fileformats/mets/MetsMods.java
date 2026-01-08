@@ -5532,6 +5532,13 @@ public class MetsMods implements ugh.dl.Fileformat {
     @Override
     public void setPrefs(Prefs prefs) throws PreferencesException {
         setNamespaces();
+
+        if (prefs == null) {
+            String message = "Can't set null prefs";
+            PreferencesException pe = new PreferencesException(message);
+            log.error(message, pe);
+            throw pe;
+        }
         this.myPreferences = prefs;
 
         log.info(this.getClass().getName() + " " + getVersion());
