@@ -8,17 +8,17 @@ keywords:
 
 Die PICA+ Konfiguration erfolgt innerhalb des umschließenden `<PicaPlus>` Elements, welches direkt dem `<Formats>` Element untergeordnet ist. Innerhalb des `<PicaPlus>` Elements kommen die typ-spezifischen Elemente `<Person>`, `<Metadata>` und `<DocStruct>` zu Einsatz, die jeweils einen internen Datentyp mappen. Ebenso wie beim RDF/XML-Format findet hier immer ein 1:1 Mapping statt.
 
-Für das Mapping wird auf die Merkmale der PICA+ Struktur zurückgegriffen, innerhalb dieser typ- spezifischen Elemente sind folgende Unterelemente erlaubt:
+Für das Mapping wird auf die Merkmale der PICA+ Struktur zurückgegriffen, innerhalb dieser typ- spezifischen Elemente sind folgende Unterelemente erlaubt:
 
 | Tag | Beschreibung |
 | :--- | :--- |
 | `<picaMainTag>` | Die PICA+ Feldnummer. Dieses Element muss genau einmal vorhanden sein. |
-| `<picaSubTag>` | Der PICA+ Feldtrenner innerhalb des mit `<picaMainTag>` angegebenen Feldes. Der Inhalt dieses Unterfeldes entspricht dem Wert des im `<Name>` Element angegebenen Metadatums. Innerhalb des `<Metadata>` und `<DocStruct>` Elements muss dieses Feld genau einmal vorhanden sein. Für das `<Person>` Element gelten andere Regeln (siehe unten). |
-| `<valueCondition>` | Bedingtes Mapping: Mit der Angabe eines regulären Ausdrucks (Perl5-Syntax) kann hier eine Bedingung angegeben werden. Nur, wenn diese Bedingung auf den Inhalt des oben definierten PICA+ Feldes zutrifft, wird der Wert dem internen Metadatum zugewiesen. Dieses Feld ist optional, Beispiel siehe unten. |
+| `<picaSubTag>` | Der PICA+ Feldtrenner innerhalb des mit `<picaMainTag>` angegebenen Feldes. Der Inhalt dieses Unterfeldes entspricht dem Wert des im `<Name>` Element angegebenen Metadatums. Innerhalb des `<Metadata>` und `<DocStruct>` Elements muss dieses Feld genau einmal vorhanden sein. Für das `<Person>` Element gelten andere Regeln (siehe unten). |
+| `<valueCondition>` | Bedingtes Mapping: Mit der Angabe eines regulären Ausdrucks (Perl5-Syntax) kann hier eine Bedingung angegeben werden. Nur, wenn diese Bedingung auf den Inhalt des oben definierten PICA+ Feldes zutrifft, wird der Wert dem internen Metadatum zugewiesen. Dieses Feld ist optional, Beispiel siehe unten. |
 | `<name>` | Der interne Metadatenname. Dieses Element muss ebenfalls genau einmal vorhanden sein. |
-| `<valueRegExp>` | Nachträgliche Bearbeitung von PICA+ Feldwerten: Mit der Angabe eines regulären Ausdrucks (Perl5-Syntax) kann der Wert des Metadatums manipuliert werden. Dieses Feld ist optional, Beispiel siehe unten. |
+| `<valueRegExp>` | Nachträgliche Bearbeitung von PICA+ Feldwerten: Mit der Angabe eines regulären Ausdrucks (Perl5-Syntax) kann der Wert des Metadatums manipuliert werden. Dieses Feld ist optional, Beispiel siehe unten. |
 
-_Beispiel: Mapping von PICA+ Felder_
+_Beispiel: Mapping von PICA+-Feldern_
 
 ```xml
 <Metadata>
@@ -49,7 +49,7 @@ _Beispiel: Nutzung von bedingten Zuweisungen_
 
 Der Wert von `picaMainTag 007s` und `picaSubTag 0` wird nur dann dem internen Metadatum `CatalogFieldVDseventeen` zugewiesen, wenn dessen Inhalt mit `VD17` beginnt. Sollte der Inhalt des PICA+ Feldes mit `VD18` beginnen, wird dieser dem internen Metadatum `CatalogFieldVDeighteen` zugewiesen.
 
-Wenn eine der Bedingungen erfüllt ist, wird zusätzlich noch das `VD17` oder das `VD18` vor der eigentlichen VD17- bzw. VD18-Nummer (incl. dem Leerzeichen) entfernt.
+Wenn eine der Bedingungen erfüllt ist, wird zusätzlich noch das `VD17` oder das `VD18` vor der eigentlichen VD17- bzw. VD18-Nummer (incl. dem Leerzeichen) entfernt.
 
 _Beispiel: Manipulation von Metadaten beim Import_
 
@@ -62,16 +62,16 @@ _Beispiel: Manipulation von Metadaten beim Import_
 </Metadata>
 ```
 
-Mit diesem regulären Ausdruck wird der Wert des PICA+ (PPN) um die Zeichenkette `PPN` ergänzt.
+Mit diesem regulären Ausdruck wird der Wert des PICA+ (PPN) um die Zeichenkette `PPN` ergänzt.
 
-Da Personen weitere Merkmale aufweisen und nicht nur ein einfaches Typ-Wert-Paar sind, kann für jedes dieser Merkmale ein `<picaSubTag>` innerhalb des `<Person>` Elements existieren. Das entsprechende Attribut `type` gibt das entsprechende Merkmal an. Folgende Werte für dieses Attribut sind gültig:
+Da Personen weitere Merkmale aufweisen und nicht nur ein einfaches Typ-Wert-Paar sind, kann für jedes dieser Merkmale ein `<picaSubTag>` innerhalb des `<Person>` Elements existieren. Das entsprechende Attribut `type` gibt das entsprechende Merkmal an. Folgende Werte für dieses Attribut sind gültig:
 
 | Attribut | Beschreibung |
 | :--- | :--- |
 | `firstname` | Vorname der Person |
 | `lastname` | Nachname der Person |
 | `identifier` | Identifier der Person (bspw. aus der Personennormdatenbank) |
-| `expansion` | Es können weiterhin Vor- und Nachname aus dem Pica-Feld „Expansion der Ansetzungsform“ extrahiert werden. |
+| `expansion` | Es können weiterhin Vor- und Nachname aus dem Pica-Feld „Expansion der Ansetzungsform“ extrahiert werden. |
 
 _Beispiel: Mapping von Personen_
 
@@ -106,9 +106,9 @@ _Beispiel: Mapping von Körperschaften_
 </Corporate>
 ```
 
-Da der Typ der jeweiligen Dokumentstruktur abhängig vom Wert eines Feldes ist, existiert innerhalb des Elements `<DocStrct>` noch ein weiteres Pflichtelement `<picaContent>`. Nur wenn das mit `<picaMainTag>` und `<picaSubTag>` spezifizierte Element den in `<picaContent>` definierten Content aufweist, wird eine entsprechende Dokumentstruktur anlegt und es werden ihr die Metadaten zugeordnet. Der Typ der Dokumentstruktur wird im Element `<Name>` spezifiziert.
+Da der Typ der jeweiligen Dokumentstruktur abhängig vom Wert eines Feldes ist, existiert innerhalb des Elements `<DocStrct>` noch ein weiteres Pflichtelement `<picaContent>`. Nur wenn das mit `<picaMainTag>` und `<picaSubTag>` spezifizierte Element den in `<picaContent>` definierten Content aufweist, wird eine entsprechende Dokumentstruktur angelegt und es werden ihr die Metadaten zugeordnet. Der Typ der Dokumentstruktur wird im Element `<Name>` spezifiziert.
 
-Hierbei kann es auch zu einem n:1 Mapping kommen, das heißt, es können mehrere Typen aus dem Pica-System einem internen Typ zugewiesen werden. Dies ist notwendig, da die Buchstabenkombination des PICA+ Formats nicht nur den bibliographischen Typ, sondern auch die Erscheinungsform (gedruckt, digital, Microform) enthält. Entsprechend muss für jede Buchstabenkombination ein Mapping vorgenommen werden.
+Hierbei kann es auch zu einem n:1 Mapping kommen, das heißt, es können mehrere Typen aus dem Pica-System einem internen Typ zugewiesen werden. Dies ist notwendig, da die Buchstabenkombination des PICA+ Formats nicht nur den bibliographischen Typ, sondern auch die Erscheinungsform (gedruckt, digital, Microform) enthält. Entsprechend muss für jede Buchstabenkombination ein Mapping vorgenommen werden.
 
 _Beispiel: Mapping eines MultiVolume-Werkes_
 
@@ -127,4 +127,4 @@ _Beispiel: Mapping eines MultiVolume-Werkes_
 </DocStruct>
 ```
 
-Für das Mapping von Dokumentstrukturen ist zu beachten, dass lediglich die ersten im Regelsatz definierten Buchstaben verglichen werden. Dies ist quasi mit einer trunkierten Suche gleichzusetzen. Da in dem Beispiel oben lediglich zwei Buchstaben im Feld `<picaContent>` angegeben sind, werden auch nur die ersten beiden Buchstaben in der PICA+ Datei berücksichtigt. Ferner erfolgt der Vergleich unter Beachtung der Groß/Kleinschreibung (case-sensitive).
+Für das Mapping von Dokumentstrukturen ist zu beachten, dass lediglich die ersten im Regelsatz definierten Buchstaben verglichen werden. Dies ist quasi mit einer trunkierten Suche gleichzusetzen. Da in dem Beispiel oben lediglich zwei Buchstaben im Feld `<picaContent>` angegeben sind, werden auch nur die ersten beiden Buchstaben in der PICA+ Datei berücksichtigt. Ferner erfolgt der Vergleich unter Beachtung der Groß/Kleinschreibung (case-sensitive).

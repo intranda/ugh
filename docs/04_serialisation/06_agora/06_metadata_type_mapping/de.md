@@ -5,9 +5,9 @@ keywords:
     - UGH
 ---
 
-Hauptbestandteil der Konfiguration für diese Serialisierungsklasse ist jedoch das Mapping der Metadatentypen in bestimmte Tabellen und Tabellenspalten. Für das Verständnis der unten beschriebenen Erläuterungen ist die Kenntnis des AGORA-Datenbankschemas daher sinnvoll.
+Hauptbestandteil der Konfiguration für diese Serialisierungsklasse ist jedoch das Mapping der Metadatentypen in bestimmte Tabellen und Tabellenspalten. Für das Verständnis der unten beschriebenen Erläuterungen ist die Kenntnis des AGORA-Datenbankschemas daher sinnvoll.
 
-Für jeden Metadatentyp existiert ein `<Metadata>` Element. Innerhalb dieses Elements wird die Tabelle, die Spalte oder sogar ein Wert ausgewählt. Jedes `<Metadata>` Element muss ein Unterelement `<InternalName>` und `<TableName>` besitzen. `<InternalName>` enthält den internen Namen des Metadatentyps und `<TableName>` enthält den Namen der Tabelle, in welcher der Wert des Metadatums gespeichert werden soll. Je nach Datenbankmanagementsystem ist hier evtl. auf Groß/Kleinschreibung zu achten. Entsprechend der Relation zwischen Struktureinheit und Metadatum gibt es mehrere Möglichkeiten, das Metadatum zu speichern:
+Für jeden Metadatentyp existiert ein `<Metadata>` Element. Innerhalb dieses Elements wird die Tabelle, die Spalte oder sogar ein Wert ausgewählt. Jedes `<Metadata>` Element muss ein Unterelement `<InternalName>` und `<TableName>` besitzen. `<InternalName>` enthält den internen Namen des Metadatentyps und `<TableName>` enthält den Namen der Tabelle, in welcher der Wert des Metadatums gespeichert werden soll. Je nach Datenbankmanagementsystem ist hier evtl. auf Groß/Kleinschreibung zu achten. Entsprechend der Relation zwischen Struktureinheit und Metadatum gibt es mehrere Möglichkeiten, das Metadatum zu speichern:
 
 | Relation | Beschreibung |
 | :------- | :----------- |
@@ -16,9 +16,9 @@ Für jeden Metadatentyp existiert ein `<Metadata>` Element. Innerhalb dieses El
 | m:n      | Ein Metadatum kann mehrmals für eine Struktureinheit vorkommen. Im Gegensatz zu der 1:n Verknüpfung wird allerdings der Metadatenwert mehrmals für unterschiedliche Struktureinheiten verwendet. Dieses Modell findet für die `DigitalCollection`- und die `PlacePublication`-Tabelle Anwendung. Sollen Daten in einer dieser beiden Tabellen gespeichert werden, muss das `<Metadata>` Element lediglich ein `<TableName>` Element enthalten. Dieses muss den Wert PlacePublication oder DigitalCollection enthalten.<br/>*Beispiel:*<br/>`<Metadata>`<br/>`<InternalName>PlaceOfPublication</InternalName> <TableName>PlacePublication</TableName>`<br/>`</Metadata>` |
 | Personen | Personen werden in einer eigenen Tabelle gespeichert. Dies ist notwendig, da die zusätzlichen Merkmale eines Person-Objekts keinen Platz in den herkömmlichen Metadatentabellen haben. Das `<FieldValue>` Element gibt in diesem Fall den Rollennamen an, den dieser Personentyp in der Datenbank besitzt. Dieser wird in der Datenbank in der `CreatorType`-Tabelle gespeichert. Das Element `<TableName>` muss dazu zwingend den Wert `Creator` besitzen.<br/>Beispiel:<br/>`<Metadata>`<br/>`<InternalName>Author</InternalName>`<br/>`<TableName>Creator</TableName>`<br/>`<FieldValue>AUTHOR</FieldValue>`<br/>`</Metadata>` |
 
-Zusätzlich können nicht nur die Typen konvertiert werden, sondern auch die Werte eines Metadatums. Dazu dienen Wertelisten, die innerhalb des `<AGORADATABASE>` Elements definiert sein müssen. Eine solche Werteliste kann für die Wertkonvertierung durch einfügen des Elements `<ValueList>` genutzt werden. Dieses Element muss den Namen der Werteliste enthalten. Es ist sicherzustellen, dass eine entsprechende Werteliste mit diesem Namen auch existiert.
+Zusätzlich können nicht nur die Typen konvertiert werden, sondern auch die Werte eines Metadatums. Dazu dienen Wertelisten, die innerhalb des `<AGORADATABASE>` Elements definiert sein müssen. Eine solche Werteliste kann für die Wertkonvertierung durch Einfügen des Elements `<ValueList>` genutzt werden. Dieses Element muss den Namen der Werteliste enthalten. Es ist sicherzustellen, dass eine entsprechende Werteliste mit diesem Namen auch existiert.
 
-_Beispiel: Nutzung einer Werteliste für die Wertkonvertierung_
+_Beispiel: Nutzung einer Werteliste für die Wertkonvertierung_
 
 ```xml
 <Metadata>

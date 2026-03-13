@@ -46,7 +46,7 @@ The following conditions apply to the `<WriteXPath>` element:
 * The write expression must necessarily start with `./` and then contain the complete path from the `<xmlData>` element. For MODS this means that even the enclosing `<mods>` element is defined. This has to do with the fact that during the internal setup of the XML structure, corresponding elements are created if they are not yet available.
 * The hierarchy of elements in XPath can only be separated by `/`.
 * Elements can be filtered at any level of the hierarchy. The filter expression must be placed between square brackets `[]`. When creating, the corresponding elements and attributes defined in this filter expression are also created.
-* Attributes are identified as such by a preceding spider monkey `@`.
+* Attributes are identified as such by a preceding at sign `@`.
 * Within filter expressions a value can be assigned to an element or an attribute. These assignments must be written directly after the attribute or element name, enclosed in single quotes `''` and separated from the name with an equal sign `=`. A valid assignment would be, for example, `@attribute='value'` or `element='value'`.
 * Outside of single quotation marks, for example, the character `/` is used as a separator between the individual tags; within single quotation marks, special characters are also allowed.
 * Assignments outside of filter expressions are not allowed, since the value is determined by the value of the assigned metadata.
@@ -238,7 +238,7 @@ _Example: Creating a PURL from the CatalogIDDigital_
 </Metadata>
 ```
 
-_Example: Removing the prefixed character string "PPN_
+_Example: Removing the prefixed character string "PPN"_
 
 ```xml
 <Metadata>
@@ -279,7 +279,7 @@ Since persons have additional characteristics, these characteristics must also b
 | :--- | :--- |
 | `<FirstnameXPath>` | Selects the field in which the first name of the person should be written. |
 | `<LastnameXPath>` | Selects the field in which the person's last name should be written. |
-| `<DisplayNameXPath>` | Selects the field in which the name of the person to be displayed should be written (here, if no metadata exists for it, the name is aggregated from `surname` and `firstname`, in the form `surname, firstname`) For export purposes, the name of the person is entered in this field in the form `surname, firstname` if no other value exists. |
+| `<DisplayNameXPath>` | Selects the field in which the name of the person to be displayed should be written (here, if no metadata exists for it, the name is aggregated from `surname` and `firstname`, in the form `surname, firstname`). For export purposes, the name of the person is entered in this field in the form `surname, firstname` if no other value exists. |
 | `IdentifierXPath` | Selects the field in which the identifier of the person (in the example an ID from the person norm file PND) should be written. This function is still directly integrated in the UGH library. A use is currently only possible as in the following example: <br />`<IdentifierXPath>` <br /> `../mods:name[@authority=&apos;pnd&apos;][@ID=&apos;&apos;`<br />`</IdentifierXPath>` |
 
 A generally more precise mapping of the following still existing attributes of persons from the document model to MODS is planned: `affiliation`, `institution`, `identifierType`, `role`, `personType` and `isCorporation`.

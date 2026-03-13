@@ -47,7 +47,7 @@ _Example: Use of conditional assignments_
 </Metadata>
 ```
 
-The value of `picaMainTag 007s` and `picaSubTag 0` is assigned to the internal metadata `CatalogFieldVDseventeen` only if its content starts with `DVD17`. If the content of the PICA+ field starts with `Vd18`, it will be assigned to the internal metadata `CatalogFieldVDeighteen`.
+The value of `picaMainTag 007s` and `picaSubTag 0` is assigned to the internal metadata `CatalogFieldVDseventeen` only if its content starts with `VD17`. If the content of the PICA+ field starts with `VD18`, it will be assigned to the internal metadata `CatalogFieldVDeighteen`.
 
 If one of the conditions is met, the `VD17` or the `VD18` in front of the actual VD17 or VD18 number (including the space) is also removed.
 
@@ -66,7 +66,7 @@ This regular expression adds the string `PN` to the value of PICA+ (PPN).
 
 Since persons have other characteristics and are not just a simple type-value pair, a `<picaSubTag>` can exist within the `<person>` element for each of these characteristics. The corresponding attribute `type` specifies the corresponding characteristic. The following values are valid for this attribute:
 
-| Attribut | Description |
+| Attribute | Description |
 | :--- | :--- |
 | `firstname` | First name of the person |
 | `lastname` | Last name of the person |
@@ -91,7 +91,7 @@ Corporations also consist of several fields. They are defined within a `<Corpora
 | `partName` | This field contains the `code` from which to import censuses, locations or dates for the corporation. The field is repeatable to allow different `codes` to be specified. If more than one field is found, all values are imported into a common field, the individual entries are separated by the value configured in `<separator>`. |
 | `identifier` |  This field contains the `code` of the `<subfield>` element in which a standard data identifier of the entity has been defined. |
 
-_Beispiel: Mapping von Körperschaften_
+_Example: Mapping of corporate bodies_
 
 ```xml
 <Corporate>

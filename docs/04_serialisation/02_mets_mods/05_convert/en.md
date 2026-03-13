@@ -83,7 +83,7 @@ All other specifications are equivalent for the file groups `DEFAULT`, `MAX`, `D
 java -jar ughCLI-1.6.jar -h
 ```
 
-For the configuration of the extended parameters (administrative metadata and file groups) the long parameters (`--mimidsufffix`, `--minmimetype`, etc.) should be used.
+For the configuration of the extended parameters (administrative metadata and file groups) the long parameters (`--minidsuffix`, `--minmimetype`, etc.) should be used.
 
 _Example: Extract from a METS file (FileGroups) From the information_
 

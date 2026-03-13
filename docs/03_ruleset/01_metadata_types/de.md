@@ -107,7 +107,7 @@ _Beispiel für die Definition einer Person mit zusätzlichen Feldern:_
 
 ## Validierung mittels regulärer Ausdrücke
 
-Für Metadatentypen können Validierungsregeln als reguläre Ausdrücke definiert werden. Diese Validierungsregeln können dann innerhalb einer Nutzeroberfläche angezeigt und angewendet werden. Im Fall von Goobi workflow wird so beispielsweise sichergestellt, dass die Metadaten korrekt validiert werden könnnen, bevor eine Aufgabe mit schreibender Berechtigung auf die Metadaten durch einen Nutzer abgeschlossen wird.
+Für Metadatentypen können Validierungsregeln als reguläre Ausdrücke definiert werden. Diese Validierungsregeln können dann innerhalb einer Nutzeroberfläche angezeigt und angewendet werden. Im Fall von Goobi workflow wird so beispielsweise sichergestellt, dass die Metadaten korrekt validiert werden können, bevor eine Aufgabe mit schreibender Berechtigung auf die Metadaten durch einen Nutzer abgeschlossen wird.
 
 Zusätzlich ist es möglich, individuelle Fehlermeldungen zu erstellen, die dem Nutzer im Falle eines Verstoßes gegen den regulären Ausdruck angezeigt werden. Hierbei kann der Platzhalter `{}` verwendet werden, um den eingetragenen Wert als Teil der Fehlermeldung zu nutzen. Wenn für die aktuell gewählte Sprache des Nutzers keine individuelle Fehlermeldung existiert, wird stattdessen eine Standard-Meldung angezeigt.
 
@@ -127,7 +127,7 @@ _Beispiel für eine Validierungsregel für einen Metadatentyp:_
 
 ## Zugriffsgeschützte Metadaten
 
-Metadaten können zugriffsgeschützt sein. Hierzu kann das Attribut `allowAccessRestriction` vergeben werden. Für Metadaten mit dieser Angabe kann in einer Nutzeroberfläche eine Option zum Setzen des Zugriffsschutzes angeboten werden. Wenn das Metadatum zugriffsgeschützt ist, wird es zwar exportiert, jedoch mit der Angabe `shareable="no"` versehen. Diese Angabe kann dann von Portalen dann ausgewertet werden und die Anzeige für unberechtigte Personen unterdrücken.
+Metadaten können zugriffsgeschützt sein. Hierzu kann das Attribut `allowAccessRestriction` vergeben werden. Für Metadaten mit dieser Angabe kann in einer Nutzeroberfläche eine Option zum Setzen des Zugriffsschutzes angeboten werden. Wenn das Metadatum zugriffsgeschützt ist, wird es zwar exportiert, jedoch mit der Angabe `shareable="no"` versehen. Diese Angabe kann dann von Portalen ausgewertet werden und die Anzeige für unberechtigte Personen unterdrücken.
 
 
 _Beispiel für die Definition von zugriffsgeschützten Metadaten:_

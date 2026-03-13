@@ -53,7 +53,7 @@ rdIdentifier
 </XPathAnchorQuery>
 ```
 
-The following example describes the XPath for the `<recordIdentifier>` element with the value `PPN123456789 Here is an excerpt from a METS file of a child structure (The content of the attribute`source`comes from the metadata mapping of the metadata`CatalogIDDigital\`, but more on this later):
+The following example describes the XPath for the `<recordIdentifier>` element with the value `PPN123456789`. Here is an excerpt from a METS file of a child structure (The content of the attribute `source` comes from the metadata mapping of the metadata `CatalogIDDigital`, but more on this later):
 
 ```xml
 <mods:mods>
@@ -79,7 +79,7 @@ Here is the corresponding location in the anchor METS file:
 
 ## The anchor identifier Metadata type
 
-The element `<AnchorIdentifierMetadataType>` describes the internal metadata type of the element that is to serve as the anchor identifier. In our example the element `CatalogIDDigital` with the value `PN123456789`.
+The element `<AnchorIdentifierMetadataType>` describes the internal metadata type of the element that is to serve as the anchor identifier. In our example the element `CatalogIDDigital` with the value `PPN123456789`.
 
 _Example: An anchor identifier Metadata type_
 

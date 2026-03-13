@@ -130,7 +130,7 @@ _Example of a validation rule for a metadata type:_
 Metadata can be access-restricted. The `allowAccessRestriction` attribute can be assigned for this purpose. An option to set access restriction can be offered in a user interface for metadata with this specification. If the metadata is access-restricted, it is exported, but with the specification `shareable=‘no’`. This specification can then be evaluated by portals and suppress the display for unauthorised persons.
 
 
-Example for the definition of access-protected metadata:_
+_Example for the definition of access-protected metadata:_
 
 ```xml
 <MetadataType allowAccessRestriction="true">
