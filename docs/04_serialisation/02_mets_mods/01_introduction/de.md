@@ -11,7 +11,7 @@ Das METS/MODS XML-Format kann das interne Dokumentmodell vollständig serialisie
 
 :::info
 **Als PDF:**   
-[http://dfg-viewer.de/fileadmin/groups/dfgviewer/METSAnwendungsprofil2.0.pdf ](http://dfg-viewer.de/fileadmin/groups/dfgviewer/METS_Anwendungsprofil_2.0.pdf%20)  
+[http://dfg-viewer.de/fileadmin/groups/dfgviewer/METSAnwendungsprofil2.0.pdf ](http://dfg-viewer.de/fileadmin/groups/dfgviewer/METS_Anwendungsprofil_2.0.pdf)  
   
 **Als XML-Profil:**   
 [http://dfg-viewer.de/fileadmin/groups/dfgviewer/METSAnwendungsprofil2.0.xml](http://dfg-viewer.de/fileadmin/groups/dfgviewer/METS_Anwendungsprofil_2.0.xml)

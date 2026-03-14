@@ -11,7 +11,7 @@ The METS/MODS XML format can completely serialize the internal document model, b
 
 :::info
 **As PDF:**  
-[http://dfg-viewer.de/fileadmin/groups/dfgviewer/METSAnwendungsprofil2.0.pdf ](http://dfg-viewer.de/fileadmin/groups/dfgviewer/METS_Anwendungsprofil_2.0.pdf%20)
+[http://dfg-viewer.de/fileadmin/groups/dfgviewer/METSAnwendungsprofil2.0.pdf ](http://dfg-viewer.de/fileadmin/groups/dfgviewer/METS_Anwendungsprofil_2.0.pdf)
 
 **As XML-Profile:**  
 [http://dfg-viewer.de/fileadmin/groups/dfgviewer/METSAnwendungsprofil2.0.xml](http://dfg-viewer.de/fileadmin/groups/dfgviewer/METS_Anwendungsprofil_2.0.xml)
