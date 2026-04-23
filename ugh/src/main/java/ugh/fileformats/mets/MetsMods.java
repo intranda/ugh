@@ -495,8 +495,6 @@ public class MetsMods implements ugh.dl.Fileformat {
     protected static final String METADATA_LOGICAL_PAGE_NUMBER = "logicalPageNumber";
     protected static final String METADATA_PHYSICAL_PAGE_NUMBER = "physPageNumber";
     protected static final String METADATA_PAGE_UNCOUNTED_VALUE = "uncounted";
-    protected static final String METADATA_PHYSICAL_BOUNDBOOK_STRING = "BoundBook";
-    protected static final String METADATA_PHYSICAL_PAGE_STRING1 = "page";
 
     // Reference type name for logical <> physical references.
     protected static final String LOGICAL_PHYSICAL_MAPPING_TYPE_STRING = "logical_physical";
@@ -3531,7 +3529,7 @@ public class MetsMods implements ugh.dl.Fileformat {
      */
     protected Element writePhysDivs(Node parentNode, DocStruct inStruct) throws PreferencesException {
         Document domDoc = parentNode.getOwnerDocument();
-        if ("div".equals(inStruct.getDocstructType())) {
+        if ("div".equals(inStruct.getDocstructType()) || StringUtils.isBlank(inStruct.getDocstructType())) {
             // Write div element.
             Element div = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_DIV_STRING);
 
