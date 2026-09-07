@@ -430,6 +430,17 @@ public class MetadataGroupTest {
     }
 
     /* Tests for the method equals(Object) */
+    /**
+     * removeMetadataGroup and changeMetadataGroup detach the group, so a group without a parent is a state that gets logged.
+     */
+    @Test
+    public void testToStringOfADetachedGroup() throws MetadataTypeNotAllowedException {
+        MetadataGroup group = new MetadataGroup(groupType);
+        assertNull(group.getParent());
+
+        assertTrue(group.toString().contains("PublisherGroup"));
+    }
+
     @Test
     public void testEqualsToItself() {
         assertEquals(fixture, fixture);

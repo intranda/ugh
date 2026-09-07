@@ -201,7 +201,8 @@ public class MetadataGroup implements Serializable, HoldingElement {
         sb.append("MetadataGroup [MDType:");
         sb.append(metadataGroupType.getName());
         sb.append(", myDocStruct:");
-        sb.append(parent.getType().getName());
+        // removeMetadataGroup and changeMetadataGroup detach the group, so it may well have no parent when it gets logged
+        sb.append(parent != null && parent.getType() != null ? parent.getType().getName() : "none");
         if (metadataList != null && !metadataList.isEmpty()) {
             sb.append(", metadataList:");
             for (Metadata md : metadataList) {

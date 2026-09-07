@@ -589,6 +589,31 @@ public class DocStructTest {
         assertNull(ds.getAllMetadata());
     }
 
+    /**
+     * removePerson and removeCorporate return quietly when the doc struct holds nothing of that kind. Metadata and groups have to do the same
+     * instead of throwing, because callers do pass occurrences that live elsewhere - a metadata of a group, for instance.
+     */
+    @Test
+    public void testRemoveMetadataOnDocStructWithoutMetadataDoesNothing() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        Metadata foreign = new Metadata(prefs.getMetadataTypeByName("Description"));
+        foreign.setValue("not part of this document");
+
+        ds.removeMetadata(foreign, true);
+
+        assertTrue(ds.getAllMetadata() == null || ds.getAllMetadata().isEmpty());
+    }
+
+    @Test
+    public void testRemoveMetadataGroupOnDocStructWithoutGroupsDoesNothing() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataGroup foreign = new MetadataGroup(prefs.getMetadataGroupTypeByName("PublisherGroup"));
+
+        ds.removeMetadataGroup(foreign, true);
+
+        assertTrue(ds.getAllMetadataGroups() == null || ds.getAllMetadataGroups().isEmpty());
+    }
+
     @Test
     public void testChangeMetadata() throws Exception {
         DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));

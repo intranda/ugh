@@ -1293,6 +1293,11 @@ public class DocStruct implements Serializable, HoldingElement {
     @Override
     public boolean removeMetadataGroup(MetadataGroup theMd, boolean force) {
 
+        if (this.allMetadataGroups == null) {
+            // no groups to remove available, abort
+            return false;
+        }
+
         MetadataGroupType inMdType;
         String maxnumbersallowed;
         int typesavailable;
@@ -1553,6 +1558,11 @@ public class DocStruct implements Serializable, HoldingElement {
      **************************************************************************/
     @Override
     public void removeMetadata(Metadata theMd, boolean force) {
+
+        if (this.allMetadata == null) {
+            // no metadata to remove available, abort
+            return;
+        }
 
         PrefsType inMdType;
         String maxnumbersallowed;
