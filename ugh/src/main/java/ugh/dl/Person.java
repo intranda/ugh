@@ -24,7 +24,6 @@ package ugh.dl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -293,31 +292,7 @@ public class Person extends Metadata {
         return result.toString();
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + Objects.hash(additionalNameParts, affiliation, displayname, firstname, institution, lastname, persontype, role);
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        Person other = (Person) obj;
-        return Objects.equals(additionalNameParts, other.additionalNameParts) && Objects.equals(affiliation, other.affiliation)
-                && Objects.equals(displayname, other.displayname) && Objects.equals(firstname, other.firstname)
-                && Objects.equals(institution, other.institution) && Objects.equals(lastname, other.lastname)
-                && Objects.equals(persontype, other.persontype) && Objects.equals(role, other.role);
-    }
+    /* Person is an occurrence in a document, so it inherits equality from Object - see the note in Metadata. */
 
     public List<NamePart> getAdditionalNameParts() {
         return additionalNameParts;

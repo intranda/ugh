@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -589,6 +590,97 @@ public class DocStructTest {
         assertNull(ds.getAllMetadata());
     }
 
+    /**
+     * removePerson and removeCorporate return quietly when the doc struct holds nothing of that kind. Metadata and groups have to do the same
+     * instead of throwing, because callers do pass occurrences that live elsewhere - a metadata of a group, for instance.
+     */
+    @Test
+    public void testRemoveMetadataOnDocStructWithoutMetadataDoesNothing() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        Metadata foreign = new Metadata(prefs.getMetadataTypeByName("Description"));
+        foreign.setValue("not part of this document");
+
+        ds.removeMetadata(foreign, true);
+
+        assertTrue(ds.getAllMetadata() == null || ds.getAllMetadata().isEmpty());
+    }
+
+    @Test
+    public void testRemoveMetadataGroupOnDocStructWithoutGroupsDoesNothing() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataGroup foreign = new MetadataGroup(prefs.getMetadataGroupTypeByName("PublisherGroup"));
+
+        ds.removeMetadataGroup(foreign, true);
+
+        assertTrue(ds.getAllMetadataGroups() == null || ds.getAllMetadataGroups().isEmpty());
+    }
+
+    /*
+     * An occurrence knows the element that holds it, and callers rely on that: Goobi workflow dereferences getParent() to add to or remove from the
+     * element an occurrence belongs to. So every mutation has to keep the parent in step with the list it maintains.
+     */
+
+    @Test
+    public void testChangeMetadataMovesTheParentToTheNewMetadata() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        Metadata replaced = new Metadata(prefs.getMetadataTypeByName("Description"));
+        replaced.setValue("replaced value");
+        ds.addMetadata(replaced);
+        Metadata replacement = new Metadata(prefs.getMetadataTypeByName("Description"));
+        replacement.setValue("new value");
+
+        assertTrue(ds.changeMetadata(replaced, replacement));
+
+        assertSame(ds, replacement.getParent());
+        assertNull(replaced.getParent());
+    }
+
+    /**
+     * The group types have to differ here, which is a contract question of its own - changeMetadata requires the opposite. This test is only about
+     * the parent.
+     */
+    @Test
+    public void testChangeMetadataGroupMovesTheParentToTheNewGroup() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataGroup replaced = new MetadataGroup(prefs.getMetadataGroupTypeByName("PublisherGroup"));
+        ds.addMetadataGroup(replaced);
+        MetadataGroup replacement = new MetadataGroup(prefs.getMetadataGroupTypeByName("LocationGroup"));
+
+        ds.changeMetadataGroup(replaced, replacement);
+
+        assertSame(ds, replacement.getParent());
+        assertNull(replaced.getParent());
+    }
+
+    @Test
+    public void testRemovePersonDetachesThePerson() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        Person person = new Person(prefs.getMetadataTypeByName("Contributor"));
+        person.setFirstname("Jane");
+        person.setLastname("Doe");
+        ds.addPerson(person);
+        assertSame(ds, person.getParent());
+
+        ds.removePerson(person, true);
+
+        assertTrue(ds.getAllPersons() == null || ds.getAllPersons().isEmpty());
+        assertNull(person.getParent());
+    }
+
+    @Test
+    public void testRemoveCorporateDetachesTheCorporate() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        Corporate corporate = new Corporate(prefs.getMetadataTypeByName("Corporation"));
+        corporate.setMainName("Acme");
+        ds.addCorporate(corporate);
+        assertSame(ds, corporate.getParent());
+
+        ds.removeCorporate(corporate, true);
+
+        assertTrue(ds.getAllCorporates() == null || ds.getAllCorporates().isEmpty());
+        assertNull(corporate.getParent());
+    }
+
     @Test
     public void testChangeMetadata() throws Exception {
         DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
@@ -1033,6 +1125,27 @@ public class DocStructTest {
         ds.sortMetadataAbcdefg();
         assertEquals("CatalogIDDigital", ds.getAllMetadata().get(0).getType().getName());
 
+    }
+
+    /**
+     * Sorting must not drop occurrences. Metadata of one type sort to the same place, which makes them duplicates for a set, but a document may
+     * hold several of them.
+     */
+    @Test
+    public void testSortMetadataAbcdefgKeepsAllMetadataOfOneType() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataType mdt = prefs.getMetadataTypeByName("Description");
+
+        Metadata first = new Metadata(mdt);
+        first.setValue("first value");
+        ds.addMetadata(first);
+        Metadata second = new Metadata(mdt);
+        second.setValue("second value");
+        ds.addMetadata(second);
+
+        ds.sortMetadataAbcdefg();
+
+        assertEquals(2, ds.getAllMetadata().size());
     }
 
     @Test

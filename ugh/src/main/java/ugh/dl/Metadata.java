@@ -25,7 +25,6 @@ package ugh.dl;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -383,25 +382,10 @@ public class Metadata implements Serializable {
         return result.toString();
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(MDType, metadataVQ, metadataVQType, authorityValue, metadataValue);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        Metadata other = (Metadata) obj;
-        return Objects.equals(MDType, other.MDType) && Objects.equals(getValueQualifier(), other.getValueQualifier())
-                && Objects.equals(getValueQualifierType(), other.getValueQualifierType())
-                && Objects.equals(getValue(), other.getValue());
-    }
+    /*
+     * Metadata deliberately inherits equality from Object. A document may hold several metadata of one type carrying the same value, and those
+     * occurrences are not interchangeable: each one is mutable, knows its parent and has its own place in the document. Comparing them by content
+     * would let removeMetadata, changeMetadata and every other lookup act on an arbitrary one of them. Compare content through getType(), getValue()
+     * and the other accessors instead.
+     */
 }

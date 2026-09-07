@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
@@ -430,6 +431,48 @@ public class MetadataGroupTest {
     }
 
     /* Tests for the method equals(Object) */
+    /*
+     * A group holds occurrences the same way a doc struct does, so it has to keep their parent in step with its lists.
+     */
+
+    @Test
+    public void testChangeMetadataGroupMovesTheParentToTheNewGroup() throws Exception {
+        MetadataGroup parent = new MetadataGroup(prefs.getMetadataGroupTypeByName("TestGroup"));
+        MetadataGroup replaced = new MetadataGroup(prefs.getMetadataGroupTypeByName("UnusedGroup"));
+        parent.addMetadataGroup(replaced);
+        MetadataGroup replacement = new MetadataGroup(prefs.getMetadataGroupTypeByName("LocationGroup"));
+
+        parent.changeMetadataGroup(replaced, replacement);
+
+        assertSame(parent, replacement.getParent());
+        assertNull(replaced.getParent());
+    }
+
+    @Test
+    public void testRemovePersonDetachesThePerson() throws Exception {
+        Person person = new Person(prefs.getMetadataTypeByName("PublisherPerson"));
+        person.setFirstname("Jane");
+        person.setLastname("Doe");
+        fixture.addPerson(person);
+        assertSame(fixture, person.getParent());
+
+        fixture.removePerson(person, true);
+
+        assertTrue(fixture.getPersonList().isEmpty());
+        assertNull(person.getParent());
+    }
+
+    /**
+     * removeMetadataGroup and changeMetadataGroup detach the group, so a group without a parent is a state that gets logged.
+     */
+    @Test
+    public void testToStringOfADetachedGroup() throws MetadataTypeNotAllowedException {
+        MetadataGroup group = new MetadataGroup(groupType);
+        assertNull(group.getParent());
+
+        assertTrue(group.toString().contains("PublisherGroup"));
+    }
+
     @Test
     public void testEqualsToItself() {
         assertEquals(fixture, fixture);
@@ -442,8 +485,8 @@ public class MetadataGroupTest {
 
     @Test
     public void testEqualsGivenObjectsWithDifferentIdentifiers() throws MetadataTypeNotAllowedException {
-        // equals(Object) method only compares the following fields:
-        // [ metadataGroupType, metadataList, personList, parent ]
+        // A MetadataGroup is an occurrence in a document and inherits equality from Object, so two groups of one type stay distinct however
+        // similar their content is.
         MetadataGroupType type1 = prefs.getMetadataGroupTypeByName("TestGroup");
         MetadataGroupType type2 = prefs.getMetadataGroupTypeByName("TestGroup");
         assertEquals(type1, type2);
@@ -452,7 +495,8 @@ public class MetadataGroupTest {
         group1.setIdentifier("1");
         group2.setIdentifier("2");
         assertNotSame(group1, group2);
-        assertEquals(group1, group2);
+        assertNotEquals(group1, group2);
+        assertEquals(group1, group1);
     }
 
     @Test
@@ -465,7 +509,7 @@ public class MetadataGroupTest {
         assertFalse(mdType.getIsPerson());
         anotherGroup.addCorporate(new Corporate(mdType));
         assertNotSame(fixture, anotherGroup);
-        assertEquals(fixture, anotherGroup);
+        assertNotEquals(fixture, anotherGroup);
     }
 
     @Test

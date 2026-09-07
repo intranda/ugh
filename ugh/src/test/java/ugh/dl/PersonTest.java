@@ -179,7 +179,8 @@ public class PersonTest {
         type.setName("type name");
         Person anotherPerson = new Person(type);
         assertEquals("type name", person.getType().getName());
-        assertEquals(person, anotherPerson);
+        // two persons built from one type are two occurrences in the document, not one value
+        assertNotEquals(person, anotherPerson);
     }
 
     @Test

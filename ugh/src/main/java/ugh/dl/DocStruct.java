@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -1294,6 +1293,11 @@ public class DocStruct implements Serializable, HoldingElement {
     @Override
     public boolean removeMetadataGroup(MetadataGroup theMd, boolean force) {
 
+        if (this.allMetadataGroups == null) {
+            // no groups to remove available, abort
+            return false;
+        }
+
         MetadataGroupType inMdType;
         String maxnumbersallowed;
         int typesavailable;
@@ -1399,6 +1403,9 @@ public class DocStruct implements Serializable, HoldingElement {
         // same kind.
         MetadataGroupType mdType = this.type.getMetadataGroupByGroup(theOldMd.getType());
         theNewMd.setType(mdType);
+
+        theOldMd.parent = null;
+        theNewMd.setParent(this);
 
         this.allMetadataGroups.remove(theOldMd);
         this.allMetadataGroups.add(counter, theNewMd);
@@ -1555,6 +1562,11 @@ public class DocStruct implements Serializable, HoldingElement {
     @Override
     public void removeMetadata(Metadata theMd, boolean force) {
 
+        if (this.allMetadata == null) {
+            // no metadata to remove available, abort
+            return;
+        }
+
         PrefsType inMdType;
         String maxnumbersallowed;
         int typesavailable;
@@ -1656,6 +1668,9 @@ public class DocStruct implements Serializable, HoldingElement {
         // same kind.
         MetadataType mdType = this.type.getMetadataTypeByType(theOldMd.getType());
         theNewMd.setType(mdType);
+
+        theOldMd.parent = null;
+        theNewMd.setParent(this);
 
         this.allMetadata.remove(theOldMd);
         this.allMetadata.add(counter, theNewMd);
@@ -2672,6 +2687,8 @@ public class DocStruct implements Serializable, HoldingElement {
             return;
         }
 
+        in.parent = null;
+
         this.persons.remove(in);
     }
 
@@ -2703,6 +2720,8 @@ public class DocStruct implements Serializable, HoldingElement {
             // There must be at least one.
             return;
         }
+
+        in.parent = null;
 
         this.corporates.remove(in);
     }
@@ -3142,27 +3161,18 @@ public class DocStruct implements Serializable, HoldingElement {
      **************************************************************************/
     public synchronized void sortMetadataAbcdefg() {
 
-        // Create empty (sorted) TreeSets and lists.
-        TreeSet<Metadata> newMetadata = new TreeSet<>(new MetadataComparator());
-        TreeSet<Person> newPersons = new TreeSet<>(new MetadataComparator());
-        List<Metadata> metadataList = new LinkedList<>();
-        List<Person> personList = new LinkedList<>();
-
-        // Add all metadata to the new TreeSets (sorted).
+        // Sort the lists, keeping every occurrence. Metadata of one type sort to the same place, which makes them duplicates for a set, but a
+        // document may hold several of them and none of them may get lost here.
         if (this.allMetadata != null) {
-            newMetadata.addAll(this.allMetadata);
+            List<Metadata> metadataList = new LinkedList<>(this.allMetadata);
+            metadataList.sort(new MetadataComparator());
+            this.allMetadata = metadataList;
         }
         if (this.persons != null) {
-            newPersons.addAll(this.persons);
+            List<Person> personList = new LinkedList<>(this.persons);
+            personList.sort(new MetadataComparator());
+            this.persons = personList;
         }
-
-        // Re-transfer the sorted sets to the linked lists.
-        metadataList.addAll(newMetadata);
-        personList.addAll(newPersons);
-
-        // Re-set the lists.
-        this.allMetadata = metadataList;
-        this.persons = personList;
 
     }
 
