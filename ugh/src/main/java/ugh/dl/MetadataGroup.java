@@ -250,60 +250,7 @@ public class MetadataGroup implements Serializable, HoldingElement {
         return returnList;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((metadataGroupType == null) ? 0 : metadataGroupType.hashCode());
-        result = prime * result + ((metadataList == null) ? 0 : metadataList.hashCode());
-        result = prime * result + ((personList == null) ? 0 : personList.hashCode());
-        result = prime * result + ((corporateList == null) ? 0 : corporateList.hashCode());
-        result = prime * result + ((parent == null) ? 0 : parent.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        MetadataGroup other = (MetadataGroup) obj;
-        if (metadataGroupType == null) {
-            if (other.metadataGroupType != null) {
-                return false;
-            }
-        } else if (!metadataGroupType.equals(other.metadataGroupType)) {
-            return false;
-        }
-        if (metadataList == null) {
-            if (other.metadataList != null) {
-                return false;
-            }
-        } else if (!metadataList.equals(other.metadataList)) {
-            return false;
-        }
-        if (personList == null) {
-            if (other.personList != null) {
-                return false;
-            }
-        } else if (!personList.equals(other.personList)) {
-            return false;
-        }
-        if (parent == null) {
-            if (other.parent != null) {
-                return false;
-            }
-        } else if (!parent.equals(other.parent)) {
-            return false;
-        }
-        return true;
-    }
+    /* A MetadataGroup is an occurrence in a document, so it inherits equality from Object - see the note in Metadata. */
 
     @Override
     public boolean isMetadataTypeBeRemoved(PrefsType inMDType) {

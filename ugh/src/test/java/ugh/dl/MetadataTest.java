@@ -207,17 +207,18 @@ public class MetadataTest {
 
     @Test
     public void testEqualsGivenTwoMetadataObjectsCreatedFromTheSameMetadataTypeObject() throws MetadataTypeNotAllowedException {
-        assertEquals(md, new Metadata(type));
+        // two metadata are two occurrences, even when they were built from one type and carry the same value
+        assertNotEquals(md, new Metadata(type));
     }
 
     @Test
     public void testEqualsGivenTwoMetadataObjectsCreatedFromTwoDefaultMetadataTypeObjects() throws MetadataTypeNotAllowedException {
-        assertEquals(md, new Metadata(new MetadataType()));
+        assertNotEquals(md, new Metadata(new MetadataType()));
     }
 
     @Test
     public void testEqualsGivenTwoMetadataObjectsCreatedFromTwoUnmodifiedCopiesOfTheSameMetadataTypeObject() throws MetadataTypeNotAllowedException {
-        assertEquals(md, new Metadata(type.copy()));
+        assertNotEquals(md, new Metadata(type.copy()));
     }
 
     @Test
@@ -238,9 +239,9 @@ public class MetadataTest {
 
     @Test
     public void testEqualsGivenTwoEqualButDifferentMetadataObjectsCreatedFromTheSameMetadataTypeObject() throws MetadataTypeNotAllowedException {
-        // The method equals(Metadata) defined in the class Metadata compares only the following items:
-        // MDType, metadataValue, MetadataVQ, MetadataVQType
-        // In this test we suppose that both Metadata objects have the same MDType
+        // Metadata is an occurrence in a document and inherits equality from Object, so matching content does not make two of them equal.
+        // This test builds the closest case: same type, same value and same qualifier, differing only in their authority record and validation
+        // state.
         Metadata md2 = new Metadata(type);
         // assure that both have the same metadataValue, MetadataVQ and MetadataVQType
         String value = "value";
@@ -259,7 +260,8 @@ public class MetadataTest {
         md.setValidationErrorPresent(false);
         md2.setValidationErrorPresent(true);
         // then we do the comparison
-        assertEquals(md, md2);
+        assertNotEquals(md, md2);
+        assertEquals(md, md);
     }
 
     @Test

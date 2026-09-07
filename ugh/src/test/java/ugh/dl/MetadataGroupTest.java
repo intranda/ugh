@@ -442,8 +442,8 @@ public class MetadataGroupTest {
 
     @Test
     public void testEqualsGivenObjectsWithDifferentIdentifiers() throws MetadataTypeNotAllowedException {
-        // equals(Object) method only compares the following fields:
-        // [ metadataGroupType, metadataList, personList, parent ]
+        // A MetadataGroup is an occurrence in a document and inherits equality from Object, so two groups of one type stay distinct however
+        // similar their content is.
         MetadataGroupType type1 = prefs.getMetadataGroupTypeByName("TestGroup");
         MetadataGroupType type2 = prefs.getMetadataGroupTypeByName("TestGroup");
         assertEquals(type1, type2);
@@ -452,7 +452,8 @@ public class MetadataGroupTest {
         group1.setIdentifier("1");
         group2.setIdentifier("2");
         assertNotSame(group1, group2);
-        assertEquals(group1, group2);
+        assertNotEquals(group1, group2);
+        assertEquals(group1, group1);
     }
 
     @Test
@@ -465,7 +466,7 @@ public class MetadataGroupTest {
         assertFalse(mdType.getIsPerson());
         anotherGroup.addCorporate(new Corporate(mdType));
         assertNotSame(fixture, anotherGroup);
-        assertEquals(fixture, anotherGroup);
+        assertNotEquals(fixture, anotherGroup);
     }
 
     @Test
