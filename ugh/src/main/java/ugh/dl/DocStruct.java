@@ -1404,6 +1404,9 @@ public class DocStruct implements Serializable, HoldingElement {
         MetadataGroupType mdType = this.type.getMetadataGroupByGroup(theOldMd.getType());
         theNewMd.setType(mdType);
 
+        theOldMd.parent = null;
+        theNewMd.setParent(this);
+
         this.allMetadataGroups.remove(theOldMd);
         this.allMetadataGroups.add(counter, theNewMd);
 
@@ -1665,6 +1668,9 @@ public class DocStruct implements Serializable, HoldingElement {
         // same kind.
         MetadataType mdType = this.type.getMetadataTypeByType(theOldMd.getType());
         theNewMd.setType(mdType);
+
+        theOldMd.parent = null;
+        theNewMd.setParent(this);
 
         this.allMetadata.remove(theOldMd);
         this.allMetadata.add(counter, theNewMd);
@@ -2681,6 +2687,8 @@ public class DocStruct implements Serializable, HoldingElement {
             return;
         }
 
+        in.parent = null;
+
         this.persons.remove(in);
     }
 
@@ -2712,6 +2720,8 @@ public class DocStruct implements Serializable, HoldingElement {
             // There must be at least one.
             return;
         }
+
+        in.parent = null;
 
         this.corporates.remove(in);
     }

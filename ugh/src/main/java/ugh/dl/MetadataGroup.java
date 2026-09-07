@@ -334,6 +334,8 @@ public class MetadataGroup implements Serializable, HoldingElement {
             return;
         }
 
+        in.parent = null;
+
         corporateList.remove(in);
     }
 
@@ -364,6 +366,8 @@ public class MetadataGroup implements Serializable, HoldingElement {
             // There must be at least one.
             return;
         }
+
+        in.parent = null;
 
         personList.remove(in);
     }
@@ -735,6 +739,9 @@ public class MetadataGroup implements Serializable, HoldingElement {
         // same kind.
         MetadataGroupType mdType = theOldMd.getType();
         theNewMd.setType(mdType);
+
+        theOldMd.parent = null;
+        theNewMd.setParent(this);
 
         this.allMetadataGroups.remove(theOldMd);
         this.allMetadataGroups.add(counter, theNewMd);

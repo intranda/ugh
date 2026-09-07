@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
@@ -430,6 +431,37 @@ public class MetadataGroupTest {
     }
 
     /* Tests for the method equals(Object) */
+    /*
+     * A group holds occurrences the same way a doc struct does, so it has to keep their parent in step with its lists.
+     */
+
+    @Test
+    public void testChangeMetadataGroupMovesTheParentToTheNewGroup() throws Exception {
+        MetadataGroup parent = new MetadataGroup(prefs.getMetadataGroupTypeByName("TestGroup"));
+        MetadataGroup replaced = new MetadataGroup(prefs.getMetadataGroupTypeByName("UnusedGroup"));
+        parent.addMetadataGroup(replaced);
+        MetadataGroup replacement = new MetadataGroup(prefs.getMetadataGroupTypeByName("LocationGroup"));
+
+        parent.changeMetadataGroup(replaced, replacement);
+
+        assertSame(parent, replacement.getParent());
+        assertNull(replaced.getParent());
+    }
+
+    @Test
+    public void testRemovePersonDetachesThePerson() throws Exception {
+        Person person = new Person(prefs.getMetadataTypeByName("PublisherPerson"));
+        person.setFirstname("Jane");
+        person.setLastname("Doe");
+        fixture.addPerson(person);
+        assertSame(fixture, person.getParent());
+
+        fixture.removePerson(person, true);
+
+        assertTrue(fixture.getPersonList().isEmpty());
+        assertNull(person.getParent());
+    }
+
     /**
      * removeMetadataGroup and changeMetadataGroup detach the group, so a group without a parent is a state that gets logged.
      */
