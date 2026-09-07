@@ -1035,6 +1035,27 @@ public class DocStructTest {
 
     }
 
+    /**
+     * Sorting must not drop occurrences. Metadata of one type sort to the same place, which makes them duplicates for a set, but a document may
+     * hold several of them.
+     */
+    @Test
+    public void testSortMetadataAbcdefgKeepsAllMetadataOfOneType() throws Exception {
+        DocStruct ds = new DocStruct(prefs.getDocStrctTypeByName("Monograph"));
+        MetadataType mdt = prefs.getMetadataTypeByName("Description");
+
+        Metadata first = new Metadata(mdt);
+        first.setValue("first value");
+        ds.addMetadata(first);
+        Metadata second = new Metadata(mdt);
+        second.setValue("second value");
+        ds.addMetadata(second);
+
+        ds.sortMetadataAbcdefg();
+
+        assertEquals(2, ds.getAllMetadata().size());
+    }
+
     @Test
     public void testImageName() throws Exception {
         DigitalDocument dd = new DigitalDocument();
