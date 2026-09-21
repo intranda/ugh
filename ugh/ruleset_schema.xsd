@@ -22,6 +22,7 @@
         </xs:sequence>
       </xs:sequence>
       <xs:attribute name="normdata" type="xs:boolean" use="optional" />
+      <xs:attribute name="allowAccessRestriction" type="xs:boolean" use="optional" />
       <xs:attribute name="type" type="xs:NCName" use="optional"/>
       <xs:attribute name="namepart" type="xs:boolean" use="optional"/>
     </xs:complexType>
