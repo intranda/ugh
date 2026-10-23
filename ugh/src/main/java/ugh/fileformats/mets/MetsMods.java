@@ -588,6 +588,12 @@ public class MetsMods implements ugh.dl.Fileformat {
     // use UUID or incremental numbers as file identifier
     protected boolean createUUIDs = false;
 
+    // known file identifiers to re-use, file group name -> file name -> identifier
+    protected Map<String, Map<String, String>> existingFileIds = new HashMap<>();
+
+    // file identifiers used during writing, file group name -> file name -> identifier
+    protected Map<String, Map<String, String>> usedFileIds = new HashMap<>();
+
     private String softwareName;
     private String softwareVersion;
     private String instanceName;
@@ -3165,6 +3171,51 @@ public class MetsMods implements ugh.dl.Fileformat {
         return true;
     }
 
+    /**
+     * Get the identifier for a file within a file group. An identifier already used in this run or a known identifier from a previous export gets
+     * re-used, otherwise a new UUID is generated.
+     * 
+     * @param fileGroupName name of the file group
+     * @param fileName name of the file, empty for single file groups
+     * @return identifier
+     */
+    private String getOrCreateFileId(String fileGroupName, String fileName) {
+        Map<String, String> usedIds = usedFileIds.computeIfAbsent(fileGroupName, k -> new HashMap<>());
+        String id = usedIds.get(fileName);
+        if (StringUtils.isBlank(id)) {
+            Map<String, String> knownIds = existingFileIds.get(fileGroupName);
+            if (knownIds != null) {
+                id = knownIds.get(fileName);
+            }
+            if (StringUtils.isBlank(id)) {
+                id = UUID.randomUUID().toString();
+            }
+            usedIds.put(fileName, id);
+        }
+        return id;
+    }
+
+    private static String getFileName(String location) {
+        if (StringUtils.isBlank(location)) {
+            return "";
+        }
+        String normalized = location.replace('\\', '/');
+        return normalized.substring(normalized.lastIndexOf('/') + 1);
+    }
+
+    public void setExistingFileIds(Map<String, Map<String, String>> fileIds) {
+        existingFileIds = new HashMap<>();
+        if (fileIds != null) {
+            for (Entry<String, Map<String, String>> entry : fileIds.entrySet()) {
+                existingFileIds.put(entry.getKey(), new HashMap<>(entry.getValue()));
+            }
+        }
+    }
+
+    public Map<String, Map<String, String>> getUsedFileIds() {
+        return usedFileIds;
+    }
+
     /***************************************************************************
      * <p>
      * Creates a METS file group.
@@ -3191,8 +3242,7 @@ public class MetsMods implements ugh.dl.Fileformat {
 
             String id = theFilegroup.getName();
             if (createUUIDs) {
-                UUID uuid = UUID.randomUUID();
-                id = uuid.toString();
+                id = getOrCreateFileId(theFilegroup.getName(), "");
             }
             theFilegroup.setFileSuffix(id);
             file.setAttribute(METS_ID_STRING, id);
@@ -3272,8 +3322,7 @@ public class MetsMods implements ugh.dl.Fileformat {
                     // Set content file's identifier (if not existing yet).
                     String id = null;
                     if (createUUIDs) {
-                        UUID uuid = UUID.randomUUID();
-                        id = uuid.toString();
+                        id = getOrCreateFileId(theFilegroup.getName(), getFileName(cf.getLocation()));
                         cf.addUUID(theFilegroup.getName(), id);
                     } else {
 

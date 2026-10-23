@@ -1,10 +1,14 @@
 package ugh.fileformats.mets;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -13,6 +17,7 @@ import org.jdom2.Namespace;
 import org.jdom2.input.SAXBuilder;
 import org.junit.Test;
 
+import ugh.dl.ExportFileformat;
 import ugh.dl.Prefs;
 import ugh.exceptions.UGHException;
 
@@ -151,5 +156,68 @@ public class MetsModsImportExportTest {
         assertEquals("FILE_0001", area.getAttributeValue("FILEID"));
         assertEquals("PHYS_0002", area.getAttributeValue("ID"));
 
+    }
+
+    @Test
+    public void testReuseExistingFileIds() throws UGHException, JDOMException, IOException {
+        Prefs prefs = new Prefs();
+        prefs.loadPrefs("src/test/resources/ruleset.xml");
+        assertNotNull(prefs.getMetadataTypeByName(ExportFileformat.FILE_ID_METADATA));
+
+        MetsMods mm = new MetsMods(prefs);
+        mm.read("src/test/resources/meta.xml");
+        MetsModsImportExport exp = new MetsModsImportExport(prefs);
+        exp.setCreateUUIDs(true);
+        exp.setDigitalDocument(mm.getDigitalDocument());
+        exp.write("src/test/resources/tmp.xml");
+        List<String> firstIds = getFileIds("src/test/resources/tmp.xml");
+        Map<String, Map<String, String>> usedIds = exp.getUsedFileIds();
+        assertEquals(18, firstIds.size());
+
+        // second export without known ids generates new ids
+        mm = new MetsMods(prefs);
+        mm.read("src/test/resources/meta.xml");
+        exp = new MetsModsImportExport(prefs);
+        exp.setCreateUUIDs(true);
+        exp.setDigitalDocument(mm.getDigitalDocument());
+        exp.write("src/test/resources/tmp.xml");
+        assertNotEquals(firstIds, getFileIds("src/test/resources/tmp.xml"));
+
+        // third export re-uses the ids from the first run
+        mm = new MetsMods(prefs);
+        mm.read("src/test/resources/meta.xml");
+        exp = new MetsModsImportExport(prefs);
+        exp.setCreateUUIDs(true);
+        exp.setExistingFileIds(usedIds);
+        exp.setDigitalDocument(mm.getDigitalDocument());
+        exp.write("src/test/resources/tmp.xml");
+        assertEquals(firstIds, getFileIds("src/test/resources/tmp.xml"));
+        assertEquals(usedIds, exp.getUsedFileIds());
+    }
+
+    private List<String> getFileIds(String filename) throws JDOMException, IOException {
+        Namespace metsNs = Namespace.getNamespace("mets", "http://www.loc.gov/METS/");
+        Document doc = new SAXBuilder().build(filename);
+        List<String> ids = new ArrayList<>();
+        Element fileSec = doc.getRootElement().getChild("fileSec", metsNs);
+        for (Element fileGrp : fileSec.getChildren("fileGrp", metsNs)) {
+            for (Element file : fileGrp.getChildren("file", metsNs)) {
+                ids.add(file.getAttributeValue("ID"));
+            }
+        }
+        // fptr must reference the same ids
+        for (Element structMap : doc.getRootElement().getChildren("structMap", metsNs)) {
+            collectFptrIds(structMap, metsNs, ids);
+        }
+        return ids;
+    }
+
+    private void collectFptrIds(Element element, Namespace metsNs, List<String> ids) {
+        for (Element child : element.getChildren()) {
+            if ("fptr".equals(child.getName())) {
+                assertTrue(ids.contains(child.getAttributeValue("FILEID")));
+            }
+            collectFptrIds(child, metsNs, ids);
+        }
     }
 }

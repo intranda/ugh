@@ -178,6 +178,10 @@ public class Prefs implements Serializable {
             throw new PreferencesException(message);
         }
 
+        MetadataType mdt = new MetadataType();
+        mdt.setName(ExportFileformat.FILE_ID_METADATA);
+        this.allMetadataTypes.add(mdt);
+
         childlist = upperchild.getChildNodes();
         for (int i = 0; i < childlist.getLength(); i++) {
             // Get single node.
@@ -239,7 +243,7 @@ public class Prefs implements Serializable {
 
         // Add internal metadata types; all internal metadata types are
         // beginning with HIDDEN_METADATA_CHAR.
-        MetadataType mdt = new MetadataType();
+        mdt = new MetadataType();
         mdt.setName(HIDDEN_METADATA_CHAR + "pagephysstart");
         this.allMetadataTypes.add(mdt);
 
@@ -548,6 +552,11 @@ public class Prefs implements Serializable {
 
             // Add allLanguages and all Metadata to DocStrctType.
             currentDocStrctType.setAllLanguages(allLanguages);
+        }
+
+        if ("BoundBook".equals(currentDocStrctType.getName())) {
+            MetadataType newMdType = getMetadataTypeByName(ExportFileformat.FILE_ID_METADATA);
+            currentDocStrctType.addMetadataType(newMdType, "*");
         }
 
         return currentDocStrctType;

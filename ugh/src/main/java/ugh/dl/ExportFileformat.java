@@ -1,5 +1,8 @@
 package ugh.dl;
 
+import java.util.Collections;
+import java.util.Map;
+
 /*******************************************************************************
  * ugh.dl / FileFormat.java
  * 
@@ -59,6 +62,12 @@ package ugh.dl;
 
 public interface ExportFileformat extends Fileformat {
 
+    /**
+     * Name of the hidden metadata on the physical top docstruct, used to persist generated file identifiers. Value format:
+     * <code>fileGroup|fileName|uuid</code>, fileName is empty for single file groups.
+     */
+    public static final String FILE_ID_METADATA = "_fileId";
+
     public void setWriteLocal(boolean writeLocalFilegroup);
 
     public void setRightsOwner(String rightsOwner);
@@ -95,6 +104,24 @@ public interface ExportFileformat extends Fileformat {
 
     default void setCreateUUIDs(boolean createUUIDS) {
         // default implementation: ignore value
+    }
+
+    /**
+     * Set already known file identifiers, they get re-used instead of generating new UUIDs. Only relevant if createUUIDs is enabled.
+     * 
+     * @param fileIds map of file group name to a map of file name and identifier. Single file groups use an empty file name
+     */
+    default void setExistingFileIds(Map<String, Map<String, String>> fileIds) {
+        // default implementation: ignore value
+    }
+
+    /**
+     * Get all file identifiers used during the last write. Only filled if createUUIDs is enabled.
+     * 
+     * @return map of file group name to a map of file name and identifier. Single file groups use an empty file name
+     */
+    default Map<String, Map<String, String>> getUsedFileIds() {
+        return Collections.emptyMap();
     }
 
     default void setIIIFUrl(String iifApiUrl) {
