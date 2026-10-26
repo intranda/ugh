@@ -173,6 +173,15 @@ public class MetsModsImportExportTest {
         List<String> firstIds = getFileIds("src/test/resources/tmp.xml");
         Map<String, Map<String, String>> usedIds = exp.getUsedFileIds();
         assertEquals(18, firstIds.size());
+        List<String> firstGroupIds = getFileGroupIds("src/test/resources/tmp.xml");
+        assertTrue(!firstGroupIds.isEmpty());
+        for (String groupId : firstGroupIds) {
+            assertNotNull(groupId);
+            assertTrue(firstIds.stream().noneMatch(groupId::equals));
+        }
+        for (Map<String, String> groupIds : usedIds.values()) {
+            assertTrue(groupIds.containsKey("/"));
+        }
 
         // second export without known ids generates new ids
         mm = new MetsMods(prefs);
@@ -182,6 +191,7 @@ public class MetsModsImportExportTest {
         exp.setDigitalDocument(mm.getDigitalDocument());
         exp.write("src/test/resources/tmp.xml");
         assertNotEquals(firstIds, getFileIds("src/test/resources/tmp.xml"));
+        assertNotEquals(firstGroupIds, getFileGroupIds("src/test/resources/tmp.xml"));
 
         // third export re-uses the ids from the first run
         mm = new MetsMods(prefs);
@@ -192,7 +202,19 @@ public class MetsModsImportExportTest {
         exp.setDigitalDocument(mm.getDigitalDocument());
         exp.write("src/test/resources/tmp.xml");
         assertEquals(firstIds, getFileIds("src/test/resources/tmp.xml"));
+        assertEquals(firstGroupIds, getFileGroupIds("src/test/resources/tmp.xml"));
         assertEquals(usedIds, exp.getUsedFileIds());
+    }
+
+    private List<String> getFileGroupIds(String filename) throws JDOMException, IOException {
+        Namespace metsNs = Namespace.getNamespace("mets", "http://www.loc.gov/METS/");
+        Document doc = new SAXBuilder().build(filename);
+        List<String> ids = new ArrayList<>();
+        Element fileSec = doc.getRootElement().getChild("fileSec", metsNs);
+        for (Element fileGrp : fileSec.getChildren("fileGrp", metsNs)) {
+            ids.add(fileGrp.getAttributeValue("ID"));
+        }
+        return ids;
     }
 
     private List<String> getFileIds(String filename) throws JDOMException, IOException {

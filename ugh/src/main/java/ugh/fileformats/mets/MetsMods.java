@@ -3229,6 +3229,9 @@ public class MetsMods implements ugh.dl.Fileformat {
 
         Element result = createDomElementNS(domDoc, this.metsNamespacePrefix, METS_FILEGRP_STRING);
         result.setAttribute(METS_FILEGROUPUSE_STRING, theFilegroup.getName());
+        if (createUUIDs) {
+            result.setAttribute(METS_ID_STRING, getOrCreateFileId(theFilegroup.getName(), "/"));
+        }
 
         if (theFilegroup.isSingleFile()) {
             String path = theFilegroup.getPathToFiles();

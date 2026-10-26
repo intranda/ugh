@@ -64,7 +64,7 @@ public interface ExportFileformat extends Fileformat {
 
     /**
      * Name of the hidden metadata on the physical top docstruct, used to persist generated file identifiers. Value format:
-     * <code>fileGroup|fileName|uuid</code>, fileName is empty for single file groups.
+     * <code>fileGroup|fileName|uuid</code>, fileName is empty for single file groups and "/" for the file group itself.
      */
     public static final String FILE_ID_METADATA = "_fileId";
 
