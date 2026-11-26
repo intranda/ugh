@@ -1581,21 +1581,19 @@ public class MetsModsImportExport extends ugh.fileformats.mets.MetsMods implemen
             }
         }
 
-        // Append to our metsNode, before the fileSec (or before the structMap
-        // if anchor file).
-        //
-        String element;
-        if (isAnchorFile) {
-            element = this.metsNamespacePrefix + ":" + METS_STRUCTMAP_STRING;
-        } else {
-            element = this.metsNamespacePrefix + ":" + METS_FILESEC_STRING;
+        // Insert the amdSec directly after the last dmdSec of our metsNode, independent of existing fileSec or structMap elements.
+        Node lastDmdSec = null;
+        NodeList children = this.metsNode.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            Node child = children.item(i);
+            if (child.getNodeType() == Node.ELEMENT_NODE && METS_DMDSEC_STRING.equals(child.getLocalName())) {
+                lastDmdSec = child;
+            }
         }
 
-        NodeList dmdList = this.metsNode.getElementsByTagName(element);
-        Node refChild = dmdList.item(0);
-        if (refChild != null) {
-            this.metsNode.insertBefore(amdSec, refChild);
-        }
+        Node refChild = lastDmdSec != null ? lastDmdSec.getNextSibling() : this.metsNode.getFirstChild();
+        // insertBefore with a null refChild appends at the end
+        this.metsNode.insertBefore(amdSec, refChild);
     }
 
     /*
